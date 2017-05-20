@@ -33,7 +33,7 @@ public class ControllerAop {
      */
     @Before("controllerPoint()")
     public void doBefore(JoinPoint point) {
-        Log.info("controller - before");
+//        Log.info("controller - before");
     }
 
     /**
@@ -50,7 +50,7 @@ public class ControllerAop {
         long begin = System.currentTimeMillis();
         Object result = point.proceed();
         long cost = System.currentTimeMillis() - begin;
-        Log.info(cost);
+
         return result;
     }
 
@@ -65,7 +65,7 @@ public class ControllerAop {
      */
     @After("controllerPoint()")
     public void doAfter(JoinPoint point) {
-        Log.info("controller - after");
+//        Log.info("controller - after");
     }
 
     /**
@@ -80,7 +80,7 @@ public class ControllerAop {
      */
     @AfterThrowing(pointcut = "controllerPoint()", throwing = "e")
     public void doAfterThrowing(JoinPoint point, Throwable e) {
-        Log.err("controller process failure !");
+//        Log.err("controller process failure !");
     }
 
 }
