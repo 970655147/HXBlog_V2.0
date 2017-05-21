@@ -19,12 +19,10 @@ public class RltBlogTagPO implements JSONTransferable<RltBlogTagPO, Integer> {
     private String id;
     private String blogId;
     private String tagId;
-    private String tagName;
 
-    public RltBlogTagPO(String blogId, String tagId, String tagName) {
+    public RltBlogTagPO(String blogId, String tagId) {
         this.blogId = blogId;
         this.tagId = tagId;
-        this.tagName = tagName;
     }
 
     public RltBlogTagPO() {
@@ -54,13 +52,6 @@ public class RltBlogTagPO implements JSONTransferable<RltBlogTagPO, Integer> {
         this.tagId = tagId;
     }
 
-    public String getTagName() {
-        return tagName;
-    }
-
-    public void setTagName(String tagName) {
-        this.tagName = tagName;
-    }
 
     // loadFromObject相关索引
     public static final int CAMEL = 0;
@@ -68,7 +59,6 @@ public class RltBlogTagPO implements JSONTransferable<RltBlogTagPO, Integer> {
     public static final String[] idIdxes = {"id", "id" };
     public static final String[] blogIdIdxes = {"blogId", "blog_id" };
     public static final String[] tagIdIdxes = {"tagId", "tag_id" };
-    public static final String[] tagNameIdxes = {"tagName", "tag_name" };
 
     // encapJSON相关filter
     public static final int ALL = 0;
@@ -92,7 +82,6 @@ public class RltBlogTagPO implements JSONTransferable<RltBlogTagPO, Integer> {
         this.id = Tools.getString(obj, idx, idIdxes);
         this.blogId = Tools.getString(obj, idx, blogIdIdxes);
         this.tagId = Tools.getString(obj, idx, tagIdIdxes);
-        this.tagName = Tools.getString(obj, idx, tagNameIdxes);
 
         return this;
     }
@@ -116,7 +105,7 @@ public class RltBlogTagPO implements JSONTransferable<RltBlogTagPO, Integer> {
 
         JSONObject res = new JSONObject()
                 .element(idIdxes[Tools.getIdx(idx, idIdxes)], id).element(blogIdIdxes[Tools.getIdx(idx, blogIdIdxes)], blogId).element(tagIdIdxes[Tools.getIdx(idx, tagIdIdxes)], tagId)
-                .element(tagNameIdxes[Tools.getIdx(idx, tagNameIdxes)], tagName);
+                ;
 
         if(Tools.isEmpty(filterIdxMap) || (filterIdxMap.get(BEAN_KEY) == null) ) {
             cycleDectector.pop();

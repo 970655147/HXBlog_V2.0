@@ -23,10 +23,14 @@
             <mvc:exclude-mapping path="/user/login"/>
             <bean class="com.hx.blog_v2.interceptor.LoginInterceptor"/>
         </mvc:interceptor>
+        <mvc:interceptor>
+            <mvc:mapping path="/*"/>
+            <mvc:exclude-mapping path="/user/login"/>
+            <bean class="com.hx.blog_v2.interceptor.WebContextInterceptor"/>
+        </mvc:interceptor>
     </mvc:interceptors>
 
     <mvc:resources mapping="/static/**" location="/static/" />
-
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="prefix" value="/"/>
         <property name="suffix" value=".html"/>

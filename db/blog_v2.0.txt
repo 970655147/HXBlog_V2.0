@@ -1,0 +1,160 @@
+
+blog : 
+
+{
+	"id" : "",
+	"title" : "xx",
+	"author" : "xx",
+	"coverUrl" : "xx",
+	"summary" : "xx",
+	"contentPath" : "xx",
+	"blogType" : "xx",
+	
+	"created_at" : "xx",
+	"updated_at" : "xx",
+	
+
+}
+
+blog_ex [可能频繁变动的部分]
+
+{
+	"commentCnt" : "0",
+	"viewCnt" : "26",
+	"goodCnt" : "xx",
+	"notGoodCnt" : "xx"
+}
+
+blog_tag 
+
+{
+	"id" : "xx",
+	"name" : "xx",
+	"created_at" : "xx",
+	"updated_at" : "xx"
+}
+
+blog_type
+
+{
+	"id" : "xx",
+	"name" : "xx",
+	"created_at" : "xx",
+	"updated_at" : "xx"
+}
+
+blog_comment
+
+{
+	"id" : "xx"
+	"blogId" : "xx",
+	"floorId" : "xx",
+	"commentId" : "xx",
+	
+	"name" : "xx",
+	"email" : "xx",
+	"headImgUrl" : "xx",
+	"toUser" : "xx",
+	"role" : "xx",
+	"content" : "xx",
+	
+	"requestIp" : "xx",
+	"created_at" : "xx",
+	"updated_at" : "xx"
+}
+
+
+rlt_blog_tag
+
+{
+	"id" : "xx",
+	"blogId" : "xx",
+	"tagId" : "xx"
+}
+
+blog_sense [history]
+
+{
+	"name" : "xx",
+	"email" : "xx",
+	"blogId" : "xx",
+	"isGood" : "xx",
+	"requestIp" : "xx",
+	"created_at" : "xx"
+
+}
+
+visitor [history]
+
+{
+	"name" : "xx",
+	"email" : "xx",
+	"browser" : "xx",
+	$otherInfoFrom Header | Request
+	
+	"requestIp" : "xx",
+	"created_at" : "xx"	
+}
+
+request_log
+
+{
+	"id" : "xx",
+	"url" : "xx",
+	"cost" :　"xx"
+	$others
+}
+
+exception_log
+
+{
+	"id" : "xx",
+	"requestIp" : "xx",
+	"msg" : "xx"
+}
+
+
+-----------------------------------------------------------------------------------------------
+
+CREATE DATABASE IF NOT EXISTS `blog` DEFAULT CHARSET utf8 COLLATE utf8_general_ci;
+
+CREATE TABLE `blog` (
+	`id` int(11) auto_increment, 
+	`title` varchar(256), 
+	`author` varchar(60), 
+	`blogType` int(11),
+	`coverUrl` varchar(2048), 
+	`summary` varchar(2048), 
+	`contentUrl` varchar(512), 
+	`createdAt` datetime, 	
+	`updatedAt` datetime,  
+	PRIMARY KEY (`id`) 
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8
+
+
+CREATE TABLE `blog_ex` (
+	`id` int(11) auto_increment, 
+	`blog_id` int(11), 
+	`comment_cnt` int(11), 
+	`view_cnt` int(11), 
+	`good_cnt` int(11), 
+	`not_good_cnt` int(11), 
+	PRIMARY KEY (`id`) 
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8
+
+
+CREATE TABLE `blog_comment` (
+	`id` int(11) auto_increment, 
+	`blog_id` int(11), 
+	`floor_id` int(11), 
+	`comment_id` int(11), 
+	`name` varchar(256), 
+	`email` varchar(128), 
+	`head_img_url` varchar(2048), 
+	`to_user` varchar(256), 
+	`role` varchar(60), 
+	`content` varchar(2048), 
+	`created_at` datetime, 
+	`updated_at` datetime, 
+	PRIMARY KEY (`id`) 
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8

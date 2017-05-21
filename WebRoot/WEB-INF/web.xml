@@ -31,6 +31,11 @@
         <url-pattern>/</url-pattern>
     </servlet-mapping>
 
+    <listener>
+        <display-name>checkUpdateListener</display-name>
+        <listener-class>com.hx.blog_v2.listener.InitializeContextListener</listener-class>
+    </listener>
+
     <welcome-file-list>
         <welcome-file>index.jsp</welcome-file>
         <welcome-file>index.html</welcome-file>

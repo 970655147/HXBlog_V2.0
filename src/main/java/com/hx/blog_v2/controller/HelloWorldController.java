@@ -2,8 +2,8 @@ package com.hx.blog_v2.controller;
 
 import com.hx.blog_v2.service.interf.BlogService;
 import com.hx.common.interf.common.Result;
+import com.hx.common.util.ResultUtils;
 import com.hx.json.JSONObject;
-import com.hx.log.validator.ValidateResultUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,7 +26,7 @@ public class HelloWorldController {
     public Result helloWorld() {
 
         // 因为 不是 标准的 getter 方法 不是标准的命名, 因此 得到的是 No MessageConverter
-        return ValidateResultUtils.success(new JSONObject().element("Hello", "World !")
+        return ResultUtils.success(new JSONObject().element("Hello", "World !")
                 .element("service is null", blogService == null)
         );
 //        return new Result(new JSONObject().element("Hello, ", "World !"));

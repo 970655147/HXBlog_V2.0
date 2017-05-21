@@ -32,6 +32,7 @@ public class BlogCommentPO implements JSONTransferable<BlogCommentPO, Integer> {
 
     private String createdAt;
     private String updatedAt;
+    private int deleted;
 
     public BlogCommentPO(String name, String email, String headImgUrl, String toUser, String role, String content) {
         this();
@@ -47,6 +48,7 @@ public class BlogCommentPO implements JSONTransferable<BlogCommentPO, Integer> {
         Date now = new Date();
         createdAt = DateUtils.formate(now, BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
         updatedAt = createdAt;
+        deleted = 0;
     }
 
     public String getId() {
@@ -145,6 +147,14 @@ public class BlogCommentPO implements JSONTransferable<BlogCommentPO, Integer> {
         this.updatedAt = updatedAt;
     }
 
+    public int isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(int deleted) {
+        this.deleted = deleted;
+    }
+
     // loadFromObject相关索引
     public static final int CAMEL = 0;
     public static final int UNDER_LINE = CAMEL + 1;
@@ -160,6 +170,7 @@ public class BlogCommentPO implements JSONTransferable<BlogCommentPO, Integer> {
     public static final String[] contentIdxes = {"content", "content" };
     public static final String[] createdAtIdxes = {"createdAt", "created_at" };
     public static final String[] updatedAtIdxes = {"updatedAt", "updated_at" };
+    public static final String[] deletedIdxes = {"deleted", "deleted" };
 
     // encapJSON相关filter
     public static final int ALL = 0;
@@ -192,6 +203,7 @@ public class BlogCommentPO implements JSONTransferable<BlogCommentPO, Integer> {
         this.content = Tools.optString(obj, idx, contentIdxes);
         this.createdAt = Tools.optString(obj, idx, createdAtIdxes);
         this.updatedAt = Tools.optString(obj, idx, updatedAtIdxes);
+        this.deleted = Tools.optBoolean(obj, idx, deletedIdxes) ? 1 : 0;
 
         return this;
     }
@@ -217,7 +229,8 @@ public class BlogCommentPO implements JSONTransferable<BlogCommentPO, Integer> {
                 .element(idIdxes[Tools.getIdx(idx, idIdxes)], id).element(blogIdIdxes[Tools.getIdx(idx, blogIdIdxes)], blogId).element(floorIdIdxes[Tools.getIdx(idx, floorIdIdxes)], floorId)
                 .element(commentIdIdxes[Tools.getIdx(idx, commentIdIdxes)], commentId).element(nameIdxes[Tools.getIdx(idx, nameIdxes)], name).element(emailIdxes[Tools.getIdx(idx, emailIdxes)], email)
                 .element(headImgUrlIdxes[Tools.getIdx(idx, headImgUrlIdxes)], headImgUrl).element(toUserIdxes[Tools.getIdx(idx, toUserIdxes)], toUser).element(roleIdxes[Tools.getIdx(idx, roleIdxes)], role)
-                .element(contentIdxes[Tools.getIdx(idx, contentIdxes)], content).element(createdAtIdxes[Tools.getIdx(idx, createdAtIdxes)], createdAt).element(updatedAtIdxes[Tools.getIdx(idx, updatedAtIdxes)], updatedAt);
+                .element(contentIdxes[Tools.getIdx(idx, contentIdxes)], content).element(createdAtIdxes[Tools.getIdx(idx, createdAtIdxes)], createdAt).element(updatedAtIdxes[Tools.getIdx(idx, updatedAtIdxes)], updatedAt)
+                .element(deletedIdxes[Tools.getIdx(idx, deletedIdxes)], deleted);
 
         if(Tools.isEmpty(filterIdxMap) || (filterIdxMap.get(BEAN_KEY) == null) ) {
             cycleDectector.pop();

@@ -28,7 +28,7 @@ public final class DateUtils {
      */
     public static final Set<String> VALID_PATTERNS = Tools.asSet(
             BlogConstants.FORMAT_YYYY_MM_DD, BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS,
-            BlogConstants.FORMAT_YYYY_MM
+            BlogConstants.FORMAT_YYYY_MM, BlogConstants.FORMAT_FILENAME
     );
     /**
      * 线程私有的 DateFormat
@@ -68,7 +68,7 @@ public final class DateUtils {
         }
         DateFormat dateFormat = threadLocal.get();
         if (dateFormat == null) {
-            dateFormat = new SimpleDateFormat();
+            dateFormat = new SimpleDateFormat(pattern);
             threadLocal.set(dateFormat);
         }
 

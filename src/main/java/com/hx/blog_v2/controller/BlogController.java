@@ -2,7 +2,7 @@ package com.hx.blog_v2.controller;
 
 import com.hx.blog_v2.service.interf.BlogService;
 import com.hx.common.interf.common.Result;
-import com.hx.log.validator.ValidateResultUtils;
+import com.hx.common.util.ResultUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,7 +29,7 @@ public class BlogController {
         info("get blog of " + id);
         info("blogService is null ? " + blogService == null);
 
-        return ValidateResultUtils.success("this is blog content !");
+        return ResultUtils.success("this is blog content !");
     }
 
 

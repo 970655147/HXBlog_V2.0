@@ -40,6 +40,7 @@ public class BlogPO implements JSONTransferable<BlogPO, Integer> {
     private String createdAt;
     private String createdAtMonth;
     private String updatedAt;
+    private int deleted;
 
     public BlogPO(String title, String author, String coverUrl, String blogTypeId, String summary, String contentUrl) {
         this();
@@ -56,6 +57,7 @@ public class BlogPO implements JSONTransferable<BlogPO, Integer> {
         createdAtMonth = DateUtils.formate(now, BlogConstants.FORMAT_YYYY_MM);
         createdAt = DateUtils.formate(now, BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
         updatedAt = createdAt;
+        deleted = 0;
     }
 
     public String getId() {
@@ -122,12 +124,28 @@ public class BlogPO implements JSONTransferable<BlogPO, Integer> {
         this.createdAt = createdAt;
     }
 
+    public String getCreatedAtMonth() {
+        return createdAtMonth;
+    }
+
+    public void setCreatedAtMonth(String createdAtMonth) {
+        this.createdAtMonth = createdAtMonth;
+    }
+
     public String getUpdatedAt() {
         return updatedAt;
     }
 
     public void setUpdatedAt(String updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public int isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(int deleted) {
+        this.deleted = deleted;
     }
 
     // loadFromObject相关索引
@@ -143,6 +161,7 @@ public class BlogPO implements JSONTransferable<BlogPO, Integer> {
     public static final String[] createdAtIdxes = {"createdAt", "created_at" };
     public static final String[] createdAtMonthIdxes = {"createdAtMonth", "created_at_month" };
     public static final String[] updatedAtIdxes = {"updatedAt", "updated_at" };
+    public static final String[] deletedIdxes = {"deleted", "deleted" };
 
     // encapJSON相关filter
     public static final int ALL = 0;
@@ -173,6 +192,7 @@ public class BlogPO implements JSONTransferable<BlogPO, Integer> {
         this.createdAt = Tools.optString(obj, idx, createdAtIdxes);
         this.createdAtMonth = Tools.optString(obj, idx, createdAtMonthIdxes);
         this.updatedAt = Tools.optString(obj, idx, updatedAtIdxes);
+        this.deleted = Tools.optBoolean(obj, idx, deletedIdxes) ? 1 : 0;
 
         return this;
     }
@@ -198,7 +218,7 @@ public class BlogPO implements JSONTransferable<BlogPO, Integer> {
                 .element(idIdxes[Tools.getIdx(idx, idIdxes)], id).element(titleIdxes[Tools.getIdx(idx, titleIdxes)], title).element(authorIdxes[Tools.getIdx(idx, authorIdxes)], author)
                 .element(coverUrlIdxes[Tools.getIdx(idx, coverUrlIdxes)], coverUrl).element(blogTypeIdIdxes[Tools.getIdx(idx, blogTypeIdIdxes)], blogTypeId).element(summaryIdxes[Tools.getIdx(idx, summaryIdxes)], summary)
                 .element(contentUrlIdxes[Tools.getIdx(idx, contentUrlIdxes)], contentUrl).element(createdAtIdxes[Tools.getIdx(idx, createdAtIdxes)], createdAt).element(createdAtMonthIdxes[Tools.getIdx(idx, createdAtMonthIdxes)], createdAtMonth)
-                .element(updatedAtIdxes[Tools.getIdx(idx, updatedAtIdxes)], updatedAt);
+                .element(updatedAtIdxes[Tools.getIdx(idx, updatedAtIdxes)], updatedAt).element(deletedIdxes[Tools.getIdx(idx, deletedIdxes)], deleted);
 
         if(Tools.isEmpty(filterIdxMap) || (filterIdxMap.get(BEAN_KEY) == null) ) {
             cycleDectector.pop();
