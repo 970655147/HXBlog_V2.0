@@ -9,6 +9,7 @@ import com.hx.blog_v2.service.interf.BaseServiceImpl;
 import com.hx.blog_v2.service.interf.BlogTypeService;
 import com.hx.blog_v2.util.BlogConstants;
 import com.hx.blog_v2.util.CacheContext;
+import com.hx.blog_v2.util.DateUtils;
 import com.hx.common.interf.common.Result;
 import com.hx.common.util.ResultUtils;
 import com.hx.log.util.Tools;
@@ -16,10 +17,7 @@ import com.hx.mongo.criteria.Criteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * BlogServiceImpl
@@ -44,9 +42,9 @@ public class BlogTypeServiceImpl extends BaseServiceImpl<BlogTypePO> implements 
         }
 
         BlogTypePO po = new BlogTypePO(params.getName());
-        blogTypes.put(po.getId(), po);
         try {
             blogTypeDao.save(po, BlogConstants.IDX_MANAGER_FILTER_ID.getDoLoad(), BlogConstants.IDX_MANAGER_FILTER_ID.getDoFilter());
+            blogTypes.put(po.getId(), po);
         } catch (Exception e) {
             e.printStackTrace();
             return ResultUtils.failed(Tools.errorMsg(e));
@@ -67,15 +65,18 @@ public class BlogTypeServiceImpl extends BaseServiceImpl<BlogTypePO> implements 
 
     @Override
     public Result update(BlogTypeUpdateForm params) {
-        BlogTypePO po = cacheContext.allBlogTypes().remove(params.getId());
+        BlogTypePO po = cacheContext.allBlogTypes().get(params.getId());
         if (po == null) {
             return ResultUtils.failed("该类型不存在 !");
         }
 
         po.setName(params.getName());
+        po.setUpdatedAt(DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS));
         try {
-            long matched = blogTypeDao.updateOne(Criteria.eq("id", params.getId()), Criteria.set("name", params.getName())).getMatchedCount();
-            if(matched == 0) {
+            long modified = blogTypeDao.updateOne(Criteria.eq("id", params.getId()),
+                    Criteria.set("name", po.getName()).add("updated_at", po.getUpdatedAt()))
+                    .getModifiedCount();
+            if(modified == 0) {
                 return ResultUtils.failed("该类型不存在 !");
             }
         } catch (Exception e) {
@@ -93,8 +94,9 @@ public class BlogTypeServiceImpl extends BaseServiceImpl<BlogTypePO> implements 
         }
 
         try {
-            long deleted = blogTypeDao.deleteOne(Criteria.eq("id", params.getId())).getDeletedCount();
-            if(deleted == 0) {
+            long modified = blogTypeDao.updateOne(Criteria.eq("id", params.getId()), Criteria.set("deleted", 1))
+                    .getModifiedCount();
+            if(modified == 0) {
                 return ResultUtils.failed("该类型不存在 !");
             }
         } catch (Exception e) {

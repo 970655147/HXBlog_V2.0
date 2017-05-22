@@ -36,6 +36,51 @@ layui.define(['form','upload','layer'], function(exports){
 
         return false;
     });
+
+    form.on('submit(addTypeSubmit)', function(data){
+        $.ajax({
+            url : "/admin/type/add",
+            type : "POST",
+            data : $(".layui-form").serialize(),
+            success : function (resp) {
+                if (resp.success) {
+                    addTypeConfirm = layer.alert('添加类型成功!', {
+                        closeBtn: 0,
+                        icon: 1
+                    }, function () {
+                        layer.close(addTypeConfirm)
+                        layer.close(addTypeLayer)
+                    });
+                } else {
+                    layer.alert('添加类型失败!', {icon: 5});
+                }
+            }
+        });
+        return false;
+    })
+
+    form.on('submit(addTagSubmit)', function(data){
+        $.ajax({
+            url : "/admin/tag/add",
+            type : "POST",
+            data : $(".layui-form").serialize(),
+            success : function (resp) {
+                if (resp.success) {
+                    addTypeConfirm = layer.alert('添加标签成功!', {
+                        closeBtn: 0,
+                        icon: 1
+                    }, function () {
+                        layer.close(addTypeConfirm)
+                        layer.close(addTypeLayer)
+                    });
+                } else {
+                    layer.alert('添加标签失败!', {icon: 5});
+                }
+            }
+        });
+        return false;
+    })
+
     layui.upload({
         url: '/admin/image/upload', //上传接口
         success : function(result){ //上传成功后的回调
@@ -64,42 +109,18 @@ layui.define(['form','upload','layer'], function(exports){
 
     //输出接口，主要是两个函数，一个删除一个编辑
     var dataList = {
-        editData: function (id,content) {
-            var html='';
-            html+='<form class="layui-form layui-form-pane" action="/admin/comment/reply" method="post">';
-            html+='<label class="layui-form-label" style="border: none" >评论内容:</label>';
-            html+='<textarea  style="width:87%;margin: auto;color: #000!important;"  readonly="true" class="layui-textarea layui-disabled" >'+content+'</textarea>';
-            html+='<label class="layui-form-label" style="border: none">回复内容:</label>';
-            html+='<textarea placeholder="请输入回复内容" name="content" lay-verify="required" style="width:87%;margin: auto" class="layui-textarea " ></textarea>';
-            html+='<input type="hidden" name="commentId" value="'+id+'"/>';
-            html+='<div class="layui-form-item">';
-            html+='<div class="layui-input-inline" style="margin:10px auto 0 auto;display: block;float: none;">';
-            html+='<button class="layui-btn" id="submit"  lay-submit="" lay-filter="demo1">立即提交</button>';
-            html+='<button type="reset" class="layui-btn layui-btn-primary">重置</button>';
-            html+='</div>';
-            html+='</div>';
-            html+='</form>';
-
-            layer.open({
-                type: 1,
-                skin: 'layui-layer-rim', //加上边框
-                area: '420px', //宽高
-                title:'回复评论',
-                content: html
-            });
-        },
         addTypeData:function () {
             var html='';
-            html+='<div class="layui-form layui-form-pane" >';
+            html+='<form class="layui-form layui-form-pane" action="/admin/type/add" method="post" >';
             html+='<label class="layui-form-label" style="border: none" name="content" >类别名称:</label>';
             html+='<input id="type_add_name" style="width:87%;margin: auto;color: #000!important;" name="name"  class="layui-input" >';
             html+='<div class="layui-form-item">';
             html+='<div class="layui-input-inline" style="margin:10px auto 0 auto;display: block;float: none;">';
-            html+='<button class="layui-btn" id="submit" onclick="layui.datalist.addTypePost()" lay-submit="" lay-filter="callback">添加</button>';
+            html+='<button class="layui-btn" id="submit" lay-submit="" lay-filter="addTypeSubmit">添加</button>';
             html+='<button type="reset" class="layui-btn layui-btn-primary">重置</button>';
             html+='</div>';
             html+='</div>';
-            html+='</div>';
+            html+='</form>';
             addTypeLayer = layer.open({
                 type: 1,
                 skin: 'layui-layer-rim', //加上边框
@@ -110,66 +131,23 @@ layui.define(['form','upload','layer'], function(exports){
         },
         addTagData:function () {
             var html='';
-            html+='<div class="layui-form layui-form-pane" >';
+            html+='<form class="layui-form layui-form-pane" action="/admin/tag/add" method="post >';
             html+='<label class="layui-form-label" style="border: none" name="content" >标签名称:</label>';
             html+='<input id="tag_add_name" style="width:87%;margin: auto;color: #000!important;" name="name"  class="layui-input" >';
             html+='<div class="layui-form-item">';
             html+='<div class="layui-input-inline" style="margin:10px auto 0 auto;display: block;float: none;">';
-            html+='<button class="layui-btn" id="submit" onclick="layui.datalist.addTagPost()" lay-submit="" lay-filter="callback">添加</button>';
+            html+='<button class="layui-btn" id="submit" lay-submit="" lay-filter="addTagSubmit">添加</button>';
             html+='<button type="reset" class="layui-btn layui-btn-primary">重置</button>';
             html+='</div>';
             html+='</div>';
-            html+='</div>';
+            html+='</form>';
+
             addTypeLayer = layer.open({
                 type: 1,
                 skin: 'layui-layer-rim', //加上边框
                 area: '420px', //宽高
                 title:'添加类别',
                 content: html
-            });
-        },
-        addTypePost : function() {
-            $.ajax({
-                url : "/admin/type/add",
-                type : "POST",
-                data :  {
-                    "name" : $("#type_add_name").val()
-                },
-                success : function (resp) {
-                    if (resp.success) {
-                        addTypeConfirm = layer.alert('添加类型成功!', {
-                            closeBtn: 0,
-                            icon: 1
-                        }, function () {
-                            layer.close(addTypeConfirm)
-                            layer.close(addTypeLayer)
-                        });
-                    } else {
-                        layer.alert('修改失败,该类别下存在博文!', {icon: 5});
-                    }
-                }
-            });
-        },
-        addTagPost : function() {
-            $.ajax({
-                url : "/admin/tag/add",
-                type : "POST",
-                data :  {
-                    "name" : $("#tag_add_name").val()
-                },
-                success : function (resp) {
-                    if (resp.success) {
-                        addTypeConfirm = layer.alert('添加标签成功!', {
-                            closeBtn: 0,
-                            icon: 1
-                        }, function () {
-                            layer.close(addTypeConfirm)
-                            layer.close(addTypeLayer)
-                        });
-                    } else {
-                        layer.alert('修改失败,该类别下存在博文!', {icon: 5});
-                    }
-                }
             });
         },
         toggleCheckted : function(input) {
@@ -179,6 +157,9 @@ layui.define(['form','upload','layer'], function(exports){
             } else {
                 input.addClass("layui-form-checked")
             }
+        },
+        refresh : function() {
+            window.location.href = window.location.href;
         }
     };
 

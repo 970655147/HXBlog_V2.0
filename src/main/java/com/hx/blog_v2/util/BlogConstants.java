@@ -67,6 +67,7 @@ public final class BlogConstants {
         IDX_MANAGER.putDoLoad(RequestLogPO.BEAN_KEY, RequestLogPO.UNDER_LINE);
         IDX_MANAGER.putDoLoad(RltBlogTagPO.BEAN_KEY, RltBlogTagPO.UNDER_LINE);
         IDX_MANAGER.putDoLoad(VisitorPO.BEAN_KEY, VisitorPO.UNDER_LINE);
+        IDX_MANAGER.putDoLoad(MoodPO.BEAN_KEY, MoodPO.UNDER_LINE);
 
         IDX_MANAGER.putDoFilter(BlogPO.BEAN_KEY, BlogPO.ALL);
         IDX_MANAGER.putDoFilter(BlogExPO.BEAN_KEY, BlogExPO.ALL);
@@ -78,6 +79,7 @@ public final class BlogConstants {
         IDX_MANAGER.putDoFilter(RequestLogPO.BEAN_KEY, RequestLogPO.ALL);
         IDX_MANAGER.putDoFilter(RltBlogTagPO.BEAN_KEY, RltBlogTagPO.ALL);
         IDX_MANAGER.putDoFilter(VisitorPO.BEAN_KEY, VisitorPO.ALL);
+        IDX_MANAGER.putDoFilter(MoodPO.BEAN_KEY, MoodPO.ALL);
 
         IDX_MANAGER_FILTER_ID = new IdxManager<>(IDX_MANAGER);
         IDX_MANAGER_FILTER_ID.putDoFilter(BlogPO.BEAN_KEY, BlogPO.FILTER_ID);
@@ -90,6 +92,7 @@ public final class BlogConstants {
         IDX_MANAGER_FILTER_ID.putDoFilter(RequestLogPO.BEAN_KEY, RequestLogPO.FILTER_ID);
         IDX_MANAGER_FILTER_ID.putDoFilter(RltBlogTagPO.BEAN_KEY, RltBlogTagPO.FILTER_ID);
         IDX_MANAGER_FILTER_ID.putDoFilter(VisitorPO.BEAN_KEY, VisitorPO.FILTER_ID);
+        IDX_MANAGER_FILTER_ID.putDoFilter(MoodPO.BEAN_KEY, MoodPO.FILTER_ID);
     }
 
     @Value("jdbc.driverClazz")
@@ -128,6 +131,8 @@ public final class BlogConstants {
     public static final String TABLE_REQUEST_LOG = "request_log";
     @Value("table.exception_log")
     public static final String TABLE_EXCEPTION_LOG = "exception_log";
+    @Value("table.mood")
+    public static final String TABLE_MOOD = "mood";
     @Value("table.id")
     public static final String TABLE_ID = "id";
 

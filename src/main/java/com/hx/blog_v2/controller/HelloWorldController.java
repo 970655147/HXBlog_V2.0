@@ -1,11 +1,14 @@
 package com.hx.blog_v2.controller;
 
 import com.hx.blog_v2.service.interf.BlogService;
+import com.hx.blog_v2.util.WebContext;
 import com.hx.common.interf.common.Result;
 import com.hx.common.util.ResultUtils;
 import com.hx.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -15,13 +18,14 @@ import org.springframework.web.bind.annotation.RestController;
  * @version 1.0
  * @date 5/19/2017 9:06 PM
  */
-@RestController
+@Controller
 @RequestMapping("/tests")
 public class HelloWorldController {
 
     @Autowired
     private BlogService blogService;
 
+    @ResponseBody
     @RequestMapping("/helloWorld")
     public Result helloWorld() {
 
@@ -31,6 +35,15 @@ public class HelloWorldController {
         );
 //        return new Result(new JSONObject().element("Hello, ", "World !"));
     }
+
+    @RequestMapping("/responseType")
+    public void responseType() {
+        // 不行,
+        WebContext.responseText("Hello World !");
+        // 还是不行,
+//        return "Hello World !";
+    }
+
 
 //    /**
 //     * Result

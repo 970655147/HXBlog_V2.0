@@ -10,26 +10,33 @@ import com.hx.log.util.Tools;
 import java.util.*;
 
 /**
- * 博客的类型
+ * 心情
  *
  * @author Jerry.X.He <970655147@qq.com>
  * @version 1.0
- * @date 5/20/2017 10:06 AM
+ * @date 5/22/2017 8:03 PM
  */
-public class BlogTypePO implements JSONTransferable<BlogTypePO, Integer> {
+public class MoodPO implements JSONTransferable<MoodPO, Integer> {
 
     private String id;
-    private String name;
+    private String title;
+    private String content;
     private String createdAt;
     private String updatedAt;
+    /**
+     * 是否可用
+     */
+    private int enable;
     private int deleted;
 
-    public BlogTypePO(String name) {
+    public MoodPO(String title, String content, int enable) {
         this();
-        this.name = name;
+        this.title = title;
+        this.content = content;
+        this.enable = enable;
     }
 
-    public BlogTypePO() {
+    public MoodPO() {
         Date now = new Date();
         createdAt = DateUtils.formate(now, BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
         updatedAt = createdAt;
@@ -44,12 +51,20 @@ public class BlogTypePO implements JSONTransferable<BlogTypePO, Integer> {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getTitle() {
+        return title;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public String getCreatedAt() {
@@ -68,6 +83,14 @@ public class BlogTypePO implements JSONTransferable<BlogTypePO, Integer> {
         this.updatedAt = updatedAt;
     }
 
+    public int getEnable() {
+        return enable;
+    }
+
+    public void setEnable(int enable) {
+        this.enable = enable;
+    }
+
     public int getDeleted() {
         return deleted;
     }
@@ -80,35 +103,39 @@ public class BlogTypePO implements JSONTransferable<BlogTypePO, Integer> {
     public static final int CAMEL = 0;
     public static final int UNDER_LINE = CAMEL + 1;
     public static final String[] idIdxes = {"id", "id" };
-    public static final String[] nameIdxes = {"name", "name" };
+    public static final String[] titleIdxes = {"title", "title" };
+    public static final String[] contentIdxes = {"content", "content" };
     public static final String[] createdAtIdxes = {"createdAt", "created_at" };
     public static final String[] updatedAtIdxes = {"updatedAt", "updated_at" };
-    public static final String[] deletedAtIdxes = {"deleted", "deleted" };
+    public static final String[] enableIdxes = {"enable", "enable" };
+    public static final String[] deletedIdxes = {"deleted", "deleted" };
 
     // encapJSON相关filter
     public static final int ALL = 0;
     public static final int FILTER_ID = ALL + 1;
     public static final List<Set<String>> filters = Tools.asList(Tools.asSet(""), Tools.asSet(idIdxes));
 
-    public static final String BEAN_KEY = "blogType_key";
-    public static final BlogTypePO PROTO_BEAN = new BlogTypePO();
+    public static final String BEAN_KEY = "mood_key";
+    public static final MoodPO PROTO_BEAN = new MoodPO();
 
     @Override
-    public BlogTypePO loadFromJSON(Map<String, Object> obj, Map<String, Integer> idxMap) {
+    public MoodPO loadFromJSON(Map<String, Object> obj, Map<String, Integer> idxMap) {
         return loadFromJSON(obj, idxMap, Constants.EMPTY_INIT_OBJ_FILTER );
     }
     @Override
-    public BlogTypePO loadFromJSON(Map<String, Object> obj, Map<String, Integer> idxMap, Set<String> initObjFilter) {
+    public MoodPO loadFromJSON(Map<String, Object> obj, Map<String, Integer> idxMap, Set<String> initObjFilter) {
         if(Tools.isEmpty(obj) || Tools.isEmpty(idxMap) || (idxMap.get(BEAN_KEY) == null) ) {
             return this;
         }
         int idx = idxMap.get(BEAN_KEY).intValue();
 
         this.id = Tools.getString(obj, idx, idIdxes);
-        this.name = Tools.getString(obj, idx, nameIdxes);
+        this.title = Tools.getString(obj, idx, titleIdxes);
+        this.content = Tools.getString(obj, idx, contentIdxes);
         this.createdAt = Tools.getString(obj, idx, createdAtIdxes);
         this.updatedAt = Tools.getString(obj, idx, updatedAtIdxes);
-        this.deleted = Tools.optBoolean(obj, idx, deletedAtIdxes) ? 1 : 0;
+        this.enable = Tools.optBoolean(obj, idx, enableIdxes) ? 1 : 0;
+        this.deleted = Tools.optBoolean(obj, idx, deletedIdxes) ? 1 : 0;
 
         return this;
     }
@@ -131,8 +158,9 @@ public class BlogTypePO implements JSONTransferable<BlogTypePO, Integer> {
         int idx = idxMap.get(BEAN_KEY).intValue();
 
         JSONObject res = new JSONObject()
-                .element(idIdxes[Tools.getIdx(idx, idIdxes)], id).element(nameIdxes[Tools.getIdx(idx, nameIdxes)], name).element(createdAtIdxes[Tools.getIdx(idx, createdAtIdxes)], createdAt)
-                .element(updatedAtIdxes[Tools.getIdx(idx, updatedAtIdxes)], updatedAt).element(deletedAtIdxes[Tools.getIdx(idx, deletedAtIdxes)], deleted);
+                .element(idIdxes[Tools.getIdx(idx, idIdxes)], id).element(titleIdxes[Tools.getIdx(idx, titleIdxes)], title).element(contentIdxes[Tools.getIdx(idx, contentIdxes)], content)
+                .element(createdAtIdxes[Tools.getIdx(idx, createdAtIdxes)], createdAt).element(updatedAtIdxes[Tools.getIdx(idx, updatedAtIdxes)], updatedAt).element(enableIdxes[Tools.getIdx(idx, enableIdxes)], enable)
+                .element(deletedIdxes[Tools.getIdx(idx, deletedIdxes)], deleted);
 
         if(Tools.isEmpty(filterIdxMap) || (filterIdxMap.get(BEAN_KEY) == null) ) {
             cycleDectector.pop();
@@ -145,8 +173,8 @@ public class BlogTypePO implements JSONTransferable<BlogTypePO, Integer> {
     }
 
     @Override
-    public BlogTypePO newInstance(Object... args) {
-        return new BlogTypePO();
+    public MoodPO newInstance(Object... args) {
+        return new MoodPO();
     }
     @Override
     public String id() {
@@ -161,7 +189,7 @@ public class BlogTypePO implements JSONTransferable<BlogTypePO, Integer> {
         return BEAN_KEY;
     }
     @Override
-    public BlogTypePO protoBean() {
+    public MoodPO protoBean() {
         return PROTO_BEAN;
     }
     @Override

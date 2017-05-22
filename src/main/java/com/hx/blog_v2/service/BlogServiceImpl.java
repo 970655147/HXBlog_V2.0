@@ -102,7 +102,9 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
             sqlParams.add(wrapWildcard(params.getKeywords()));
             sqlParams.add(wrapWildcard(params.getKeywords()));
         }
-        sql.append(" group by b.id ");
+        sql.append(" group by b.id limit ?, ? ");
+        sqlParams.add(page.recordOffset());
+        sqlParams.add(page.getPageSize());
 
         List<AdminBlogVO> list = jdbcTemplate.query(sql.toString(), sqlParams.toArray(), new AdminBlogVOMapper());
         encapTypeTagInfo(list);
@@ -221,6 +223,7 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
             blogDao.save(po, BlogConstants.IDX_MANAGER_FILTER_ID.getDoLoad(), BlogConstants.IDX_MANAGER_FILTER_ID.getDoFilter());
             String[] tagIds = params.getBlogTagIds().split(",");
             blogInserted = true;
+
             if (!Tools.isEmpty(tagIds)) {
                 Tools.trimAllSpaces(tagIds);
                 List<RltBlogTagPO> blogTags = new ArrayList<>(tagIds.length);
@@ -262,10 +265,17 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
      * @since 1.0
      */
     private Result update0(BlogPO po, BlogAddForm params) {
+        po.setId(params.getId());
+        po.setUpdatedAt(DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS));
+
         try {
-            po.setId(params.getId());
-            po.setUpdatedAt(DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS));
-            blogDao.updateById(po, BlogConstants.IDX_MANAGER_FILTER_ID.getDoLoad(), BlogConstants.IDX_MANAGER_FILTER_ID.getDoFilter());
+            // 对于createAt的处理 先放在这里, 等之后 HXMongo 的review[abort JSONTransferable] 之后吧,
+            long matched = blogDao.updateById(po, BlogConstants.IDX_MANAGER_FILTER_ID.getDoLoad(), BlogConstants.IDX_MANAGER_FILTER_ID.getDoFilter())
+                    .getMatchedCount();
+            if(matched == 0) {
+                return ResultUtils.failed("没有找到对应的博客 !");
+            }
+
             String[] tagIds = params.getBlogTagIds().split(",");
             if (!Tools.isEmpty(tagIds)) {
                 Tools.trimAllSpaces(tagIds);

@@ -24,7 +24,7 @@
             <bean class="com.hx.blog_v2.interceptor.LoginInterceptor"/>
         </mvc:interceptor>
         <mvc:interceptor>
-            <mvc:mapping path="/*"/>
+            <mvc:mapping path="/**"/>
             <mvc:exclude-mapping path="/user/login"/>
             <bean class="com.hx.blog_v2.interceptor.WebContextInterceptor"/>
         </mvc:interceptor>

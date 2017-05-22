@@ -120,8 +120,95 @@
             }, 500);
         }
 
+        form.on('submit(addTypeSubmit)', function(data){
+            $.ajax({
+                url : "/admin/type/add",
+                type : "POST",
+                data :  $(".layui-form").serialize(),
+                success : function (resp) {
+                    if (resp.success) {
+                        layer.alert('添加类型成功!', {
+                            closeBtn: 0,
+                            icon: 1
+                        }, function () {
+                            window.location.href = "/static/admin/blogTypeManage.html"
+                        });
+                    } else {
+                        layer.alert('添加类型失败!', {icon: 5});
+                    }
+                }
+            });
+
+            return false;
+        })
+
+        form.on('submit(updateTypeSubmit)', function(data){
+            $.ajax({
+                url : "/admin/type/update",
+                type : "POST",
+                data : $(".layui-form").serialize(),
+                success : function (resp) {
+                    if (resp.success) {
+                        layer.alert('更新类型成功!', {
+                            closeBtn: 0,
+                            icon: 1
+                        }, function () {
+                            window.location.href = "/static/admin/blogTypeManage.html"
+                        });
+                    } else {
+                        layer.alert('更新类型失败!', {icon: 5});
+                    }
+                }
+            });
+
+            return false;
+        })
+
         //输出接口，主要是两个函数，一个删除一个编辑
         var datalist = {
+            addData: function () {
+                var html = '';
+                html += '<form class="layui-form layui-form-pane" >';
+                html += '<label class="layui-form-label" style="border: none" name="content" >类别名称:</label>';
+                html += '<input id="add_name"  style="width:87%;margin: auto;color: #000!important;" name="name" lay-verify="required" class="layui-input" >';
+                html += '<div class="layui-form-item">';
+                html += '<div class="layui-input-inline" style="margin:10px auto 0 auto;display: block;float: none;">';
+                html += '<button class="layui-btn" id="submit"  lay-submit="" lay-filter="addTypeSubmit">添加</button>';
+                html += '<button type="reset" class="layui-btn layui-btn-primary">重置</button>';
+                html += '</div>';
+                html += '</div>';
+                html += '</form>';
+
+                layer.open({
+                    type: 1,
+                    skin: 'layui-layer-rim', //加上边框
+                    area: '420px', //宽高
+                    title: '添加类别',
+                    content: html
+                });
+            },
+            editData: function (id, typeName) {
+                var html = '';
+                html += '<form class="layui-form layui-form-pane" >';
+                html += '<label class="layui-form-label" style="border: none" >类别名称:</label>';
+                html += '<textarea  id="edit_name" style="width:87%;margin: auto;color: #000!important;" name="name" class="layui-textarea" lay-verify="required" >' + typeName + '</textarea>';
+                html += '<input id="edit_id" type="hidden" name="id" value="' + id + '"/>';
+                html += '<div class="layui-form-item">';
+                html += '<div class="layui-input-inline" style="margin:10px auto 0 auto;display: block;float: none;">';
+                html += '<button class="layui-btn" id="editSubmit" lay-submit="" lay-filter="updateTypeSubmit">立即提交</button>';
+                html += '<button type="reset" class="layui-btn layui-btn-primary">重置</button>';
+                html += '</div>';
+                html += '</div>';
+                html += '</form>';
+
+                layer.open({
+                    type: 1,
+                    skin: 'layui-layer-rim', //加上边框
+                    area: '420px', //宽高
+                    title: '修改类别',
+                    content: html
+                });
+            },
             deleteData: function (id) {
                 layer.confirm('您确定要删除吗？', {
                     btn: ['确定', '取消'] //按钮
@@ -148,92 +235,8 @@
                 }, function () {
 
                 });
-            },
-            editData: function (id, typeName) {
-                var html = '';
-                html += '<div class="layui-form layui-form-pane" >';
-                html += '<label class="layui-form-label" style="border: none" >类别名称:</label>';
-                html += '<textarea  id="edit_name" style="width:87%;margin: auto;color: #000!important;" name="name" class="layui-textarea" lay-verify="required" >' + typeName + '</textarea>';
-                html += '<input id="edit_id" type="hidden" name="id" value="' + id + '"/>';
-                html += '<div class="layui-form-item">';
-                html += '<div class="layui-input-inline" style="margin:10px auto 0 auto;display: block;float: none;">';
-                html += '<button class="layui-btn" id="editSubmit" onclick="layui.datalist.editTypePost()" lay-submit="" lay-filter="demo1">立即提交</button>';
-                html += '<button type="reset" class="layui-btn layui-btn-primary">重置</button>';
-                html += '</div>';
-                html += '</div>';
-                html += '</div>';
-
-                layer.open({
-                    type: 1,
-                    skin: 'layui-layer-rim', //加上边框
-                    area: '420px', //宽高
-                    title: '修改类别',
-                    content: html
-                });
-            },
-            addData: function () {
-                var html = '';
-                html += '<div class="layui-form layui-form-pane" >';
-                html += '<label class="layui-form-label" style="border: none" name="content" >类别名称:</label>';
-                html += '<input id="add_name"  style="width:87%;margin: auto;color: #000!important;" name="name" lay-verify="required" class="layui-input" >';
-                html += '<div class="layui-form-item">';
-                html += '<div class="layui-input-inline" style="margin:10px auto 0 auto;display: block;float: none;">';
-                html += '<button class="layui-btn" id="submit" onclick="layui.datalist.addTypePost()"  lay-submit="" lay-filter="demo1">添加</button>';
-                html += '<button type="reset" class="layui-btn layui-btn-primary">重置</button>';
-                html += '</div>';
-                html += '</div>';
-                html += '</div>';
-                layer.open({
-                    type: 1,
-                    skin: 'layui-layer-rim', //加上边框
-                    area: '420px', //宽高
-                    title: '添加类别',
-                    content: html
-                });
-            },
-            editTypePost : function() {
-                $.ajax({
-                    url : "/admin/type/update",
-                    type : "POST",
-                    data :  {
-                        "id" : $("#edit_id").val(),
-                        "name" : $("#edit_name").val()
-                    },
-                    success : function (resp) {
-                        if (resp.success) {
-                            layer.alert('修改成功!', {
-                                closeBtn: 0,
-                                icon: 1
-                            }, function () {
-                                window.location.href = "/static/admin/blogTypeManage.html"
-                            });
-                        } else {
-                            layer.alert('修改失败,该类别下存在博文!', {icon: 5});
-                        }
-                    }
-                });
-            },
-            addTypePost : function() {
-                $.ajax({
-                    url : "/admin/type/add",
-                    type : "POST",
-                    data :  {
-                        "name" : $("#add_name").val()
-                    },
-                    success : function (resp) {
-                        if (resp.success) {
-                            layer.alert('添加类型成功!', {
-                                closeBtn: 0,
-                                icon: 1
-                            }, function () {
-                                window.location.href = "/static/admin/blogTypeManage.html"
-                            });
-                        } else {
-                            layer.alert('修改失败,该类别下存在博文!', {icon: 5});
-                        }
-                    }
-                });
             }
+
         };
         exports('datalist', datalist);
     });

@@ -3,7 +3,9 @@ package com.hx.blog_v2.domain;
 import com.hx.blog_v2.domain.po.BlogPO;
 import com.hx.blog_v2.domain.po.BlogTagPO;
 import com.hx.blog_v2.domain.po.BlogTypePO;
+import com.hx.blog_v2.domain.po.MoodPO;
 import com.hx.blog_v2.domain.vo.AdminBlogVO;
+import com.hx.blog_v2.domain.vo.AdminMoodVO;
 import com.hx.blog_v2.domain.vo.BlogTagVO;
 import com.hx.blog_v2.domain.vo.BlogTypeVO;
 import com.hx.log.util.BeanTransferUtils;
@@ -34,8 +36,8 @@ public final class POVOTransferUtils {
      */
     public static void main(String[] args) {
 
-        Class src = BlogPO.class;
-        Class dst = AdminBlogVO.class;
+        Class src = MoodPO.class;
+        Class dst = AdminMoodVO.class;
 
         String transfer = BeanTransferUtils.transferTo(src, dst);
         String transferList = BeanTransferUtils.transferListTo(src, dst);
@@ -167,6 +169,46 @@ public final class POVOTransferUtils {
         }
         return result;
     }
+
+    // -------------------- MoodPO <-> AdminMoodVO --------------------------
+    public static AdminMoodVO moodPO2AdminMoodVO(MoodPO src) {
+        AdminMoodVO result = new AdminMoodVO();
+        result.setId(src.getId());
+        result.setContent(src.getContent());
+        result.setUpdatedAt(src.getUpdatedAt());
+        result.setTitle(src.getTitle());
+        result.setCreatedAt(src.getCreatedAt());
+        result.setEnable(src.getEnable());
+        return result;
+    }
+
+    public static Collection<AdminMoodVO> moodPO2AdminMoodVOList(Collection<MoodPO> src) {
+        List<AdminMoodVO> result = new ArrayList<>(src.size());
+        for(MoodPO ele : src) {
+            result.add(moodPO2AdminMoodVO(ele));
+        }
+        return result;
+    }
+
+    public static MoodPO adminMoodVO2MoodPO(AdminMoodVO src) {
+        MoodPO result = new MoodPO();
+        result.setId(src.getId());
+        result.setContent(src.getContent());
+        result.setUpdatedAt(src.getUpdatedAt());
+        result.setTitle(src.getTitle());
+        result.setCreatedAt(src.getCreatedAt());
+        result.setEnable(src.getEnable());
+        return result;
+    }
+
+    public static Collection<MoodPO> adminMoodVO2MoodPOList(Collection<AdminMoodVO> src) {
+        List<MoodPO> result = new ArrayList<>(src.size());
+        for(AdminMoodVO ele : src) {
+            result.add(adminMoodVO2MoodPO(ele));
+        }
+        return result;
+    }
+
 
     // -------------------- 待续 --------------------------
 

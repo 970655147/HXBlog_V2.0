@@ -6,7 +6,7 @@ Create your own skin at http://designer.videojs.com
 /* SKIN
 ================================================================================
 The main class name for all skin-specific styles. To make your own skin,
-replace all occurances of 'vjs-default-skin' with a new name. Then save your new
+replace all occurances of 'vjs-default-skin' with a new name. Then add your new
 skin name to your video tag instead of the default skin.
 e.g. <video class="video-js my-skin-name">
 */
@@ -78,7 +78,7 @@ The default control bar that is a container for most of the controls.
   display: none;
   position: absolute;
   /* Place control bar at the bottom of the player box/video.
-     If you want more margin below the control bar, save more height. */
+     If you want more margin below the control bar, add more height. */
   bottom: 0;
   /* Use left/right to stretch to 100% width of player div */
   left: 0;
@@ -622,7 +622,7 @@ that will hold the video tag or object tag for other playback methods.
 The div contains the video playback element (Flash or HTML5) and controls,
 and sets the width and height of the video.
 
-** If you want to save some kind of border/padding (e.g. a frame), or special
+** If you want to add some kind of border/padding (e.g. a frame), or special
 positioning, use another containing element. Otherwise you risk messing up
 control positioning and full window mode. **
 */

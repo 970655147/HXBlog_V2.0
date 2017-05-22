@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -65,8 +66,8 @@ public class CacheContext {
      */
     @PostConstruct
     public void init() {
-        blogTagsById = new HashMap<>();
-        blogTypesById = new HashMap<>();
+        blogTagsById = new LinkedHashMap<>();
+        blogTypesById = new LinkedHashMap<>();
         try {
             List<BlogTagPO> list = blogTagDao.findMany(Criteria.allMatch(), BlogConstants.IDX_MANAGER.getDoLoad());
             for(BlogTagPO po : list) {

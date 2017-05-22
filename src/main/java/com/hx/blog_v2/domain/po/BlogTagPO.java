@@ -22,6 +22,7 @@ public class BlogTagPO implements JSONTransferable<BlogTagPO, Integer> {
     private String name;
     private String createdAt;
     private String updatedAt;
+    private int deleted;
 
     public BlogTagPO(String name) {
         this();
@@ -31,6 +32,7 @@ public class BlogTagPO implements JSONTransferable<BlogTagPO, Integer> {
     public BlogTagPO() {
         createdAt = DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
         updatedAt = createdAt;
+        deleted = 0;
     }
 
     public String getId() {
@@ -72,6 +74,7 @@ public class BlogTagPO implements JSONTransferable<BlogTagPO, Integer> {
     public static final String[] nameIdxes = {"name", "name" };
     public static final String[] createdAtIdxes = {"createdAt", "created_at" };
     public static final String[] updatedAtIdxes = {"updatedAt", "updated_at" };
+    public static final String[] deletedAtIdxes = {"deleted", "deleted" };
 
     // encapJSON相关filter
     public static final int ALL = 0;
@@ -96,6 +99,7 @@ public class BlogTagPO implements JSONTransferable<BlogTagPO, Integer> {
         this.name = Tools.getString(obj, idx, nameIdxes);
         this.createdAt = Tools.getString(obj, idx, createdAtIdxes);
         this.updatedAt = Tools.getString(obj, idx, updatedAtIdxes);
+        this.deleted = Tools.optBoolean(obj, idx, deletedAtIdxes) ? 1 : 0;
 
         return this;
     }
@@ -119,7 +123,7 @@ public class BlogTagPO implements JSONTransferable<BlogTagPO, Integer> {
 
         JSONObject res = new JSONObject()
                 .element(idIdxes[Tools.getIdx(idx, idIdxes)], id).element(nameIdxes[Tools.getIdx(idx, nameIdxes)], name).element(createdAtIdxes[Tools.getIdx(idx, createdAtIdxes)], createdAt)
-                .element(updatedAtIdxes[Tools.getIdx(idx, updatedAtIdxes)], updatedAt);
+                .element(updatedAtIdxes[Tools.getIdx(idx, updatedAtIdxes)], updatedAt).element(deletedAtIdxes[Tools.getIdx(idx, deletedAtIdxes)], deleted);
 
         if(Tools.isEmpty(filterIdxMap) || (filterIdxMap.get(BEAN_KEY) == null) ) {
             cycleDectector.pop();
