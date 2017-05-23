@@ -31,7 +31,7 @@ layui.define([ 'layer', 'form'], function (exports) {
         var ip = returnCitySN["cip"];
         var ipName = returnCitySN["cname"];
         $.ajax({
-            url : "/user/login",
+            url : "/admin/user/login",
             type : "POST",
             data:{
                 userName : data.field.userName,

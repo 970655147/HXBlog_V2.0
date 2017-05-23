@@ -81,6 +81,12 @@ public class Test02JSONTransferable {
         infoIdxesAndDao(clazz);
     }
 
+    @Test
+    public void user() throws Exception {
+        Class clazz = UserPO.class;
+        infoIdxesAndDao(clazz);
+    }
+
 
     /**
      * 生成 JSONTransferable 需要的数据, 以及 dao

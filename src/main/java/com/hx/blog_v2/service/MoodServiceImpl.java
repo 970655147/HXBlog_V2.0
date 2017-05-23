@@ -76,9 +76,9 @@ public class MoodServiceImpl extends BaseServiceImpl<MoodPO> implements MoodServ
     @Override
     public Result update(MoodAddForm params) {
         MoodPO po = new MoodPO(params.getTitle(), params.getContent(), params.getEnable());
+
         po.setId(params.getId());
         po.setUpdatedAt(DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS));
-
         try {
             long modified = moodDao.updateById(po, BlogConstants.IDX_MANAGER_FILTER_ID.getDoLoad(), BlogConstants.IDX_MANAGER_FILTER_ID.getDoFilter())
                     .getModifiedCount();

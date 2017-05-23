@@ -17,8 +17,8 @@ import com.hx.blog_v2.util.BlogConstants;
 import com.hx.blog_v2.util.CacheContext;
 import com.hx.blog_v2.util.DateUtils;
 import com.hx.blog_v2.util.WebContext;
+import com.hx.common.interf.common.Page;
 import com.hx.common.interf.common.Result;
-import com.hx.common.result.SimplePage;
 import com.hx.common.util.ResultUtils;
 import com.hx.log.file.FileUtils;
 import com.hx.log.util.Log;
@@ -84,7 +84,7 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
     }
 
     @Override
-    public Result adminList(AdminBlogSearchForm params, SimplePage<AdminBlogVO> page) {
+    public Result adminList(AdminBlogSearchForm params, Page<AdminBlogVO> page) {
         StringBuilder sql = new StringBuilder(
                 " select b.*, GROUP_CONCAT(rlt.tag_id) as tagIds from blog as b inner join rlt_blog_tag as rlt on b.id = rlt.blog_id " +
                         " where b.deleted = 0 ");

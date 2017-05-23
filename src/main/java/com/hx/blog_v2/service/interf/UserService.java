@@ -1,10 +1,9 @@
 package com.hx.blog_v2.service.interf;
 
-import com.hx.blog_v2.domain.form.BlogTagAddForm;
-import com.hx.blog_v2.domain.form.BlogTagUpdateForm;
-import com.hx.blog_v2.domain.po.BlogTagPO;
-import com.hx.blog_v2.domain.vo.BlogTagVO;
-import com.hx.common.interf.common.Page;
+import com.hx.blog_v2.domain.form.BeanIdForm;
+import com.hx.blog_v2.domain.form.UserAddForm;
+import com.hx.blog_v2.domain.po.UserPO;
+import com.hx.blog_v2.domain.vo.AdminUserVO;
 import com.hx.common.interf.common.Result;
 import com.hx.common.result.SimplePage;
 
@@ -15,47 +14,46 @@ import com.hx.common.result.SimplePage;
  * @version 1.0
  * @date 5/20/2017 11:48 AM
  */
-public interface BlogTagService extends BaseService<BlogTagPO> {
+public interface UserService extends BaseService<UserPO> {
 
     /**
-     * 增加一个 BlogTag
+     * 增加一个 用户
      *
      * @return result
      * @author Jerry.X.He
      * @date 5/20/2017 6:21 PM
      * @since 1.0
      */
-    Result add(BlogTagAddForm params);
+    Result add(UserAddForm params);
 
     /**
-     * 获取所有的 BlogTag
+     * 搜索符合的条件的用户
      *
      * @return result
      * @author Jerry.X.He
      * @date 5/20/2017 6:21 PM
      * @since 1.0
      */
-    Result list();
+    Result adminList(SimplePage<AdminUserVO> page);
 
     /**
-     * 更新一个 BlogTag
+     * 更新给定的用户
      *
      * @return result
      * @author Jerry.X.He
      * @date 5/20/2017 6:21 PM
      * @since 1.0
      */
-    Result update(BlogTagUpdateForm params);
+    Result update(UserAddForm params);
 
     /**
-     * 移除一个 BlogTag
+     * 移除给定的用户
      *
      * @return result
      * @author Jerry.X.He
      * @date 5/20/2017 6:21 PM
      * @since 1.0
      */
-    Result remove(BlogTagUpdateForm params);
-
+    Result remove(BeanIdForm params);
 
 }

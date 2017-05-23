@@ -1,13 +1,7 @@
 package com.hx.blog_v2.domain;
 
-import com.hx.blog_v2.domain.po.BlogPO;
-import com.hx.blog_v2.domain.po.BlogTagPO;
-import com.hx.blog_v2.domain.po.BlogTypePO;
-import com.hx.blog_v2.domain.po.MoodPO;
-import com.hx.blog_v2.domain.vo.AdminBlogVO;
-import com.hx.blog_v2.domain.vo.AdminMoodVO;
-import com.hx.blog_v2.domain.vo.BlogTagVO;
-import com.hx.blog_v2.domain.vo.BlogTypeVO;
+import com.hx.blog_v2.domain.po.*;
+import com.hx.blog_v2.domain.vo.*;
 import com.hx.log.util.BeanTransferUtils;
 import com.hx.log.util.Tools;
 
@@ -36,8 +30,8 @@ public final class POVOTransferUtils {
      */
     public static void main(String[] args) {
 
-        Class src = MoodPO.class;
-        Class dst = AdminMoodVO.class;
+        Class src = UserPO.class;
+        Class dst = AdminUserVO.class;
 
         String transfer = BeanTransferUtils.transferTo(src, dst);
         String transferList = BeanTransferUtils.transferListTo(src, dst);
@@ -208,6 +202,51 @@ public final class POVOTransferUtils {
         }
         return result;
     }
+
+    // -------------------- UserPO <-> AdminUserVO --------------------------
+    public static AdminUserVO userPO2AdminUserVO(UserPO src) {
+        AdminUserVO result = new AdminUserVO();
+        result.setId(src.getId());
+        result.setCreatedAt(src.getCreatedAt());
+        result.setLastLoginIp(src.getLastLoginIp());
+        result.setLastLoginAt(src.getLastLoginAt());
+        result.setUserName(src.getUserName());
+        result.setNickName(src.getNickName());
+        result.setHeadImgUrl(src.getHeadImgUrl());
+        result.setEmail(src.getEmail());
+        result.setMotto(src.getMotto());
+        return result;
+    }
+
+    public static Collection<AdminUserVO> userPO2AdminUserVOList(Collection<UserPO> src) {
+        List<AdminUserVO> result = new ArrayList<>(src.size());
+        for(UserPO ele : src) {
+            result.add(userPO2AdminUserVO(ele));
+        }
+        return result;
+    }
+
+    public static UserPO adminUserVO2UserPO(AdminUserVO src) {
+        UserPO result = new UserPO();
+        result.setId(src.getId());
+        result.setCreatedAt(src.getCreatedAt());
+        result.setLastLoginIp(src.getLastLoginIp());
+        result.setUserName(src.getUserName());
+        result.setNickName(src.getNickName());
+        result.setHeadImgUrl(src.getHeadImgUrl());
+        result.setEmail(src.getEmail());
+        result.setMotto(src.getMotto());
+        return result;
+    }
+
+    public static Collection<UserPO> adminUserVO2UserPOList(Collection<AdminUserVO> src) {
+        List<UserPO> result = new ArrayList<>(src.size());
+        for(AdminUserVO ele : src) {
+            result.add(adminUserVO2UserPO(ele));
+        }
+        return result;
+    }
+
 
 
     // -------------------- 待续 --------------------------

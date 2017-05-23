@@ -5,12 +5,15 @@ import com.hx.blog_v2.domain.POVOTransferUtils;
 import com.hx.blog_v2.domain.form.BlogTagAddForm;
 import com.hx.blog_v2.domain.form.BlogTagUpdateForm;
 import com.hx.blog_v2.domain.po.BlogTagPO;
+import com.hx.blog_v2.domain.vo.BlogTagVO;
 import com.hx.blog_v2.service.interf.BaseServiceImpl;
 import com.hx.blog_v2.service.interf.BlogTagService;
 import com.hx.blog_v2.util.BlogConstants;
 import com.hx.blog_v2.util.CacheContext;
 import com.hx.blog_v2.util.DateUtils;
+import com.hx.common.interf.common.Page;
 import com.hx.common.interf.common.Result;
+import com.hx.common.result.SimplePage;
 import com.hx.common.util.ResultUtils;
 import com.hx.log.util.Tools;
 import com.hx.mongo.criteria.Criteria;
@@ -62,6 +65,7 @@ public class BlogTagServiceImpl extends BaseServiceImpl<BlogTagPO> implements Bl
         for (Map.Entry<String, BlogTagPO> entry : blogTypes.entrySet()) {
             all.add(entry.getValue());
         }
+
         return ResultUtils.success(POVOTransferUtils.blogTagPO2BlogTagVOList(all));
     }
 
@@ -77,7 +81,7 @@ public class BlogTagServiceImpl extends BaseServiceImpl<BlogTagPO> implements Bl
         try {
             long matched = blogTagDao.updateOne(Criteria.eq("id", params.getId()),
                     Criteria.set("name", po.getName()).add("updated_at", po.getUpdatedAt()))
-                    .getMatchedCount();
+                    .getModifiedCount();
             if(matched == 0) {
                 return ResultUtils.failed("该标签不存在 !");
             }
