@@ -105,7 +105,7 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
         sql.append(" group by b.id limit ?, ? ");
         sqlParams.add(page.recordOffset());
         sqlParams.add(page.getPageSize());
-
+        
         List<AdminBlogVO> list = jdbcTemplate.query(sql.toString(), sqlParams.toArray(), new AdminBlogVOMapper());
         encapTypeTagInfo(list);
         page.setList(list);

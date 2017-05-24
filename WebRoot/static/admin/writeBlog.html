@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <title>写博客页面</title>
-    <link href="./plugin/layui/css/layui.css" rel="stylesheet" />
 
-    <style>
-        .layui-form-selected dl{
-            z-index: 1000;
-        }
-    </style>
+    <link href="./css/writeBlog.css" rel="stylesheet"/>
+    <!-- common imports -->
+    <script type="text/javascript" src="./js/commonImport.js"></script>
+    <script type="text/javascript" src="./plugin/layui/layui.js"></script>
+
+
 </head>
 <body>
 <fieldset class="layui-elem-field layui-field-title" style="margin-top: 10px;">
@@ -54,7 +54,7 @@
             </select>
         </div>
         <div class="layui-input-inline">
-            <button class="layui-btn" type="button" onclick="layui.datalist.addTypeData()">
+            <button class="layui-btn" type="button" onclick="layui.funcs.addTypeData()">
                 <i class="layui-icon">&#xe608;</i> 添加类别
             </button>
         </div>
@@ -72,12 +72,12 @@
             </select>
         </div>
         <div class="layui-input-inline">
-            <button class="layui-btn" type="button" onclick="layui.datalist.addTagData()">
+            <button class="layui-btn" type="button" onclick="layui.funcs.addTagData()">
                 <i class="layui-icon">&#xe608;</i> 添加标签
             </button>
         </div>
         <div class="layui-input-inline">
-            <button class="layui-btn" type="button" onclick="layui.datalist.refresh()">
+            <button class="layui-btn" type="button" onclick="layui.funcs.refresh()">
                 <i class="layui-icon">&#xe608;</i> 刷新
             </button>
         </div>
@@ -112,67 +112,6 @@
 <script src="../js/jquery-1.11.1.min.js" ></script>
 <script src="../myJs/stringBuilder.js" ></script>
 <script src="../myJs/utils.js" ></script>
-
-<script type="text/javascript">
-    //实例化编辑器
-    var ue = UE.getEditor('editor');
-
-    // 加载类型, 标签
-    $.ajax({
-        url : "/composite/typeAndTags",
-        type : "GET",
-        success : function (result) {
-            if(result.success) {
-                var types = result.data.types
-                for(idx in types) {
-                    $("#blogTypeId").append("<option value='" + types[idx].id + "'> " + types[idx].name + " </option>")
-                }
-                var tags = result.data.tags
-                for(idx in tags) {
-                    $("#tagIds").append("<option value='" + tags[idx].id + "'> " + tags[idx].name + " </option>")
-                }
-            }
-        }
-    });
-
-    // 如果是更新博客的话, 更新加载博客原有的内容
-    queryParams = getParamsFromUrl(window.location.href)
-    var currentBlogId = queryParams.id
-    if(!isEmpty(currentBlogId)) {
-        $.ajax({
-            url : "/admin/blog/get",
-            type : "GET",
-            data : {"id" : currentBlogId },
-            success : function (result) {
-                if(result.success) {
-                    var blog = result.data
-                    $("[name='id']").attr("value", currentBlogId)
-                    $("[name='title']").attr("value", blog.title)
-                    $("[name='author']").attr("value", blog.author)
-                    $("[name='coverUrl']").attr("value", blog.coverUrl)
-                    $("[id='coverShow']").attr("src", blog.coverUrl)
-                    $("#blogTypeId option[value='" + blog.blogTypeId + "']").attr("selected", "")
-                    for(idx in blog.blogTagIds) {
-                        var value = blog.blogTagIds[idx]
-                        var text = blog.blogTagNames[idx]
-                        $("#tagSelected").append(
-                            '<div value=' + value + ' class="layui-unselect layui-form-checkbox layui-form-checked" lay-skin="" onclick="layui.datalist.toggleCheckted(this)" >' +
-                            '<span>' + text + '</span><i class="layui-icon"></i>' +
-                            '</div>')
-                        $("#tagIds option[value='" + value + "']").remove()
-                    }
-                    $("#tagIds option:eq(1)").attr("selected", "")
-                    $("[name='summary']").val(blog.summary)
-                    // Cannot read property 'getRange' of undefined
-                    ue.ready(function() {
-                        UE.getEditor('editor').execCommand('insertHtml', blog.content)
-                    });
-                }
-            }
-        });
-    }
-
-</script>
 
 <!-- layui规范化用法 -->
 <script type="text/javascript" >

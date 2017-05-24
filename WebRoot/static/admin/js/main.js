@@ -1,5 +1,4 @@
-﻿
-var element;
+﻿var element;
 var $;
 
 layui.define(['element', 'layer', 'util', 'pagesize', 'form'], function (exports) {
@@ -43,7 +42,7 @@ layui.define(['element', 'layer', 'util', 'pagesize', 'form'], function (exports
             return;
         }
         if (url == undefined) return;
-        switchTab($,element,title,url,id);
+        switchTab($, element, title, url, id);
 
     });
 
@@ -85,11 +84,11 @@ layui.define(['element', 'layer', 'util', 'pagesize', 'form'], function (exports
     //隐藏侧边导航
     function hideSideNav() {
         if (!ishide) {
-            $('.layui-side').animate({ left: '-200px' });
-            $('.layui-side-hide').animate({ left: '-200px' });
-            $('.layui-body').animate({ left: '0px' });
-            $('.layui-footer').animate({ left: '0px' });
-            var tishi = layer.msg('鼠标靠左自动显示菜单', { time: 1500 });
+            $('.layui-side').animate({left: '-200px'});
+            $('.layui-side-hide').animate({left: '-200px'});
+            $('.layui-body').animate({left: '0px'});
+            $('.layui-footer').animate({left: '0px'});
+            var tishi = layer.msg('鼠标靠左自动显示菜单', {time: 1500});
             layer.style(tishi, {
                 top: 'auto',
                 bottom: '50px'
@@ -97,16 +96,18 @@ layui.define(['element', 'layer', 'util', 'pagesize', 'form'], function (exports
             ishide = true;
         }
     }
+
     //显示侧边导航
     function showSideNav() {
         if (ishide) {
-            $('.layui-side').animate({ left: '0px' });
-            $('.layui-side-hide').animate({ left: '0px' });
-            $('.layui-body').animate({ left: '200px' });
-            $('.layui-footer').animate({ left: '200px' });
+            $('.layui-side').animate({left: '0px'});
+            $('.layui-side-hide').animate({left: '0px'});
+            $('.layui-body').animate({left: '200px'});
+            $('.layui-footer').animate({left: '200px'});
             ishide = false;
         }
     }
+
     runSteward();
     //管家功能
     function runSteward() {
@@ -120,7 +121,7 @@ layui.define(['element', 'layer', 'util', 'pagesize', 'form'], function (exports
 
         function getNotReplyLeaveMessage() {
             clearInterval(interval); //停止计时器
-            var content = '<p>目前有<span>'+notReplyNum+'</span>条留言未回复<a href="javascript:layer.msg(\'跳转到相应页面\')">点击查看</a></p>';
+            var content = '<p>目前有<span>' + notReplyNum + '</span>条留言未回复<a href="javascript:layer.msg(\'跳转到相应页面\')">点击查看</a></p>';
             content += '<div class="notnotice" >不再提醒</div>';
             layerSteward = layer.open({
                 type: 1,
@@ -180,7 +181,7 @@ layui.define(['element', 'layer', 'util', 'pagesize', 'form'], function (exports
 
         function getNotReplyLeaveMessage() {
             clearInterval(interval); //停止计时器
-            var content = '<p>目前有<span>'+notReplyNum+'</span>条留言未回复<a href="javascript:layer.msg(\'跳转到相应页面\')">点击查看</a></p>';
+            var content = '<p>目前有<span>' + notReplyNum + '</span>条留言未回复<a href="javascript:layer.msg(\'跳转到相应页面\')">点击查看</a></p>';
             content += '<div class="notnotice" >不再提醒</div>';
             layerSteward = layer.open({
                 type: 1,
@@ -229,7 +230,7 @@ layui.define(['element', 'layer', 'util', 'pagesize', 'form'], function (exports
     exports('main', {});
 });
 
-function switchTab($,element,title,url,id){
+function switchTab($, element, title, url, id) {
 
     var tabTitleDiv = $('.layui-tab[lay-filter=\'tab\']').children('.layui-tab-title');
     var exist = tabTitleDiv.find('li[lay-id=' + id + ']');
@@ -242,7 +243,11 @@ function switchTab($,element,title,url,id){
         setTimeout(function () {
             //模拟菜单加载
             layer.close(index);
-            element.tabAdd('tab', { title: title, content: '<iframe src="' + url + '" style="width:100%;height:100%;border:none;outline:none;"></iframe>', id: id });
+            element.tabAdd('tab', {
+                title: title,
+                content: '<iframe src="' + url + '" style="width:100%;height:100%;border:none;outline:none;"></iframe>',
+                id: id
+            });
             //切换到指定索引的卡片
             element.tabChange('tab', id);
         }, 500);

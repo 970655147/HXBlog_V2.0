@@ -1,15 +1,17 @@
 ﻿// 加载类型, 标签
 $.ajax({
-    url : "/composite/typeAndTags",
-    type : "GET",
-    success : function (result) {
-        if(result.success) {
+    url: "/composite/typeAndTags",
+    type: "GET",
+    success: function (result) {
+        if (result.success) {
             var types = result.data.types
-            for(idx in types) {
+            $("#blogTypeId").append("<option value=''> 全部 </option>")
+            for (idx in types) {
                 $("#blogTypeId").append("<option value='" + types[idx].id + "'> " + types[idx].name + " </option>")
             }
             var tags = result.data.tags
-            for(idx in tags) {
+            $("#blogTagId").append("<option value=''> 全部 </option>")
+            for (idx in tags) {
                 $("#blogTagId").append("<option value='" + tags[idx].id + "'> " + tags[idx].name + " </option>")
             }
         }
@@ -24,7 +26,7 @@ layui.define(['element', 'laypage', 'layer', 'form', 'pagesize'], function (expo
     var element = layui.element();
     var laypageId = 'pageNav';
 
-    form.on('submit(formSearch)', function(data){
+    form.on('submit(formSearch)', function (data) {
         var index = layer.load(1);
         doSearch(layer, index, 1)
         return false;
@@ -39,7 +41,7 @@ layui.define(['element', 'laypage', 'layer', 'form', 'pagesize'], function (expo
         setTimeout(doSearch(layer, index, 1), 500);
     }
 
-    function doSearch(layer, index, pageNow)  {
+    function doSearch(layer, index, pageNow) {
         layer.close(index);
         var params = $("#blogSearchForm").serialize()
         params.pageNow = pageNow
@@ -50,7 +52,7 @@ layui.define(['element', 'laypage', 'layer', 'form', 'pagesize'], function (expo
             type: "GET",
             data: params,
             success: function (resp) {
-                if(resp.success) {
+                if (resp.success) {
                     var html = '';
                     for (var i in resp.data.list) {
                         var item = resp.data.list[i];
@@ -62,8 +64,8 @@ layui.define(['element', 'laypage', 'layer', 'form', 'pagesize'], function (expo
                         html += '<td>' + item.createdAt + '</td>';
                         html += '<td>' + item.blogTypeName + '</td>';
                         html += '<td>' + item.blogTagNames + '</td>';
-                        html += '<td><button class="layui-btn layui-btn-small layui-btn-normal" onclick="layui.datalist.editData(' + item.id + ')"><i class="layui-icon">&#xe642;</i></button></td>';
-                        html += '<td><button class="layui-btn layui-btn-small layui-btn-danger" onclick="layui.datalist.deleteData(' + item.id + ')"><i class="layui-icon">&#xe640;</i></button></td>';
+                        html += '<td><button class="layui-btn layui-btn-small layui-btn-normal" onclick="layui.funcs.editData(' + item.id + ')"><i class="layui-icon">&#xe642;</i></button></td>';
+                        html += '<td><button class="layui-btn layui-btn-small layui-btn-danger" onclick="layui.funcs.deleteData(' + item.id + ')"><i class="layui-icon">&#xe640;</i></button></td>';
                         html += '</tr>';
                     }
                     $('#dataContent').html(html);
@@ -98,14 +100,17 @@ layui.define(['element', 'laypage', 'layer', 'form', 'pagesize'], function (expo
     }
 
     //输出接口，主要是两个函数，一个删除一个编辑
-    var datalist = {
+    var funcs = {
+        editData: function (id) {
+            parent.switchTab(parent.$, parent.element, '修改博客', '/static/admin/writeBlog.html?id=' + id, 'Blog' + id);
+        },
         deleteData: function (id) {
             layer.confirm('同时会删除对应评论，确定删除？', {
                 btn: ['确定', '取消'] //按钮
             }, function () {
                 $.ajax({
                     url: '/admin/blog/remove',
-                    data: {"id" : id },
+                    data: {"id": id},
                     type: 'POST',
                     success: function (result) {
                         if (result.success) {
@@ -113,7 +118,7 @@ layui.define(['element', 'laypage', 'layer', 'form', 'pagesize'], function (expo
                                 closeBtn: 0,
                                 icon: 1
                             }, function () {
-                                window.location.href = "/static/admin/blogManage.html"
+                                location.reload()
                             });
                         } else {
                             layer.alert('删除失败!', {icon: 5});
@@ -123,10 +128,7 @@ layui.define(['element', 'laypage', 'layer', 'form', 'pagesize'], function (expo
             }, function () {
 
             });
-        },
-        editData: function (id) {
-            parent.switchTab(parent.$, parent.element, '修改博客', '/static/admin/writeBlog.html?id=' + id, 'Blog' + id);
         }
     };
-    exports('datalist', datalist);
+    exports('funcs', funcs);
 });

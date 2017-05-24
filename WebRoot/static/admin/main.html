@@ -3,16 +3,17 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8"/>
-    <title>DB' BLOG后台管理系统</title>
+    <title>HXBlog_V2.0 后台管理系统</title>
+
     <link href="./images/blog.ico" rel="icon" type="image/x-icon">
-    <!-- animate.css -->
     <link href="./css/animate.min.css" rel="stylesheet"/>
-    <!-- layui.css -->
-    <link href="./plugin/layui/css/layui.css" rel="stylesheet"/>
-    <!-- font-awesome.css -->
     <link href="./plugin/font-awesome/css/font-awesome.min.css" rel="stylesheet"/>
-    <!-- 本页样式 -->
     <link href="./css/main.css" rel="stylesheet"/>
+
+    <!-- common imports -->
+    <script type="text/javascript" src="./js/commonImport.js"></script>
+    <script type="text/javascript" src="./plugin/layui/layui.js"></script>
+
 </head>
 
 <body>
@@ -27,7 +28,7 @@
         </div>
         <ul class="ht-nav">
             <li class="ht-nav-item">
-                <a target="_blank" href="http://www.dblearn.top">前台入口</a>
+                <a target="_blank" href="http://www.baid.com">前台入口</a>
             </li>
             <li class="ht-nav-item">
                 <a href="javascript:;" id="individuation"><i class="fa fa-tasks fa-fw" style="padding-right:5px;"></i>个性化</a>
@@ -48,43 +49,29 @@
                     <a href="javascript:;"><i class="fa fa-file-text"></i>博客管理</a>
                     <dl class="layui-nav-child">
                         <dd><a href="javascript:;" data-url="/static/admin/writeBlog.html" data-id="1">写博客</a></dd>
-                        <dd><a href="javascript:;" data-url="/static/admin/blogManage.html" data-id="2">博客信息管理</a></dd>
-                    </dl>
-                </li>
-                <li class="layui-nav-item">
-                    <a href="javascript:;"><i class="fa fa-commenting-o"></i>评论建议管理</a>
-                    <dl class="layui-nav-child">
-                        <dd><a href="javascript:;" data-url="/admin/commentManage" data-id="3">评论管理</a></dd>
-                        <dd><a href="javascript:;" data-url="/admin/blogAdviceManage" data-id="4">建议管理</a></dd>
-                    </dl>
-                </li>
-                <li class="layui-nav-item">
-                    <a href="javascript:;"><i class="fa fa-heart"></i>点点滴滴管理</a>
-                    <dl class="layui-nav-child">
-                        <dd><a href="javascript:;" data-url="/static/admin/timeLineManage.html" data-id="5">时光轴管理</a></dd>
-                        <dd><a href="javascript:;" data-url="/admin/timeLineManage" data-id="6">照片墙管理</a></dd>
+                        <dd><a href="javascript:;" data-url="/static/admin/blogManagement.html" data-id="2">博客信息管理</a></dd>
+                        <dd><a href="javascript:;" data-url="/admin/commentManagement.html" data-id="3">评论管理</a></dd>
                     </dl>
                 </li>
                 <li class="layui-nav-item">
                     <a href="javascript:;"><i class="fa fa-pencil-square-o"></i>标签类别管理</a>
                     <dl class="layui-nav-child">
-                        <dd><a href="javascript:;" data-url="/static/admin/blogTagManage.html" data-id="7">博客标签管理</a></dd>
-                        <dd><a href="javascript:;" data-url="/static/admin/blogTypeManage.html" data-id="8">博客类别管理</a></dd>
+                        <dd><a href="javascript:;" data-url="/static/admin/blogTagManagement.html" data-id="7">博客标签管理</a></dd>
+                        <dd><a href="javascript:;" data-url="/static/admin/blogTypeManagement.html" data-id="8">博客类别管理</a></dd>
                     </dl>
                 </li>
                 <li class="layui-nav-item">
                     <a href="javascript:;"><i class="fa fa-info-circle"></i>网站信息管理</a>
                     <dl class="layui-nav-child">
-                        <dd><a href="javascript:;" data-url="/admin/linkManage" data-id="9">友情链接管理</a></dd>
-                        <dd><a href="javascript:;" data-url="/admin/signatureManage" data-id="10">博客签名管理</a></dd>
-                        <dd><a href="javascript:;" data-url="/admin/mottoManage" data-id="11">博客鸡汤管理</a></dd>
+                        <dd><a href="javascript:;" data-url="/static/admin/linksManagement.html" data-id="9">友情链接管理</a></dd>
+                        <dd><a href="javascript:;" data-url="/static/admin/moodsManagement.html" data-id="5">心情管理</a></dd>
                     </dl>
                 </li>
                 <li class="layui-nav-item">
                     <a href="javascript:;"><i class="fa fa-cog"></i>系统管理</a>
                     <dl class="layui-nav-child">
-                        <dd><a href="javascript:;" data-url="/static/admin/accountManage.html" data-id="12">账号管理</a></dd>
-                        <dd><a href="javascript:;" data-url="/admin/adminManage" data-id="12">修改账号密码</a></dd>
+                        <dd><a href="javascript:;" data-url="/static/admin/accountManagement.html" data-id="12">账号管理</a></dd>
+                        <dd><a href="javascript:;" data-url="/static/admin/accountPwdManagement.html" data-id="12">修改账号密码</a></dd>
                         <dd><a href="javascript:;" onclick="refreshSystem()">刷新系统缓存</a></dd>
                     </dl>
                 </li>
@@ -148,7 +135,7 @@
     </div>
     <!--底部信息-->
     <div class="layui-footer">
-        <p style="line-height:44px;text-align:center;">DB'S BLOG后台管理系统</p>
+        <p style="line-height:44px;text-align:center;">HXBlog_V2.0 后台管理系统</p>
     </div>
     <!--个性化设置-->
     <div class="individuation animated flipOutY layui-hide">
@@ -183,15 +170,16 @@
     </div>
 </div>
 
-<!-- layui.js -->
-<script src="./plugin/layui/layui.js"></script>
 <!-- layui规范化用法 -->
 <script type="text/javascript">
+    var notReplyNum = 3;
+
     layui.config({
         base: './js/'
     }).use('main');
-    var notReplyNum = 3;
+</script>
 
+<script type="text/javascript" >
     function refreshSystem() {
         $.ajax({
             url: "/admin/system/flushCache",

@@ -30,8 +30,8 @@ public final class POVOTransferUtils {
      */
     public static void main(String[] args) {
 
-        Class src = UserPO.class;
-        Class dst = AdminUserVO.class;
+        Class src = LinkPO.class;
+        Class dst = AdminLinkVO.class;
 
         String transfer = BeanTransferUtils.transferTo(src, dst);
         String transferList = BeanTransferUtils.transferListTo(src, dst);
@@ -247,6 +247,48 @@ public final class POVOTransferUtils {
         return result;
     }
 
+    // -------------------- UserPO <-> AdminUserVO --------------------------
+    public static AdminLinkVO linkPO2AdminLinkVO(LinkPO src) {
+        AdminLinkVO result = new AdminLinkVO();
+        result.setName(src.getName());
+        result.setId(src.getId());
+        result.setUpdatedAt(src.getUpdatedAt());
+        result.setCreatedAt(src.getCreatedAt());
+        result.setEnable(src.getEnable());
+        result.setUrl(src.getUrl());
+        result.setDesc(src.getDesc());
+        result.setSort(src.getSort());
+        return result;
+    }
+
+    public static Collection<AdminLinkVO> linkPO2AdminLinkVOList(Collection<LinkPO> src) {
+        List<AdminLinkVO> result = new ArrayList<>(src.size());
+        for(LinkPO ele : src) {
+            result.add(linkPO2AdminLinkVO(ele));
+        }
+        return result;
+    }
+
+    public static LinkPO adminLinkVO2LinkPO(AdminLinkVO src) {
+        LinkPO result = new LinkPO();
+        result.setName(src.getName());
+        result.setId(src.getId());
+        result.setUpdatedAt(src.getUpdatedAt());
+        result.setCreatedAt(src.getCreatedAt());
+        result.setEnable(src.getEnable());
+        result.setUrl(src.getUrl());
+        result.setDesc(src.getDesc());
+        result.setSort(src.getSort());
+        return result;
+    }
+
+    public static Collection<LinkPO> adminLinkVO2LinkPOList(Collection<AdminLinkVO> src) {
+        List<LinkPO> result = new ArrayList<>(src.size());
+        for(AdminLinkVO ele : src) {
+            result.add(adminLinkVO2LinkPO(ele));
+        }
+        return result;
+    }
 
 
     // -------------------- 待续 --------------------------
