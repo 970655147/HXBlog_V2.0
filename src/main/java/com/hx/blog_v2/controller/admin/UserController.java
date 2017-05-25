@@ -2,11 +2,8 @@ package com.hx.blog_v2.controller.admin;
 
 import com.hx.blog_v2.domain.form.BeanIdForm;
 import com.hx.blog_v2.domain.form.LoginForm;
-import com.hx.blog_v2.domain.form.MoodAddForm;
-import com.hx.blog_v2.domain.form.UserAddForm;
-import com.hx.blog_v2.domain.vo.AdminMoodVO;
+import com.hx.blog_v2.domain.form.UserSaveForm;
 import com.hx.blog_v2.domain.vo.AdminUserVO;
-import com.hx.blog_v2.service.interf.MoodService;
 import com.hx.blog_v2.service.interf.UserService;
 import com.hx.common.interf.common.Result;
 import com.hx.common.result.SimplePage;
@@ -31,7 +28,7 @@ public class UserController {
     private UserService userService;
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public Result add(UserAddForm params) {
+    public Result add(UserSaveForm params) {
 
         return userService.add(params);
     }
@@ -44,7 +41,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST)
-    public Result update(UserAddForm params) {
+    public Result update(UserSaveForm params) {
 
         return userService.update(params);
     }

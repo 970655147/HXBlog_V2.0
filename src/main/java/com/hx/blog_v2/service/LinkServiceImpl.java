@@ -1,19 +1,13 @@
 package com.hx.blog_v2.service;
 
 import com.hx.blog_v2.dao.interf.LinkDao;
-import com.hx.blog_v2.dao.interf.MoodDao;
 import com.hx.blog_v2.domain.form.BeanIdForm;
-import com.hx.blog_v2.domain.form.LinkAddForm;
-import com.hx.blog_v2.domain.form.MoodAddForm;
+import com.hx.blog_v2.domain.form.LinkSaveForm;
 import com.hx.blog_v2.domain.mapper.AdminLinkVOMapper;
-import com.hx.blog_v2.domain.mapper.AdminMoodVOMapper;
 import com.hx.blog_v2.domain.po.LinkPO;
-import com.hx.blog_v2.domain.po.MoodPO;
 import com.hx.blog_v2.domain.vo.AdminLinkVO;
-import com.hx.blog_v2.domain.vo.AdminMoodVO;
 import com.hx.blog_v2.service.interf.BaseServiceImpl;
 import com.hx.blog_v2.service.interf.LinkService;
-import com.hx.blog_v2.service.interf.MoodService;
 import com.hx.blog_v2.util.BlogConstants;
 import com.hx.blog_v2.util.DateUtils;
 import com.hx.common.interf.common.Result;
@@ -44,7 +38,7 @@ public class LinkServiceImpl extends BaseServiceImpl<LinkPO> implements LinkServ
     private JdbcTemplate jdbcTemplate;
 
     @Override
-    public Result add(LinkAddForm params) {
+    public Result add(LinkSaveForm params) {
         LinkPO po = new LinkPO(params.getName(), params.getDesc(), params.getUrl(), params.getSort(), params.getEnable());
 
         try {
@@ -67,7 +61,7 @@ public class LinkServiceImpl extends BaseServiceImpl<LinkPO> implements LinkServ
     }
 
     @Override
-    public Result update(LinkAddForm params) {
+    public Result update(LinkSaveForm params) {
         LinkPO po = new LinkPO(params.getName(), params.getDesc(), params.getUrl(), params.getSort(), params.getEnable());
 
         po.setId(params.getId());
@@ -87,8 +81,11 @@ public class LinkServiceImpl extends BaseServiceImpl<LinkPO> implements LinkServ
 
     @Override
     public Result remove(BeanIdForm params) {
+        String updatedAt = DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
         try {
-            long deleted = linkDao.updateOne(Criteria.eq("id", params.getId()), Criteria.set("deleted", "1")).getModifiedCount();
+            long deleted = linkDao.updateOne(Criteria.eq("id", params.getId()),
+                    Criteria.set("deleted", "1").add("updated_at", updatedAt)
+            ).getModifiedCount();
             if (deleted == 0) {
                 return ResultUtils.failed("连接[" + params.getId() + "]不存在 !");
             }

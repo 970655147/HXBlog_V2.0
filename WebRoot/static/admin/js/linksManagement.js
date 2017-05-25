@@ -86,14 +86,14 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
             data : $(".layui-form").serialize(),
             success : function (result) {
                 if(result.success) {
-                    layer.alert('添加有情连接成功!', {
+                    layer.alert('添加友情链接成功!', {
                         closeBtn: 0,
                         icon: 1
                     }, function () {
                         location.reload()
                     });
                 } else {
-                    layer.alert('添加心情失败 !', {icon: 5});
+                    layer.alert('添加友情链接失败 !', {icon: 5});
                 }
             }
         });

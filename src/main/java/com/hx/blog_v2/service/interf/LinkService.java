@@ -1,7 +1,7 @@
 package com.hx.blog_v2.service.interf;
 
 import com.hx.blog_v2.domain.form.BeanIdForm;
-import com.hx.blog_v2.domain.form.LinkAddForm;
+import com.hx.blog_v2.domain.form.LinkSaveForm;
 import com.hx.blog_v2.domain.po.LinkPO;
 import com.hx.blog_v2.domain.vo.AdminLinkVO;
 import com.hx.common.interf.common.Result;
@@ -24,7 +24,7 @@ public interface LinkService extends BaseService<LinkPO> {
      * @date 5/20/2017 6:21 PM
      * @since 1.0
      */
-    Result add(LinkAddForm params);
+    Result add(LinkSaveForm params);
 
     /**
      * 搜索符合的条件的心情列表
@@ -44,7 +44,7 @@ public interface LinkService extends BaseService<LinkPO> {
      * @date 5/20/2017 6:21 PM
      * @since 1.0
      */
-    Result update(LinkAddForm params);
+    Result update(LinkSaveForm params);
 
     /**
      * 移除给定的心情

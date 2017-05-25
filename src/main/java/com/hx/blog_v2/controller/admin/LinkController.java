@@ -1,7 +1,7 @@
 package com.hx.blog_v2.controller.admin;
 
 import com.hx.blog_v2.domain.form.BeanIdForm;
-import com.hx.blog_v2.domain.form.LinkAddForm;
+import com.hx.blog_v2.domain.form.LinkSaveForm;
 import com.hx.blog_v2.domain.vo.AdminLinkVO;
 import com.hx.blog_v2.service.interf.LinkService;
 import com.hx.common.interf.common.Result;
@@ -26,7 +26,7 @@ public class LinkController {
     private LinkService linkService;
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public Result add(LinkAddForm params) {
+    public Result add(LinkSaveForm params) {
 
         return linkService.add(params);
     }
@@ -39,7 +39,7 @@ public class LinkController {
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST)
-    public Result update(LinkAddForm params) {
+    public Result update(LinkSaveForm params) {
 
         return linkService.update(params);
     }

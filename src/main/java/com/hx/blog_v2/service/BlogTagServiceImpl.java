@@ -2,18 +2,14 @@ package com.hx.blog_v2.service;
 
 import com.hx.blog_v2.dao.interf.BlogTagDao;
 import com.hx.blog_v2.domain.POVOTransferUtils;
-import com.hx.blog_v2.domain.form.BlogTagAddForm;
-import com.hx.blog_v2.domain.form.BlogTagUpdateForm;
+import com.hx.blog_v2.domain.form.BlogTagSaveForm;
 import com.hx.blog_v2.domain.po.BlogTagPO;
-import com.hx.blog_v2.domain.vo.BlogTagVO;
 import com.hx.blog_v2.service.interf.BaseServiceImpl;
 import com.hx.blog_v2.service.interf.BlogTagService;
 import com.hx.blog_v2.util.BlogConstants;
 import com.hx.blog_v2.util.CacheContext;
 import com.hx.blog_v2.util.DateUtils;
-import com.hx.common.interf.common.Page;
 import com.hx.common.interf.common.Result;
-import com.hx.common.result.SimplePage;
 import com.hx.common.util.ResultUtils;
 import com.hx.log.util.Tools;
 import com.hx.mongo.criteria.Criteria;
@@ -41,7 +37,7 @@ public class BlogTagServiceImpl extends BaseServiceImpl<BlogTagPO> implements Bl
     private CacheContext cacheContext;
 
     @Override
-    public Result add(BlogTagAddForm params) {
+    public Result add(BlogTagSaveForm params) {
         Map<String, BlogTagPO> blogTypes = cacheContext.allBlogTags();
         if (contains(blogTypes, params.getName())) {
             return ResultUtils.failed("该标签已经存在 !");
@@ -70,7 +66,7 @@ public class BlogTagServiceImpl extends BaseServiceImpl<BlogTagPO> implements Bl
     }
 
     @Override
-    public Result update(BlogTagUpdateForm params) {
+    public Result update(BlogTagSaveForm params) {
         BlogTagPO po = cacheContext.allBlogTags().get(params.getId());
         if (po == null) {
             return ResultUtils.failed("该标签不存在 !");
@@ -82,7 +78,7 @@ public class BlogTagServiceImpl extends BaseServiceImpl<BlogTagPO> implements Bl
             long matched = blogTagDao.updateOne(Criteria.eq("id", params.getId()),
                     Criteria.set("name", po.getName()).add("updated_at", po.getUpdatedAt()))
                     .getModifiedCount();
-            if(matched == 0) {
+            if (matched == 0) {
                 return ResultUtils.failed("该标签不存在 !");
             }
         } catch (Exception e) {
@@ -93,16 +89,18 @@ public class BlogTagServiceImpl extends BaseServiceImpl<BlogTagPO> implements Bl
     }
 
     @Override
-    public Result remove(BlogTagUpdateForm params) {
+    public Result remove(BlogTagSaveForm params) {
         BlogTagPO po = cacheContext.allBlogTags().remove(params.getId());
         if (po == null) {
             return ResultUtils.failed("该标签不存在 !");
         }
 
+        String updatedAt = DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
         try {
-            long deleted = blogTagDao.updateOne(Criteria.eq("id", params.getId()), Criteria.set("deleted", 1))
-                    .getModifiedCount();
-            if(deleted == 0) {
+            long deleted = blogTagDao.updateOne(Criteria.eq("id", params.getId()),
+                    Criteria.set("deleted", 1).add("updated_at", updatedAt)
+            ).getModifiedCount();
+            if (deleted == 0) {
                 return ResultUtils.failed("该标签不存在 !");
             }
         } catch (Exception e) {

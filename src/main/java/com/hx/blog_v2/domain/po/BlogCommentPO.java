@@ -22,6 +22,7 @@ public class BlogCommentPO implements JSONTransferable<BlogCommentPO, Integer> {
     private String blogId;
     private String floorId;
     private String commentId;
+    private String parentCommentId;
 
     private String name;
     private String email;
@@ -81,6 +82,14 @@ public class BlogCommentPO implements JSONTransferable<BlogCommentPO, Integer> {
 
     public void setCommentId(String commentId) {
         this.commentId = commentId;
+    }
+
+    public String getParentCommentId() {
+        return parentCommentId;
+    }
+
+    public void setParentCommentId(String parentCommentId) {
+        this.parentCommentId = parentCommentId;
     }
 
     public String getName() {
@@ -162,6 +171,7 @@ public class BlogCommentPO implements JSONTransferable<BlogCommentPO, Integer> {
     public static final String[] blogIdIdxes = {"blogId", "blog_id" };
     public static final String[] floorIdIdxes = {"floorId", "floor_id" };
     public static final String[] commentIdIdxes = {"commentId", "comment_id" };
+    public static final String[] parentCommentIdIdxes = {"parentCommentId", "parent_comment_id" };
     public static final String[] nameIdxes = {"name", "name" };
     public static final String[] emailIdxes = {"email", "email" };
     public static final String[] headImgUrlIdxes = {"headImgUrl", "head_img_url" };
@@ -195,6 +205,7 @@ public class BlogCommentPO implements JSONTransferable<BlogCommentPO, Integer> {
         this.blogId = Tools.optString(obj, idx, blogIdIdxes);
         this.floorId = Tools.optString(obj, idx, floorIdIdxes);
         this.commentId = Tools.optString(obj, idx, commentIdIdxes);
+        this.parentCommentId = Tools.optString(obj, idx, parentCommentIdIdxes);
         this.name = Tools.optString(obj, idx, nameIdxes);
         this.email = Tools.optString(obj, idx, emailIdxes);
         this.headImgUrl = Tools.optString(obj, idx, headImgUrlIdxes);
@@ -230,7 +241,7 @@ public class BlogCommentPO implements JSONTransferable<BlogCommentPO, Integer> {
                 .element(commentIdIdxes[Tools.getIdx(idx, commentIdIdxes)], commentId).element(nameIdxes[Tools.getIdx(idx, nameIdxes)], name).element(emailIdxes[Tools.getIdx(idx, emailIdxes)], email)
                 .element(headImgUrlIdxes[Tools.getIdx(idx, headImgUrlIdxes)], headImgUrl).element(toUserIdxes[Tools.getIdx(idx, toUserIdxes)], toUser).element(roleIdxes[Tools.getIdx(idx, roleIdxes)], role)
                 .element(contentIdxes[Tools.getIdx(idx, contentIdxes)], content).element(createdAtIdxes[Tools.getIdx(idx, createdAtIdxes)], createdAt).element(updatedAtIdxes[Tools.getIdx(idx, updatedAtIdxes)], updatedAt)
-                .element(deletedIdxes[Tools.getIdx(idx, deletedIdxes)], deleted);
+                .element(deletedIdxes[Tools.getIdx(idx, deletedIdxes)], deleted).element(parentCommentIdIdxes[Tools.getIdx(idx, parentCommentIdIdxes)], parentCommentId);
 
         if(Tools.isEmpty(filterIdxMap) || (filterIdxMap.get(BEAN_KEY) == null) ) {
             cycleDectector.pop();

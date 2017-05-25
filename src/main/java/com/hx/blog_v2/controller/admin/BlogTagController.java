@@ -1,11 +1,7 @@
 package com.hx.blog_v2.controller.admin;
 
-import com.hx.blog_v2.domain.form.BlogTagAddForm;
-import com.hx.blog_v2.domain.form.BlogTagUpdateForm;
-import com.hx.blog_v2.domain.form.BlogTypeAddForm;
-import com.hx.blog_v2.domain.form.BlogTypeUpdateForm;
+import com.hx.blog_v2.domain.form.BlogTagSaveForm;
 import com.hx.blog_v2.service.interf.BlogTagService;
-import com.hx.blog_v2.service.interf.BlogTypeService;
 import com.hx.common.interf.common.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,20 +24,20 @@ public class BlogTagController {
 
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public Result add(BlogTagAddForm params) {
+    public Result add(BlogTagSaveForm params) {
 
 
         return blogTagService.add(params);
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST)
-    public Result update(BlogTagUpdateForm params) {
+    public Result update(BlogTagSaveForm params) {
 
         return blogTagService.update(params);
     }
 
     @RequestMapping(value = "/remove", method = RequestMethod.POST)
-    public Result remove(BlogTagUpdateForm params) {
+    public Result remove(BlogTagSaveForm params) {
 
         return blogTagService.remove(params);
     }

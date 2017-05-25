@@ -30,8 +30,8 @@ public final class POVOTransferUtils {
      */
     public static void main(String[] args) {
 
-        Class src = LinkPO.class;
-        Class dst = AdminLinkVO.class;
+        Class src = BlogCommentPO.class;
+        Class dst = CommentVO.class;
 
         String transfer = BeanTransferUtils.transferTo(src, dst);
         String transferList = BeanTransferUtils.transferListTo(src, dst);
@@ -286,6 +286,104 @@ public final class POVOTransferUtils {
         List<LinkPO> result = new ArrayList<>(src.size());
         for(AdminLinkVO ele : src) {
             result.add(adminLinkVO2LinkPO(ele));
+        }
+        return result;
+    }
+
+    // -------------------- BlogCommentPO <-> AdminCommentVO --------------------------
+    public static AdminCommentVO blogCommentPO2AdminCommentVO(BlogCommentPO src) {
+        AdminCommentVO result = new AdminCommentVO();
+        result.setName(src.getName());
+        result.setId(src.getId());
+        result.setContent(src.getContent());
+        result.setCreatedAt(src.getCreatedAt());
+        result.setHeadImgUrl(src.getHeadImgUrl());
+        result.setEmail(src.getEmail());
+        result.setRole(src.getRole());
+        result.setToUser(src.getToUser());
+        result.setCommentId(src.getCommentId());
+        result.setBlogId(src.getBlogId());
+        result.setFloorId(src.getFloorId());
+        return result;
+    }
+
+    public static Collection<AdminCommentVO> blogCommentPO2AdminCommentVOList(Collection<BlogCommentPO> src) {
+        List<AdminCommentVO> result = new ArrayList<>(src.size());
+        for(BlogCommentPO ele : src) {
+            result.add(blogCommentPO2AdminCommentVO(ele));
+        }
+        return result;
+    }
+
+    public static BlogCommentPO adminCommentVO2BlogCommentPO(AdminCommentVO src) {
+        BlogCommentPO result = new BlogCommentPO();
+        result.setName(src.getName());
+        result.setId(src.getId());
+        result.setContent(src.getContent());
+        result.setCreatedAt(src.getCreatedAt());
+        result.setHeadImgUrl(src.getHeadImgUrl());
+        result.setEmail(src.getEmail());
+        result.setRole(src.getRole());
+        result.setToUser(src.getToUser());
+        result.setCommentId(src.getCommentId());
+        result.setBlogId(src.getBlogId());
+        result.setFloorId(src.getFloorId());
+        return result;
+    }
+
+    public static Collection<BlogCommentPO> adminCommentVO2BlogCommentPOList(Collection<AdminCommentVO> src) {
+        List<BlogCommentPO> result = new ArrayList<>(src.size());
+        for(AdminCommentVO ele : src) {
+            result.add(adminCommentVO2BlogCommentPO(ele));
+        }
+        return result;
+    }
+
+    // -------------------- BlogCommentPO <-> CommentVO --------------------------
+    public static CommentVO blogCommentPO2CommentVO(BlogCommentPO src) {
+        CommentVO result = new CommentVO();
+        result.setName(src.getName());
+        result.setId(src.getId());
+        result.setContent(src.getContent());
+        result.setCommentId(src.getCommentId());
+        result.setEmail(src.getEmail());
+        result.setToUser(src.getToUser());
+        result.setBlogId(src.getBlogId());
+        result.setHeadImgUrl(src.getHeadImgUrl());
+        result.setFloorId(src.getFloorId());
+        result.setCreatedAt(src.getCreatedAt());
+        result.setRole(src.getRole());
+        return result;
+    }
+
+    public static Collection<CommentVO> blogCommentPO2CommentVOList(Collection<BlogCommentPO> src) {
+        List<CommentVO> result = new ArrayList<>(src.size());
+        for(BlogCommentPO ele : src) {
+            result.add(blogCommentPO2CommentVO(ele));
+        }
+        return result;
+    }
+
+    public static BlogCommentPO commentVO2BlogCommentPO(CommentVO src) {
+        BlogCommentPO result = new BlogCommentPO();
+        result.setName(src.getName());
+        result.setId(src.getId());
+        result.setContent(src.getContent());
+        result.setCommentId(src.getCommentId());
+        result.setEmail(src.getEmail());
+        result.setToUser(src.getToUser());
+        result.setBlogId(src.getBlogId());
+        result.setHeadImgUrl(src.getHeadImgUrl());
+        result.setFloorId(src.getFloorId());
+        result.setCreatedAt(src.getCreatedAt());
+        result.setRole(src.getRole());
+        return result;
+    }
+
+    public static Collection<BlogCommentPO> commentVO2BlogCommentPOList(Collection<CommentVO> src) {
+        List<BlogCommentPO> result = new ArrayList<>(src.size());
+        for(CommentVO ele : src) {
+            result.add(commentVO2BlogCommentPO(ele));
         }
         return result;
     }

@@ -7,14 +7,14 @@ package com.hx.blog_v2.domain.form;
  * @version 1.0
  * @date 5/22/2017 8:12 PM
  */
-public class MoodAddForm {
+public class MoodSaveForm {
 
     private String id;
     private String title;
     private String content;
     private int enable;
 
-    public MoodAddForm() {
+    public MoodSaveForm() {
     }
 
     public String getId() {

@@ -1,37 +1,24 @@
 package com.hx.blog_v2.service;
 
-import com.hx.blog_v2.dao.interf.BlogDao;
 import com.hx.blog_v2.dao.interf.MoodDao;
-import com.hx.blog_v2.dao.interf.RltBlogTagDao;
-import com.hx.blog_v2.domain.form.AdminBlogSearchForm;
 import com.hx.blog_v2.domain.form.BeanIdForm;
-import com.hx.blog_v2.domain.form.BlogAddForm;
-import com.hx.blog_v2.domain.form.MoodAddForm;
-import com.hx.blog_v2.domain.mapper.AdminBlogVOMapper;
+import com.hx.blog_v2.domain.form.MoodSaveForm;
 import com.hx.blog_v2.domain.mapper.AdminMoodVOMapper;
 import com.hx.blog_v2.domain.po.*;
-import com.hx.blog_v2.domain.vo.AdminBlogVO;
 import com.hx.blog_v2.domain.vo.AdminMoodVO;
 import com.hx.blog_v2.service.interf.BaseServiceImpl;
-import com.hx.blog_v2.service.interf.BlogService;
 import com.hx.blog_v2.service.interf.MoodService;
 import com.hx.blog_v2.util.BlogConstants;
-import com.hx.blog_v2.util.CacheContext;
 import com.hx.blog_v2.util.DateUtils;
-import com.hx.blog_v2.util.WebContext;
 import com.hx.common.interf.common.Result;
 import com.hx.common.result.SimplePage;
 import com.hx.common.util.ResultUtils;
-import com.hx.log.file.FileUtils;
-import com.hx.log.util.Log;
 import com.hx.log.util.Tools;
 import com.hx.mongo.criteria.Criteria;
-import com.hx.mongo.criteria.SortByCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -51,7 +38,7 @@ public class MoodServiceImpl extends BaseServiceImpl<MoodPO> implements MoodServ
     private JdbcTemplate jdbcTemplate;
 
     @Override
-    public Result add(MoodAddForm params) {
+    public Result add(MoodSaveForm params) {
         MoodPO po = new MoodPO(params.getTitle(), params.getContent(), params.getEnable());
 
         try {
@@ -74,7 +61,7 @@ public class MoodServiceImpl extends BaseServiceImpl<MoodPO> implements MoodServ
     }
 
     @Override
-    public Result update(MoodAddForm params) {
+    public Result update(MoodSaveForm params) {
         MoodPO po = new MoodPO(params.getTitle(), params.getContent(), params.getEnable());
 
         po.setId(params.getId());
@@ -94,8 +81,11 @@ public class MoodServiceImpl extends BaseServiceImpl<MoodPO> implements MoodServ
 
     @Override
     public Result remove(BeanIdForm params) {
+        String updatedAt = DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
         try {
-            long deleted = moodDao.updateOne(Criteria.eq("id", params.getId()), Criteria.set("deleted", "1")).getModifiedCount();
+            long deleted = moodDao.updateOne(Criteria.eq("id", params.getId()),
+                    Criteria.set("deleted", "1").add("updated_at", updatedAt)
+            ).getModifiedCount();
             if (deleted == 0) {
                 return ResultUtils.failed("心情[" + params.getId() + "]不存在 !");
             }

@@ -2,7 +2,7 @@ package com.hx.blog_v2.service;
 
 import com.hx.blog_v2.dao.interf.UserDao;
 import com.hx.blog_v2.domain.form.BeanIdForm;
-import com.hx.blog_v2.domain.form.UserAddForm;
+import com.hx.blog_v2.domain.form.UserSaveForm;
 import com.hx.blog_v2.domain.mapper.AdminUserVOMapper;
 import com.hx.blog_v2.domain.po.UserPO;
 import com.hx.blog_v2.domain.vo.AdminUserVO;
@@ -39,7 +39,7 @@ public class UserServiceImpl implements UserService {
     private JdbcTemplate jdbcTemplate;
 
     @Override
-    public Result add(UserAddForm params) {
+    public Result add(UserSaveForm params) {
         UserPO po = new UserPO(params.getUserName(), params.getPassword(), params.getNickName(), params.getEmail(),
                 params.getHeadImgUrl(), params.getMotto());
 
@@ -63,7 +63,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Result update(UserAddForm params) {
+    public Result update(UserSaveForm params) {
         UserPO po = new UserPO(null, null, params.getNickName(), params.getEmail(), params.getHeadImgUrl(),
                 params.getMotto());
         po.setId(params.getId());
@@ -86,8 +86,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Result remove(BeanIdForm params) {
+        String updatedAt = DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
         try {
-            long deleted = userDao.updateOne(Criteria.eq("id", params.getId()), Criteria.set("deleted", "1")).getModifiedCount();
+            long deleted = userDao.updateOne(Criteria.eq("id", params.getId()),
+                    Criteria.set("deleted", "1").add("updated_at", updatedAt)
+            ).getModifiedCount();
             if (deleted == 0) {
                 return ResultUtils.failed("用户[" + params.getId() + "]不存在 !");
             }

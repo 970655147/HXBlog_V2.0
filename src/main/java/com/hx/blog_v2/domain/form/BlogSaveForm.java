@@ -12,7 +12,7 @@ import java.util.*;
  * @version 1.0
  * @date 5/20/2017 9:42 AM
  */
-public class BlogAddForm {
+public class BlogSaveForm {
 
     private String id;
     private String title;
@@ -42,8 +42,8 @@ public class BlogAddForm {
     private String createdAtMonth;
     private String updatedAt;
 
-    public BlogAddForm(String title, String author, String coverUrl, String blogTypeId, String blogTagIds,
-                       String summary, String content) {
+    public BlogSaveForm(String title, String author, String coverUrl, String blogTypeId, String blogTagIds,
+                        String summary, String content) {
         this();
         this.title = title;
         this.author = author;
@@ -54,7 +54,7 @@ public class BlogAddForm {
         this.content = content;
     }
 
-    public BlogAddForm() {
+    public BlogSaveForm() {
         Date now = new Date();
         createdAtMonth = DateUtils.formate(now, BlogConstants.FORMAT_YYYY_MM);
         createdAt = DateUtils.formate(now, BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);

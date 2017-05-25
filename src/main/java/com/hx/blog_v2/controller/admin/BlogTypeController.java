@@ -1,7 +1,6 @@
 package com.hx.blog_v2.controller.admin;
 
-import com.hx.blog_v2.domain.form.BlogTypeAddForm;
-import com.hx.blog_v2.domain.form.BlogTypeUpdateForm;
+import com.hx.blog_v2.domain.form.BlogTypeSaveForm;
 import com.hx.blog_v2.service.interf.BlogTypeService;
 import com.hx.common.interf.common.Result;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,21 +24,21 @@ public class BlogTypeController {
 
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public Result add(BlogTypeAddForm params) {
+    public Result add(BlogTypeSaveForm params) {
 
 
-        Result result =  blogTypeService.add(params);
+        Result result = blogTypeService.add(params);
         return result;
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST)
-    public Result update(BlogTypeUpdateForm params) {
+    public Result update(BlogTypeSaveForm params) {
 
         return blogTypeService.update(params);
     }
 
     @RequestMapping(value = "/remove", method = RequestMethod.POST)
-    public Result remove(BlogTypeUpdateForm params) {
+    public Result remove(BlogTypeSaveForm params) {
 
         return blogTypeService.remove(params);
     }

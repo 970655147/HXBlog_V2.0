@@ -2,7 +2,7 @@ package com.hx.blog_v2.service.interf;
 
 import com.hx.blog_v2.domain.form.AdminBlogSearchForm;
 import com.hx.blog_v2.domain.form.BeanIdForm;
-import com.hx.blog_v2.domain.form.BlogAddForm;
+import com.hx.blog_v2.domain.form.BlogSaveForm;
 import com.hx.blog_v2.domain.po.BlogPO;
 import com.hx.blog_v2.domain.vo.AdminBlogVO;
 import com.hx.common.interf.common.Page;
@@ -25,7 +25,7 @@ public interface BlogService extends BaseService<BlogPO> {
      * @date 5/20/2017 6:21 PM
      * @since 1.0
      */
-    Result save(BlogAddForm params);
+    Result save(BlogSaveForm params);
 
     /**
      * 增加一个 Blog

@@ -7,7 +7,7 @@ package com.hx.blog_v2.domain.form;
  * @version 1.0
  * @date 5/23/2017 8:12 PM
  */
-public class UserAddForm {
+public class UserSaveForm {
 
     private String id;
     private String userName;
@@ -17,7 +17,7 @@ public class UserAddForm {
     private String headImgUrl;
     private String motto;
 
-    public UserAddForm() {
+    public UserSaveForm() {
 
     }
 

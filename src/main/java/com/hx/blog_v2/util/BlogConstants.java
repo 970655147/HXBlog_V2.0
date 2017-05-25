@@ -3,7 +3,6 @@ package com.hx.blog_v2.util;
 import com.hx.blog_v2.domain.po.*;
 import com.hx.log.idx.IdxManager;
 import com.hx.log.util.Constants;
-import com.hx.log.util.Log;
 import com.hx.log.util.Tools;
 import com.hx.mongo.config.MysqlDbConfig;
 import com.hx.mongo.config.interf.DbConfig;
@@ -172,6 +171,13 @@ public final class BlogConstants {
      */
     public static final String SESSION_SESSION = "session:session";
 
+    /**
+     * 存放在session中的相关信息的key
+     */
+    /**
+     * 用户认证信息的key
+     */
+    public static final String SESSION_USER = "session:user";
 
     @Value("blog.dir")
     public static String BLOG_ROOT_DIR = "D:\\HXBlog_V2.0\\post";

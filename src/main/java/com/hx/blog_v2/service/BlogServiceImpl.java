@@ -4,7 +4,7 @@ import com.hx.blog_v2.dao.interf.BlogDao;
 import com.hx.blog_v2.dao.interf.RltBlogTagDao;
 import com.hx.blog_v2.domain.form.AdminBlogSearchForm;
 import com.hx.blog_v2.domain.form.BeanIdForm;
-import com.hx.blog_v2.domain.form.BlogAddForm;
+import com.hx.blog_v2.domain.form.BlogSaveForm;
 import com.hx.blog_v2.domain.mapper.AdminBlogVOMapper;
 import com.hx.blog_v2.domain.po.BlogPO;
 import com.hx.blog_v2.domain.po.BlogTagPO;
@@ -13,10 +13,7 @@ import com.hx.blog_v2.domain.po.RltBlogTagPO;
 import com.hx.blog_v2.domain.vo.AdminBlogVO;
 import com.hx.blog_v2.service.interf.BaseServiceImpl;
 import com.hx.blog_v2.service.interf.BlogService;
-import com.hx.blog_v2.util.BlogConstants;
-import com.hx.blog_v2.util.CacheContext;
-import com.hx.blog_v2.util.DateUtils;
-import com.hx.blog_v2.util.WebContext;
+import com.hx.blog_v2.util.*;
 import com.hx.common.interf.common.Page;
 import com.hx.common.interf.common.Result;
 import com.hx.common.util.ResultUtils;
@@ -52,12 +49,12 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
     private CacheContext cacheContext;
 
     @Override
-    public Result save(BlogAddForm params) {
+    public Result save(BlogSaveForm params) {
         String contentUrl = generateBlogPath(params);
         BlogPO po = new BlogPO(params.getTitle(), params.getAuthor(), params.getCoverUrl(),
                 params.getBlogTypeId(), params.getSummary(), contentUrl);
 
-        if (! Tools.isEmpty(params.getId())) {
+        if (!Tools.isEmpty(params.getId())) {
             return update0(po, params);
         }
         return add0(po, params);
@@ -99,13 +96,13 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
         }
         if (!Tools.isEmpty(params.getKeywords())) {
             sql.append(" and (b.title like ? or b.author like ?) ");
-            sqlParams.add(wrapWildcard(params.getKeywords()));
-            sqlParams.add(wrapWildcard(params.getKeywords()));
+            sqlParams.add(SqlUtils.wrapWildcard(params.getKeywords()));
+            sqlParams.add(SqlUtils.wrapWildcard(params.getKeywords()));
         }
         sql.append(" group by b.id limit ?, ? ");
         sqlParams.add(page.recordOffset());
         sqlParams.add(page.getPageSize());
-        
+
         List<AdminBlogVO> list = jdbcTemplate.query(sql.toString(), sqlParams.toArray(), new AdminBlogVOMapper());
         encapTypeTagInfo(list);
         page.setList(list);
@@ -114,8 +111,11 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
 
     @Override
     public Result remove(BeanIdForm params) {
+        String updatedAt = DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
         try {
-            long deleted = blogDao.updateOne(Criteria.eq("id", params.getId()), Criteria.set("deleted", "1")).getModifiedCount();
+            long deleted = blogDao.updateOne(Criteria.eq("id", params.getId()),
+                    Criteria.set("deleted", "1").add("updated_at", updatedAt)
+            ).getModifiedCount();
             if (deleted == 0) {
                 return ResultUtils.failed("博客[" + params.getId() + "]不存在 !");
             }
@@ -138,7 +138,7 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
      * @date 5/21/2017 3:09 PM
      * @since 1.0
      */
-    private String generateBlogPath(BlogAddForm params) {
+    private String generateBlogPath(BlogSaveForm params) {
         String fileName = DateUtils.formate(new Date(), BlogConstants.FORMAT_FILENAME) + "-" + params.getTitle();
         int bucket = (fileName.hashCode() & 63);
         return bucket + "/" + fileName + Tools.HTML;
@@ -195,19 +195,6 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
     }
 
     /**
-     * 封装模糊匹配的语句
-     *
-     * @param keywords keywords
-     * @return java.lang.String
-     * @author Jerry.X.He
-     * @date 5/21/2017 7:54 PM
-     * @since 1.0
-     */
-    private String wrapWildcard(String keywords) {
-        return "%" + keywords + "%";
-    }
-
-    /**
      * 处理保存博客的逻辑
      *
      * @param po     po
@@ -217,7 +204,7 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
      * @date 5/21/2017 10:05 PM
      * @since 1.0
      */
-    private Result add0(BlogPO po, BlogAddForm params) {
+    private Result add0(BlogPO po, BlogSaveForm params) {
         boolean blogInserted = false, tagsInserted = false;
         try {
             blogDao.save(po, BlogConstants.IDX_MANAGER_FILTER_ID.getDoLoad(), BlogConstants.IDX_MANAGER_FILTER_ID.getDoFilter());
@@ -264,7 +251,7 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
      * @date 5/21/2017 10:05 PM
      * @since 1.0
      */
-    private Result update0(BlogPO po, BlogAddForm params) {
+    private Result update0(BlogPO po, BlogSaveForm params) {
         po.setId(params.getId());
         po.setUpdatedAt(DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS));
 
@@ -272,7 +259,7 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
             // 对于createAt的处理 先放在这里, 等之后 HXMongo 的review[abort JSONTransferable] 之后吧,
             long matched = blogDao.updateById(po, BlogConstants.IDX_MANAGER_FILTER_ID.getDoLoad(), BlogConstants.IDX_MANAGER_FILTER_ID.getDoFilter())
                     .getMatchedCount();
-            if(matched == 0) {
+            if (matched == 0) {
                 return ResultUtils.failed("没有找到对应的博客 !");
             }
 
@@ -283,7 +270,7 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
                 for (String tagId : tagIds) {
                     blogTags.add(new RltBlogTagPO(po.getId(), tagId));
                 }
-                rltBlogTagDao.deleteMany(Criteria.eq("blog_id", po.getId()) );
+                rltBlogTagDao.deleteMany(Criteria.eq("blog_id", po.getId()));
                 rltBlogTagDao.save(blogTags, BlogConstants.IDX_MANAGER_FILTER_ID.getDoLoad(), BlogConstants.IDX_MANAGER_FILTER_ID.getDoFilter());
             }
             String blogFile = Tools.getFilePath(WebContext.getBlogRootPath(), po.getContentUrl());

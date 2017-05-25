@@ -1,7 +1,7 @@
 package com.hx.blog_v2.controller.admin;
 
 import com.hx.blog_v2.domain.form.BeanIdForm;
-import com.hx.blog_v2.domain.form.MoodAddForm;
+import com.hx.blog_v2.domain.form.MoodSaveForm;
 import com.hx.blog_v2.domain.vo.AdminMoodVO;
 import com.hx.blog_v2.service.interf.MoodService;
 import com.hx.common.interf.common.Result;
@@ -26,7 +26,7 @@ public class MoodController {
     private MoodService moodService;
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public Result add(MoodAddForm params) {
+    public Result add(MoodSaveForm params) {
 
         return moodService.add(params);
     }
@@ -39,7 +39,7 @@ public class MoodController {
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST)
-    public Result update(MoodAddForm params) {
+    public Result update(MoodSaveForm params) {
 
         return moodService.update(params);
     }

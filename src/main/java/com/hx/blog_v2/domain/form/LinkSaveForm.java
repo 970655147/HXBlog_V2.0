@@ -1,13 +1,13 @@
 package com.hx.blog_v2.domain.form;
 
 /**
- * AdminLinkVO
+ * LinkSaveForm
  *
  * @author Jerry.X.He <970655147@qq.com>
  * @version 1.0
  * @date 5/24/2017 7:44 PM
  */
-public class LinkAddForm {
+public class LinkSaveForm {
 
     private String id;
     private String name;

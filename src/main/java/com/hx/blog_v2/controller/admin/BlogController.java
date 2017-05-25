@@ -2,7 +2,7 @@ package com.hx.blog_v2.controller.admin;
 
 import com.hx.blog_v2.domain.form.AdminBlogSearchForm;
 import com.hx.blog_v2.domain.form.BeanIdForm;
-import com.hx.blog_v2.domain.form.BlogAddForm;
+import com.hx.blog_v2.domain.form.BlogSaveForm;
 import com.hx.blog_v2.domain.vo.AdminBlogVO;
 import com.hx.blog_v2.service.interf.BlogService;
 import com.hx.common.interf.common.Result;
@@ -27,7 +27,7 @@ public class BlogController {
     private BlogService blogService;
 
     @RequestMapping(value = "/save", method = RequestMethod.POST)
-    public Result save(BlogAddForm params) {
+    public Result save(BlogSaveForm params) {
 
         return blogService.save(params);
     }
