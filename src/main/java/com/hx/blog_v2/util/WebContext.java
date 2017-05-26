@@ -49,6 +49,10 @@ public final class WebContext {
      * 存放博客的文件夹
      */
     private static String BLOG_ROOT_PATH = null;
+    /**
+     * 存放图片的文件夹
+     */
+    private static String IMG_ROOT_PATH = null;
 
     static {
         try {
@@ -63,6 +67,7 @@ public final class WebContext {
     public static void init(ServletContext servletContext) {
         PROJ_PATH = servletContext.getRealPath("/");
         BLOG_ROOT_PATH = BlogConstants.BLOG_ROOT_DIR;
+        IMG_ROOT_PATH = BlogConstants.IMG_ROOT_DIR;
     }
 
     /**
@@ -87,6 +92,18 @@ public final class WebContext {
      */
     public static String getBlogRootPath() {
         return BLOG_ROOT_PATH;
+    }
+
+    /**
+     * 获取图片的根路径
+     *
+     * @return java.lang.String
+     * @author Jerry.X.He
+     * @date 5/21/2017 3:17 PM
+     * @since 1.0
+     */
+    public static String getImgRootPath() {
+        return IMG_ROOT_PATH;
     }
 
     // -------------------- req/resp --------------------------

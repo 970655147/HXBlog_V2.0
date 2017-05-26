@@ -6,8 +6,6 @@
  * @date 5/25/2017 7:41 PM
  */
 
-var commentNum = 2;
-
 layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
     var $ = layui.jquery;
     var layer = layui.layer;
@@ -15,6 +13,12 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
     var laypage = layui.laypage;
     var element = layui.element();
     var laypageId = 'pageNav';
+
+    /**
+     * 弹出层相关id
+     * @type {null}
+     */
+    var addReplyConfirmDialog = null, addReplyDialog = null
 
 
     initilData(1);
@@ -49,7 +53,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
                             html += '<td>' + item.toUser + '</td>';
                             html += '<td>' + item.content + '</td>';
                             html += '<td>' + item.createdAt + '</td>';
-                            html += '<td><i class="layui-icon layui-btn-small" style="cursor:pointer;font-size: 30px; color: #FA4B2A;vertical-align: middle;" onclick="layui.funcs.addReply(' + item.blogId + ', ' + item.floorId + ',\'' + item.name + '\',\'' + item.content + '\')" >&#x1005;</i> </td>';
+                            html += '<td><i class="layui-icon layui-btn-small" style="cursor:pointer;font-size: 30px; color: #FA4B2A;vertical-align: middle;" onclick="layui.funcs.addReply(' + item.id + ', ' + item.blogId + ', ' + item.floorId + ',\'' + item.name + '\',\'' + item.content + '\')" >&#x1005;</i> </td>';
                             html += '<td><button class="layui-btn layui-btn-small" onclick=\'layui.funcs.showData("' + item.blogName + '", ' + item.floorId + ')\'><i class="layui-icon">&#xe63a;</i></button></td>';
                             html += '<td><button class="layui-btn layui-btn-small layui-btn-normal" onclick="layui.funcs.editData(' + item.id + ',\'' + item.toUser + '\',\'' + item.content + '\')"><i class="layui-icon">&#xe642;</i></button></td>';
                             html += '<td><button class="layui-btn layui-btn-small layui-btn-danger" onclick="layui.funcs.deleteData(' + item.id + ')"><i class="layui-icon">&#xe640;</i></button></td>';
@@ -85,11 +89,12 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
             data : $(".layui-form").serialize(),
             success : function (result) {
                 if(result.success) {
-                    layer.alert('添加评论成功!', {
+                    addReplyConfirmDialog = layer.alert('添加评论成功!', {
                         closeBtn: 0,
                         icon: 1
                     }, function () {
-                        location.reload()
+                        layer.close(addReplyConfirmDialog)
+                        layer.close(addReplyDialog)
                     });
                 } else {
                     layer.alert('添加评论失败 !', {icon: 5});
@@ -137,9 +142,9 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
                         var comments = resp.data.list
                         var incr = 20, marginLeft = incr
                         for (var idx in comments) {
-                            var reply = comments[idx];
+                            var reply = comments[idx]
                             html += '<blockquote class="layui-elem-quote" style="margin-left: ' + marginLeft + 'px" >';
-                            html += '<span>[' + reply.name + '] @ [' + reply.toUser + '] : ' + reply.content + '</span>';
+                            html += '<span style="cursor:pointer" alt="reply" onclick="layui.funcs.addReply(' + reply.id + ', ' + reply.blogId + ', ' + reply.floorId + ',\'' + reply.name + '\',\'' + reply.content + '\')" >[' + reply.name + '] @ [' + reply.toUser + '] : ' + reply.content + '</span>';
                             html += '</blockquote>';
                             marginLeft += incr
                         }
@@ -158,9 +163,10 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
                 }
             })
         },
-        addReply: function (blogId, floorId, toUser, content) {
+        addReply: function (id, blogId, floorId, toUser, content) {
             var html = '';
             html += '<form class="layui-form layui-form-pane" action="/admin/comment/reply" method="post">';
+            html += '<input type="hidden" name="id" value="' + id + '"/>';
             html += '<input type="hidden" name="blogId" value="' + blogId + '"/>';
             html += '<input type="hidden" name="floorId" value="' + floorId + '"/>';
             html += '<input type="hidden" name="toUser" value="' + toUser + '"/>';
@@ -176,7 +182,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
             html += '</div>';
             html += '</form>';
 
-            layer.open({
+            addReplyDialog = layer.open({
                 type: 1,
                 skin: 'layui-layer-rim', //加上边框
                 area: '420px', //宽高

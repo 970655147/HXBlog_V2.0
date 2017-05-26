@@ -178,9 +178,26 @@ public final class BlogConstants {
      * 用户认证信息的key
      */
     public static final String SESSION_USER = "session:user";
+    /**
+     * 缓存的 blogId -> nextFloorId 的个数
+     */
+    @Value("cache.blog2FloorId")
+    public static int MAX_CACHED_BLOG_2_FLOOR_ID = 100;
+    /**
+     * 缓存的 blogId, floorId -> nextCommentId 的个数
+     */
+    @Value("cache.blogFloor2CommentId")
+    public static int MAX_CACHED_BLOG_FLOOR_2_COMMENT_ID = 1000;
 
     @Value("blog.dir")
     public static String BLOG_ROOT_DIR = "D:\\HXBlog_V2.0\\post";
+    @Value("img.dir")
+    public static String IMG_ROOT_DIR = "D:\\HXBlog_V2.0\\imgs";
+
+    /**
+     * 回复博主, 层主的时候的 parentCommentId
+     */
+    public static String REPLY_2_FLOOR_OWNER = "-1";
 
 
 }

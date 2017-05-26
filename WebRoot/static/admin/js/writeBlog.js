@@ -143,8 +143,10 @@ layui.define(['form', 'upload', 'layer'], function (exports) {
         url: '/admin/image/upload', //上传接口
         success: function (result) { //上传成功后的回调
             if (result.success) {
-                $("#coverUrl").attr("value", "http://localhost:8080/static/admin/images/logo.jpg")
-                $("#coverShow").attr("src", "http://localhost:8080/static/admin/images/logo.jpg")
+                var visitUrl = result.data.url
+                console.log(visitUrl)
+                $("#coverUrl").attr("value", visitUrl)
+                $("#coverShow").attr("src", visitUrl)
             } else {
                 alert("上传文件失败");
             }

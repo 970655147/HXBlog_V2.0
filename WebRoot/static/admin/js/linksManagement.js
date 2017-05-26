@@ -58,6 +58,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
                         $('#dataContent').html(html);
                         element.init();
 
+                        $('#dataConsole,#dataList').attr('style', 'display:block'); //显示FiledBox
                         laypage({
                             cont: laypageId,
                             pages: resp.data.totalPage,
@@ -74,8 +75,6 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
                     }
                 }
             });
-
-            $('#dataConsole,#dataList').attr('style', 'display:block'); //显示FiledBox
         }, 500);
     }
 

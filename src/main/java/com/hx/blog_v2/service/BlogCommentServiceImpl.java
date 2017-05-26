@@ -10,6 +10,7 @@ import com.hx.blog_v2.domain.vo.CommentVO;
 import com.hx.blog_v2.service.interf.BaseServiceImpl;
 import com.hx.blog_v2.service.interf.BlogCommentService;
 import com.hx.blog_v2.util.BlogConstants;
+import com.hx.blog_v2.util.CacheContext;
 import com.hx.blog_v2.util.DateUtils;
 import com.hx.blog_v2.util.SqlUtils;
 import com.hx.common.interf.common.Page;
@@ -39,6 +40,8 @@ public class BlogCommentServiceImpl extends BaseServiceImpl<BlogCommentPO> imple
     private BlogCommentDao commentDao;
     @Autowired
     private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private CacheContext cacheContext;
 
     @Override
     public Result add(CommentSaveForm params) {
@@ -46,9 +49,13 @@ public class BlogCommentServiceImpl extends BaseServiceImpl<BlogCommentPO> imple
         BlogCommentPO po = new BlogCommentPO(user.getUserName(), user.getEmail(), user.getHeadImgUrl(), params.getToUser(),
                 user.getRole(), params.getContent());
         po.setBlogId(params.getBlogId());
-        po.setFloorId(params.getFloorId());
-        po.setCommentId("1");
-        po.setParentCommentId("1");
+        if(! Tools.isEmpty(params.getFloorId())) {
+            po.setFloorId(params.getFloorId());
+        } else {
+            po.setFloorId(cacheContext.nextFloorId(po.getBlogId()));
+        }
+        po.setCommentId(cacheContext.nextCommentId(po.getBlogId(), po.getFloorId()));
+        po.setParentCommentId(params.getId() == null ? BlogConstants.REPLY_2_FLOOR_OWNER : params.getId());
 
         try {
             commentDao.save(po, BlogConstants.IDX_MANAGER_FILTER_ID.getDoLoad(), BlogConstants.IDX_MANAGER_FILTER_ID.getDoFilter());

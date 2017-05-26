@@ -4,9 +4,12 @@ import com.hx.blog_v2.dao.interf.BlogTagDao;
 import com.hx.blog_v2.dao.interf.BlogTypeDao;
 import com.hx.blog_v2.domain.po.BlogTagPO;
 import com.hx.blog_v2.domain.po.BlogTypePO;
+import com.hx.common.interf.cache.Cache;
+import com.hx.log.cache.mem.LRUMCache;
 import com.hx.log.util.Log;
 import com.hx.mongo.criteria.Criteria;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -15,6 +18,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * 缓存了一部分的数据
@@ -30,6 +34,8 @@ public class CacheContext {
     private BlogTagDao blogTagDao;
     @Autowired
     private BlogTypeDao blogTypeDao;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     /**
      * id -> blogTag
@@ -39,22 +45,14 @@ public class CacheContext {
      * id -> blogType
      */
     private Map<String, BlogTypePO> blogTypesById;
-
-    public BlogTagDao getBlogTagDao() {
-        return blogTagDao;
-    }
-
-    public void setBlogTagDao(BlogTagDao blogTagDao) {
-        this.blogTagDao = blogTagDao;
-    }
-
-    public BlogTypeDao getBlogTypeDao() {
-        return blogTypeDao;
-    }
-
-    public void setBlogTypeDao(BlogTypeDao blogTypeDao) {
-        this.blogTypeDao = blogTypeDao;
-    }
+    /**
+     * blogId -> 给定的博客的下一个层数索引
+     */
+    private final Cache<String, AtomicLong> blog2NextFloorId = new LRUMCache<>(BlogConstants.MAX_CACHED_BLOG_2_FLOOR_ID);
+    /**
+     * blogId, floorId -> 给定的博客给定的层级下一个评论索引
+     */
+    private final Cache<String, AtomicLong> blogFloor2NextCommentId = new LRUMCache<>(BlogConstants.MAX_CACHED_BLOG_2_FLOOR_ID);
 
     /**
      * 初始化 CacheContext
@@ -119,7 +117,64 @@ public class CacheContext {
         return blogTagsById.get(id);
     }
 
+    /**
+     * 获取给定到的博客的下一个层数id
+     *
+     * @param blogId blogId
+     * @return long
+     * @author Jerry.X.He
+     * @date 5/26/2017 7:34 PM
+     * @since 1.0
+     */
+    public String nextFloorId(String blogId) {
+        AtomicLong idx = blog2NextFloorId.get(blogId);
+        if(idx != null) {
+            return String.valueOf(idx.getAndIncrement());
+        }
 
+        synchronized (blog2NextFloorId) {
+            idx = blog2NextFloorId.get(blogId);
+            if(idx != null) {
+                return String.valueOf(idx.getAndIncrement());
+            }
+
+            String sql = " select ifnull(max(floor_id), 0) as max_floor_id from blog_comment where blog_id = ? ";
+            Map<String, Object> res = jdbcTemplate.queryForMap(sql, new Object[]{blogId });
+            long maxFloorId = Long.parseLong(String.valueOf(res.get("max_floor_id")));
+            blog2NextFloorId.put(blogId, new AtomicLong(maxFloorId + 2));
+            return String.valueOf(maxFloorId + 1);
+        }
+    }
+
+    /**
+     * 获取给定到的博客的给定的层数的下一个回复的id
+     *
+     * @param blogId blogId
+     * @param floorId floorId
+     * @return long
+     * @author Jerry.X.He
+     * @date 5/26/2017 7:35 PM
+     * @since 1.0
+     */
+    public String nextCommentId(String blogId, String floorId) {
+        AtomicLong idx = blogFloor2NextCommentId.get(blogId);
+        if(idx != null) {
+            return String.valueOf(idx.getAndIncrement());
+        }
+
+        synchronized (blogFloor2NextCommentId) {
+            idx = blogFloor2NextCommentId.get(blogId);
+            if(idx != null) {
+                return String.valueOf(idx.getAndIncrement());
+            }
+
+            String sql = " select ifnull(max(comment_id), 0) as max_comment_id from blog_comment where blog_id = ? and floor_id = ? ";
+            Map<String, Object> res = jdbcTemplate.queryForMap(sql, new Object[]{blogId, floorId });
+            long maxCommentId = Long.parseLong(String.valueOf(res.get("max_comment_id")));
+            blogFloor2NextCommentId.put(blogId, new AtomicLong(maxCommentId + 2));
+            return String.valueOf(maxCommentId + 1);
+        }
+    }
 
 
 

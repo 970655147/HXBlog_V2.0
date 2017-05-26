@@ -35,6 +35,7 @@
         <property name="prefix" value="/"/>
         <property name="suffix" value=".html"/>
     </bean>
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver" />
 
     <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
         <property name="messageConverters">
