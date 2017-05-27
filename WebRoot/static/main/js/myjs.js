@@ -1,6 +1,3 @@
-/**
- * Created by ldb on 2017/4/14.
- */
 new WOW().init();
 
 $(document).ready(function () {
@@ -90,13 +87,4 @@ function siteTime(){
 }
 siteTime();
 
-function parse() {
-    $(".sourceText").emojiParse({
-        icons: [{
-            path: "/foreground/images/qq/",
-            file: ".gif",
-            placeholder: "#qq_{alias}#"
-        }]
-    });
-}
 

@@ -195,6 +195,11 @@ public final class BlogConstants {
     public static String IMG_ROOT_DIR = "D:\\HXBlog_V2.0\\imgs";
 
     /**
+     * 作为意见收集信息的"帖子的id"
+     */
+    public static final String CONTEXT_BLOG_ID = "-1";
+
+    /**
      * 回复博主, 层主的时候的 parentCommentId
      */
     public static String REPLY_2_FLOOR_OWNER = "-1";

@@ -7,6 +7,7 @@ import com.hx.log.util.Tools;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 import static com.hx.log.util.Log.info;
@@ -30,8 +31,8 @@ public final class POVOTransferUtils {
      */
     public static void main(String[] args) {
 
-        Class src = BlogCommentPO.class;
-        Class dst = CommentVO.class;
+        Class src = BlogPO.class;
+        Class dst = BlogVO.class;
 
         String transfer = BeanTransferUtils.transferTo(src, dst);
         String transferList = BeanTransferUtils.transferListTo(src, dst);
@@ -388,6 +389,68 @@ public final class POVOTransferUtils {
         return result;
     }
 
+    // -------------------- BlogPO <-> BlogVO --------------------------
+    public static BlogVO blogPO2BlogVO(BlogPO src) {
+        BlogVO result = new BlogVO();
+        result.setId(src.getId());
+        result.setCreatedAtMonth(src.getCreatedAtMonth());
+        result.setAuthor(src.getAuthor());
+        result.setUpdatedAt(src.getUpdatedAt());
+        result.setBlogTypeId(src.getBlogTypeId());
+        result.setCreatedAt(src.getCreatedAt());
+        result.setCoverUrl(src.getCoverUrl());
+        result.setTitle(src.getTitle());
+        result.setSummary(src.getSummary());
+        result.setContentUrl(src.getContentUrl());
+        return result;
+    }
+
+    public static Collection<BlogVO> blogPO2BlogVOList(Collection<BlogPO> src) {
+        List<BlogVO> result = new ArrayList<>(src.size());
+        for(BlogPO ele : src) {
+            result.add(blogPO2BlogVO(ele));
+        }
+        return result;
+    }
+
+    public static BlogPO blogVO2BlogPO(BlogVO src) {
+        BlogPO result = new BlogPO();
+        result.setId(src.getId());
+        result.setCreatedAtMonth(src.getCreatedAtMonth());
+        result.setAuthor(src.getAuthor());
+        result.setUpdatedAt(src.getUpdatedAt());
+        result.setBlogTypeId(src.getBlogTypeId());
+        result.setCreatedAt(src.getCreatedAt());
+        result.setCoverUrl(src.getCoverUrl());
+        result.setTitle(src.getTitle());
+        result.setSummary(src.getSummary());
+        result.setContentUrl(src.getContentUrl());
+        return result;
+    }
+
+    public static Collection<BlogPO> blogVO2BlogPOList(Collection<BlogVO> src) {
+        List<BlogPO> result = new ArrayList<>(src.size());
+        for(BlogVO ele : src) {
+            result.add(blogVO2BlogPO(ele));
+        }
+        return result;
+    }
+
+    public static BlogVO blogExPO2BlogVO(BlogExPO src, BlogVO vo) {
+        vo.setViewCnt(src.getViewCnt());
+        vo.setCommentCnt(src.getCommentCnt());
+        vo.setGoodCnt(src.getGoodCnt());
+        vo.setNotGoodCnt(src.getNotGoodCnt());
+        return vo;
+    }
+
+    public static Collection<BlogVO> blogExPO2BlogVOList(Collection<BlogExPO> src, Collection<BlogVO> voes) {
+        Iterator<BlogVO> ite = voes.iterator();
+        for(BlogExPO ele : src) {
+            blogExPO2BlogVO(ele, ite.next());
+        }
+        return voes;
+    }
 
     // -------------------- 待续 --------------------------
 

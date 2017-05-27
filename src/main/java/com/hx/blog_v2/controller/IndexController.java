@@ -1,7 +1,12 @@
 package com.hx.blog_v2.controller;
 
+import com.hx.blog_v2.service.interf.IndexService;
+import com.hx.blog_v2.util.CacheContext;
+import com.hx.common.interf.common.Result;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 
 /**
  * ViewController
@@ -14,5 +19,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/index")
 public class IndexController {
 
+    @Autowired
+    private IndexService indexService;
+
+    @RequestMapping("index")
+    public Result index() {
+
+        return indexService.index();
+    }
 
 }

@@ -2,8 +2,10 @@ package com.hx.blog_v2.util;
 
 import com.hx.blog_v2.dao.interf.BlogTagDao;
 import com.hx.blog_v2.dao.interf.BlogTypeDao;
+import com.hx.blog_v2.dao.interf.LinkDao;
 import com.hx.blog_v2.domain.po.BlogTagPO;
 import com.hx.blog_v2.domain.po.BlogTypePO;
+import com.hx.blog_v2.domain.po.LinkPO;
 import com.hx.common.interf.cache.Cache;
 import com.hx.log.cache.mem.LRUMCache;
 import com.hx.log.util.Log;
@@ -13,8 +15,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.io.IOException;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +35,8 @@ public class CacheContext {
     @Autowired
     private BlogTypeDao blogTypeDao;
     @Autowired
+    private LinkDao linkDao;
+    @Autowired
     private JdbcTemplate jdbcTemplate;
 
     /**
@@ -45,6 +47,10 @@ public class CacheContext {
      * id -> blogType
      */
     private Map<String, BlogTypePO> blogTypesById;
+    /**
+     * 所有的友情链接
+     */
+    private List<LinkPO> links;
     /**
      * blogId -> 给定的博客的下一个层数索引
      */
@@ -68,7 +74,7 @@ public class CacheContext {
         blogTypesById = new LinkedHashMap<>();
         try {
             List<BlogTagPO> list = blogTagDao.findMany(Criteria.allMatch(), BlogConstants.IDX_MANAGER.getDoLoad());
-            for(BlogTagPO po : list) {
+            for (BlogTagPO po : list) {
                 blogTagsById.put(po.getId(), po);
             }
         } catch (Exception e) {
@@ -76,13 +82,17 @@ public class CacheContext {
         }
         try {
             List<BlogTypePO> list = blogTypeDao.findMany(Criteria.allMatch(), BlogConstants.IDX_MANAGER.getDoLoad());
-            for(BlogTypePO po : list) {
+            for (BlogTypePO po : list) {
                 blogTypesById.put(po.getId(), po);
             }
         } catch (Exception e) {
             Log.err("error while load blog_type's data !");
         }
-
+        try {
+            links = linkDao.findMany(Criteria.allMatch(), BlogConstants.IDX_MANAGER.getDoLoad());
+        } catch (Exception e) {
+            Log.err("error while load link's data !");
+        }
     }
 
     /**
@@ -118,6 +128,18 @@ public class CacheContext {
     }
 
     /**
+     * 获取所有的友情链接
+     *
+     * @return java.util.List<com.hx.blog_v2.domain.po.LinkPO>
+     * @author Jerry.X.He
+     * @date 5/27/2017 9:25 PM
+     * @since 1.0
+     */
+    public List<LinkPO> allLinks() {
+        return links;
+    }
+
+    /**
      * 获取给定到的博客的下一个层数id
      *
      * @param blogId blogId
@@ -128,18 +150,18 @@ public class CacheContext {
      */
     public String nextFloorId(String blogId) {
         AtomicLong idx = blog2NextFloorId.get(blogId);
-        if(idx != null) {
+        if (idx != null) {
             return String.valueOf(idx.getAndIncrement());
         }
 
         synchronized (blog2NextFloorId) {
             idx = blog2NextFloorId.get(blogId);
-            if(idx != null) {
+            if (idx != null) {
                 return String.valueOf(idx.getAndIncrement());
             }
 
             String sql = " select ifnull(max(floor_id), 0) as max_floor_id from blog_comment where blog_id = ? ";
-            Map<String, Object> res = jdbcTemplate.queryForMap(sql, new Object[]{blogId });
+            Map<String, Object> res = jdbcTemplate.queryForMap(sql, new Object[]{blogId});
             long maxFloorId = Long.parseLong(String.valueOf(res.get("max_floor_id")));
             blog2NextFloorId.put(blogId, new AtomicLong(maxFloorId + 2));
             return String.valueOf(maxFloorId + 1);
@@ -149,7 +171,7 @@ public class CacheContext {
     /**
      * 获取给定到的博客的给定的层数的下一个回复的id
      *
-     * @param blogId blogId
+     * @param blogId  blogId
      * @param floorId floorId
      * @return long
      * @author Jerry.X.He
@@ -158,25 +180,23 @@ public class CacheContext {
      */
     public String nextCommentId(String blogId, String floorId) {
         AtomicLong idx = blogFloor2NextCommentId.get(blogId);
-        if(idx != null) {
+        if (idx != null) {
             return String.valueOf(idx.getAndIncrement());
         }
 
         synchronized (blogFloor2NextCommentId) {
             idx = blogFloor2NextCommentId.get(blogId);
-            if(idx != null) {
+            if (idx != null) {
                 return String.valueOf(idx.getAndIncrement());
             }
 
             String sql = " select ifnull(max(comment_id), 0) as max_comment_id from blog_comment where blog_id = ? and floor_id = ? ";
-            Map<String, Object> res = jdbcTemplate.queryForMap(sql, new Object[]{blogId, floorId });
+            Map<String, Object> res = jdbcTemplate.queryForMap(sql, new Object[]{blogId, floorId});
             long maxCommentId = Long.parseLong(String.valueOf(res.get("max_comment_id")));
             blogFloor2NextCommentId.put(blogId, new AtomicLong(maxCommentId + 2));
             return String.valueOf(maxCommentId + 1);
         }
     }
-
-
 
 
 }

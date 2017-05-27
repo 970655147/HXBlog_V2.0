@@ -1,15 +1,13 @@
 package com.hx.blog_v2.service;
 
 import com.hx.blog_v2.dao.interf.BlogDao;
+import com.hx.blog_v2.dao.interf.BlogExDao;
 import com.hx.blog_v2.dao.interf.RltBlogTagDao;
 import com.hx.blog_v2.domain.form.AdminBlogSearchForm;
 import com.hx.blog_v2.domain.form.BeanIdForm;
 import com.hx.blog_v2.domain.form.BlogSaveForm;
 import com.hx.blog_v2.domain.mapper.AdminBlogVOMapper;
-import com.hx.blog_v2.domain.po.BlogPO;
-import com.hx.blog_v2.domain.po.BlogTagPO;
-import com.hx.blog_v2.domain.po.BlogTypePO;
-import com.hx.blog_v2.domain.po.RltBlogTagPO;
+import com.hx.blog_v2.domain.po.*;
 import com.hx.blog_v2.domain.vo.AdminBlogVO;
 import com.hx.blog_v2.service.interf.BaseServiceImpl;
 import com.hx.blog_v2.service.interf.BlogService;
@@ -41,6 +39,8 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
 
     @Autowired
     private BlogDao blogDao;
+    @Autowired
+    private BlogExDao blogExDao;
     @Autowired
     private RltBlogTagDao rltBlogTagDao;
     @Autowired
@@ -84,7 +84,7 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
     public Result adminList(AdminBlogSearchForm params, Page<AdminBlogVO> page) {
         StringBuilder sql = new StringBuilder(
                 " select b.*, GROUP_CONCAT(rlt.tag_id) as tagIds from blog as b inner join rlt_blog_tag as rlt on b.id = rlt.blog_id " +
-                        " where b.deleted = 0 ");
+                        " where b.deleted = 0 and b.id >= 0 ");
         List<Object> sqlParams = new ArrayList<>(3);
         if (!Tools.isEmpty(params.getBlogTypeId())) {
             sql.append(" and b.blog_type_id = ? ");
@@ -208,9 +208,10 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
         boolean blogInserted = false, tagsInserted = false;
         try {
             blogDao.save(po, BlogConstants.IDX_MANAGER_FILTER_ID.getDoLoad(), BlogConstants.IDX_MANAGER_FILTER_ID.getDoFilter());
-            String[] tagIds = params.getBlogTagIds().split(",");
+            blogExDao.save(new BlogExPO(po.getId()), BlogConstants.IDX_MANAGER_FILTER_ID.getDoLoad(), BlogConstants.IDX_MANAGER_FILTER_ID.getDoFilter());
             blogInserted = true;
 
+            String[] tagIds = params.getBlogTagIds().split(",");
             if (!Tools.isEmpty(tagIds)) {
                 Tools.trimAllSpaces(tagIds);
                 List<RltBlogTagPO> blogTags = new ArrayList<>(tagIds.length);
@@ -227,7 +228,8 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
             e.printStackTrace();
             try {
                 if (blogInserted) {
-                    blogDao.deleteOne(Criteria.eq("id", po.getId()));
+                    remove(new BeanIdForm(po.getId()));
+                    blogExDao.deleteOne(Criteria.eq("blog_id", po.getId()));
                 }
                 if (tagsInserted) {
                     rltBlogTagDao.deleteMany(Criteria.eq("blog_id", po.getId()));

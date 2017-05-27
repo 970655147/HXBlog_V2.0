@@ -12,9 +12,14 @@ public class BeanIdForm {
     private String id;
 
 
+    public BeanIdForm(String id) {
+        this.id = id;
+    }
+
     public BeanIdForm() {
 
     }
+
 
     public String getId() {
         return id;

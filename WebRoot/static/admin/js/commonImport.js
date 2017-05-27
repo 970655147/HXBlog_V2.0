@@ -12,8 +12,9 @@ var styleShetts = [
     "./css/common.css"
 ]
 var jses = [
-    "../js/jquery-1.11.1.min.js",
-    "../myJs/constants.js"
+    "../myJs/constants.js",
+    "../myJs/stringBuilder.js",
+    "../myJs/utils.js"
 ]
 
 // 处理导入 css, js 的逻辑
