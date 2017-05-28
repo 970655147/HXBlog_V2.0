@@ -69,6 +69,7 @@ public final class BlogConstants {
         IDX_MANAGER.putDoLoad(MoodPO.BEAN_KEY, MoodPO.UNDER_LINE);
         IDX_MANAGER.putDoLoad(UserPO.BEAN_KEY, UserPO.UNDER_LINE);
         IDX_MANAGER.putDoLoad(LinkPO.BEAN_KEY, LinkPO.UNDER_LINE);
+        IDX_MANAGER.putDoLoad(ImagePO.BEAN_KEY, ImagePO.UNDER_LINE);
 
         IDX_MANAGER.putDoFilter(BlogPO.BEAN_KEY, BlogPO.ALL);
         IDX_MANAGER.putDoFilter(BlogExPO.BEAN_KEY, BlogExPO.ALL);
@@ -83,6 +84,7 @@ public final class BlogConstants {
         IDX_MANAGER.putDoFilter(MoodPO.BEAN_KEY, MoodPO.ALL);
         IDX_MANAGER.putDoFilter(UserPO.BEAN_KEY, UserPO.ALL);
         IDX_MANAGER.putDoFilter(LinkPO.BEAN_KEY, LinkPO.ALL);
+        IDX_MANAGER.putDoFilter(ImagePO.BEAN_KEY, ImagePO.ALL);
 
         IDX_MANAGER_FILTER_ID = new IdxManager<>(IDX_MANAGER);
         IDX_MANAGER_FILTER_ID.putDoFilter(BlogPO.BEAN_KEY, BlogPO.FILTER_ID);
@@ -98,6 +100,7 @@ public final class BlogConstants {
         IDX_MANAGER_FILTER_ID.putDoFilter(MoodPO.BEAN_KEY, MoodPO.FILTER_ID);
         IDX_MANAGER_FILTER_ID.putDoFilter(UserPO.BEAN_KEY, UserPO.FILTER_ID);
         IDX_MANAGER_FILTER_ID.putDoFilter(LinkPO.BEAN_KEY, LinkPO.FILTER_ID);
+        IDX_MANAGER_FILTER_ID.putDoFilter(ImagePO.BEAN_KEY, ImagePO.FILTER_ID);
     }
 
     @Value("jdbc.driverClazz")
@@ -142,6 +145,8 @@ public final class BlogConstants {
     public static final String TABLE_USER = "user";
     @Value("table.link")
     public static final String TABLE_LINK = "link";
+    @Value("table.images")
+    public static final String TABLE_IMAGES = "images";
 
     @Value("table.id")
     public static final String TABLE_ID = "id";

@@ -147,7 +147,6 @@ layui.define(['form', 'upload', 'layer'], function (exports) {
         success: function (result) { //上传成功后的回调
             if (result.success) {
                 var visitUrl = result.data.url
-                console.log(visitUrl)
                 $("#coverUrl").attr("value", visitUrl)
                 $("#coverShow").attr("src", visitUrl)
             } else {
@@ -155,6 +154,7 @@ layui.define(['form', 'upload', 'layer'], function (exports) {
             }
         }
     });
+
     form.on('select(tagIds)', function (context) {
         var select = $(context.elem)
         var value = context.value

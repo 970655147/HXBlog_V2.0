@@ -25,9 +25,9 @@ public class MoodController {
     private MoodService moodService;
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
-    public Result list(SimplePage<MoodVO> page) {
+    public Result list() {
 
-        return moodService.list(page);
+        return moodService.list();
     }
 
 }

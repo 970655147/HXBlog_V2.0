@@ -106,34 +106,36 @@
 
                                     <div role="tabpanel" class="tab-pane fade" id="safari"
                                          aria-labelledby="safari-tab">
-                                        <div class="gallery-grids" style="margin: 0;padding: 0 3em">
-                                            <div class="gallery-grid">
-                                                <a href="./images/g1.jpg"
+                                        <div class="gallery-grids" style="margin: 0;padding: 0 3em" v-for="(image, idx) in images" >
+                                            <div v-if="idx % 4 == 0" >
+                                            <div class="gallery-grid"  >
+                                                <a href="javascript:void(0)"
                                                    class="wow fadeInUp animated animated" data-wow-delay=".3s"
                                                    style="visibility: visible; animation-delay: 0.5s; animation-name: fadeInUp;">
-                                                    <img src="./images/g1.jpg" alt=" "
+                                                    <img :src="image.url" :alt="image.title"
                                                          class="img-responsive zoom-img">
                                                 </a>
-                                                <a href="./images/g5.jpg"
+                                                <a href="javascript:void(0)"
                                                    class="wow fadeInUp animated animated" data-wow-delay=".3s"
                                                    style="visibility: visible; animation-delay: 0.5s; animation-name: fadeInUp;">
-                                                    <img src="./images/g5.jpg" alt=" "
+                                                    <img :src="images[idx+1].url" :alt="images[idx+1].title"
                                                          class="img-responsive zoom-img">
                                                 </a>
                                             </div>
                                             <div class="gallery-grid">
-                                                <a href="./images/g6.jpg"
+                                                <a href="javascript:void(0)"
                                                    class="wow fadeInUp animated animated" data-wow-delay=".3s"
                                                    style="visibility: visible; animation-delay: 0.5s; animation-name: fadeInUp;">
-                                                    <img src="./images/g6.jpg" alt=" "
+                                                    <img :src="images[idx+2].url" :alt="images[idx+2].title"
                                                          class="img-responsive zoom-img">
                                                 </a>
-                                                <a href="./images/g2.jpg"
+                                                <a href="javascript:void(0)"
                                                    class="wow fadeInUp animated animated" data-wow-delay=".3s"
                                                    style="visibility: visible; animation-delay: 0.5s; animation-name: fadeInUp;">
-                                                    <img src="./images/g2.jpg" alt=" "
+                                                    <img :src="images[idx+3].url" :alt="images[idx+3].title"
                                                          class="img-responsive zoom-img">
                                                 </a>
+                                            </div>
                                             </div>
                                             <div class="clearfix"></div>
                                         </div>

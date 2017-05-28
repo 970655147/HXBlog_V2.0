@@ -21,16 +21,18 @@ function contentInit() {
     var app = new Vue({
         el: '#bodyContent',
         data: {
-            moods : []
+            moods : [],
+            images : []
         },
         mounted: function () {
             var that = this
             $.ajax({
-                url: "/mood/list",
+                url: "/composite/moodAndImages",
                 data: {},
                 success: function (resp) {
                     if (resp.success) {
-                        that.moods = resp.data.list
+                        that.moods = resp.data.moods
+                        that.images = resp.data.images
                     }
                 }
             });

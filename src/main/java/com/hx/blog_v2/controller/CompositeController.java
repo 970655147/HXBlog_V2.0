@@ -2,6 +2,8 @@ package com.hx.blog_v2.controller;
 
 import com.hx.blog_v2.service.interf.BlogTagService;
 import com.hx.blog_v2.service.interf.BlogTypeService;
+import com.hx.blog_v2.service.interf.ImageService;
+import com.hx.blog_v2.service.interf.MoodService;
 import com.hx.common.interf.common.Result;
 import com.hx.common.util.ResultUtils;
 import com.hx.json.JSONObject;
@@ -25,11 +27,14 @@ public class CompositeController {
     private BlogTypeService blogTypeService;
     @Autowired
     private BlogTagService blogTagService;
+    @Autowired
+    private MoodService moodService;
+    @Autowired
+    private ImageService imageService;
 
 
     @RequestMapping(value = "/typeAndTags", method = RequestMethod.GET)
-    public Result list() {
-
+    public Result typeAndTags() {
         Result typeResult = blogTypeService.list();
         if(! typeResult.isSuccess()) {
             return typeResult;
@@ -39,8 +44,24 @@ public class CompositeController {
             return tagResult;
         }
 
-        JSONObject data = new JSONObject().element("types", typeResult.getData())
-                .element("tags", tagResult.getData());
+        JSONObject data = new JSONObject()
+                .element("types", typeResult.getData()).element("tags", tagResult.getData());
+        return ResultUtils.success(data);
+    }
+
+    @RequestMapping(value = "/moodAndImages", method = RequestMethod.GET)
+    public Result moodAndImages() {
+        Result moodsResult = moodService.list();
+        if(! moodsResult.isSuccess()) {
+            return moodsResult;
+        }
+        Result imagesResult = imageService.list();
+        if(! imagesResult.isSuccess()) {
+            return imagesResult;
+        }
+
+        JSONObject data = new JSONObject()
+                .element("moods", moodsResult.getData()).element("images", imagesResult.getData());
         return ResultUtils.success(data);
     }
 

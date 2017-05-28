@@ -31,8 +31,8 @@ public final class POVOTransferUtils {
      */
     public static void main(String[] args) {
 
-        Class src = MoodPO.class;
-        Class dst = MoodVO.class;
+        Class src = ImagePO.class;
+        Class dst = AdminImageVO.class;
 
         String transfer = BeanTransferUtils.transferTo(src, dst);
         String transferList = BeanTransferUtils.transferListTo(src, dst);
@@ -487,6 +487,81 @@ public final class POVOTransferUtils {
         }
         return voes;
     }
+
+    // -------------------- ImagePO <-> ImageVO --------------------------
+    public static ImageVO imagePO2ImageVO(ImagePO src) {
+        ImageVO result = new ImageVO();
+        result.setId(src.getId());
+        result.setUrl(src.getUrl());
+        result.setTitle(src.getTitle());
+        result.setCreatedAt(src.getCreatedAt());
+        return result;
+    }
+
+    public static Collection<ImageVO> imagePO2ImageVOList(Collection<ImagePO> src) {
+        List<ImageVO> result = new ArrayList<>(src.size());
+        for(ImagePO ele : src) {
+            result.add(imagePO2ImageVO(ele));
+        }
+        return result;
+    }
+
+    public static ImagePO imageVO2ImagePO(ImageVO src) {
+        ImagePO result = new ImagePO();
+        result.setId(src.getId());
+        result.setUrl(src.getUrl());
+        result.setTitle(src.getTitle());
+        result.setCreatedAt(src.getCreatedAt());
+        return result;
+    }
+
+    public static Collection<ImagePO> imageVO2ImagePOList(Collection<ImageVO> src) {
+        List<ImagePO> result = new ArrayList<>(src.size());
+        for(ImageVO ele : src) {
+            result.add(imageVO2ImagePO(ele));
+        }
+        return result;
+    }
+
+    // -------------------- ImagePO <-> AdminImageVO --------------------------
+    public static AdminImageVO imagePO2AdminImageVO(ImagePO src) {
+        AdminImageVO result = new AdminImageVO();
+        result.setId(src.getId());
+        result.setUpdatedAt(src.getUpdatedAt());
+        result.setTitle(src.getTitle());
+        result.setCreatedAt(src.getCreatedAt());
+        result.setEnable(src.getEnable());
+        result.setUrl(src.getUrl());
+        return result;
+    }
+
+    public static Collection<AdminImageVO> imagePO2AdminImageVOList(Collection<ImagePO> src) {
+        List<AdminImageVO> result = new ArrayList<>(src.size());
+        for(ImagePO ele : src) {
+            result.add(imagePO2AdminImageVO(ele));
+        }
+        return result;
+    }
+
+    public static ImagePO adminImageVO2ImagePO(AdminImageVO src) {
+        ImagePO result = new ImagePO();
+        result.setId(src.getId());
+        result.setUpdatedAt(src.getUpdatedAt());
+        result.setTitle(src.getTitle());
+        result.setCreatedAt(src.getCreatedAt());
+        result.setEnable(src.getEnable());
+        result.setUrl(src.getUrl());
+        return result;
+    }
+
+    public static Collection<ImagePO> adminImageVO2ImagePOList(Collection<AdminImageVO> src) {
+        List<ImagePO> result = new ArrayList<>(src.size());
+        for(AdminImageVO ele : src) {
+            result.add(adminImageVO2ImagePO(ele));
+        }
+        return result;
+    }
+
 
     // -------------------- 待续 --------------------------
 
