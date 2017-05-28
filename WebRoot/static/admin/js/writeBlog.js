@@ -15,13 +15,16 @@ $.ajax({
     type : "GET",
     success : function (result) {
         if(result.success) {
+            var typeIdEle = $("#typeId")
             var types = result.data.types
             for(idx in types) {
-                $("#blogTypeId").append("<option value='" + types[idx].id + "'> " + types[idx].name + " </option>")
+                typeIdEle.append("<option value='" + types[idx].id + "'> " + types[idx].name + " </option>")
             }
+
+            var tagIdEle = $("#tagIds")
             var tags = result.data.tags
             for(idx in tags) {
-                $("#tagIds").append("<option value='" + tags[idx].id + "'> " + tags[idx].name + " </option>")
+                tagIdEle.append("<option value='" + tags[idx].id + "'> " + tags[idx].name + " </option>")
             }
         }
     }

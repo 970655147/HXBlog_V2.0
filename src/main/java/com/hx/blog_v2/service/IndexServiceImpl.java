@@ -59,44 +59,54 @@ public class IndexServiceImpl extends BaseServiceImpl<Object> implements IndexSe
 
     @Override
     public Result index() {
-        String recommendBlogsSql = " select * from blog as b inner join blog_ex as e on b.id = e.blog_id " +
-                " where b.deleted = 0 and b.id >= 0 order by e.comment_cnt desc limit 0, 1 ";
         String hotBlogsSql = " select * from blog as b inner join blog_ex as e on b.id = e.blog_id " +
                 " where b.deleted = 0 and b.id >= 0 order by e.comment_cnt desc limit 0, 5 ";
-        String latestBlogsSql = " select * from blog as b inner join blog_ex as e on b.id = e.blog_id " +
-                " where b.deleted = 0 and b.id >= 0 order by b.created_at desc limit 0, 5 ";
         String latestCommentsSql = " select * from blog_comment order by created_at limit 0, 5 ";
         String contextBlogSql = " select * from blog as b inner join blog_ex as e on b.id = e.blog_id " +
                 " where b.id = " + BlogConstants.CONTEXT_BLOG_ID;
         String facetByMogroupnthSql = " select b.created_at_month as month, count(*) as cnt from blog as b " +
                 "where b.deleted = 0 and b.id >= 0 group by b.created_at_month ";
         String todayVisitedSql = " select count(*) as cnt from visitor where created_at >= (select cast(cast(sysdate() as date) AS datetime))";
-        BlogVO recommendBlog = jdbcTemplate.queryForObject(recommendBlogsSql, new BlogVOMapper());
+
         List<BlogVO> hotBlogs = jdbcTemplate.query(hotBlogsSql, new BlogVOMapper());
-        List<BlogVO> latestBlogs = jdbcTemplate.query(latestBlogsSql, new BlogVOMapper());
         List<CommentVO> latestComments = jdbcTemplate.query(latestCommentsSql, new CommentVOMapper());
         BlogVO contextBlog = jdbcTemplate.queryForObject(contextBlogSql, new BlogVOMapper());
         List<FacetByMonthVO> facetByMonth = jdbcTemplate.query(facetByMogroupnthSql, new FacetByMonthMapper());
         Integer todayVisited = jdbcTemplate.queryForObject(todayVisitedSql, new OneIntMapper("cnt"));
-
         encapBlogVo(hotBlogs);
-        encapBlogVo(Collections.singletonList(recommendBlog));
 
         JSONObject data = new JSONObject();
         data.put("title", "生活有度, 人生添寿");
-        data.put("subTitle", "如果你浪费了自己的年龄, 那是挺可悲的 因为你的青春只能持续一点儿时间——很短的一点儿时间 ");
+        data.put("subTitle", "如果你浪费了自己的年龄, 那是挺可悲的 因为你的青春只能持续一点儿时间 -- 很短的一点儿时间 ");
         data.put("tags", tags2List(cacheContext.allBlogTags()));
         data.put("types", tags2List(cacheContext.allBlogTypes()));
         data.put("links", cacheContext.allLinks());
 
-        data.put("recommend", recommendBlog);
         data.put("hotBlogs", hotBlogs);
-        data.put("latestBlogs", latestBlogs);
         data.put("latestComments", latestComments);
         data.put("facetByMonth", facetByMonth);
         data.put("goodSensed", contextBlog.getGoodCnt());
         data.put("todayVisited", todayVisited);
         // 本周, 本月, 合计
+
+        return ResultUtils.success(data);
+    }
+
+    @Override
+    public Result latest() {
+        String recommendBlogsSql = " select * from blog as b inner join blog_ex as e on b.id = e.blog_id " +
+                " where b.deleted = 0 and b.id >= 0 order by e.comment_cnt desc limit 0, 1 ";
+        String latestBlogsSql = " select * from blog as b inner join blog_ex as e on b.id = e.blog_id " +
+                " where b.deleted = 0 and b.id >= 0 order by b.created_at desc limit 0, 5 ";
+
+        BlogVO recommendBlog = jdbcTemplate.queryForObject(recommendBlogsSql, new BlogVOMapper());
+        List<BlogVO> latestBlogs = jdbcTemplate.query(latestBlogsSql, new BlogVOMapper());
+        encapBlogVo(Collections.singletonList(recommendBlog));
+        encapBlogVo(latestBlogs);
+
+        JSONObject data = new JSONObject();
+        data.put("recommend", recommendBlog);
+        data.put("latestBlogs", latestBlogs);
 
         return ResultUtils.success(data);
     }
@@ -127,7 +137,6 @@ public class IndexServiceImpl extends BaseServiceImpl<Object> implements IndexSe
      * @date 5/27/2017 11:26 PM
      * @since 1.0
      */
-
     private void encapBlogVo(List<BlogVO> voes) {
         for(BlogVO vo : voes) {
             encapTypeTagInfo(vo);

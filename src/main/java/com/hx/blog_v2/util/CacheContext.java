@@ -73,7 +73,7 @@ public class CacheContext {
         blogTagsById = new LinkedHashMap<>();
         blogTypesById = new LinkedHashMap<>();
         try {
-            List<BlogTagPO> list = blogTagDao.findMany(Criteria.allMatch(), BlogConstants.IDX_MANAGER.getDoLoad());
+            List<BlogTagPO> list = blogTagDao.findMany(Criteria.eq("deleted", "0"), BlogConstants.IDX_MANAGER.getDoLoad());
             for (BlogTagPO po : list) {
                 blogTagsById.put(po.getId(), po);
             }
@@ -81,7 +81,7 @@ public class CacheContext {
             Log.err("error while load blog_tag's data !");
         }
         try {
-            List<BlogTypePO> list = blogTypeDao.findMany(Criteria.allMatch(), BlogConstants.IDX_MANAGER.getDoLoad());
+            List<BlogTypePO> list = blogTypeDao.findMany(Criteria.eq("deleted", "0"), BlogConstants.IDX_MANAGER.getDoLoad());
             for (BlogTypePO po : list) {
                 blogTypesById.put(po.getId(), po);
             }
@@ -89,7 +89,7 @@ public class CacheContext {
             Log.err("error while load blog_type's data !");
         }
         try {
-            links = linkDao.findMany(Criteria.allMatch(), BlogConstants.IDX_MANAGER.getDoLoad());
+            links = linkDao.findMany(Criteria.eq("deleted", "0"), BlogConstants.IDX_MANAGER.getDoLoad());
         } catch (Exception e) {
             Log.err("error while load link's data !");
         }

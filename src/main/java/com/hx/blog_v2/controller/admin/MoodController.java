@@ -31,7 +31,6 @@ public class MoodController {
         return moodService.add(params);
     }
 
-
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public Result list(SimplePage<AdminMoodVO> page) {
 

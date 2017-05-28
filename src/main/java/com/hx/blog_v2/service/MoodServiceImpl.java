@@ -4,8 +4,10 @@ import com.hx.blog_v2.dao.interf.MoodDao;
 import com.hx.blog_v2.domain.form.BeanIdForm;
 import com.hx.blog_v2.domain.form.MoodSaveForm;
 import com.hx.blog_v2.domain.mapper.AdminMoodVOMapper;
-import com.hx.blog_v2.domain.po.*;
+import com.hx.blog_v2.domain.mapper.MoodVOMapper;
+import com.hx.blog_v2.domain.po.MoodPO;
 import com.hx.blog_v2.domain.vo.AdminMoodVO;
+import com.hx.blog_v2.domain.vo.MoodVO;
 import com.hx.blog_v2.service.interf.BaseServiceImpl;
 import com.hx.blog_v2.service.interf.MoodService;
 import com.hx.blog_v2.util.BlogConstants;
@@ -51,9 +53,18 @@ public class MoodServiceImpl extends BaseServiceImpl<MoodPO> implements MoodServ
     }
 
     @Override
+    public Result list(SimplePage<MoodVO> page) {
+        String sql = " select * from mood where deleted = 0 and enable = 1 order by created_at ";
+
+        List<MoodVO> list = jdbcTemplate.query(sql, new MoodVOMapper());
+        page.setList(list);
+        return ResultUtils.success(page);
+    }
+
+    @Override
     public Result adminList(SimplePage<AdminMoodVO> page) {
         String sql = " select * from mood where deleted = 0 order by created_at desc limit ?, ? ";
-        Object[] params = new Object[]{page.recordOffset(), page.getPageSize() };
+        Object[] params = new Object[]{page.recordOffset(), page.getPageSize()};
 
         List<AdminMoodVO> list = jdbcTemplate.query(sql, params, new AdminMoodVOMapper());
         page.setList(list);
@@ -69,7 +80,7 @@ public class MoodServiceImpl extends BaseServiceImpl<MoodPO> implements MoodServ
         try {
             long modified = moodDao.updateById(po, BlogConstants.IDX_MANAGER_FILTER_ID.getDoLoad(), BlogConstants.IDX_MANAGER_FILTER_ID.getDoFilter())
                     .getModifiedCount();
-            if(modified == 0) {
+            if (modified == 0) {
                 return ResultUtils.failed("没有找到对应的心情 !");
             }
         } catch (Exception e) {

@@ -22,10 +22,16 @@ public class IndexController {
     @Autowired
     private IndexService indexService;
 
-    @RequestMapping("index")
+    @RequestMapping("/index")
     public Result index() {
 
         return indexService.index();
+    }
+
+    @RequestMapping("/latest")
+    public Result latest() {
+
+        return indexService.latest();
     }
 
 }

@@ -1,43 +1,53 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html>
 <link>
-<title>HXBlog_V2.0</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<head>
+    <title>HXBlog_V2.0</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 
-<link href="./images/blog.ico" rel="icon" type="image/x-icon"/>
-<link href="./css/style.css" rel="stylesheet"/>
-<link href="./css/mystyle.css" rel="stylesheet"/>
-<!-- common imports -->
-<script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-<script type="text/javascript" src="./js/jquery.svg3dtagcloud.min.js"></script>
-<script type="text/javascript" src="./js/jquery.emoji.js"></script>
-<script type="text/javascript" src="../js/vue.js"></script>
-<script type="text/javascript" src="./myJs/headerFooter.js"></script>
-<script type="text/javascript" src="./myJs/commonImport.js"></script>
-<script type="text/javascript" src="./myJs/index.js"></script>
-<script type="text/javascript">
-    importCss()
-    $(document).ready(function () {
-        importHeaderFooter()
-        importJs()
-        init()
-    })
-</script>
+    <link href="./images/blog.ico" rel="icon" type="image/x-icon"/>
+    <link href="./css/style.css" rel="stylesheet"/>
+    <link href="./css/mystyle.css" rel="stylesheet"/>
+    <link href="./css/animate.min.css" rel="stylesheet"/>
+    <link href="./css/bootstrap.css" rel="stylesheet"/>
+    <link href="./css/dropdown.css" rel="stylesheet"/>
+    <link href="./css/jquery.mCustomScrollbar.min.css" rel="stylesheet"/>
+    <link href="./css/jquery.emoji.css" rel="stylesheet"/>
+    <!-- common imports -->
+    <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="./js/jquery.svg3dtagcloud.min.js"></script>
+    <script type="text/javascript" src="./js/jquery.emoji.js"></script>
+    <script type="text/javascript" src="../js/vue.js"></script>
+    <script type="text/javascript" src="./myJs/headerFooter.js"></script>
+    <script type="text/javascript" src="./myJs/commonImport.js"></script>
+    <script type="text/javascript" src="./myJs/index.js"></script>
+    <script type="text/javascript">
+        importCss()
+        $(document).ready(function () {
+            importHeaderFooter()
+            importJs()
+            headerFooterInit()
+            contentInit()
+        })
+    </script>
 
 </head>
 <boday>
-    <div id="content">
-        <div class="header" id="header"></div><!--头部导航结束-->
-        <div class="header-bottom" id="banner"></div><!--博客标题结束-->
+    <div>
+        <div name="header">
+            <div class="header" id="headerNav"></div><!--头部导航结束-->
+            <div class="header-bottom" id="bannerNav"></div><!--博客标题结束-->
 
-        <div class="banner" style="background: url(./images/background.jpg) no-repeat 0px 0px;background-size: 100%">
-            <div class="container">
-                <h2>{{title}}</h2>
-                <p>{{subTitle}}</p>
-                <a href="#"> Hello Guys </a>
-            </div>
-        </div><!--鸡汤签名结束-->
+            <div class="banner"
+                 style="background: url(./images/background.jpg) no-repeat 0px 0px;background-size: 100%">
+                <div class="container">
+                    <h2 id="title">{{title}}</h2>
+                    <p id="subTitle">{{subTitle}}</p>
+                    <a href="#"> Hello Guys </a>
+                </div>
+            </div><!--鸡汤签名结束-->
+        </div>
 
         <div class="services w3l wow fadeInDown" data-wow-duration=".8s" data-wow-delay=".2s">
             <div class="container">
@@ -103,26 +113,28 @@
             </div>
         </div><!--tabs页面结束-->
 
-        <div class="technology ">
+        <div id="bodyContent" class="technology">
             <div class="container">
                 <div class="col-md-9 technology-left">
                     <div class="tech-no">
                         <div class="tc-ch ">
-                            <h3><a href="blog.html">推荐 :
-                                <span>{{recommend.title}}</span></a>
+                            <h3>
+                                <a :href="'/static/main/blogList.html?id=' + recommend.id">推荐 :
+                                    <span>{{recommend.title}}</span>
+                                </a>
                             </h3>
                             <h6></h6>
                             <div class="tch-img">
-                                <a href="blog.html">
-                                    <img :src="recommend.coverUrl" class="img-responsive" :alt="recommend.author"
-                                         width="300px" height="300px">
+                                <a :href="'/static/main/blogList.html?id=' + recommend.id">
+                                    <img :src="recommend.coverUrl" class="img-responsive"
+                                         :alt="recommend.author" width="300px" height="300px">
                                 </a>
                             </div>
                             <h6> by <a> {{recommend.author}} </a> <span> {{recommend.createdAt}} </span>
                             </h6>
                             <p> {{recommend.summary}} </p>
                             <div class="bht1">
-                                <a :href="'/blog/' + recommend.id" href="blog.html">继续阅读</a>
+                                <a :href="'/static/main/blogList?id=' + recommend.id" href="blog.html">继续阅读</a>
                             </div>
 
                             <div class="clearfix"></div>
@@ -130,26 +142,26 @@
                         <div class="clearfix"></div>
 
                         <div class="w3ls tc-ch wow fadeInDown" data-wow-duration=".8s" data-wow-delay=".2s">
-                            <h3><a href="blog.html">最新更新</a></h3>
+                            <h3><a href="javascript:void(0)">最新更新</a></h3>
                             <h6></h6>
                             <div>
                                 <div>
                                     <div class="col-md-6  w3ls-left wow fadeInDown" v-for="blog in latestBlogL1">
                                         <div class="tc-ch">
                                             <div class="tch-img">
-                                                <a th:href="'/blog/' + blog.id" href="blog.html">
-                                                    <img :src="blog.coverUrl" class="img-responsive"
-                                                         width="300px" height="300px">
+                                                <a :href="'/static/main/blogList?id=' + blog.id">
+                                                    <img :src="blog.coverUrl" class="img-responsive" width="300px"
+                                                         height="300px">
                                                 </a>
                                             </div>
-                                            <h6><a :href="'/blog/' + blog.id" href="blog.html">{{blog.title}}</a>
+                                            <h6><a :href="'/static/main/blogList?id=' + blog.id" href="blog.html">{{blog.title}}</a>
                                             </h6>
                                             <h6> by <a>{{blog.author}}</a>
                                                 <span>{{blog.createdAt}}</span>
                                             </h6>
                                             <p class="summary">{{blog.summary}}</p>
                                             <div class="bht1">
-                                                <a th:href="'/blog/' + blog.id" href="blog.html">查看更多</a>
+                                                <a :href="'/static/main/blogList?id=' + blog.id">查看更多</a>
                                             </div>
                                             <div class="soci">
                                                 <p style="padding-right: 1.8em">
@@ -179,7 +191,7 @@
                                 <div class="col-md-6 wthree-left wow fadeInDown" data-wow-duration=".8s"
                                      data-wow-delay=".2s" style="width: 250px;height: 250px;">
                                     <div class="tch-img">
-                                        <a th:href="'/blog/' + blog.id" href="blog.html">
+                                        <a :href="'/blog/' + blog.id" href="blog.html">
                                             <img :src="blog.coverUrl" class="img-responsive" width="300px"
                                                  height="300px">
                                         </a>
@@ -188,7 +200,7 @@
                                 <div class="col-md-6 wthree-right wow fadeInDown" data-wow-duration=".8s"
                                      data-wow-delay=".2s">
                                     <h6>
-                                        <a th:href="'/blog/' + blog.id" href="blog.html">{{blog.title}}</a>
+                                        <a :href="'/blog/' + blog.id">{{blog.title}}</a>
                                     </h6>
                                     <h6> by
                                         <a>{{blog.author}}</a>
@@ -196,7 +208,7 @@
                                     </h6>
                                     <p class="summary">{{blog.summary}}</p>
                                     <div class="bht1">
-                                        <a th:href="'/blog/' + blog.id" href="blog.html">查看更多</a>
+                                        <a :href="'/blog/' + blog.id">查看更多</a>
                                     </div>
                                     <div class="soci">
                                         <p>
@@ -220,15 +232,17 @@
                     </div>
                 </div><!--左侧内容结束-->
 
-                <div class="col-md-3 technology-right" id="rightNav"></div><!--右侧内容结束-->
-
+                <div name="header">
+                    <div class="col-md-3 technology-right" id="rightNav"></div><!--右侧内容结束-->
+                </div>
                 <div class="clearfix"></div>
             </div>
         </div><!--内容主体结束-->
 
-        <div class="footer" id="footerNav"></div><!--尾部结束-->
-
-        <div class="copyright wow fadeInDown" id="copyrightNav" data-wow-duration=".8s" data-wow-delay=".2s"></div>
+        <div name="header">
+            <div class="footer" id="footerNav"></div><!--尾部结束-->
+            <div class="copyright wow fadeInDown" id="copyrightNav" data-wow-duration=".8s" data-wow-delay=".2s"></div>
+        </div>
         <!--版权区结束-->
 
         <img id="oImg" src="./images/xiaolongbao.gif"/>

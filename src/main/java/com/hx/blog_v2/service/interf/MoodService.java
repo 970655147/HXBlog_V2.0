@@ -4,6 +4,7 @@ import com.hx.blog_v2.domain.form.BeanIdForm;
 import com.hx.blog_v2.domain.form.MoodSaveForm;
 import com.hx.blog_v2.domain.po.MoodPO;
 import com.hx.blog_v2.domain.vo.AdminMoodVO;
+import com.hx.blog_v2.domain.vo.MoodVO;
 import com.hx.common.interf.common.Result;
 import com.hx.common.result.SimplePage;
 
@@ -25,6 +26,16 @@ public interface MoodService extends BaseService<MoodPO> {
      * @since 1.0
      */
     Result add(MoodSaveForm params);
+
+    /**
+     * 搜索符合的条件的心情列表
+     *
+     * @return result
+     * @author Jerry.X.He
+     * @date 5/20/2017 6:21 PM
+     * @since 1.0
+     */
+    Result list(SimplePage<MoodVO> page);
 
     /**
      * 搜索符合的条件的心情列表

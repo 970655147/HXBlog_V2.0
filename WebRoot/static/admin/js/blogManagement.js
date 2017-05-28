@@ -5,14 +5,17 @@ $.ajax({
     success: function (result) {
         if (result.success) {
             var types = result.data.types
-            $("#blogTypeId").append("<option value=''> 全部 </option>")
+            var typeIdEle = $("#typeId")
+            typeIdEle.append("<option value=''> 全部 </option>")
             for (idx in types) {
-                $("#blogTypeId").append("<option value='" + types[idx].id + "'> " + types[idx].name + " </option>")
+                typeIdEle.append("<option value='" + types[idx].id + "'> " + types[idx].name + " </option>")
             }
+
             var tags = result.data.tags
-            $("#blogTagId").append("<option value=''> 全部 </option>")
+            var tagIdEle = $("#tagId")
+            tagIdEle.append("<option value=''> 全部 </option>")
             for (idx in tags) {
-                $("#blogTagId").append("<option value='" + tags[idx].id + "'> " + tags[idx].name + " </option>")
+                tagIdEle.append("<option value='" + tags[idx].id + "'> " + tags[idx].name + " </option>")
             }
         }
     }

@@ -7,23 +7,17 @@
  */
 
 // 需要导入的css, js
-var styleShetts = [
-    "./css/bootstrap.css",
-    "./css/dropdown.css",
-    "./css/animate.min.css",
-    "./css/jquery.mCustomScrollbar.min.css",
-    "./css/jquery.emoji.css"
-]
+var styleShetts = []
 var jses = [
     "./js/bootstrap.min.js",
     "./js/wow.min.js",
     "./js/modernizr.custom.js",
     "./js/jquery.dropdown.js",
     "./js/time.js",
-    "./js/jquery.mousewheel-3.0.6.min.js",
-    "./js/jquery.mCustomScrollbar.min.js",
     "./js/xiaolongbao.js",
-    "./js/myjs.js"
+    "./js/myjs.js",
+    "../myJs/constants.js",
+    "../myJs/stringBuilder.js"
 ]
 
 // 处理导入 css, js 的逻辑

@@ -31,7 +31,7 @@ public final class WebContext {
     }
 
     /**
-     * ±£´æÏß³ÌÌØÓĞµÄÏà¹Ø¶ÔÏó
+     * ä¿å­˜çº¿ç¨‹ç‰¹æœ‰çš„ç›¸å…³å¯¹è±¡
      */
     private static Map<String, ThreadLocal<Object>> threadLocalMap = new HashMap<>();
 
@@ -42,15 +42,15 @@ public final class WebContext {
     }
 
     /**
-     * ÏîÄ¿µÄ¾ø¶ÔÂ·¾¶
+     * é¡¹ç›®çš„ç»å¯¹è·¯å¾„
      */
     private static String PROJ_PATH = null;
     /**
-     * ´æ·Å²©¿ÍµÄÎÄ¼ş¼Ğ
+     * å­˜æ”¾åšå®¢çš„æ–‡ä»¶å¤¹
      */
     private static String BLOG_ROOT_PATH = null;
     /**
-     * ´æ·ÅÍ¼Æ¬µÄÎÄ¼ş¼Ğ
+     * å­˜æ”¾å›¾ç‰‡çš„æ–‡ä»¶å¤¹
      */
     private static String IMG_ROOT_PATH = null;
 
@@ -62,7 +62,7 @@ public final class WebContext {
         }
     }
 
-    // -------------------- ÎÄ¼şÏµÍ³Ïà¹Ø --------------------------
+    // -------------------- æ–‡ä»¶ç³»ç»Ÿç›¸å…³ --------------------------
 
     public static void init(ServletContext servletContext) {
         PROJ_PATH = servletContext.getRealPath("/");
@@ -71,7 +71,7 @@ public final class WebContext {
     }
 
     /**
-     * »ñÈ¡µ±Ç°ÏîÄ¿µÄÂ·¾¶
+     * è·å–å½“å‰é¡¹ç›®çš„è·¯å¾„
      *
      * @return java.lang.String
      * @author Jerry.X.He
@@ -83,7 +83,7 @@ public final class WebContext {
     }
 
     /**
-     * »ñÈ¡²©¿ÍµÄ¸ùÂ·¾¶
+     * è·å–åšå®¢çš„æ ¹è·¯å¾„
      *
      * @return java.lang.String
      * @author Jerry.X.He
@@ -95,7 +95,7 @@ public final class WebContext {
     }
 
     /**
-     * »ñÈ¡Í¼Æ¬µÄ¸ùÂ·¾¶
+     * è·å–å›¾ç‰‡çš„æ ¹è·¯å¾„
      *
      * @return java.lang.String
      * @author Jerry.X.He
@@ -109,9 +109,9 @@ public final class WebContext {
     // -------------------- req/resp --------------------------
 
     /**
-     * ÅäÖÃµ±Ç°ÇëÇó´¦ÀíÏß³Ì¶ÔÓ¦µÄrequest
+     * é…ç½®å½“å‰è¯·æ±‚å¤„ç†çº¿ç¨‹å¯¹åº”çš„request
      *
-     * @param req µ±Ç°Ïß³Ì¶ÔÓ¦µÄÇëÇó
+     * @param req å½“å‰çº¿ç¨‹å¯¹åº”çš„è¯·æ±‚
      * @return void
      * @author Jerry.X.He
      * @date 5/6/2017 3:04 PM
@@ -122,7 +122,7 @@ public final class WebContext {
     }
 
     /**
-     * »ñÈ¡µ±Ç°ÇëÇó´¦ÀíÏß³Ì¶ÔÓ¦µÄrequest
+     * è·å–å½“å‰è¯·æ±‚å¤„ç†çº¿ç¨‹å¯¹åº”çš„request
      *
      * @return void
      * @author Jerry.X.He
@@ -134,7 +134,7 @@ public final class WebContext {
     }
 
     /**
-     * ÇåÀíµ±Ç°ÇëÇó´¦ÀíÏß³Ì¶ÔÓ¦µÄrequest
+     * æ¸…ç†å½“å‰è¯·æ±‚å¤„ç†çº¿ç¨‹å¯¹åº”çš„request
      *
      * @return void
      * @author Jerry.X.He
@@ -146,9 +146,9 @@ public final class WebContext {
     }
 
     /**
-     * ÅäÖÃµ±Ç°ÇëÇó´¦ÀíÏß³Ì¶ÔÓ¦µÄrequest
+     * é…ç½®å½“å‰è¯·æ±‚å¤„ç†çº¿ç¨‹å¯¹åº”çš„request
      *
-     * @param resp µ±Ç°Ïß³Ì¶ÔÓ¦µÄresponse
+     * @param resp å½“å‰çº¿ç¨‹å¯¹åº”çš„response
      * @return void
      * @author Jerry.X.He
      * @date 5/6/2017 3:04 PM
@@ -159,7 +159,7 @@ public final class WebContext {
     }
 
     /**
-     * »ñÈ¡µ±Ç°ÇëÇó´¦ÀíÏß³Ì¶ÔÓ¦µÄrequest
+     * è·å–å½“å‰è¯·æ±‚å¤„ç†çº¿ç¨‹å¯¹åº”çš„request
      *
      * @return void
      * @author Jerry.X.He
@@ -171,7 +171,7 @@ public final class WebContext {
     }
 
     /**
-     * ÇåÀíµ±Ç°ÇëÇó´¦ÀíÏß³Ì¶ÔÓ¦µÄresponse
+     * æ¸…ç†å½“å‰è¯·æ±‚å¤„ç†çº¿ç¨‹å¯¹åº”çš„response
      *
      * @return void
      * @author Jerry.X.He
@@ -183,9 +183,9 @@ public final class WebContext {
     }
 
     /**
-     * ÅäÖÃµ±Ç°ÇëÇó´¦ÀíÏß³Ì¶ÔÓ¦µÄsession
+     * é…ç½®å½“å‰è¯·æ±‚å¤„ç†çº¿ç¨‹å¯¹åº”çš„session
      *
-     * @param session µ±Ç°ÇëÇó¶ÔÓ¦µÄsession
+     * @param session å½“å‰è¯·æ±‚å¯¹åº”çš„session
      * @return void
      * @author Jerry.X.He
      * @date 5/6/2017 3:04 PM
@@ -196,7 +196,7 @@ public final class WebContext {
     }
 
     /**
-     * »ñÈ¡µ±Ç°ÇëÇó´¦ÀíÏß³Ì¶ÔÓ¦µÄrequest
+     * è·å–å½“å‰è¯·æ±‚å¤„ç†çº¿ç¨‹å¯¹åº”çš„request
      *
      * @return void
      * @author Jerry.X.He
@@ -208,7 +208,7 @@ public final class WebContext {
     }
 
     /**
-     * ÇåÀíµ±Ç°ÇëÇó´¦ÀíÏß³Ì¶ÔÓ¦µÄresponse
+     * æ¸…ç†å½“å‰è¯·æ±‚å¤„ç†çº¿ç¨‹å¯¹åº”çš„response
      *
      * @return void
      * @author Jerry.X.He
@@ -220,9 +220,9 @@ public final class WebContext {
     }
 
     /**
-     * ´ÓrequestÖĞ»ñÈ¡²ÎÊı
+     * ä»requestä¸­è·å–å‚æ•°
      *
-     * @param key ¸ø¶¨µÄkey
+     * @param key ç»™å®šçš„key
      * @return java.lang.Object
      * @author Jerry.X.He
      * @date 5/6/2017 11:59 PM
@@ -233,9 +233,9 @@ public final class WebContext {
     }
 
     /**
-     * ´ÓrequestÖĞ»ñÈ¡ÊôĞÔ
+     * ä»requestä¸­è·å–å±æ€§
      *
-     * @param key ¸ø¶¨µÄkey
+     * @param key ç»™å®šçš„key
      * @return java.lang.Object
      * @author Jerry.X.He
      * @date 5/6/2017 11:59 PM
@@ -246,9 +246,9 @@ public final class WebContext {
     }
 
     /**
-     * ´ÓrequestÖĞ»ñÈ¡ÊôĞÔ
+     * ä»requestä¸­è·å–å±æ€§
      *
-     * @param key ¸ø¶¨µÄkey
+     * @param key ç»™å®šçš„key
      * @return java.lang.Object
      * @author Jerry.X.He
      * @date 5/6/2017 11:59 PM
@@ -259,10 +259,10 @@ public final class WebContext {
     }
 
     /**
-     * ÅäÖÃrequestÖĞµÄÊôĞÔ
+     * é…ç½®requestä¸­çš„å±æ€§
      *
-     * @param key ¸ø¶¨µÄkey
-     * @param val ¸ø¶¨µÄval
+     * @param key ç»™å®šçš„key
+     * @param val ç»™å®šçš„val
      * @return java.lang.Object
      * @author Jerry.X.He
      * @date 5/6/2017 11:59 PM
@@ -273,9 +273,9 @@ public final class WebContext {
     }
 
     /**
-     * ÒÆ³ırequsetÖĞµÄÊôĞÔ
+     * ç§»é™¤requsetä¸­çš„å±æ€§
      *
-     * @param key ¸ø¶¨µÄkey
+     * @param key ç»™å®šçš„key
      * @return java.lang.Object
      * @author Jerry.X.He
      * @date 5/6/2017 11:59 PM
@@ -286,9 +286,9 @@ public final class WebContext {
     }
 
     /**
-     * ´ÓsessionÖĞ»ñÈ¡ÊôĞÔ
+     * ä»sessionä¸­è·å–å±æ€§
      *
-     * @param key ¸ø¶¨µÄkey
+     * @param key ç»™å®šçš„key
      * @return java.lang.Object
      * @author Jerry.X.He
      * @date 5/6/2017 11:59 PM
@@ -299,9 +299,9 @@ public final class WebContext {
     }
 
     /**
-     * ´ÓsessionÖĞ»ñÈ¡ÊôĞÔ
+     * ä»sessionä¸­è·å–å±æ€§
      *
-     * @param key ¸ø¶¨µÄkey
+     * @param key ç»™å®šçš„key
      * @return java.lang.Object
      * @author Jerry.X.He
      * @date 5/6/2017 11:59 PM
@@ -312,10 +312,10 @@ public final class WebContext {
     }
 
     /**
-     * ÅäÖÃsessionÖĞµÄÊôĞÔ
+     * é…ç½®sessionä¸­çš„å±æ€§
      *
-     * @param key ¸ø¶¨µÄkey
-     * @param val ¸ø¶¨µÄval
+     * @param key ç»™å®šçš„key
+     * @param val ç»™å®šçš„val
      * @return java.lang.Object
      * @author Jerry.X.He
      * @date 5/6/2017 11:59 PM
@@ -326,9 +326,9 @@ public final class WebContext {
     }
 
     /**
-     * ÒÆ³ısessionÖĞµÄÊôĞÔ
+     * ç§»é™¤sessionä¸­çš„å±æ€§
      *
-     * @param key ¸ø¶¨µÄkey
+     * @param key ç»™å®šçš„key
      * @return java.lang.Object
      * @author Jerry.X.He
      * @date 5/6/2017 11:59 PM
@@ -341,9 +341,9 @@ public final class WebContext {
     // -------------------- write response --------------------------
 
     /**
-     * ÏòresponseÖĞĞ´³ötext
+     * å‘responseä¸­å†™å‡ºtext
      *
-     * @param text ĞèÒªĞ´³öµÄÊı¾İ
+     * @param text éœ€è¦å†™å‡ºçš„æ•°æ®
      * @return void
      * @author Jerry.X.He
      * @date 5/6/2017 3:24 PM
@@ -356,9 +356,9 @@ public final class WebContext {
     }
 
     /**
-     * ÏòresponseÖĞĞ´³öhtml
+     * å‘responseä¸­å†™å‡ºhtml
      *
-     * @param text ĞèÒªĞ´³öµÄÊı¾İ
+     * @param text éœ€è¦å†™å‡ºçš„æ•°æ®
      * @return void
      * @author Jerry.X.He
      * @date 5/6/2017 3:24 PM
@@ -371,9 +371,9 @@ public final class WebContext {
     }
 
     /**
-     * ÏòresponseÖĞĞ´³öxml
+     * å‘responseä¸­å†™å‡ºxml
      *
-     * @param text ĞèÒªĞ´³öµÄÊı¾İ
+     * @param text éœ€è¦å†™å‡ºçš„æ•°æ®
      * @return void
      * @author Jerry.X.He
      * @date 5/6/2017 3:24 PM
@@ -386,9 +386,9 @@ public final class WebContext {
     }
 
     /**
-     * ÏòresponseÖĞĞ´³öjson
+     * å‘responseä¸­å†™å‡ºjson
      *
-     * @param text ĞèÒªĞ´³öµÄÊı¾İ
+     * @param text éœ€è¦å†™å‡ºçš„æ•°æ®
      * @return void
      * @author Jerry.X.He
      * @date 5/6/2017 3:24 PM
@@ -409,10 +409,10 @@ public final class WebContext {
     }
 
     /**
-     * ÏòresponseÖĞĞ´³öÍ¼Æ¬
+     * å‘responseä¸­å†™å‡ºå›¾ç‰‡
      *
-     * @param img    ĞèÒªĞ´³öµÄÊı¾İ
-     * @param format ĞèÒªĞ´³öµÄÍ¼Æ¬µÄ¸ñÊ½
+     * @param img    éœ€è¦å†™å‡ºçš„æ•°æ®
+     * @param format éœ€è¦å†™å‡ºçš„å›¾ç‰‡çš„æ ¼å¼
      * @return void
      * @author Jerry.X.He
      * @date 5/6/2017 3:24 PM
@@ -430,7 +430,7 @@ public final class WebContext {
     }
 
     /**
-     * ÅäÖÃµ±Ç°response²»ÔÊĞí»º´æ
+     * é…ç½®å½“å‰responseä¸å…è®¸ç¼“å­˜
      *
      * @return void
      * @author Jerry.X.He
@@ -447,14 +447,14 @@ public final class WebContext {
     // -------------------- to be continued --------------------------
 
 
-    // -------------------- ¸¨Öú·½·¨ --------------------------
+    // -------------------- è¾…åŠ©æ–¹æ³• --------------------------
 
 
     /**
-     * ÅäÖÃµ±Ç°ÇëÇó´¦ÀíÏß³Ì¶ÔÓ¦µÄkv
+     * é…ç½®å½“å‰è¯·æ±‚å¤„ç†çº¿ç¨‹å¯¹åº”çš„kv
      *
-     * @param key ĞèÒªÅäÖÃµÄµÄkey
-     * @param val ĞèÒªÅäÖÃµÄkey¶ÔÓ¦µÄvalue
+     * @param key éœ€è¦é…ç½®çš„çš„key
+     * @param val éœ€è¦é…ç½®çš„keyå¯¹åº”çš„value
      * @return void
      * @author Jerry.X.He
      * @date 5/6/2017 3:04 PM
@@ -471,9 +471,9 @@ public final class WebContext {
     }
 
     /**
-     * »ñÈ¡µ±Ç°ÇëÇó´¦ÀíÏß³Ì¶ÔÓ¦µÄkey¶ÔÓ¦µÄ¶ÔÏó
+     * è·å–å½“å‰è¯·æ±‚å¤„ç†çº¿ç¨‹å¯¹åº”çš„keyå¯¹åº”çš„å¯¹è±¡
      *
-     * @param key ĞèÒª»ñÈ¡µÄµÄkey
+     * @param key éœ€è¦è·å–çš„çš„key
      * @return void
      * @author Jerry.X.He
      * @date 5/6/2017 3:04 PM
@@ -489,9 +489,9 @@ public final class WebContext {
     }
 
     /**
-     * ÇåÀíµ±Ç°ÇëÇó´¦ÀíÏß³Ì¶ÔÓ¦µÄkey¶ÔÓ¦µÄ¶ÔÏó
+     * æ¸…ç†å½“å‰è¯·æ±‚å¤„ç†çº¿ç¨‹å¯¹åº”çš„keyå¯¹åº”çš„å¯¹è±¡
      *
-     * @param key ĞèÒª»ñÈ¡µÄµÄkey
+     * @param key éœ€è¦è·å–çš„çš„key
      * @return void
      * @author Jerry.X.He
      * @date 5/6/2017 3:04 PM
@@ -505,10 +505,10 @@ public final class WebContext {
     }
 
     /**
-     * ÏòresponseÖĞĞ´³ötext
+     * å‘responseä¸­å†™å‡ºtext
      *
      * @param resp response
-     * @param text ĞèÒªĞ´³öµÄĞÅÏ¢
+     * @param text éœ€è¦å†™å‡ºçš„ä¿¡æ¯
      * @return void
      * @author Jerry.X.He
      * @date 5/6/2017 3:23 PM

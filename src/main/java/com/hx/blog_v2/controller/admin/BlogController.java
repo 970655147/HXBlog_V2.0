@@ -35,7 +35,7 @@ public class BlogController {
     @RequestMapping(value = "/get", method = RequestMethod.GET)
     public Result get(BeanIdForm params) {
 
-        return blogService.get(params);
+        return blogService.adminGet(params);
     }
 
 

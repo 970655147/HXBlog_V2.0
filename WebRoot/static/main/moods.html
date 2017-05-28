@@ -1,0 +1,163 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>HXBlog_V2.0</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="keywords" content=""/>
+
+    <link href="./images/blog.ico" rel="icon" type="image/x-icon"/>
+    <link href="./css/style.css" rel="stylesheet"/>
+    <link href="./css/mystyle.css" rel="stylesheet"/>
+    <link href="./css/animate.min.css" rel="stylesheet"/>
+    <link href="./css/bootstrap.css" rel="stylesheet"/>
+    <link href="./css/dropdown.css" rel="stylesheet"/>
+    <link href="./css/jquery.mCustomScrollbar.min.css" rel="stylesheet"/>
+    <link href="./css/jquery.emoji.css" rel="stylesheet"/>
+    <link href="./css/commentStyle.css" rel="stylesheet"/>
+    <link href="./css/upprise.css" rel="stylesheet"/>
+    <link href='./css/jquery.eeyellow.Timeline.css' rel='stylesheet' type='text/css'/>
+    <link href="./css/chocolat.css" type="text/css" rel="stylesheet" media="screen">
+    <!-- common imports -->
+    <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="./js/jquery.svg3dtagcloud.min.js"></script>
+    <script type="text/javascript" src="./js/jquery.emoji.js"></script>
+    <script type="text/javascript" src="./js/jquery.mCustomScrollbar.min.js"></script>
+    <script type="text/javascript" src="./js/jquery.mousewheel-3.0.6.min.js"></script>
+    <script src="./js/jquery.eeyellow.Timeline.js"></script>
+    <script src="./js/jquery.chocolat.js"></script>
+    <script type="text/javascript" src="../js/vue.js"></script>
+    <script type="text/javascript" src="./myJs/commonImport.js"></script>
+    <script type="text/javascript" src="./myJs/headerFooter.js"></script>
+    <script type="text/javascript" src="./myJs/moods.js"></script>
+    <script type="text/javascript" src="../myJs/utils.js"></script>
+    <script type="text/javascript">
+        importCss()
+        $(document).ready(function () {
+            importHeaderFooter()
+            importJs()
+            headerFooterInit()
+            contentInit()
+        })
+    </script>
+
+</head>
+<body>
+<div class="header" id="headerNav"></div><!--头部导航结束-->
+
+<div class="header-bottom" id="bannerNav"></div><!--博客标题结束-->
+
+<!-- technology-left -->
+<div class="technology " id="bodyContent" data-wow-duration=".8s" data-wow-delay=".2s">
+    <div class="container ">
+        <div class="col-md-12 technology-left" style="width: 100%">
+            <div class="blog">
+                <div class="row">
+                    <div class="services w3l " >
+                        <div class="grid_3 grid_5">
+                            <div class="bs-example bs-example-tabs" role="tabpanel" data-example-id="togglable-tabs">
+                                <ul id="myTab" class="nav nav-tabs" role="tablist">
+                                    <li role="presentation" class="active" style="width: 50%">
+                                        <a href="#expeditions" id="expeditions-tab" role="tab" data-toggle="tab"
+                                           aria-controls="expeditions" aria-expanded="true">时光轴</a></li>
+                                    <li role="presentation" class="" style="width: 50%">
+                                        <a href="#safari" role="tab" id="safari-tab" data-toggle="tab"
+                                           aria-controls="safari">照片墙</a>
+                                    </li>
+                                </ul><!--面板标签标题结束-->
+                                <div id="myTabContent" class="tab-content">
+                                    <div role="tabpanel" class="tab-pane fade active in" id="expeditions"
+                                         aria-labelledby="expeditions-tab" style="padding-bottom: 0">
+                                        <div class="VivaTimeline">
+                                            <dl>
+                                                <span>
+                                                    <dt>{{new Date().format("yyyy-MM-dd")}}</dt>
+                                                    <span v-for="(mood, idx) in moods">
+                                                        <dd v-if="idx % 2 == 0" class="pos-left clearfix wow fadeInLeftBig animated">
+                                                            <div class="circ"></div>
+                                                            <div class="time"> {{new Date(mood.createdAt).format("yyyy-MM-dd")}} </div>
+                                                            <div class="events">
+                                                                <div class="events-header"> {{mood.title}} </div>
+                                                                <div class="events-body">
+                                                                    <div class="row">
+                                                                        <div class="events-desc">{{mood.content}}</div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </dd>
+                                                        <dd v-else class="pos-right clearfix wow fadeInLeftBig animated">
+                                                            <div class="circ"></div>
+                                                            <div class="time"> {{new Date(mood.createdAt).format("yyyy-MM-dd")}} </div>
+                                                            <div class="events">
+                                                                <div class="events-header"> {{mood.title}} </div>
+                                                                <div class="events-body">
+                                                                    <div class="row">
+                                                                        <div class="events-desc">{{mood.content}}</div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </dd>
+                                                    </span>
+                                                </span>
+                                            </dl>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    </div><!--面板1内容结束-->
+
+                                    <div role="tabpanel" class="tab-pane fade" id="safari"
+                                         aria-labelledby="safari-tab">
+                                        <div class="gallery-grids" style="margin: 0;padding: 0 3em">
+                                            <div class="gallery-grid">
+                                                <a href="./images/g1.jpg"
+                                                   class="wow fadeInUp animated animated" data-wow-delay=".3s"
+                                                   style="visibility: visible; animation-delay: 0.5s; animation-name: fadeInUp;">
+                                                    <img src="./images/g1.jpg" alt=" "
+                                                         class="img-responsive zoom-img">
+                                                </a>
+                                                <a href="./images/g5.jpg"
+                                                   class="wow fadeInUp animated animated" data-wow-delay=".3s"
+                                                   style="visibility: visible; animation-delay: 0.5s; animation-name: fadeInUp;">
+                                                    <img src="./images/g5.jpg" alt=" "
+                                                         class="img-responsive zoom-img">
+                                                </a>
+                                            </div>
+                                            <div class="gallery-grid">
+                                                <a href="./images/g6.jpg"
+                                                   class="wow fadeInUp animated animated" data-wow-delay=".3s"
+                                                   style="visibility: visible; animation-delay: 0.5s; animation-name: fadeInUp;">
+                                                    <img src="./images/g6.jpg" alt=" "
+                                                         class="img-responsive zoom-img">
+                                                </a>
+                                                <a href="./images/g2.jpg"
+                                                   class="wow fadeInUp animated animated" data-wow-delay=".3s"
+                                                   style="visibility: visible; animation-delay: 0.5s; animation-name: fadeInUp;">
+                                                    <img src="./images/g2.jpg" alt=" "
+                                                         class="img-responsive zoom-img">
+                                                </a>
+                                            </div>
+                                            <div class="clearfix"></div>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    </div><!--面板2内容结束-->
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <!-- technology-right -->
+    </div>
+</div>
+
+
+<div class="copyright wow fadeInDown" data-wow-duration=".8s" data-wow-delay=".2s" id="copyrightNav"></div><!--版权区结束-->
+
+</body>
+</html>
+
+
+
+

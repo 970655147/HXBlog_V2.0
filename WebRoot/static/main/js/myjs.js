@@ -1,60 +1,11 @@
 new WOW().init();
 
 $(document).ready(function () {
-
-
-
     $( '#cd-dropdown' ).dropdown( {
         gutter : 5,
         delay : 100,
         random : true
     } );
-
-
-
-    $('body').on("click",'.heart',function()
-    {
-
-        var A=$(this).attr("id");
-        var B=A.split("like");
-        var messageID=B[1];
-        var C=parseInt($("#likeCount"+messageID).html());
-        $(this).css("background-position","")
-        var D=$(this).attr("rel");
-
-        if(D === 'like')
-        {
-            $("#likeCount"+messageID).html(C+1);
-            $(this).addClass("heartAnimation").attr("rel","unlike");
-            $.ajax({
-                url:'/like',
-                type:'POST',
-                async:true,    //或false,是否异步
-                data:{
-                },
-                success:function (result) {
-                    var result=eval("("+result+")");
-                    if(result.success){
-                    }else{
-                        alert("点赞失败，系统可能出了故障哦~~~~(>_<)~~~~")
-                    }
-                }
-
-            });
-        }
-        else
-        {
-            alert("您已经点过赞了哦，感谢您的支持(∩_∩)");
-            /*$("#likeCount"+messageID).html(C-1);
-            $(this).removeClass("heartAnimation").attr("rel","like");
-            $(this).css("background-position","left");*/
-        }
-
-
-    });
-
-
-
 
 });
 

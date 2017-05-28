@@ -21,4 +21,14 @@ public interface IndexService extends BaseService<Object> {
      */
     Result index();
 
+    /**
+     * 获取推荐的博客, 以及最近的博客
+     *
+     * @return
+     * @author Jerry.X.He
+     * @date 5/27/2017 9:15 PM
+     * @since 1.0
+     */
+    Result latest();
+
 }

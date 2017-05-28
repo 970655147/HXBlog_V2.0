@@ -31,8 +31,8 @@ public final class POVOTransferUtils {
      */
     public static void main(String[] args) {
 
-        Class src = BlogPO.class;
-        Class dst = BlogVO.class;
+        Class src = MoodPO.class;
+        Class dst = MoodVO.class;
 
         String transfer = BeanTransferUtils.transferTo(src, dst);
         String transferList = BeanTransferUtils.transferListTo(src, dst);
@@ -203,6 +203,42 @@ public final class POVOTransferUtils {
         }
         return result;
     }
+
+    // -------------------- MoodPO <-> MoodVO --------------------------
+    public static MoodVO moodPO2MoodVO(MoodPO src) {
+        MoodVO result = new MoodVO();
+        result.setId(src.getId());
+        result.setContent(src.getContent());
+        result.setCreatedAt(src.getCreatedAt());
+        result.setTitle(src.getTitle());
+        return result;
+    }
+
+    public static Collection<MoodVO> moodPO2MoodVOList(Collection<MoodPO> src) {
+        List<MoodVO> result = new ArrayList<>(src.size());
+        for(MoodPO ele : src) {
+            result.add(moodPO2MoodVO(ele));
+        }
+        return result;
+    }
+
+    public static MoodPO moodVO2MoodPO(MoodVO src) {
+        MoodPO result = new MoodPO();
+        result.setId(src.getId());
+        result.setContent(src.getContent());
+        result.setCreatedAt(src.getCreatedAt());
+        result.setTitle(src.getTitle());
+        return result;
+    }
+
+    public static Collection<MoodPO> moodVO2MoodPOList(Collection<MoodVO> src) {
+        List<MoodPO> result = new ArrayList<>(src.size());
+        for(MoodVO ele : src) {
+            result.add(moodVO2MoodPO(ele));
+        }
+        return result;
+    }
+
 
     // -------------------- UserPO <-> AdminUserVO --------------------------
     public static AdminUserVO userPO2AdminUserVO(UserPO src) {

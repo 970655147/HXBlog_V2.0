@@ -6,15 +6,22 @@ import com.hx.blog_v2.dao.interf.RltBlogTagDao;
 import com.hx.blog_v2.domain.form.AdminBlogSearchForm;
 import com.hx.blog_v2.domain.form.BeanIdForm;
 import com.hx.blog_v2.domain.form.BlogSaveForm;
-import com.hx.blog_v2.domain.mapper.AdminBlogVOMapper;
+import com.hx.blog_v2.domain.form.BlogSearchForm;
+import com.hx.blog_v2.domain.mapper.*;
 import com.hx.blog_v2.domain.po.*;
 import com.hx.blog_v2.domain.vo.AdminBlogVO;
+import com.hx.blog_v2.domain.vo.BlogVO;
+import com.hx.blog_v2.domain.vo.CommentVO;
 import com.hx.blog_v2.service.interf.BaseServiceImpl;
 import com.hx.blog_v2.service.interf.BlogService;
 import com.hx.blog_v2.util.*;
 import com.hx.common.interf.common.Page;
 import com.hx.common.interf.common.Result;
 import com.hx.common.util.ResultUtils;
+import com.hx.json.JSONArray;
+import com.hx.json.JSONObject;
+import com.hx.log.alogrithm.tree.TreeUtils;
+import com.hx.log.alogrithm.tree.interf.TreeInfoExtractor;
 import com.hx.log.file.FileUtils;
 import com.hx.log.util.Log;
 import com.hx.log.util.Tools;
@@ -23,9 +30,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * BlogServiceImpl
@@ -61,7 +66,7 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
     }
 
     @Override
-    public Result get(BeanIdForm params) {
+    public Result adminGet(BeanIdForm params) {
         StringBuilder sql = new StringBuilder(
                 " select b.*, GROUP_CONCAT(rlt.tag_id) as tagIds from blog as b inner join rlt_blog_tag as rlt on b.id = rlt.blog_id " +
                         " where b.deleted = 0 and b.id = ? group by b.id ");
@@ -81,30 +86,98 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
     }
 
     @Override
+    public Result get(BeanIdForm params) {
+        String blogSql = " select b.*, e.*, GROUP_CONCAT(rlt.tag_id) as tagIds from blog as b inner join rlt_blog_tag as rlt on b.id = rlt.blog_id " +
+                " inner join blog_ex as e on b.id = e.blog_id  where b.deleted = 0 and b.id = ? group by b.id ";
+        String commentsSql = " select * from blog_comment where deleted = 0 and blog_id = ? order by floor_id ";
+        Object[] sqlParams = new Object[]{params.getId()};
+
+        BlogVO vo = null;
+        List<BlogCommentPO> comments = null;
+        try {
+            // 如果 没有找到记录, 或者 找到多条记录, 都会抛出异常
+            vo = jdbcTemplate.queryForObject(blogSql, sqlParams, new BlogVOMapper());
+            comments = jdbcTemplate.query(commentsSql, sqlParams, new CommentPOMapper());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResultUtils.failed("给定的博客[" + params.getId() + "]不存在 !");
+        }
+        encapTypeTagInfo(vo);
+        encapContent(vo);
+
+        JSONArray commentsArr = generateCommentTree(comments);
+        JSONObject data = new JSONObject()
+                .element("blog", vo).element("comments", commentsArr)
+                ;
+        return ResultUtils.success(data);
+    }
+
+    @Override
     public Result adminList(AdminBlogSearchForm params, Page<AdminBlogVO> page) {
         StringBuilder sql = new StringBuilder(
                 " select b.*, GROUP_CONCAT(rlt.tag_id) as tagIds from blog as b inner join rlt_blog_tag as rlt on b.id = rlt.blog_id " +
                         " where b.deleted = 0 and b.id >= 0 ");
         List<Object> sqlParams = new ArrayList<>(3);
-        if (!Tools.isEmpty(params.getBlogTypeId())) {
-            sql.append(" and b.blog_type_id = ? ");
-            sqlParams.add(params.getBlogTypeId());
+        if (!Tools.isEmpty(params.getId())) {
+            sql.append(" and b.id = ? ");
+            sqlParams.add(params.getId());
+        } else {
+            if (!Tools.isEmpty(params.getTypeId())) {
+                sql.append(" and b.blog_type_id = ? ");
+                sqlParams.add(params.getTypeId());
+            }
+            if (!Tools.isEmpty(params.getTagId())) {
+                sql.append(" and b.id in (select blog_id from rlt_blog_tag where tag_id = ?) ");
+                sqlParams.add(params.getTagId());
+            }
+            if (!Tools.isEmpty(params.getKeywords())) {
+                sql.append(" and (b.title like ? or b.author like ?) ");
+                sqlParams.add(SqlUtils.wrapWildcard(params.getKeywords()));
+                sqlParams.add(SqlUtils.wrapWildcard(params.getKeywords()));
+            }
+
+            sql.append(" group by b.id limit ?, ? ");
+            sqlParams.add(page.recordOffset());
+            sqlParams.add(page.getPageSize());
         }
-        if (!Tools.isEmpty(params.getBlogTagId())) {
-            sql.append(" and b.id in (select blog_id from rlt_blog_tag where tag_id = ?) ");
-            sqlParams.add(params.getBlogTagId());
-        }
-        if (!Tools.isEmpty(params.getKeywords())) {
-            sql.append(" and (b.title like ? or b.author like ?) ");
-            sqlParams.add(SqlUtils.wrapWildcard(params.getKeywords()));
-            sqlParams.add(SqlUtils.wrapWildcard(params.getKeywords()));
-        }
-        sql.append(" group by b.id limit ?, ? ");
-        sqlParams.add(page.recordOffset());
-        sqlParams.add(page.getPageSize());
 
         List<AdminBlogVO> list = jdbcTemplate.query(sql.toString(), sqlParams.toArray(), new AdminBlogVOMapper());
         encapTypeTagInfo(list);
+        page.setList(list);
+        return ResultUtils.success(page);
+    }
+
+    @Override
+    public Result list(BlogSearchForm params, Page<BlogVO> page) {
+        StringBuilder sql = new StringBuilder(
+                " select b.*, e.*, GROUP_CONCAT(rlt.tag_id) as tagIds from blog as b inner join rlt_blog_tag as rlt on b.id = rlt.blog_id " +
+                        " inner join blog_ex as e on b.id = e.blog_id where b.deleted = 0 and b.id >= 0 ");
+        List<Object> sqlParams = new ArrayList<>(3);
+        if (!Tools.isEmpty(params.getId())) {
+            sql.append(" and b.id = ? ");
+            sqlParams.add(params.getId());
+        } else {
+            if (!Tools.isEmpty(params.getTypeId())) {
+                sql.append(" and b.blog_type_id = ? ");
+                sqlParams.add(params.getTypeId());
+            }
+            if (!Tools.isEmpty(params.getTagId())) {
+                sql.append(" and b.id in (select blog_id from rlt_blog_tag where tag_id = ?) ");
+                sqlParams.add(params.getTagId());
+            }
+            if (!Tools.isEmpty(params.getKeywords())) {
+                sql.append(" and (b.title like ? or b.author like ?) ");
+                sqlParams.add(SqlUtils.wrapWildcard(params.getKeywords()));
+                sqlParams.add(SqlUtils.wrapWildcard(params.getKeywords()));
+            }
+
+            sql.append(" group by b.id limit ?, ? ");
+            sqlParams.add(page.recordOffset());
+            sqlParams.add(page.getPageSize());
+        }
+
+        List<BlogVO> list = jdbcTemplate.query(sql.toString(), sqlParams.toArray(), new BlogVOMapper());
+        encapBlogVo(list);
         page.setList(list);
         return ResultUtils.success(page);
     }
@@ -147,7 +220,7 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
     /**
      * 封装 type, tag 的信息
      *
-     * @param list list
+     * @param list adminList
      * @return void
      * @author Jerry.X.He
      * @date 5/21/2017 6:29 PM
@@ -284,6 +357,85 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
         }
 
         return ResultUtils.success(po.getId());
+    }
+
+    /**
+     * 封装给定的博客列表的信息
+     *
+     * @param voes voes
+     * @return void
+     * @author Jerry.X.He
+     * @date 5/27/2017 11:26 PM
+     * @since 1.0
+     */
+    private void encapBlogVo(List<BlogVO> voes) {
+        for(BlogVO vo : voes) {
+            encapTypeTagInfo(vo);
+            encapContent(vo);
+        }
+    }
+
+    private void encapTypeTagInfo(BlogVO vo) {
+        BlogTypePO type = cacheContext.blogType(vo.getBlogTypeId());
+        if (type != null) {
+            vo.setBlogTypeName(type.getName());
+        }
+        if (vo.getBlogTagIds() != null) {
+            List<String> tagIds = vo.getBlogTagIds();
+            List<String> tagNames = new ArrayList<>(tagIds.size());
+            for (String tagId : tagIds) {
+                BlogTagPO tag = cacheContext.blogTag(tagId);
+                tagNames.add(tag == null ? Tools.NULL : tag.getName());
+            }
+            vo.setBlogTagNames(tagNames);
+        }
+    }
+
+    /**
+     * 封装给定的博客的内容信息
+     *
+     * @param vo vo
+     * @return void
+     * @author Jerry.X.He
+     * @date 5/21/2017 8:48 PM
+     * @since 1.0
+     */
+    private void encapContent(BlogVO vo) {
+        if (!Tools.isEmpty(vo.getContentUrl())) {
+            try {
+                vo.setContent(Tools.getContent(Tools.getFilePath(WebContext.getBlogRootPath(), vo.getContentUrl())));
+            } catch (Exception e) {
+                Log.err(Tools.errorMsg(e));
+            }
+        }
+    }
+
+    /**
+     * 生成评论树
+     *
+     * @param comments comments
+     * @return com.hx.json.JSONArray
+     * @author Jerry.X.He
+     * @date 5/28/2017 2:48 PM
+     * @since 1.0
+     */
+    public JSONArray generateCommentTree(List<BlogCommentPO> comments) {
+        Map<String, List<BlogCommentPO>> treeMap = new TreeMap<>();
+        for(BlogCommentPO comment : comments) {
+            List<BlogCommentPO> floorComments = treeMap.get(comment.getFloorId());
+            if(floorComments == null) {
+                floorComments = new ArrayList<>();
+                treeMap.put(comment.getFloorId(), floorComments);
+            }
+
+            floorComments.add(comment);
+        }
+
+        JSONArray arr = new JSONArray();
+        for(Map.Entry<String, List<BlogCommentPO>> entry : treeMap.entrySet()) {
+            arr.add(entry.getValue());
+        }
+        return arr;
     }
 
 }

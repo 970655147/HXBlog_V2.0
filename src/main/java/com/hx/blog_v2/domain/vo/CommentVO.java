@@ -1,5 +1,7 @@
 package com.hx.blog_v2.domain.vo;
 
+import com.hx.log.alogrithm.tree.interf.TreeIdExtractor;
+
 /**
  * 评论列表中的 Comment
  *
@@ -7,7 +9,7 @@ package com.hx.blog_v2.domain.vo;
  * @version 1.0
  * @date 5/25/2017 9:45 PM
  */
-public class CommentVO {
+public class CommentVO implements TreeIdExtractor<CommentVO, String> {
 
     private String id;
     private String blogId;
@@ -112,5 +114,15 @@ public class CommentVO {
 
     public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
+    }
+
+    @Override
+    public String id() {
+        return commentId;
+    }
+
+    @Override
+    public String parentId() {
+        return floorId;
     }
 }

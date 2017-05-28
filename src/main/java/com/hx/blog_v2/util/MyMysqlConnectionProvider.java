@@ -26,7 +26,7 @@ public class MyMysqlConnectionProvider implements ConnectionProvider<Connection>
                             config.ip(), config.port(), config.db()),
                     config.username(), config.password() );
         }catch(SQLException se){
-            Tools.assert0("error while try to get an connection !");
+            Tools.assert0("error while try to adminGet an connection !");
         }
 
         return con;

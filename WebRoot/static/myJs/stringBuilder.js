@@ -1,5 +1,5 @@
 /**
- * js ÊµÏÖµÄStringBuilder
+ * js å®ç°çš„StringBuilder
  *
  * @author Jerry.X.He <970655147@qq.com>
  * @version 1.0
@@ -7,7 +7,7 @@
  */
 
 /**
- * jsÊµÏÖµÄStringBuilder
+ * jså®ç°çš„StringBuilder
  *
  * @constructor
  */
@@ -16,25 +16,25 @@ function StringBuilder() {
 }
 
 /**
- * Ìí¼Ó×Ö·û´®µÄ·½·¨
+ * æ·»åŠ å­—ç¬¦ä¸²çš„æ–¹æ³•
  *
- * @param str ¸ø¶¨µÄĞèÒªÌí¼ÓµÄ×Ö·û´®
+ * @param str ç»™å®šçš„éœ€è¦æ·»åŠ çš„å­—ç¬¦ä¸²
  */
 StringBuilder.prototype.append = function (str) {
     this._stringArray.push(str);
 }
 
 /**
- * ½«µ±Ç°StrinbgBuilder×ª»»Îª×Ö·û´®
+ * å°†å½“å‰StrinbgBuilderè½¬æ¢ä¸ºå­—ç¬¦ä¸²
  *
- * @param sep Á¬½Ó¸÷¸ö×ÓÔªËØµÄ·Ö¸ô·û
+ * @param sep è¿æ¥å„ä¸ªå­å…ƒç´ çš„åˆ†éš”ç¬¦
  */
 StringBuilder.prototype.join = function (sep) {
     return this._stringArray.join(sep);
 }
 
 /**
- * ½«µ±Ç°StrinbgBuilder×ª»»Îª×Ö·û´®
+ * å°†å½“å‰StrinbgBuilderè½¬æ¢ä¸ºå­—ç¬¦ä¸²
  */
 StringBuilder.prototype.toString = function () {
     return this.join("");
