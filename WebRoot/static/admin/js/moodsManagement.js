@@ -69,6 +69,8 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
                                 }
                             }
                         });
+                    } else {
+                        layer.alert("拉取心情列表失败[" + resp.msg + "] !", {icon: 5});
                     }
                 }
             });
@@ -89,7 +91,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
                         location.reload()
                     });
                 } else {
-                    layer.alert('添加心情失败 !', {icon: 5});
+                    layer.alert("添加心情失败[" + resp.msg + "] !", {icon: 5});
                 }
             }
         });
@@ -110,7 +112,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
                         location.reload()
                     });
                 } else {
-                    layer.alert('修改心情失败 !', {icon: 5});
+                    layer.alert("更新心情失败[" + resp.msg + "] !", {icon: 5});
                 }
             }
         });
@@ -196,7 +198,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
                                 location.reload()
                             });
                         } else {
-                            layer.alert('删除失败 !', {icon: 5});
+                            layer.alert("删除心情失败[" + resp.msg + "] !", {icon: 5});
                         }
                     }
                 });

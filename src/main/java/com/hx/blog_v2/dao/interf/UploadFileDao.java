@@ -1,6 +1,6 @@
 package com.hx.blog_v2.dao.interf;
 
-import com.hx.blog_v2.domain.po.UploadedImagePO;
+import com.hx.blog_v2.domain.po.UploadFilePO;
 import com.hx.mongo.dao.interf.MysqlIBaseDao;
 
 /**
@@ -10,7 +10,7 @@ import com.hx.mongo.dao.interf.MysqlIBaseDao;
  * @version 1.0
  * @date 5/20/2017 10:37 AM
  */
-public interface UploadedImageDao extends MysqlIBaseDao<UploadedImagePO> {
+public interface UploadFileDao extends MysqlIBaseDao<UploadFilePO> {
 
 
 }

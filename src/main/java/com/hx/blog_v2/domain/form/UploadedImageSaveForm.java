@@ -1,6 +1,6 @@
 package com.hx.blog_v2.domain.form;
 
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * UploadedImageSaveForm
@@ -11,16 +11,20 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
  */
 public class UploadedImageSaveForm {
 
-    private CommonsMultipartFile file;
+    private MultipartFile file;
+
+    public UploadedImageSaveForm(MultipartFile file) {
+        this.file = file;
+    }
 
     public UploadedImageSaveForm() {
     }
 
-    public CommonsMultipartFile getFile() {
+    public MultipartFile getFile() {
         return file;
     }
 
-    public void setFile(CommonsMultipartFile file) {
+    public void setFile(MultipartFile file) {
         this.file = file;
     }
 }

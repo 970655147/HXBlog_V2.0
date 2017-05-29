@@ -6,7 +6,7 @@ import com.hx.blog_v2.dao.interf.LinkDao;
 import com.hx.blog_v2.domain.po.BlogTagPO;
 import com.hx.blog_v2.domain.po.BlogTypePO;
 import com.hx.blog_v2.domain.po.LinkPO;
-import com.hx.blog_v2.domain.po.UploadedImagePO;
+import com.hx.blog_v2.domain.po.UploadFilePO;
 import com.hx.common.interf.cache.Cache;
 import com.hx.log.cache.mem.LRUMCache;
 import com.hx.log.util.Log;
@@ -63,7 +63,7 @@ public class CacheContext {
     /**
      * digest -> uploadedImage 的缓存
      */
-    private final Cache<String, UploadedImagePO> digest2UploadedImage = new LRUMCache<>(BlogConstants.MAX_CACHED_UPLOADED_IMAGE);
+    private final Cache<String, UploadFilePO> digest2UploadedFiles = new LRUMCache<>(BlogConstants.MAX_CACHED_UPLOADED_IMAGE);
 
     /**
      * 初始化 CacheContext
@@ -148,13 +148,13 @@ public class CacheContext {
      * 根据digest 获取图片的信息
      *
      * @param digest digest
-     * @return com.hx.blog_v2.domain.po.UploadedImagePO
+     * @return com.hx.blog_v2.domain.po.UploadFilePO
      * @author Jerry.X.He
      * @date 5/29/2017 4:27 PM
      * @since 1.0
      */
-    public UploadedImagePO getUploadedImage(String digest) {
-        return digest2UploadedImage.get(digest);
+    public UploadFilePO getUploadedFile(String digest) {
+        return digest2UploadedFiles.get(digest);
     }
 
     /**
@@ -167,8 +167,8 @@ public class CacheContext {
      * @date 5/29/2017 4:28 PM
      * @since 1.0
      */
-    public void putUploadedImage(String digest, UploadedImagePO image) {
-        digest2UploadedImage.put(digest, image);
+    public void putUploadedFile(String digest, UploadFilePO image) {
+        digest2UploadedFiles.put(digest, image);
     }
 
     /**

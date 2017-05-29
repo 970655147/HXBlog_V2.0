@@ -101,7 +101,7 @@ public class Test02JSONTransferable {
 
     @Test
     public void uploadedImage() throws Exception {
-        Class clazz = UploadedImagePO.class;
+        Class clazz = UploadFilePO.class;
         infoIdxesAndDao(clazz);
     }
 

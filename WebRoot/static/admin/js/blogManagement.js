@@ -17,6 +17,8 @@ $.ajax({
             for (idx in tags) {
                 tagIdEle.append("<option value='" + tags[idx].id + "'> " + tags[idx].name + " </option>")
             }
+        } else {
+            layer.alert("拉取类型/标签列表失败[" + resp.msg + "] !", {icon: 5});
         }
     }
 });
@@ -96,6 +98,8 @@ layui.define(['element', 'laypage', 'layer', 'form', 'pagesize'], function (expo
                     layui.pagesize(laypageId, params.pageSize).callback(function (newPageSize) {
                         initilData(1, newPageSize);
                     });
+                } else {
+                    layer.alert("拉取博客列表失败[" + resp.msg + "] !", {icon: 5});
                 }
             }
         });
@@ -124,7 +128,7 @@ layui.define(['element', 'laypage', 'layer', 'form', 'pagesize'], function (expo
                                 location.reload()
                             });
                         } else {
-                            layer.alert('删除失败!', {icon: 5});
+                            layer.alert("删除博客失败[" + resp.msg + "] !", {icon: 5});
                         }
                     }
                 });

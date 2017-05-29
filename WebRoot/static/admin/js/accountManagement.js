@@ -69,6 +69,8 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
                                 }
                             }
                         });
+                    } else {
+                        layer.alert("拉取用户列表失败[" + resp.msg + "] !", {icon: 5});
                     }
                 }
             });
@@ -89,7 +91,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
                         window.location.href = "/static/admin/accountManagement.html"
                     });
                 } else {
-                    layer.alert('添加用户失败 !', {icon: 5});
+                    layer.alert("添加用户失败[" + resp.msg + "] !", {icon: 5});
                 }
             }
         });
@@ -110,7 +112,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
                         window.location.href = "/static/admin/accountManagement.html"
                     });
                 } else {
-                    layer.alert('更新用户失败 !', {icon: 5});
+                    layer.alert("更新用户失败[" + resp.msg + "] !", {icon: 5});
                 }
             }
         });
@@ -204,7 +206,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
                                 window.location.href = "/static/admin/accountManagement.html"
                             });
                         } else {
-                            layer.alert('删除失败!', {icon: 5});
+                            layer.alert("删除用户失败[" + resp.msg + "] !", {icon: 5});
                         }
                     }
                 });

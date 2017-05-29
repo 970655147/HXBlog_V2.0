@@ -228,7 +228,7 @@ public final class WebContext {
      * @date 5/6/2017 11:59 PM
      * @since 1.0
      */
-    public static Object getParameterFromRequest(String key) {
+    public static String getParameterFromRequest(String key) {
         return getRequest().getParameter(key);
     }
 

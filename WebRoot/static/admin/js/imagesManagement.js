@@ -70,6 +70,8 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
                                 }
                             }
                         });
+                    } else {
+                        layer.alert("拉取图片墙列表失败[" + resp.msg + "] !", {icon: 5});
                     }
                 }
             });
@@ -90,7 +92,7 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
                         location.reload()
                     });
                 } else {
-                    layer.alert('添加图片失败 !', {icon: 5});
+                    layer.alert("添加图片失败[" + resp.msg + "] !", {icon: 5});
                 }
             }
         });
@@ -104,14 +106,14 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
             data: $(".layui-form").serialize(),
             success: function (result) {
                 if (result.success) {
-                    var addTopId = layer.alert('修改图片成功 !', {
+                    var addTopId = layer.alert('更新图片成功 !', {
                         closeBtn: 0,
                         icon: 1
                     }, function () {
                         location.reload()
                     });
                 } else {
-                    layer.alert('修改图片失败 !', {icon: 5});
+                    layer.alert("更新图片失败[" + resp.msg + "] !", {icon: 5});
                 }
             }
         });
@@ -206,7 +208,7 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
                                 location.reload()
                             });
                         } else {
-                            layer.alert('删除图片失败 !', {icon: 5});
+                            layer.alert("删除图片失败[" + resp.msg + "] !", {icon: 5});
                         }
                     }
                 });
@@ -219,7 +221,7 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
             formData.append("file", $("#uploadImgInput").get(0).files[0]);
             console.log(formData)
             $.ajax({
-                url: '/admin/image/upload', //上传接口
+                url: '/admin/upload/image', //上传接口
                 data : formData,
                 type : "POST",
                 processData : false,

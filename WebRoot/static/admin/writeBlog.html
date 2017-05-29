@@ -38,7 +38,7 @@
         </div>
         <label class="layui-form-label">添加封面</label>
         <div class="layui-input-inline">
-            <input type="file" name="file" class="layui-upload-file" lay-title="添加一个碉堡了的图片">
+            <input id="uploadCoverImage" type="file" name="file" class="layui-upload-file" lay-title="添加一个碉堡了的图片">
         </div>
         <img id="coverShow" width="60px" height="60px" />
     </div>
@@ -62,7 +62,6 @@
 
         </div>
         <div class="layui-input-inline">
-            <!-- 可能会出现给定的博客, 选了所有的标签, 然后 来编辑, 可能编辑不了, 卧槽 这个怎么做, 选空白的option又不起作用.. -->
             <select id="tagIds" lay-verify="required" lay-filter="tagIds" >
                 <option value="" ></option>
             </select>
@@ -91,12 +90,14 @@
         <input type="hidden" name="blogTagIds" id="blogTagIds">
         <input type="hidden" name="content" id="content">
         <input type="hidden" name="id" id="id">
+
         <div class="layui-input-block">
-        <script id="editor" type="text/plain" style='width:99%;height:300px;'></script></div>
+            <script id="editor" type="text/plain" style='width:99%;height:300px;'></script></div>
         </div>
     <div class="layui-form-item">
         <div class="layui-input-block">
-            <button class="layui-btn" id="submit"  lay-submit="" lay-filter="submitBlog">立即提交</button>
+            <input id="uploadEditorHtml" type="file" name="file" class="layui-upload-file" lay-type="file" lay-title="插入html" />
+            <button class="layui-btn" id="submit" lay-submit="" lay-filter="submitBlog" style="float:right; margin-right:40px" >立即提交</button>
         </div>
     </div>
 </form>

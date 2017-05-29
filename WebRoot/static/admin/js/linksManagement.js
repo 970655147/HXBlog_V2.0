@@ -72,6 +72,8 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
                                 }
                             }
                         });
+                    } else {
+                        layer.alert("拉取友情链接列表失败[" + resp.msg + "] !", {icon: 5});
                     }
                 }
             });
@@ -92,7 +94,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
                         location.reload()
                     });
                 } else {
-                    layer.alert('添加友情链接失败 !', {icon: 5});
+                    layer.alert("添加友情链接失败[" + resp.msg + "] !", {icon: 5});
                 }
             }
         });
@@ -113,7 +115,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
                         location.reload()
                     });
                 } else {
-                    layer.alert('修改友情链接失败 !', {icon: 5});
+                    layer.alert("更新友情链接失败[" + resp.msg + "] !", {icon: 5});
                 }
             }
         });
@@ -207,7 +209,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
                                 location.reload()
                             });
                         } else {
-                            layer.alert('删除失败!', {icon: 5});
+                            layer.alert("删除友情链接失败[" + resp.msg + "] !", {icon: 5});
                         }
                     }
                 });

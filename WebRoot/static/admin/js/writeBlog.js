@@ -26,6 +26,8 @@ $.ajax({
             for(idx in tags) {
                 tagIdEle.append("<option value='" + tags[idx].id + "'> " + tags[idx].name + " </option>")
             }
+        } else {
+            layer.alert("拉取类型/标签列表失败[" + resp.msg + "] !", {icon: 5});
         }
     }
 });
@@ -62,6 +64,8 @@ if(!isEmpty(currentBlogId)) {
                 ue.ready(function() {
                     UE.getEditor('editor').execCommand('insertHtml', blog.content)
                 });
+            } else {
+                layer.alert("拉取博客信息失败[" + resp.msg + "] !", {icon: 5});
             }
         }
     });
@@ -89,8 +93,9 @@ layui.define(['form', 'upload', 'layer'], function (exports) {
                         icon: 1
                     }, function () {
                         layer.close(addBlogLayer)
-                        console.log("清理日志 !")
                     });
+                } else {
+                    layer.alert("保存博客失败[" + resp.msg + "] !", {icon: 5});
                 }
             }
         });
@@ -113,7 +118,7 @@ layui.define(['form', 'upload', 'layer'], function (exports) {
                         layer.close(addTypeLayer)
                     });
                 } else {
-                    layer.alert('添加类型失败!', {icon: 5});
+                    layer.alert("添加类型失败[" + resp.msg + "] !", {icon: 5});
                 }
             }
         });
@@ -135,7 +140,7 @@ layui.define(['form', 'upload', 'layer'], function (exports) {
                         layer.close(addTypeLayer)
                     });
                 } else {
-                    layer.alert('添加标签失败!', {icon: 5});
+                    layer.alert("保存标签失败[" + resp.msg + "] !", {icon: 5});
                 }
             }
         });
@@ -143,14 +148,36 @@ layui.define(['form', 'upload', 'layer'], function (exports) {
     })
 
     layui.upload({
-        url: '/admin/image/upload', //上传接口
-        success: function (result) { //上传成功后的回调
-            if (result.success) {
-                var visitUrl = result.data.url
+        elem : "#uploadCoverImage",
+        url: '/admin/upload/image', //上传接口
+        ext: "jpg|jpeg|png|bmp|gif",
+        success: function (resp) { //上传成功后的回调
+            if (resp.success) {
+                var visitUrl = resp.data.url
                 $("#coverUrl").attr("value", visitUrl)
                 $("#coverShow").attr("src", visitUrl);
             } else {
-                alert("上传文件失败");
+                layer.alert("保存图片失败[" + resp.msg + "] !", {icon: 5});
+            }
+        }
+    });
+
+    layui.upload({
+        elem : "#uploadEditorHtml",
+        url: '/admin/upload/file', //上传接口
+        ext: "html|txt",
+        before : function(input) {
+            var reader = new FileReader();
+            reader.readAsText(input.files[0], encoding);
+            reader.onload = function(evt){
+                var content = evt.target.result;
+                UE.getEditor('editor').execCommand('insertHtml', content)
+            }
+        },
+        success: function (resp) { //上传成功后的回调
+            if (resp.success) {
+            } else {
+                layer.alert("保存文件失败[" + resp.msg + "] !", {icon: 5});
             }
         }
     });
@@ -176,7 +203,7 @@ layui.define(['form', 'upload', 'layer'], function (exports) {
             var html = '';
             html += '<form class="layui-form layui-form-pane" action="/admin/type/add" method="post" >';
             html += '<label class="layui-form-label" style="border: none" name="content" >类别名称:</label>';
-            html += '<input id="type_add_name" style="width:87%;margin: auto;color: #000!important;" name="name"  class="layui-input" >';
+            html += '<input style="width:87%;margin: auto;color: #000!important;" name="name"  class="layui-input" >';
             html += '<div class="layui-form-item">';
             html += '<div class="layui-input-inline" style="margin:10px auto 0 auto;display: block;float: none;">';
             html += '<button class="layui-btn" id="submit" lay-submit="" lay-filter="addTypeSubmit">添加</button>';
@@ -196,7 +223,7 @@ layui.define(['form', 'upload', 'layer'], function (exports) {
             var html = '';
             html += '<form class="layui-form layui-form-pane" action="/admin/tag/add" method="post >';
             html += '<label class="layui-form-label" style="border: none" name="content" >标签名称:</label>';
-            html += '<input id="tag_add_name" style="width:87%;margin: auto;color: #000!important;" name="name"  class="layui-input" >';
+            html += '<input style="width:87%;margin: auto;color: #000!important;" name="name"  class="layui-input" >';
             html += '<div class="layui-form-item">';
             html += '<div class="layui-input-inline" style="margin:10px auto 0 auto;display: block;float: none;">';
             html += '<button class="layui-btn" id="submit" lay-submit="" lay-filter="addTagSubmit">添加</button>';

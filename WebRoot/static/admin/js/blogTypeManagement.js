@@ -24,10 +24,6 @@ layui.define(['layer', 'form'], function (exports) {
                 data: {},
                 success: function (resp) {
                     var html = '';
-                    html += '<table style="table-layout: fixed" class="layui-table" lay-even>';
-                    html += '<colgroup><col width="40"><col width="200"><col width="40"><col width="40"></colgroup>';
-                    html += '<thead><tr><th>编号</th><th>博客类型名</th><th colspan="2">操作</th></tr></thead>';
-                    html += '<tbody>';
                     if(resp.success) {
                         for (var i in resp.data) {
                             var item = resp.data[i];
@@ -38,8 +34,9 @@ layui.define(['layer', 'form'], function (exports) {
                             html += '<td><button class="layui-btn layui-btn-small layui-btn-danger" onclick="layui.funcs.deleteData(' + item.id + ')"><i class="layui-icon">&#xe640;</i></button></td>';
                             html += '</tr>';
                         }
+                    } else {
+                        layer.alert("拉取类型列表失败[" + resp.msg + "] !", {icon: 5});
                     }
-                    html += '</tbody></table>';
                     $('#dataContent').html(html);
                 }
             });
@@ -62,7 +59,7 @@ layui.define(['layer', 'form'], function (exports) {
                         location.reload()
                     });
                 } else {
-                    layer.alert('添加类型失败!', {icon: 5});
+                    layer.alert("添加类型失败[" + resp.msg + "] !", {icon: 5});
                 }
             }
         });
@@ -84,7 +81,7 @@ layui.define(['layer', 'form'], function (exports) {
                         location.reload()
                     });
                 } else {
-                    layer.alert('更新类型失败!', {icon: 5});
+                    layer.alert("更新类型失败[" + resp.msg + "] !", {icon: 5});
                 }
             }
         });
@@ -156,7 +153,7 @@ layui.define(['layer', 'form'], function (exports) {
                                 location.reload()
                             });
                         } else {
-                            layer.alert('删除失败,该类别下存在博文!', {icon: 5});
+                            layer.alert("删除类型失败[" + resp.msg + "] !", {icon: 5});
                         }
                     }
                 });

@@ -11,6 +11,13 @@
  */
 var pageSize = 10
 
+/**
+ * 读取文件的编码
+ * @type {string}
+ */
+var encoding = "gbk"
+
+
 
 
 

@@ -76,6 +76,8 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
                                 }
                             }
                         });
+                    } else {
+                        layer.alert("拉取评论列表失败[" + resp.msg + "] !", {icon: 5});
                     }
                 }
             }, 500);
@@ -97,7 +99,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
                         layer.close(addReplyDialog)
                     });
                 } else {
-                    layer.alert('添加评论失败 !', {icon: 5});
+                    layer.alert("添加评论失败[" + resp.msg + "] !", {icon: 5});
                 }
             }
         });
@@ -118,7 +120,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
                         location.reload()
                     });
                 } else {
-                    layer.alert('更新评论失败 !', {icon: 5});
+                    layer.alert("更新评论失败[" + resp.msg + "] !", {icon: 5});
                 }
             }
         });
@@ -159,6 +161,8 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
                             title: '查看回复',
                             content: html
                         });
+                    } else {
+                        layer.alert("拉取给定的博客的评论列表失败[" + resp.msg + "] !", {icon: 5});
                     }
                 }
             })
@@ -231,7 +235,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
                                 location.reload()
                             });
                         } else {
-                            layer.alert('删除失败!', {icon: 5});
+                            layer.alert("删除评论失败[" + resp.msg + "] !", {icon: 5});
                         }
                     }
                 });

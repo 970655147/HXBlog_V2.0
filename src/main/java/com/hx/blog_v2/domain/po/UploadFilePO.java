@@ -21,7 +21,7 @@ import java.util.Map;
  * @version 1.0
  * @date 5/29/2017 4:11 PM
  */
-public class UploadedImagePO implements JSONTransferable<UploadedImagePO> {
+public class UploadFilePO implements JSONTransferable<UploadFilePO> {
 
     @JSONField({"id", "id"})
     private String id;
@@ -38,7 +38,7 @@ public class UploadedImagePO implements JSONTransferable<UploadedImagePO> {
     @JSONField({"createdAt", "created_at"})
     private String createdAt;
 
-    public UploadedImagePO(String originalFileName, String contentType, String url, String digest, String size) {
+    public UploadFilePO(String originalFileName, String contentType, String url, String digest, String size) {
         this();
         this.originalFileName = originalFileName;
         this.contentType = contentType;
@@ -47,7 +47,7 @@ public class UploadedImagePO implements JSONTransferable<UploadedImagePO> {
         this.size = size;
     }
 
-    public UploadedImagePO() {
+    public UploadFilePO() {
         Date now = new Date();
         createdAt = DateUtils.formate(now, BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
     }
@@ -114,15 +114,15 @@ public class UploadedImagePO implements JSONTransferable<UploadedImagePO> {
         return JSONObject.fromObject(this).toString();
     }
 
-    public static final UploadedImagePO PROTO_BEAN = new UploadedImagePO();
+    public static final UploadFilePO PROTO_BEAN = new UploadFilePO();
 
     @Override
-    public UploadedImagePO loadFromJSON(Map<String, Object> obj, JSONConfig config) {
+    public UploadFilePO loadFromJSON(Map<String, Object> obj, JSONConfig config) {
         if (Tools.isEmpty(obj)) {
             return this;
         }
 
-        JSONObject.fromObject(obj).toBean(UploadedImagePO.class, this, config);
+        JSONObject.fromObject(obj).toBean(UploadFilePO.class, this, config);
         return this;
     }
 
@@ -142,8 +142,8 @@ public class UploadedImagePO implements JSONTransferable<UploadedImagePO> {
     }
 
     @Override
-    public UploadedImagePO newInstance(Object... args) {
-        return new UploadedImagePO();
+    public UploadFilePO newInstance(Object... args) {
+        return new UploadFilePO();
     }
 
     @Override

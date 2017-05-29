@@ -57,7 +57,7 @@ public final class BlogConstants {
     public static final Class[] ALL_PO_CLAZZ = new Class[]{
             BlogCommentPO.class, BlogExPO.class, BlogPO.class, BlogSensePO.class, BlogTagPO.class,
             BlogTypePO.class, ExceptionLogPO.class, ImagePO.class, LinkPO.class, MoodPO.class, RequestLogPO.class,
-            UserPO.class, VisitorPO.class, RltBlogTagPO.class, UploadedImagePO.class
+            UserPO.class, VisitorPO.class, RltBlogTagPO.class, UploadFilePO.class
     };
     /**
      * 下划线的注册了各个PO 的 KeyNodeParser
@@ -149,8 +149,8 @@ public final class BlogConstants {
     public static final String TABLE_LINK = "link";
     @Value("table.images")
     public static final String TABLE_IMAGES = "images";
-    @Value("table.uploaded_image")
-    public static final String TABLE_UPLOADED_IMAGE = "uploaded_images";
+    @Value("table.uploaded_files")
+    public static final String TABLE_UPLOADED_FILES = "uploaded_files";
 
     @Value("table.id")
     public static final String TABLE_ID = "id";
@@ -205,8 +205,8 @@ public final class BlogConstants {
 
     @Value("blog.dir")
     public static String BLOG_ROOT_DIR = "D:\\HXBlog_V2.0\\post";
-    @Value("img.dir")
-    public static String IMG_ROOT_DIR = "D:\\HXBlog_V2.0\\imgs";
+    @Value("files.dir")
+    public static String IMG_ROOT_DIR = "D:\\HXBlog_V2.0\\files";
 
     /**
      * 作为意见收集信息的"帖子的id"
@@ -222,7 +222,7 @@ public final class BlogConstants {
      * 上传到服务器的图片的 url 前缀
      */
     @Value("image.url.prefix")
-    public static String IMAGE_URL_RREFIX = "http://localhost/imgs/";
+    public static String IMAGE_URL_RREFIX = "http://localhost/files/";
 
 
     // -------------------- 辅助方法 --------------------------
