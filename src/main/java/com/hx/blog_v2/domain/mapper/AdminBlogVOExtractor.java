@@ -37,7 +37,7 @@ public class AdminBlogVOExtractor implements ResultSetExtractor<AdminBlogVO> {
      */
     public static AdminBlogVO extractBean(ResultSet rs) throws SQLException, DataAccessException {
         BlogPO po = new BlogPO();
-        po.loadFromJSON(new ResultSet2MapAdapter(rs), BlogConstants.IDX_MANAGER.getDoLoad());
+        po.loadFromJSON(new ResultSet2MapAdapter(rs), BlogConstants.LOAD_ALL_CONFIG);
         AdminBlogVO vo = POVOTransferUtils.blogPO2AdminBlogVO(po);
         String tagIds = rs.getString("tagIds");
         String[] tagIdArr = tagIds.split(",");

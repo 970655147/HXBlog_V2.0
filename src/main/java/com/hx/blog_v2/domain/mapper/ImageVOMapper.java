@@ -22,7 +22,7 @@ public class ImageVOMapper implements RowMapper<ImageVO> {
     @Override
     public ImageVO mapRow(ResultSet resultSet, int i) throws SQLException {
         ImagePO po = new ImagePO();
-        po.loadFromJSON(new ResultSet2MapAdapter(resultSet), BlogConstants.IDX_MANAGER.getDoLoad());
+        po.loadFromJSON(new ResultSet2MapAdapter(resultSet), BlogConstants.LOAD_ALL_CONFIG);
         ImageVO vo = POVOTransferUtils.imagePO2ImageVO(po);
         return vo;
     }

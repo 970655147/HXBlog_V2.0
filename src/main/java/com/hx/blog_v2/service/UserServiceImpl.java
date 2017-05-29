@@ -44,7 +44,7 @@ public class UserServiceImpl implements UserService {
                 params.getHeadImgUrl(), params.getMotto());
 
         try {
-            userDao.save(po, BlogConstants.IDX_MANAGER_FILTER_ID.getDoLoad(), BlogConstants.IDX_MANAGER_FILTER_ID.getDoFilter());
+            userDao.save(po, BlogConstants.ADD_BEAN_CONFIG);
         } catch (Exception e) {
             e.printStackTrace();
             return ResultUtils.failed(Tools.errorMsg(e));
@@ -64,15 +64,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Result update(UserSaveForm params) {
-        UserPO po = new UserPO(null, null, params.getNickName(), params.getEmail(), params.getHeadImgUrl(),
-                params.getMotto());
+        UserPO po = new UserPO(null, null, params.getNickName(), params.getEmail(),
+                params.getHeadImgUrl(),params.getMotto());
         po.setId(params.getId());
         po.setUpdatedAt(DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS));
 
-        Map<String, Integer> filterIdxMap = JSONObject.fromObject(BlogConstants.IDX_MANAGER_FILTER_ID.getDoFilter());
-        filterIdxMap.put(UserPO.BEAN_KEY, UserPO.FILTER_WHILE_UPDATE);
         try {
-            long modified = userDao.updateById(po, BlogConstants.IDX_MANAGER_FILTER_ID.getDoLoad(), filterIdxMap)
+            long modified = userDao.updateById(po, BlogConstants.UPDATE_BEAN_CONFIG)
                     .getModifiedCount();
             if (modified == 0) {
                 return ResultUtils.failed("没有找到对应的用户 !");

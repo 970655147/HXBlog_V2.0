@@ -6,6 +6,7 @@ import com.hx.blog_v2.domain.po.BlogPO;
 import com.hx.blog_v2.domain.po.BlogSensePO;
 import com.hx.blog_v2.util.BlogConstants;
 import com.hx.json.JSONObject;
+import com.hx.json.config.simple.SimpleJSONConfig;
 import com.hx.log.str.MysqlSqlGenerator;
 import org.junit.Test;
 
@@ -27,7 +28,7 @@ public class Test01GenerateTable {
         BlogPO blog = new BlogPO("xx", "hx", "url", "1", "xx", "url");
         blog.setId("2");
 
-        JSONObject blogObj = blog.encapJSON(BlogConstants.IDX_MANAGER.getDoLoad(), BlogConstants.IDX_MANAGER.getDoFilter());
+        JSONObject blogObj = blog.encapJSON(new SimpleJSONConfig());
         String sql = MysqlSqlGenerator.generateCreateTableSql(BlogConstants.TABLE_BLOG, blogObj);
         info(sql);
 
@@ -44,7 +45,7 @@ public class Test01GenerateTable {
         blog.setGoodCnt(12);
         blog.setNotGoodCnt(12);
 
-        JSONObject blogObj = blog.encapJSON(BlogConstants.IDX_MANAGER.getDoLoad(), BlogConstants.IDX_MANAGER.getDoFilter());
+        JSONObject blogObj = blog.encapJSON(new SimpleJSONConfig());
         String sql = MysqlSqlGenerator.generateCreateTableSql(BlogConstants.TABLE_BLOG_EX, blogObj);
         info(sql);
 
@@ -61,7 +62,7 @@ public class Test01GenerateTable {
         blog.setCommentId("11");
 
 
-        JSONObject blogObj = blog.encapJSON(BlogConstants.IDX_MANAGER.getDoLoad(), BlogConstants.IDX_MANAGER.getDoFilter());
+        JSONObject blogObj = blog.encapJSON(new SimpleJSONConfig());
         String sql = MysqlSqlGenerator.generateCreateTableSql(BlogConstants.TABLE_BLOG_COMMENT, blogObj);
         info(sql);
 

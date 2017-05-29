@@ -3,11 +3,16 @@ package com.hx.blog_v2.domain.po;
 import com.hx.blog_v2.util.BlogConstants;
 import com.hx.blog_v2.util.DateUtils;
 import com.hx.json.JSONObject;
+import com.hx.json.config.interf.JSONConfig;
+import com.hx.json.interf.JSONField;
 import com.hx.log.json.interf.JSONTransferable;
 import com.hx.log.util.Constants;
 import com.hx.log.util.Tools;
 
-import java.util.*;
+import java.util.Date;
+import java.util.Deque;
+import java.util.LinkedList;
+import java.util.Map;
 
 /**
  * 用户
@@ -16,19 +21,31 @@ import java.util.*;
  * @version 1.0
  * @date 5/23/2017 8:12 PM
  */
-public class UserPO implements JSONTransferable<UserPO, Integer> {
+public class UserPO implements JSONTransferable<UserPO> {
 
+    @JSONField({"id", "id"})
     private String id;
+    @JSONField({"userName", "user_name"})
     private String userName;
+    @JSONField({"password", "password"})
     private String password;
+    @JSONField({"nickName", "nick_name"})
     private String nickName;
+    @JSONField({"email", "email"})
     private String email;
+    @JSONField({"headImgUrl", "head_img_url"})
     private String headImgUrl;
+    @JSONField({"motto", "motto"})
     private String motto;
+    @JSONField({"lastLoginIp", "last_login_ip"})
     private String lastLoginIp;
+    @JSONField({"lastLoginAt", "last_login_at"})
     private String lastLoginAt;
+    @JSONField({"createdAt", "created_at"})
     private String createdAt;
+    @JSONField({"updatedAt", "updated_at"})
     private String updatedAt;
+    @JSONField({"deleted", "deleted"})
     private int deleted;
 
     public UserPO(String userName, String password, String nickName, String email, String headImgUrl, String motto) {
@@ -145,119 +162,46 @@ public class UserPO implements JSONTransferable<UserPO, Integer> {
         this.deleted = deleted;
     }
 
-    // loadFromObject相关索引
-    public static final int CAMEL = 0;
-    public static final int UNDER_LINE = CAMEL + 1;
-    public static final String[] idIdxes = {"id", "id" };
-    public static final String[] userNameIdxes = {"userName", "user_name" };
-    public static final String[] passwordIdxes = {"password", "password" };
-    public static final String[] nickNameIdxes = {"nickName", "nick_name" };
-    public static final String[] emailIdxes = {"email", "email" };
-    public static final String[] headImgUrlIdxes = {"headImgUrl", "head_img_url" };
-    public static final String[] mottoIdxes = {"motto", "motto" };
-    public static final String[] lastLoginIpIdxes = {"lastLoginIp", "last_login_ip" };
-    public static final String[] lastLoginAtIdxes = {"lastLoginAt", "last_login_at" };
-    public static final String[] createdAtIdxes = {"createdAt", "created_at" };
-    public static final String[] updatedAtIdxes = {"updatedAt", "updated_at" };
-    public static final String[] deletedIdxes = {"deleted", "deleted" };
-
-    // encapJSON相关filter
-    public static final int ALL = 0;
-    public static final int FILTER_ID = ALL + 1;
-    public static final int FILTER_WHILE_UPDATE = FILTER_ID + 1;
-    public static final List<Set<String>> filters = Tools.asList(Tools.asSet(""), Tools.asSet(idIdxes),
-            Tools.asSet(idIdxes, userNameIdxes, passwordIdxes, lastLoginIpIdxes, lastLoginAtIdxes, createdAtIdxes)
-    );
-
-    public static final String BEAN_KEY = "userPO_key";
     public static final UserPO PROTO_BEAN = new UserPO();
 
     @Override
-    public UserPO loadFromJSON(Map<String, Object> obj, Map<String, Integer> idxMap) {
-        return loadFromJSON(obj, idxMap, Constants.EMPTY_INIT_OBJ_FILTER );
-    }
-    @Override
-    public UserPO loadFromJSON(Map<String, Object> obj, Map<String, Integer> idxMap, Set<String> initObjFilter) {
-        if(Tools.isEmpty(obj) || Tools.isEmpty(idxMap) || (idxMap.get(BEAN_KEY) == null) ) {
+    public UserPO loadFromJSON(Map<String, Object> obj, JSONConfig config) {
+        if (Tools.isEmpty(obj)) {
             return this;
         }
-        int idx = idxMap.get(BEAN_KEY).intValue();
 
-        this.id = Tools.getString(obj, idx, idIdxes);
-        this.userName = Tools.getString(obj, idx, userNameIdxes);
-        this.password = Tools.getString(obj, idx, passwordIdxes);
-        this.nickName = Tools.getString(obj, idx, nickNameIdxes);
-        this.email = Tools.getString(obj, idx, emailIdxes);
-        this.headImgUrl = Tools.getString(obj, idx, headImgUrlIdxes);
-        this.motto = Tools.getString(obj, idx, mottoIdxes);
-        this.lastLoginIp = Tools.getString(obj, idx, lastLoginIpIdxes);
-        this.lastLoginAt = Tools.getString(obj, idx, lastLoginAtIdxes);
-        this.createdAt = Tools.getString(obj, idx, createdAtIdxes);
-        this.updatedAt = Tools.getString(obj, idx, updatedAtIdxes);
-        this.deleted = Tools.optBoolean(obj, idx, deletedIdxes) ? 1 : 0;
-
+        JSONObject.fromObject(obj).toBean(UserPO.class, this, config);
         return this;
     }
 
     @Override
-    public JSONObject encapJSON(Map<String, Integer> idxMap, Map<String, Integer> filterIdxMap) {
-        return encapJSON(idxMap, filterIdxMap, new LinkedList<Object>() );
+    public JSONObject encapJSON(JSONConfig config) {
+        return encapJSON(config, new LinkedList<>());
     }
+
     @Override
-    public JSONObject encapJSON(Map<String, Integer> idxMap, Map<String, Integer> filterIdxMap, Deque<Object> cycleDectector) {
-        if(cycleDectector.contains(this) ) {
-            return JSONObject.fromObject(Constants.OBJECT_ALREADY_EXISTS).element("id", String.valueOf(id()) );
+    public JSONObject encapJSON(JSONConfig config, Deque<Object> cycleDectector) {
+        if (cycleDectector.contains(this)) {
+            return JSONObject.fromObject(Constants.OBJECT_ALREADY_EXISTS).element("id", String.valueOf(id()));
         }
         cycleDectector.push(this);
 
-        if(Tools.isEmpty(idxMap) || (idxMap.get(BEAN_KEY) == null) ) {
-            cycleDectector.pop();
-            return null;
-        }
-        int idx = idxMap.get(BEAN_KEY).intValue();
-
-        JSONObject res = new JSONObject()
-                .element(idIdxes[Tools.getIdx(idx, idIdxes)], id).element(userNameIdxes[Tools.getIdx(idx, userNameIdxes)], userName).element(passwordIdxes[Tools.getIdx(idx, passwordIdxes)], password)
-                .element(nickNameIdxes[Tools.getIdx(idx, nickNameIdxes)], nickName).element(emailIdxes[Tools.getIdx(idx, emailIdxes)], email).element(headImgUrlIdxes[Tools.getIdx(idx, headImgUrlIdxes)], headImgUrl)
-                .element(mottoIdxes[Tools.getIdx(idx, mottoIdxes)], motto).element(lastLoginIpIdxes[Tools.getIdx(idx, lastLoginIpIdxes)], lastLoginIp).element(lastLoginAtIdxes[Tools.getIdx(idx, lastLoginAtIdxes)], lastLoginAt)
-                .element(createdAtIdxes[Tools.getIdx(idx, createdAtIdxes)], createdAt).element(updatedAtIdxes[Tools.getIdx(idx, updatedAtIdxes)], updatedAt).element(deletedIdxes[Tools.getIdx(idx, deletedIdxes)], deleted);
-
-        if(Tools.isEmpty(filterIdxMap) || (filterIdxMap.get(BEAN_KEY) == null) ) {
-            cycleDectector.pop();
-            return res;
-        }
-
-        cycleDectector.pop();
-        int filterIdx = filterIdxMap.get(BEAN_KEY).intValue();
-        return Tools.filter(res, filters.get(Tools.getIdx(filterIdx, filters.size())) );
+        JSONObject result = JSONObject.fromObject(this, config);
+        return result;
     }
 
     @Override
     public UserPO newInstance(Object... args) {
         return new UserPO();
     }
+
     @Override
     public String id() {
         return id;
     }
+
     @Override
     public void id(String id) {
         this.id = id;
-    }
-    @Override
-    public String beanKey() {
-        return BEAN_KEY;
-    }
-    @Override
-    public UserPO protoBean() {
-        return PROTO_BEAN;
-    }
-    @Override
-    public Integer defaultLoadIdx() {
-        return CAMEL;
-    }
-    @Override
-    public Integer defaultFilterIdx() {
-        return ALL;
     }
 }

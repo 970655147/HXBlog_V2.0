@@ -38,5 +38,10 @@ public class BlogController {
         return blogService.get(form);
     }
 
+    @RequestMapping("/advices")
+    public Result advices() {
+        BeanIdForm from = new BeanIdForm("-1");
+        return blogService.get(from);
+    }
 
 }

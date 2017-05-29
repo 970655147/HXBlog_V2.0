@@ -20,7 +20,7 @@ import java.sql.Connection;
  * @date 5/20/2017 10:38 AM
  */
 @Repository
-public class RequestLogDaoImpl extends MysqlBaseDaoImpl<RequestLogPO, Integer> implements RequestLogDao {
+public class RequestLogDaoImpl extends MysqlBaseDaoImpl<RequestLogPO> implements RequestLogDao {
 
     public RequestLogDaoImpl(RequestLogPO bean) {
         super(bean);

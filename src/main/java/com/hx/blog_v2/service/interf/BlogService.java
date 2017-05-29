@@ -54,20 +54,20 @@ public interface BlogService extends BaseService<BlogPO> {
      *
      * @return result
      * @author Jerry.X.He
-     * @date 5/20/2017 6:21 PM
+     * @date 5/28/2017 11:41 AM
      * @since 1.0
      */
-    Result adminList(AdminBlogSearchForm params, Page<AdminBlogVO> page);
+    Result list(BlogSearchForm params, Page<BlogVO> page);
 
     /**
      * 搜索符合的条件的博客列表
      *
      * @return result
      * @author Jerry.X.He
-     * @date 5/28/2017 11:41 AM
+     * @date 5/20/2017 6:21 PM
      * @since 1.0
      */
-    Result list(BlogSearchForm params, Page<BlogVO> page);
+    Result adminList(AdminBlogSearchForm params, Page<AdminBlogVO> page);
 
     /**
      * 移除给定的博客

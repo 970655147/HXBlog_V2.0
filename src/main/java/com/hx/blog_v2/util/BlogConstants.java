@@ -1,12 +1,20 @@
 package com.hx.blog_v2.util;
 
 import com.hx.blog_v2.domain.po.*;
+import com.hx.json.config.interf.JSONBeanProcessor;
+import com.hx.json.config.interf.JSONConfig;
+import com.hx.json.config.interf.JSONKeyNodeParser;
+import com.hx.json.config.interf.JSONValueNodeParser;
+import com.hx.json.config.simple.*;
 import com.hx.log.idx.IdxManager;
+import com.hx.log.json.interf.JSONTransferable;
 import com.hx.log.util.Constants;
 import com.hx.log.util.Tools;
 import com.hx.mongo.config.MysqlDbConfig;
 import com.hx.mongo.config.interf.DbConfig;
 import org.springframework.beans.factory.annotation.Value;
+
+import java.util.Set;
 
 /**
  * BlogConstants
@@ -46,62 +54,58 @@ public final class BlogConstants {
      * JSONTransferable
      */
     /**
-     * 不过滤任何数据的 idxManager
+     * 各个 PO 的 class
      */
-    public static IdxManager<Integer> IDX_MANAGER;
+    public static final Class[] ALL_PO_CLAZZ = new Class[]{
+            BlogCommentPO.class, BlogExPO.class, BlogPO.class, BlogSensePO.class, BlogTagPO.class,
+            BlogTypePO.class, ExceptionLogPO.class, ImagePO.class, LinkPO.class, MoodPO.class, RequestLogPO.class,
+            UserPO.class, VisitorPO.class, RltBlogTagPO.class
+    };
     /**
-     * 过滤掉id 的 idxManager
+     * 下划线的注册了各个PO 的 KeyNodeParser
      */
-    public static IdxManager<Integer> IDX_MANAGER_FILTER_ID;
+    public static final JSONKeyNodeParser UNDER_LINE_KEY_NODE_PARSER = regKeyNodeParser(1);
+    /**
+     * valueNodeParser
+     */
+    public static final JSONValueNodeParser DEFAULT_VALUE_NODE_PARSER = new SimpleValueNodeParser();
+    /**
+     * 默认的不过滤任何字段的 beanProcessor
+     */
+    public static final JSONBeanProcessor DEFAULT_BEAN_PROCESSOR = SimpleBeanProcessor.getInstance();
+    /**
+     * 向数据库中 增加bean 是需要过滤掉 "id"
+     */
+    public static final JSONBeanProcessor ADD_BEAN_BEAN_PROCESSOR = regFilterBeanProcessor(Tools.asSet("id"));
+    /**
+     * 向数据库中 增加bean 是需要过滤掉 "created_at", "deleted"
+     */
+    public static final JSONBeanProcessor UPDATE_BEAN_BEAN_PROCESSOR = regFilterBeanProcessor(Tools.asSet("created_at", "deleted"));
 
-    static {
-        IDX_MANAGER = new IdxManager<>();
-        IDX_MANAGER.putDoLoad(BlogPO.BEAN_KEY, BlogPO.UNDER_LINE);
-        IDX_MANAGER.putDoLoad(BlogExPO.BEAN_KEY, BlogExPO.UNDER_LINE);
-        IDX_MANAGER.putDoLoad(BlogCommentPO.BEAN_KEY, BlogCommentPO.UNDER_LINE);
-        IDX_MANAGER.putDoLoad(BlogSensePO.BEAN_KEY, BlogSensePO.UNDER_LINE);
-        IDX_MANAGER.putDoLoad(BlogTagPO.BEAN_KEY, BlogTagPO.UNDER_LINE);
-        IDX_MANAGER.putDoLoad(BlogTypePO.BEAN_KEY, BlogTypePO.UNDER_LINE);
-        IDX_MANAGER.putDoLoad(ExceptionLogPO.BEAN_KEY, ExceptionLogPO.UNDER_LINE);
-        IDX_MANAGER.putDoLoad(RequestLogPO.BEAN_KEY, RequestLogPO.UNDER_LINE);
-        IDX_MANAGER.putDoLoad(RltBlogTagPO.BEAN_KEY, RltBlogTagPO.UNDER_LINE);
-        IDX_MANAGER.putDoLoad(VisitorPO.BEAN_KEY, VisitorPO.UNDER_LINE);
-        IDX_MANAGER.putDoLoad(MoodPO.BEAN_KEY, MoodPO.UNDER_LINE);
-        IDX_MANAGER.putDoLoad(UserPO.BEAN_KEY, UserPO.UNDER_LINE);
-        IDX_MANAGER.putDoLoad(LinkPO.BEAN_KEY, LinkPO.UNDER_LINE);
-        IDX_MANAGER.putDoLoad(ImagePO.BEAN_KEY, ImagePO.UNDER_LINE);
-
-        IDX_MANAGER.putDoFilter(BlogPO.BEAN_KEY, BlogPO.ALL);
-        IDX_MANAGER.putDoFilter(BlogExPO.BEAN_KEY, BlogExPO.ALL);
-        IDX_MANAGER.putDoFilter(BlogCommentPO.BEAN_KEY, BlogCommentPO.ALL);
-        IDX_MANAGER.putDoFilter(BlogSensePO.BEAN_KEY, BlogSensePO.ALL);
-        IDX_MANAGER.putDoFilter(BlogTagPO.BEAN_KEY, BlogTagPO.ALL);
-        IDX_MANAGER.putDoFilter(BlogTypePO.BEAN_KEY, BlogTypePO.ALL);
-        IDX_MANAGER.putDoFilter(ExceptionLogPO.BEAN_KEY, ExceptionLogPO.ALL);
-        IDX_MANAGER.putDoFilter(RequestLogPO.BEAN_KEY, RequestLogPO.ALL);
-        IDX_MANAGER.putDoFilter(RltBlogTagPO.BEAN_KEY, RltBlogTagPO.ALL);
-        IDX_MANAGER.putDoFilter(VisitorPO.BEAN_KEY, VisitorPO.ALL);
-        IDX_MANAGER.putDoFilter(MoodPO.BEAN_KEY, MoodPO.ALL);
-        IDX_MANAGER.putDoFilter(UserPO.BEAN_KEY, UserPO.ALL);
-        IDX_MANAGER.putDoFilter(LinkPO.BEAN_KEY, LinkPO.ALL);
-        IDX_MANAGER.putDoFilter(ImagePO.BEAN_KEY, ImagePO.ALL);
-
-        IDX_MANAGER_FILTER_ID = new IdxManager<>(IDX_MANAGER);
-        IDX_MANAGER_FILTER_ID.putDoFilter(BlogPO.BEAN_KEY, BlogPO.FILTER_ID);
-        IDX_MANAGER_FILTER_ID.putDoFilter(BlogExPO.BEAN_KEY, BlogExPO.FILTER_ID);
-        IDX_MANAGER_FILTER_ID.putDoFilter(BlogCommentPO.BEAN_KEY, BlogCommentPO.FILTER_ID);
-        IDX_MANAGER_FILTER_ID.putDoFilter(BlogSensePO.BEAN_KEY, BlogSensePO.FILTER_ID);
-        IDX_MANAGER_FILTER_ID.putDoFilter(BlogTagPO.BEAN_KEY, BlogTagPO.FILTER_ID);
-        IDX_MANAGER_FILTER_ID.putDoFilter(BlogTypePO.BEAN_KEY, BlogTypePO.FILTER_ID);
-        IDX_MANAGER_FILTER_ID.putDoFilter(ExceptionLogPO.BEAN_KEY, ExceptionLogPO.FILTER_ID);
-        IDX_MANAGER_FILTER_ID.putDoFilter(RequestLogPO.BEAN_KEY, RequestLogPO.FILTER_ID);
-        IDX_MANAGER_FILTER_ID.putDoFilter(RltBlogTagPO.BEAN_KEY, RltBlogTagPO.FILTER_ID);
-        IDX_MANAGER_FILTER_ID.putDoFilter(VisitorPO.BEAN_KEY, VisitorPO.FILTER_ID);
-        IDX_MANAGER_FILTER_ID.putDoFilter(MoodPO.BEAN_KEY, MoodPO.FILTER_ID);
-        IDX_MANAGER_FILTER_ID.putDoFilter(UserPO.BEAN_KEY, UserPO.FILTER_ID);
-        IDX_MANAGER_FILTER_ID.putDoFilter(LinkPO.BEAN_KEY, LinkPO.FILTER_ID);
-        IDX_MANAGER_FILTER_ID.putDoFilter(ImagePO.BEAN_KEY, ImagePO.FILTER_ID);
-    }
+    /**
+     * 从数据库加载所有数据的 JSONConfig
+     */
+    public static final JSONConfig LOAD_ALL_CONFIG = new SimpleJSONConfig(
+            UNDER_LINE_KEY_NODE_PARSER,
+            DEFAULT_VALUE_NODE_PARSER,
+            DEFAULT_BEAN_PROCESSOR
+    );
+    /**
+     * 向数据库添加记录的的 JSONConfig
+     */
+    public static final JSONConfig ADD_BEAN_CONFIG = new SimpleJSONConfig(
+            UNDER_LINE_KEY_NODE_PARSER,
+            DEFAULT_VALUE_NODE_PARSER,
+            ADD_BEAN_BEAN_PROCESSOR
+    );
+    /**
+     * 向数据库更新记录的的 JSONConfig
+     */
+    public static final JSONConfig UPDATE_BEAN_CONFIG = new SimpleJSONConfig(
+            UNDER_LINE_KEY_NODE_PARSER,
+            DEFAULT_VALUE_NODE_PARSER,
+            UPDATE_BEAN_BEAN_PROCESSOR
+    );
 
     @Value("jdbc.driverClazz")
     public static String DB_DRIVER = "com.mysql.jdbc.Driver";
@@ -209,5 +213,41 @@ public final class BlogConstants {
      */
     public static String REPLY_2_FLOOR_OWNER = "-1";
 
+
+    // -------------------- 辅助方法 --------------------------
+
+    /**
+     * 注册监听所有的 POClass 的给定索引的 JSONField 的 KeyNodeParser
+     *
+     * @param idx idx
+     * @return com.hx.json.config.simple.RegisteredJSONFieldKeyNodeParser
+     * @author Jerry.X.He
+     * @date 5/29/2017 2:50 PM
+     * @since 1.0
+     */
+    private static RegisteredJSONFieldKeyNodeParser regKeyNodeParser(int idx) {
+        RegisteredJSONFieldKeyNodeParser result = RegisteredJSONFieldKeyNodeParser.of(ALL_PO_CLAZZ.length);
+        for(Class clazz : ALL_PO_CLAZZ) {
+            result.register(clazz, JSONFieldKeyNodeParser.of(idx));
+        }
+        return result;
+    }
+
+    /**
+     * 注册监听所有的 POClass 的给定索引的 JSONField 的 KeyNodeParser
+     *
+     * @param filter 需要过滤的字段
+     * @return com.hx.json.config.simple.RegisteredJSONFieldKeyNodeParser
+     * @author Jerry.X.He
+     * @date 5/29/2017 2:50 PM
+     * @since 1.0
+     */
+    private static RegisteredBeanProcessor regFilterBeanProcessor(Set<String> filter) {
+        RegisteredBeanProcessor result = RegisteredBeanProcessor.of(ALL_PO_CLAZZ.length);
+        for(Class clazz : ALL_PO_CLAZZ) {
+            result.register(clazz, new FilteredBeanProcessor(false, true, filter));
+        }
+        return result;
+    }
 
 }

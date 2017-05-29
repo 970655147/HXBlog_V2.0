@@ -44,7 +44,7 @@ public class MoodServiceImpl extends BaseServiceImpl<MoodPO> implements MoodServ
         MoodPO po = new MoodPO(params.getTitle(), params.getContent(), params.getEnable());
 
         try {
-            moodDao.save(po, BlogConstants.IDX_MANAGER_FILTER_ID.getDoLoad(), BlogConstants.IDX_MANAGER_FILTER_ID.getDoFilter());
+            moodDao.save(po, BlogConstants.ADD_BEAN_CONFIG);
         } catch (Exception e) {
             e.printStackTrace();
             return ResultUtils.failed(Tools.errorMsg(e));
@@ -77,7 +77,7 @@ public class MoodServiceImpl extends BaseServiceImpl<MoodPO> implements MoodServ
         po.setId(params.getId());
         po.setUpdatedAt(DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS));
         try {
-            long modified = moodDao.updateById(po, BlogConstants.IDX_MANAGER_FILTER_ID.getDoLoad(), BlogConstants.IDX_MANAGER_FILTER_ID.getDoFilter())
+            long modified = moodDao.updateById(po, BlogConstants.UPDATE_BEAN_CONFIG)
                     .getModifiedCount();
             if (modified == 0) {
                 return ResultUtils.failed("没有找到对应的心情 !");

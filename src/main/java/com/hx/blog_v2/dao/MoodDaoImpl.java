@@ -22,7 +22,7 @@ import java.sql.Connection;
  * @date 5/20/2017 10:38 AM
  */
 @Repository
-public class MoodDaoImpl extends MysqlBaseDaoImpl<MoodPO, Integer> implements MoodDao {
+public class MoodDaoImpl extends MysqlBaseDaoImpl<MoodPO> implements MoodDao {
 
     public MoodDaoImpl(MoodPO bean) {
         super(bean);

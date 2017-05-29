@@ -22,7 +22,7 @@ public class AdminMoodVOMapper implements RowMapper<AdminMoodVO> {
     @Override
     public AdminMoodVO mapRow(ResultSet resultSet, int i) throws SQLException {
         MoodPO po = new MoodPO();
-        po.loadFromJSON(new ResultSet2MapAdapter(resultSet), BlogConstants.IDX_MANAGER.getDoLoad());
+        po.loadFromJSON(new ResultSet2MapAdapter(resultSet), BlogConstants.LOAD_ALL_CONFIG);
         AdminMoodVO vo = POVOTransferUtils.moodPO2AdminMoodVO(po);
         return vo;
     }

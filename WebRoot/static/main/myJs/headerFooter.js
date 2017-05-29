@@ -46,7 +46,7 @@ function headerFooterInit() {
                 var typesEle = $("#cd-dropdown")
                 for (idx in data.types) {
                     var type = data.types[idx]
-                    typesEle.append("<option id='types'><a> " + type.name + " </a></option>")
+                    typesEle.append("<option name='type' value='/static/main/blogList.html?typeId=" + type.id + "' >" + type.name + "</option>")
                 }
 
                 var linksEle = $("#links")
@@ -54,7 +54,7 @@ function headerFooterInit() {
                     var link = data.links[idx]
                     linksEle.append(
                         "<div class='sim-button button5'>" +
-                        "<a href=" + link.url + "><span> " + link.name + " </span></a>" +
+                        "<a href='" + link.url + "'><span> " + link.name + " </span></a>" +
                         "</div>")
                 }
 
@@ -67,11 +67,11 @@ function headerFooterInit() {
                     hotBlogsEle.append(
                         "<div class='blog-grids wow fadeInDown' data-wow-duration='.8s' data-wow-delay='.2s'> " +
                         "<div class='blog-grid-left'> " +
-                        "<a href='blog.html'> " +
+                        "<a href='/static/main/blogDetail.html?id=" + blog.id + "'> " +
                         "<img src='" + blog.coverUrl + "' class='img-responsive' alt='" + blog.author + "' width='40px' height='40px'>" +
                         "</a>" +
                         "</div>" +
-                        "<div class='blog-grid-right'><h5><a href='blog.html'> " + blog.title + " </a></h5></div>" +
+                        "<div class='blog-grid-right'><h5><a href='/static/main/blogDetail.html?id=" + blog.id + "'> " + blog.title + " </a></h5></div>" +
                         "<div class='clearfix'></div>" +
                         "</div>")
                 }
@@ -87,7 +87,7 @@ function headerFooterInit() {
                     var comment = data.latestComments[idx]
                     latestComments.append(
                         "<span>" +
-                        "<a href='/blog/" + comment.blogId + "'>" + comment.name + "@" + comment.toUser + " </a> - " + comment.createdAt + " " +
+                        "<a href='/static/main/blogDetail.html?id=" + comment.blogId + "'>" + comment.name + "@" + comment.toUser + " </a> - " + comment.createdAt + " " +
                         "</span>" +
                         "<p><span class='sourceText'>" + comment.content + "</span></p>"
                     )
@@ -113,7 +113,7 @@ function headerFooterInit() {
         for (var idx in tags) {
             var entry = {
                 label: tags[idx].name,
-                url: '/blog/tag/' + tags[idx].id
+                url: '/static/main/blogList.html?tagId=' + tags[idx].id
             }
             tagEntries.push(entry);
         }

@@ -50,7 +50,7 @@ public class ImageServiceImpl extends BaseServiceImpl<ImagePO> implements ImageS
         ImagePO po = new ImagePO(params.getTitle(), params.getUrl(), params.getEnable());
 
         try {
-            imageDao.save(po, BlogConstants.IDX_MANAGER_FILTER_ID.getDoLoad(), BlogConstants.IDX_MANAGER_FILTER_ID.getDoFilter());
+            imageDao.save(po, BlogConstants.ADD_BEAN_CONFIG);
         } catch (Exception e) {
             e.printStackTrace();
             return ResultUtils.failed(Tools.errorMsg(e));
@@ -83,7 +83,7 @@ public class ImageServiceImpl extends BaseServiceImpl<ImagePO> implements ImageS
         po.setId(params.getId());
         po.setUpdatedAt(DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS));
         try {
-            long modified = imageDao.updateById(po, BlogConstants.IDX_MANAGER_FILTER_ID.getDoLoad(), BlogConstants.IDX_MANAGER_FILTER_ID.getDoFilter())
+            long modified = imageDao.updateById(po, BlogConstants.UPDATE_BEAN_CONFIG)
                     .getModifiedCount();
             if (modified == 0) {
                 return ResultUtils.failed("没有找到对应的图片 !");

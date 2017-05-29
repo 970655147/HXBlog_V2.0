@@ -20,7 +20,7 @@ import java.sql.Connection;
  * @date 5/20/2017 10:38 AM
  */
 @Repository
-public class LinkDaoImpl extends MysqlBaseDaoImpl<LinkPO, Integer> implements LinkDao {
+public class LinkDaoImpl extends MysqlBaseDaoImpl<LinkPO> implements LinkDao {
 
     public LinkDaoImpl(LinkPO bean) {
         super(bean);

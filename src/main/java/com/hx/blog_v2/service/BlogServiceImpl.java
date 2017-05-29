@@ -113,41 +113,6 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
     }
 
     @Override
-    public Result adminList(AdminBlogSearchForm params, Page<AdminBlogVO> page) {
-        StringBuilder sql = new StringBuilder(
-                " select b.*, GROUP_CONCAT(rlt.tag_id) as tagIds from blog as b inner join rlt_blog_tag as rlt on b.id = rlt.blog_id " +
-                        " where b.deleted = 0 and b.id >= 0 ");
-        List<Object> sqlParams = new ArrayList<>(3);
-        if (!Tools.isEmpty(params.getId())) {
-            sql.append(" and b.id = ? ");
-            sqlParams.add(params.getId());
-        } else {
-            if (!Tools.isEmpty(params.getTypeId())) {
-                sql.append(" and b.blog_type_id = ? ");
-                sqlParams.add(params.getTypeId());
-            }
-            if (!Tools.isEmpty(params.getTagId())) {
-                sql.append(" and b.id in (select blog_id from rlt_blog_tag where tag_id = ?) ");
-                sqlParams.add(params.getTagId());
-            }
-            if (!Tools.isEmpty(params.getKeywords())) {
-                sql.append(" and (b.title like ? or b.author like ?) ");
-                sqlParams.add(SqlUtils.wrapWildcard(params.getKeywords()));
-                sqlParams.add(SqlUtils.wrapWildcard(params.getKeywords()));
-            }
-
-            sql.append(" group by b.id limit ?, ? ");
-            sqlParams.add(page.recordOffset());
-            sqlParams.add(page.getPageSize());
-        }
-
-        List<AdminBlogVO> list = jdbcTemplate.query(sql.toString(), sqlParams.toArray(), new AdminBlogVOMapper());
-        encapTypeTagInfo(list);
-        page.setList(list);
-        return ResultUtils.success(page);
-    }
-
-    @Override
     public Result list(BlogSearchForm params, Page<BlogVO> page) {
         StringBuilder sql = new StringBuilder(
                 " select b.*, e.*, GROUP_CONCAT(rlt.tag_id) as tagIds from blog as b inner join rlt_blog_tag as rlt on b.id = rlt.blog_id " +
@@ -178,6 +143,41 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
 
         List<BlogVO> list = jdbcTemplate.query(sql.toString(), sqlParams.toArray(), new BlogVOMapper());
         encapBlogVo(list);
+        page.setList(list);
+        return ResultUtils.success(page);
+    }
+
+    @Override
+    public Result adminList(AdminBlogSearchForm params, Page<AdminBlogVO> page) {
+        StringBuilder sql = new StringBuilder(
+                " select b.*, GROUP_CONCAT(rlt.tag_id) as tagIds from blog as b inner join rlt_blog_tag as rlt on b.id = rlt.blog_id " +
+                        " where b.deleted = 0 and b.id >= 0 ");
+        List<Object> sqlParams = new ArrayList<>(3);
+        if (!Tools.isEmpty(params.getId())) {
+            sql.append(" and b.id = ? ");
+            sqlParams.add(params.getId());
+        } else {
+            if (!Tools.isEmpty(params.getTypeId())) {
+                sql.append(" and b.blog_type_id = ? ");
+                sqlParams.add(params.getTypeId());
+            }
+            if (!Tools.isEmpty(params.getTagId())) {
+                sql.append(" and b.id in (select blog_id from rlt_blog_tag where tag_id = ?) ");
+                sqlParams.add(params.getTagId());
+            }
+            if (!Tools.isEmpty(params.getKeywords())) {
+                sql.append(" and (b.title like ? or b.author like ?) ");
+                sqlParams.add(SqlUtils.wrapWildcard(params.getKeywords()));
+                sqlParams.add(SqlUtils.wrapWildcard(params.getKeywords()));
+            }
+
+            sql.append(" group by b.id limit ?, ? ");
+            sqlParams.add(page.recordOffset());
+            sqlParams.add(page.getPageSize());
+        }
+
+        List<AdminBlogVO> list = jdbcTemplate.query(sql.toString(), sqlParams.toArray(), new AdminBlogVOMapper());
+        encapTypeTagInfo(list);
         page.setList(list);
         return ResultUtils.success(page);
     }
@@ -280,8 +280,8 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
     private Result add0(BlogPO po, BlogSaveForm params) {
         boolean blogInserted = false, tagsInserted = false;
         try {
-            blogDao.save(po, BlogConstants.IDX_MANAGER_FILTER_ID.getDoLoad(), BlogConstants.IDX_MANAGER_FILTER_ID.getDoFilter());
-            blogExDao.save(new BlogExPO(po.getId()), BlogConstants.IDX_MANAGER_FILTER_ID.getDoLoad(), BlogConstants.IDX_MANAGER_FILTER_ID.getDoFilter());
+            blogDao.save(po, BlogConstants.ADD_BEAN_CONFIG);
+            blogExDao.save(new BlogExPO(po.getId()), BlogConstants.ADD_BEAN_CONFIG);
             blogInserted = true;
 
             String[] tagIds = params.getBlogTagIds().split(",");
@@ -291,7 +291,7 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
                 for (String tagId : tagIds) {
                     blogTags.add(new RltBlogTagPO(po.getId(), tagId));
                 }
-                rltBlogTagDao.save(blogTags, BlogConstants.IDX_MANAGER_FILTER_ID.getDoLoad(), BlogConstants.IDX_MANAGER_FILTER_ID.getDoFilter());
+                rltBlogTagDao.save(blogTags, BlogConstants.ADD_BEAN_CONFIG);
                 tagsInserted = true;
             }
             String blogFile = Tools.getFilePath(WebContext.getBlogRootPath(), po.getContentUrl());
@@ -332,8 +332,8 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
 
         try {
             // 对于createAt的处理 先放在这里, 等之后 HXMongo 的review[abort JSONTransferable] 之后吧,
-            long matched = blogDao.updateById(po, BlogConstants.IDX_MANAGER_FILTER_ID.getDoLoad(), BlogConstants.IDX_MANAGER_FILTER_ID.getDoFilter())
-                    .getMatchedCount();
+            long matched = blogDao.updateById(po, BlogConstants.UPDATE_BEAN_CONFIG)
+                    .getModifiedCount();
             if (matched == 0) {
                 return ResultUtils.failed("没有找到对应的博客 !");
             }
@@ -346,7 +346,7 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
                     blogTags.add(new RltBlogTagPO(po.getId(), tagId));
                 }
                 rltBlogTagDao.deleteMany(Criteria.eq("blog_id", po.getId()));
-                rltBlogTagDao.save(blogTags, BlogConstants.IDX_MANAGER_FILTER_ID.getDoLoad(), BlogConstants.IDX_MANAGER_FILTER_ID.getDoFilter());
+                rltBlogTagDao.insertMany(blogTags, BlogConstants.ADD_BEAN_CONFIG);
             }
             String blogFile = Tools.getFilePath(WebContext.getBlogRootPath(), po.getContentUrl());
             FileUtils.createIfNotExists(blogFile, true);

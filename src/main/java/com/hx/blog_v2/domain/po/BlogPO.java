@@ -3,10 +3,16 @@ package com.hx.blog_v2.domain.po;
 import com.hx.blog_v2.util.BlogConstants;
 import com.hx.blog_v2.util.DateUtils;
 import com.hx.json.JSONObject;
+import com.hx.json.config.interf.JSONConfig;
+import com.hx.json.interf.JSONField;
 import com.hx.log.json.interf.JSONTransferable;
+import com.hx.log.util.Constants;
 import com.hx.log.util.Tools;
 
-import java.util.*;
+import java.util.Date;
+import java.util.Deque;
+import java.util.LinkedList;
+import java.util.Map;
 
 /**
  * 博客的一条记录
@@ -15,32 +21,31 @@ import java.util.*;
  * @version 1.0
  * @date 5/20/2017 9:42 AM
  */
-public class BlogPO implements JSONTransferable<BlogPO, Integer> {
+public class BlogPO implements JSONTransferable<BlogPO> {
 
+    @JSONField({"id", "id"})
     private String id;
+    @JSONField({"title", "title"})
     private String title;
+    @JSONField({"author", "author"})
     private String author;
-    /**
-     * 封面的url
-     */
+    @JSONField({"coverUrl", "cover_url"})
     private String coverUrl;
-    /**
-     * 所属的分类
-     */
+    @JSONField({"blogTypeId", "blog_type_id"})
     private String blogTypeId;
-    /**
-     * 摘要
-     */
+    @JSONField({"summary", "summary"})
     private String summary;
-    /**
-     * 内容的映射
-     */
+    @JSONField({"contentUrl", "content_url"})
     private String contentUrl;
-
+    @JSONField({"createdAt", "created_at"})
     private String createdAt;
+    @JSONField({"createdAtMonth", "created_at_month"})
     private String createdAtMonth;
+    @JSONField({"updatedAt", "updated_at"})
     private String updatedAt;
+    @JSONField({"deleted", "deleted"})
     private int deleted;
+
 
     public BlogPO(String title, String author, String coverUrl, String blogTypeId, String summary, String contentUrl) {
         this();
@@ -148,115 +153,48 @@ public class BlogPO implements JSONTransferable<BlogPO, Integer> {
         this.deleted = deleted;
     }
 
-    // loadFromObject相关索引
-    public static final int CAMEL = 0;
-    public static final int UNDER_LINE = CAMEL + 1;
-    public static final String[] idIdxes = {"id", "id" };
-    public static final String[] titleIdxes = {"title", "title" };
-    public static final String[] authorIdxes = {"author", "author" };
-    public static final String[] coverUrlIdxes = {"coverUrl", "cover_url" };
-    public static final String[] blogTypeIdIdxes = {"blogTypeId", "blog_type_id" };
-    public static final String[] summaryIdxes = {"summary", "summary" };
-    public static final String[] contentUrlIdxes = {"contentUrl", "content_url" };
-    public static final String[] createdAtIdxes = {"createdAt", "created_at" };
-    public static final String[] createdAtMonthIdxes = {"createdAtMonth", "created_at_month" };
-    public static final String[] updatedAtIdxes = {"updatedAt", "updated_at" };
-    public static final String[] deletedIdxes = {"deleted", "deleted" };
-
-    // encapJSON相关filter
-    public static final int ALL = 0;
-    public static final int FILTER_ID = ALL + 1;
-    public static final List<Set<String>> filters = Tools.asList(Tools.asSet(""), Tools.asSet(idIdxes));
-
-    public static final String BEAN_KEY = "blogPO_key";
     public static final BlogPO PROTO_BEAN = new BlogPO();
 
     @Override
-    public BlogPO loadFromJSON(Map<String, Object> obj, Map<String, Integer> idxMap) {
-        return loadFromJSON(obj, idxMap, com.hx.log.util.Constants.EMPTY_INIT_OBJ_FILTER );
-    }
-    @Override
-    public BlogPO loadFromJSON(Map<String, Object> obj, Map<String, Integer> idxMap, Set<String> initObjFilter) {
-        if(Tools.isEmpty(obj) || Tools.isEmpty(idxMap) || (idxMap.get(BEAN_KEY) == null) ) {
+    public BlogPO loadFromJSON(Map<String, Object> obj, JSONConfig config) {
+        if (Tools.isEmpty(obj)) {
             return this;
         }
-        int idx = idxMap.get(BEAN_KEY).intValue();
 
-        this.id = Tools.getString(obj, idx, idIdxes);
-        this.title = Tools.optString(obj, idx, titleIdxes);
-        this.author = Tools.optString(obj, idx, authorIdxes);
-        this.coverUrl = Tools.optString(obj, idx, coverUrlIdxes);
-        this.blogTypeId = Tools.optString(obj, idx, blogTypeIdIdxes);
-        this.summary = Tools.optString(obj, idx, summaryIdxes);
-        this.contentUrl = Tools.optString(obj, idx, contentUrlIdxes);
-        this.createdAt = Tools.optString(obj, idx, createdAtIdxes);
-        this.createdAtMonth = Tools.optString(obj, idx, createdAtMonthIdxes);
-        this.updatedAt = Tools.optString(obj, idx, updatedAtIdxes);
-        this.deleted = Tools.optBoolean(obj, idx, deletedIdxes) ? 1 : 0;
-
+        JSONObject.fromObject(obj).toBean(BlogPO.class, this, config);
         return this;
     }
 
     @Override
-    public JSONObject encapJSON(Map<String, Integer> idxMap, Map<String, Integer> filterIdxMap) {
-        return encapJSON(idxMap, filterIdxMap, new LinkedList<Object>() );
+    public JSONObject encapJSON(JSONConfig config) {
+        return encapJSON(config, new LinkedList<>());
     }
+
     @Override
-    public JSONObject encapJSON(Map<String, Integer> idxMap, Map<String, Integer> filterIdxMap, Deque<Object> cycleDectector) {
-        if(cycleDectector.contains(this) ) {
-            return JSONObject.fromObject(com.hx.log.util.Constants.OBJECT_ALREADY_EXISTS).element("id", String.valueOf(id()) );
+    public JSONObject encapJSON(JSONConfig config, Deque<Object> cycleDectector) {
+        if (cycleDectector.contains(this)) {
+            return JSONObject.fromObject(Constants.OBJECT_ALREADY_EXISTS).element("id", String.valueOf(id()));
         }
         cycleDectector.push(this);
 
-        if(Tools.isEmpty(idxMap) || (idxMap.get(BEAN_KEY) == null) ) {
-            cycleDectector.pop();
-            return null;
-        }
-        int idx = idxMap.get(BEAN_KEY).intValue();
-
-        JSONObject res = new JSONObject()
-                .element(idIdxes[Tools.getIdx(idx, idIdxes)], id).element(titleIdxes[Tools.getIdx(idx, titleIdxes)], title).element(authorIdxes[Tools.getIdx(idx, authorIdxes)], author)
-                .element(coverUrlIdxes[Tools.getIdx(idx, coverUrlIdxes)], coverUrl).element(blogTypeIdIdxes[Tools.getIdx(idx, blogTypeIdIdxes)], blogTypeId).element(summaryIdxes[Tools.getIdx(idx, summaryIdxes)], summary)
-                .element(contentUrlIdxes[Tools.getIdx(idx, contentUrlIdxes)], contentUrl).element(createdAtIdxes[Tools.getIdx(idx, createdAtIdxes)], createdAt).element(createdAtMonthIdxes[Tools.getIdx(idx, createdAtMonthIdxes)], createdAtMonth)
-                .element(updatedAtIdxes[Tools.getIdx(idx, updatedAtIdxes)], updatedAt).element(deletedIdxes[Tools.getIdx(idx, deletedIdxes)], deleted);
-
-        if(Tools.isEmpty(filterIdxMap) || (filterIdxMap.get(BEAN_KEY) == null) ) {
-            cycleDectector.pop();
-            return res;
-        }
-
-        cycleDectector.pop();
-        int filterIdx = filterIdxMap.get(BEAN_KEY).intValue();
-        return Tools.filter(res, filters.get(Tools.getIdx(filterIdx, filters.size())) );
+        JSONObject result = JSONObject.fromObject(this, config);
+        return result;
     }
 
     @Override
     public BlogPO newInstance(Object... args) {
         return new BlogPO();
     }
+
     @Override
     public String id() {
         return id;
     }
+
     @Override
     public void id(String id) {
         this.id = id;
     }
-    @Override
-    public String beanKey() {
-        return BEAN_KEY;
-    }
-    @Override
-    public BlogPO protoBean() {
-        return PROTO_BEAN;
-    }
-    @Override
-    public Integer defaultLoadIdx() {
-        return CAMEL;
-    }
-    @Override
-    public Integer defaultFilterIdx() {
-        return ALL;
-    }
+
 
 }

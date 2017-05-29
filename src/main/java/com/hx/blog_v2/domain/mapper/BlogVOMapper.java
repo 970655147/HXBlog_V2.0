@@ -27,8 +27,8 @@ public class BlogVOMapper implements RowMapper<BlogVO> {
         BlogExPO exPo = new BlogExPO();
 
         Map<String, Object> resultMap = new ResultSet2MapAdapter(resultSet);
-        po.loadFromJSON(resultMap, BlogConstants.IDX_MANAGER.getDoLoad());
-        exPo.loadFromJSON(resultMap, BlogConstants.IDX_MANAGER.getDoLoad());
+        po.loadFromJSON(resultMap, BlogConstants.LOAD_ALL_CONFIG);
+        exPo.loadFromJSON(resultMap, BlogConstants.LOAD_ALL_CONFIG);
 
         BlogVO vo = POVOTransferUtils.blogPO2BlogVO(po);
         vo = POVOTransferUtils.blogExPO2BlogVO(exPo, vo);

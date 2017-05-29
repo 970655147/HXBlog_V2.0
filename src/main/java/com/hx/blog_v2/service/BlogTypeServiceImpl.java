@@ -40,12 +40,12 @@ public class BlogTypeServiceImpl extends BaseServiceImpl<BlogTypePO> implements 
     public Result add(BlogTypeSaveForm params) {
         Map<String, BlogTypePO> blogTypes = cacheContext.allBlogTypes();
         if (contains(blogTypes, params.getName())) {
-            return ResultUtils.failed("¸ÃÀàĞÍÒÑ¾­´æÔÚ !");
+            return ResultUtils.failed("è¯¥ç±»å‹å·²ç»å­˜åœ¨ !");
         }
 
         BlogTypePO po = new BlogTypePO(params.getName());
         try {
-            blogTypeDao.save(po, BlogConstants.IDX_MANAGER_FILTER_ID.getDoLoad(), BlogConstants.IDX_MANAGER_FILTER_ID.getDoFilter());
+            blogTypeDao.save(po, BlogConstants.ADD_BEAN_CONFIG);
             blogTypes.put(po.getId(), po);
         } catch (Exception e) {
             e.printStackTrace();
@@ -69,17 +69,16 @@ public class BlogTypeServiceImpl extends BaseServiceImpl<BlogTypePO> implements 
     public Result update(BlogTypeSaveForm params) {
         BlogTypePO po = cacheContext.allBlogTypes().get(params.getId());
         if (po == null) {
-            return ResultUtils.failed("¸ÃÀàĞÍ²»´æÔÚ !");
+            return ResultUtils.failed("è¯¥ç±»å‹ä¸å­˜åœ¨ !");
         }
 
         po.setName(params.getName());
         po.setUpdatedAt(DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS));
         try {
-            long modified = blogTypeDao.updateOne(Criteria.eq("id", params.getId()),
-                    Criteria.set("name", po.getName()).add("updated_at", po.getUpdatedAt()))
+            long modified = blogTypeDao.updateById(po, BlogConstants.UPDATE_BEAN_CONFIG)
                     .getModifiedCount();
             if (modified == 0) {
-                return ResultUtils.failed("¸ÃÀàĞÍ²»´æÔÚ !");
+                return ResultUtils.failed("è¯¥ç±»å‹ä¸å­˜åœ¨ !");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -92,7 +91,7 @@ public class BlogTypeServiceImpl extends BaseServiceImpl<BlogTypePO> implements 
     public Result remove(BlogTypeSaveForm params) {
         BlogTypePO po = cacheContext.allBlogTypes().remove(params.getId());
         if (po == null) {
-            return ResultUtils.failed("¸ÃÀàĞÍ²»´æÔÚ !");
+            return ResultUtils.failed("è¯¥ç±»å‹ä¸å­˜åœ¨ !");
         }
 
         String updatedAt = DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
@@ -101,7 +100,7 @@ public class BlogTypeServiceImpl extends BaseServiceImpl<BlogTypePO> implements 
                     Criteria.set("deleted", 1).add("updated_at", updatedAt)
             ).getModifiedCount();
             if (modified == 0) {
-                return ResultUtils.failed("¸ÃÀàĞÍ²»´æÔÚ !");
+                return ResultUtils.failed("è¯¥ç±»å‹ä¸å­˜åœ¨ !");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -111,10 +110,10 @@ public class BlogTypeServiceImpl extends BaseServiceImpl<BlogTypePO> implements 
     }
 
 
-    // -------------------- ¸¨Öú·½·¨ --------------------------
+    // -------------------- è¾…åŠ©æ–¹æ³• --------------------------
 
     /**
-     * ÅĞ¶Ïµ±Ç°ËùÓĞµÄ BlogType ÖĞ ÊÇ·ñÓĞÃû×ÖÎª nameµÄ BlogType
+     * åˆ¤æ–­å½“å‰æ‰€æœ‰çš„ BlogType ä¸­ æ˜¯å¦æœ‰åå­—ä¸º nameçš„ BlogType
      *
      * @param blogTypes blogTypes
      * @param name      name

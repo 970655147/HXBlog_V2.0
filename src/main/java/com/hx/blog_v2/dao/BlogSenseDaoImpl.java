@@ -20,7 +20,7 @@ import java.sql.Connection;
  * @date 5/20/2017 10:38 AM
  */
 @Repository
-public class BlogSenseDaoImpl extends MysqlBaseDaoImpl<BlogSensePO, Integer> implements BlogSenseDao {
+public class BlogSenseDaoImpl extends MysqlBaseDaoImpl<BlogSensePO> implements BlogSenseDao {
 
     public BlogSenseDaoImpl(BlogSensePO bean) {
         super(bean);

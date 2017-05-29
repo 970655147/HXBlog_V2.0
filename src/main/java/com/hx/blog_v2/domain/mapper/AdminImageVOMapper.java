@@ -24,7 +24,7 @@ public class AdminImageVOMapper implements RowMapper<AdminImageVO> {
     @Override
     public AdminImageVO mapRow(ResultSet resultSet, int i) throws SQLException {
         ImagePO po = new ImagePO();
-        po.loadFromJSON(new ResultSet2MapAdapter(resultSet), BlogConstants.IDX_MANAGER.getDoLoad());
+        po.loadFromJSON(new ResultSet2MapAdapter(resultSet), BlogConstants.LOAD_ALL_CONFIG);
         AdminImageVO vo = POVOTransferUtils.imagePO2AdminImageVO(po);
         return vo;
     }

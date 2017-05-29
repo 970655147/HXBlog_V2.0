@@ -45,7 +45,7 @@ public class BlogTagServiceImpl extends BaseServiceImpl<BlogTagPO> implements Bl
 
         BlogTagPO po = new BlogTagPO(params.getName());
         try {
-            blogTagDao.save(po, BlogConstants.IDX_MANAGER_FILTER_ID.getDoLoad(), BlogConstants.IDX_MANAGER_FILTER_ID.getDoFilter());
+            blogTagDao.save(po, BlogConstants.ADD_BEAN_CONFIG);
             blogTypes.put(po.getId(), po);
         } catch (Exception e) {
             e.printStackTrace();
@@ -75,8 +75,7 @@ public class BlogTagServiceImpl extends BaseServiceImpl<BlogTagPO> implements Bl
         po.setName(params.getName());
         po.setUpdatedAt(DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS));
         try {
-            long matched = blogTagDao.updateOne(Criteria.eq("id", params.getId()),
-                    Criteria.set("name", po.getName()).add("updated_at", po.getUpdatedAt()))
+            long matched = blogTagDao.updateById(po, BlogConstants.UPDATE_BEAN_CONFIG)
                     .getModifiedCount();
             if (matched == 0) {
                 return ResultUtils.failed("该标签不存在 !");

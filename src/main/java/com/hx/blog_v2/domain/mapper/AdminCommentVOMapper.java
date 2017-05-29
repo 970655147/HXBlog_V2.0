@@ -24,7 +24,7 @@ public class AdminCommentVOMapper implements RowMapper<AdminCommentVO> {
     @Override
     public AdminCommentVO mapRow(ResultSet resultSet, int i) throws SQLException {
         BlogCommentPO po = new BlogCommentPO();
-        po.loadFromJSON(new ResultSet2MapAdapter(resultSet), BlogConstants.IDX_MANAGER.getDoLoad());
+        po.loadFromJSON(new ResultSet2MapAdapter(resultSet), BlogConstants.LOAD_ALL_CONFIG);
         AdminCommentVO vo = POVOTransferUtils.blogCommentPO2AdminCommentVO(po);
         vo.setBlogName(resultSet.getString("blog_name"));
         return vo;

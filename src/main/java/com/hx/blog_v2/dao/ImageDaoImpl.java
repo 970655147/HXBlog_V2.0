@@ -20,7 +20,7 @@ import java.sql.Connection;
  * @date 5/20/2017 10:38 AM
  */
 @Repository
-public class ImageDaoImpl extends MysqlBaseDaoImpl<ImagePO, Integer> implements ImageDao {
+public class ImageDaoImpl extends MysqlBaseDaoImpl<ImagePO> implements ImageDao {
 
     public ImageDaoImpl(ImagePO bean) {
         super(bean);

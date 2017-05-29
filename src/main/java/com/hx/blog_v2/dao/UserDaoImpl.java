@@ -20,7 +20,7 @@ import java.sql.Connection;
  * @date 5/20/2017 10:38 AM
  */
 @Repository
-public class UserDaoImpl extends MysqlBaseDaoImpl<UserPO, Integer> implements UserDao {
+public class UserDaoImpl extends MysqlBaseDaoImpl<UserPO> implements UserDao {
 
     public UserDaoImpl(UserPO bean) {
         super(bean);

@@ -58,7 +58,7 @@ public class BlogCommentServiceImpl extends BaseServiceImpl<BlogCommentPO> imple
         po.setParentCommentId(params.getId() == null ? BlogConstants.REPLY_2_FLOOR_OWNER : params.getId());
 
         try {
-            commentDao.save(po, BlogConstants.IDX_MANAGER_FILTER_ID.getDoLoad(), BlogConstants.IDX_MANAGER_FILTER_ID.getDoFilter());
+            commentDao.save(po, BlogConstants.ADD_BEAN_CONFIG);
         } catch (Exception e) {
             e.printStackTrace();
             return ResultUtils.failed(Tools.errorMsg(e));

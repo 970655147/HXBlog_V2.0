@@ -88,7 +88,7 @@ body {
 }
 
 /* 	from csdn	*/
-/*  ¶¥²È   */
+/*  é¡¶è¸©   */
 #digg{display:block; *display:inline-block; clear:both; width:182px; _width:188px; margin:0 auto; padding:30px 0 15px; text-align:center;}
 #digg:after{content:"."; display:block; height:0; clear:both; visibility:hidden;}
 	.digg{display:inline-block; float:left; width: 72px; height: 72px; overflow:hidden; margin:0 2px; background:#ff7900; text-align:center;}
@@ -101,10 +101,10 @@ body {
 .digg_enable{ background:url(../images/post/digg_bg.gif) no-repeat 0 0; text-align:center; cursor:pointer;}
 .digg_disable{ background:#ff7900; text-align:center; cursor:pointer;}
 
-/*  ÆÀÂÛÍ·   */
+/*  è¯„è®ºå¤´   */
 .panel_head { clear: both; height: 30px; padding: 0 5px; background: url(../images/post/tit_bg.jpg) repeat-x top; color: #333; font: bold 12px/30px Arial; text-indent: 5px; }
 
-/*  ÆÀÂÛ  */
+/*  è¯„è®º  */
 .comment_item fieldset{padding:0 10px; border:solid 1px #ddd; background-color:#f1f1f1;color:#999;}
 .comment_head,.commentform_title{clear: both; background:#F8FCFB; color:#888; padding:1px 4px; }
 .comment_head a,.commentform_title a{color:#369;}

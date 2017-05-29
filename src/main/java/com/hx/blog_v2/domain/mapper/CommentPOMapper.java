@@ -22,7 +22,7 @@ public class CommentPOMapper implements RowMapper<BlogCommentPO> {
     @Override
     public BlogCommentPO mapRow(ResultSet resultSet, int i) throws SQLException {
         BlogCommentPO po = new BlogCommentPO();
-        po.loadFromJSON(new ResultSet2MapAdapter(resultSet), BlogConstants.IDX_MANAGER.getDoLoad());
+        po.loadFromJSON(new ResultSet2MapAdapter(resultSet), BlogConstants.LOAD_ALL_CONFIG);
         return po;
     }
 

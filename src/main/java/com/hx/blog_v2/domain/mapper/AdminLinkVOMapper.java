@@ -22,7 +22,7 @@ public class AdminLinkVOMapper implements RowMapper<AdminLinkVO> {
     @Override
     public AdminLinkVO mapRow(ResultSet resultSet, int i) throws SQLException {
         LinkPO po = new LinkPO();
-        po.loadFromJSON(new ResultSet2MapAdapter(resultSet), BlogConstants.IDX_MANAGER.getDoLoad());
+        po.loadFromJSON(new ResultSet2MapAdapter(resultSet), BlogConstants.LOAD_ALL_CONFIG);
         AdminLinkVO vo = POVOTransferUtils.linkPO2AdminLinkVO(po);
         return vo;
     }

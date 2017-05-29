@@ -20,7 +20,7 @@ import java.sql.Connection;
  * @date 5/20/2017 10:38 AM
  */
 @Repository
-public class ExceptionLogDaoImpl extends MysqlBaseDaoImpl<ExceptionLogPO, Integer> implements ExceptionLogDao {
+public class ExceptionLogDaoImpl extends MysqlBaseDaoImpl<ExceptionLogPO> implements ExceptionLogDao {
 
     public ExceptionLogDaoImpl(ExceptionLogPO bean) {
         super(bean);

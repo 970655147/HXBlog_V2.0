@@ -22,7 +22,7 @@ public class AdminUserVOMapper implements RowMapper<AdminUserVO> {
     @Override
     public AdminUserVO mapRow(ResultSet resultSet, int i) throws SQLException {
         UserPO po = new UserPO();
-        po.loadFromJSON(new ResultSet2MapAdapter(resultSet), BlogConstants.IDX_MANAGER.getDoLoad());
+        po.loadFromJSON(new ResultSet2MapAdapter(resultSet), BlogConstants.LOAD_ALL_CONFIG);
         AdminUserVO vo = POVOTransferUtils.userPO2AdminUserVO(po);
         return vo;
     }

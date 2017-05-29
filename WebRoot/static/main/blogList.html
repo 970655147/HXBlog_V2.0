@@ -51,18 +51,18 @@
                     <div class="col-md-6 wthree-left wow fadeInDown" data-wow-duration=".8s" data-wow-delay=".2s"
                          style="width: 250px;height: 250px;">
                         <div class="tch-img">
-                            <a :href="'/blog/' + blog.id" href="blog.html">
+                            <a :href="'/static/main/blogDetail.html?id=' + blog.id" >
                                 <img :src="blog.coverUrl" class="img-responsive" :alt="blog.author">
                             </a>
                         </div>
                     </div>
                     <div class="col-md-6 wthree-right wow fadeInDown" data-wow-duration=".8s" data-wow-delay=".2s">
-                        <h6><a :href="'/blog/' + blog.id" th:text="${blog.title}">最新博文2</a></h6>
+                        <h6><a :href="'/static/main/blogDetail.html?id=' + blog.id" th:text="${blog.title}">{{blog.title}}</a></h6>
                         <h6> by <a> {{blog.author}} </a>
                             <span> {{blog.createdAt}} </span></h6>
                         <p class="summary"> {{blog.summary}} </p>
                         <div class="bht1">
-                            <a :href="'/blog/' + blog.id">查看更多</a>
+                            <a :href="'/static/main/blogDetail.html?id=' + blog.id">查看更多</a>
                         </div>
                         <div class="soci">
                             <p>

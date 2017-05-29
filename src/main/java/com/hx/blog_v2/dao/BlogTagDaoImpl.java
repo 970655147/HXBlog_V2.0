@@ -22,7 +22,7 @@ import java.util.Map;
  * @date 5/20/2017 10:38 AM
  */
 @Repository
-public class BlogTagDaoImpl extends MysqlBaseDaoImpl<BlogTagPO, Integer> implements BlogTagDao {
+public class BlogTagDaoImpl extends MysqlBaseDaoImpl<BlogTagPO> implements BlogTagDao {
 
     public BlogTagDaoImpl(BlogTagPO bean) {
         super(bean);
