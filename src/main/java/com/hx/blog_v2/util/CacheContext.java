@@ -6,6 +6,7 @@ import com.hx.blog_v2.dao.interf.LinkDao;
 import com.hx.blog_v2.domain.po.BlogTagPO;
 import com.hx.blog_v2.domain.po.BlogTypePO;
 import com.hx.blog_v2.domain.po.LinkPO;
+import com.hx.blog_v2.domain.po.UploadedImagePO;
 import com.hx.common.interf.cache.Cache;
 import com.hx.log.cache.mem.LRUMCache;
 import com.hx.log.util.Log;
@@ -59,6 +60,10 @@ public class CacheContext {
      * blogId, floorId -> 给定的博客给定的层级下一个评论索引
      */
     private final Cache<String, AtomicLong> blogFloor2NextCommentId = new LRUMCache<>(BlogConstants.MAX_CACHED_BLOG_2_FLOOR_ID);
+    /**
+     * digest -> uploadedImage 的缓存
+     */
+    private final Cache<String, UploadedImagePO> digest2UploadedImage = new LRUMCache<>(BlogConstants.MAX_CACHED_UPLOADED_IMAGE);
 
     /**
      * 初始化 CacheContext
@@ -137,6 +142,33 @@ public class CacheContext {
      */
     public List<LinkPO> allLinks() {
         return links;
+    }
+
+    /**
+     * 根据digest 获取图片的信息
+     *
+     * @param digest digest
+     * @return com.hx.blog_v2.domain.po.UploadedImagePO
+     * @author Jerry.X.He
+     * @date 5/29/2017 4:27 PM
+     * @since 1.0
+     */
+    public UploadedImagePO getUploadedImage(String digest) {
+        return digest2UploadedImage.get(digest);
+    }
+
+    /**
+     * 向缓存中添加一个图片信息
+     *
+     * @param digest digest
+     * @param image  image
+     * @return void
+     * @author Jerry.X.He
+     * @date 5/29/2017 4:28 PM
+     * @since 1.0
+     */
+    public void putUploadedImage(String digest, UploadedImagePO image) {
+        digest2UploadedImage.put(digest, image);
     }
 
     /**

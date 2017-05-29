@@ -6,8 +6,6 @@ import com.hx.json.config.interf.JSONConfig;
 import com.hx.json.config.interf.JSONKeyNodeParser;
 import com.hx.json.config.interf.JSONValueNodeParser;
 import com.hx.json.config.simple.*;
-import com.hx.log.idx.IdxManager;
-import com.hx.log.json.interf.JSONTransferable;
 import com.hx.log.util.Constants;
 import com.hx.log.util.Tools;
 import com.hx.mongo.config.MysqlDbConfig;
@@ -59,7 +57,7 @@ public final class BlogConstants {
     public static final Class[] ALL_PO_CLAZZ = new Class[]{
             BlogCommentPO.class, BlogExPO.class, BlogPO.class, BlogSensePO.class, BlogTagPO.class,
             BlogTypePO.class, ExceptionLogPO.class, ImagePO.class, LinkPO.class, MoodPO.class, RequestLogPO.class,
-            UserPO.class, VisitorPO.class, RltBlogTagPO.class
+            UserPO.class, VisitorPO.class, RltBlogTagPO.class, UploadedImagePO.class
     };
     /**
      * 下划线的注册了各个PO 的 KeyNodeParser
@@ -107,7 +105,7 @@ public final class BlogConstants {
             UPDATE_BEAN_BEAN_PROCESSOR
     );
 
-    @Value("jdbc.driverClazz")
+    @Value("jdbc.driver_clazz")
     public static String DB_DRIVER = "com.mysql.jdbc.Driver";
     @Value("jdbc.ip")
     public static String DB_IP = "192.168.0.190";
@@ -151,6 +149,8 @@ public final class BlogConstants {
     public static final String TABLE_LINK = "link";
     @Value("table.images")
     public static final String TABLE_IMAGES = "images";
+    @Value("table.uploaded_image")
+    public static final String TABLE_UPLOADED_IMAGE = "uploaded_images";
 
     @Value("table.id")
     public static final String TABLE_ID = "id";
@@ -190,13 +190,18 @@ public final class BlogConstants {
     /**
      * 缓存的 blogId -> nextFloorId 的个数
      */
-    @Value("cache.blog2FloorId")
+    @Value("cache.blog_2_floorId")
     public static int MAX_CACHED_BLOG_2_FLOOR_ID = 100;
     /**
      * 缓存的 blogId, floorId -> nextCommentId 的个数
      */
-    @Value("cache.blogFloor2CommentId")
+    @Value("cache.blog_floor_2_commentId")
     public static int MAX_CACHED_BLOG_FLOOR_2_COMMENT_ID = 1000;
+    /**
+     * 缓存的 blogId, floorId -> nextCommentId 的个数
+     */
+    @Value("cache.uploaded_image")
+    public static int MAX_CACHED_UPLOADED_IMAGE = 1000;
 
     @Value("blog.dir")
     public static String BLOG_ROOT_DIR = "D:\\HXBlog_V2.0\\post";
@@ -213,6 +218,12 @@ public final class BlogConstants {
      */
     public static String REPLY_2_FLOOR_OWNER = "-1";
 
+    /**
+     * 上传到服务器的图片的 url 前缀
+     */
+    @Value("image.url.prefix")
+    public static String IMAGE_URL_RREFIX = "http://localhost/imgs/";
+
 
     // -------------------- 辅助方法 --------------------------
 
@@ -227,7 +238,7 @@ public final class BlogConstants {
      */
     private static RegisteredJSONFieldKeyNodeParser regKeyNodeParser(int idx) {
         RegisteredJSONFieldKeyNodeParser result = RegisteredJSONFieldKeyNodeParser.of(ALL_PO_CLAZZ.length);
-        for(Class clazz : ALL_PO_CLAZZ) {
+        for (Class clazz : ALL_PO_CLAZZ) {
             result.register(clazz, JSONFieldKeyNodeParser.of(idx));
         }
         return result;
@@ -244,7 +255,7 @@ public final class BlogConstants {
      */
     private static RegisteredBeanProcessor regFilterBeanProcessor(Set<String> filter) {
         RegisteredBeanProcessor result = RegisteredBeanProcessor.of(ALL_PO_CLAZZ.length);
-        for(Class clazz : ALL_PO_CLAZZ) {
+        for (Class clazz : ALL_PO_CLAZZ) {
             result.register(clazz, new FilteredBeanProcessor(false, true, filter));
         }
         return result;

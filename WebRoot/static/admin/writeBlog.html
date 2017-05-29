@@ -31,19 +31,14 @@
 
 
     <div class="layui-form-item">
-        <label class="layui-form-label">推荐博文</label>
+        <label class="layui-form-label">封面地址</label>
         <div class="layui-input-inline">
-            <div th:switch="${blog}==null? ${false}:${blog.is_Recommend}">
-                <span th:case="${false}">
-                    <input type="radio" name="isRecommend" value=true title="是"  >
-                    <input type="radio" name="isRecommend" value=false title="否" checked >
-                </span>
-            </div>
+            <input type="text" name="coverUrl" id="coverUrl" lay-verify="required" autocomplete="off" placeholder="请输入封面url"
+                   class="layui-input" onblur="layui.funcs.coverImgShow()" />
         </div>
         <label class="layui-form-label">添加封面</label>
         <div class="layui-input-inline">
             <input type="file" name="file" class="layui-upload-file" lay-title="添加一个碉堡了的图片">
-            <input type="hidden" name="coverUrl" id="coverUrl" lay-verify="required" >
         </div>
         <img id="coverShow" width="60px" height="60px" />
     </div>
@@ -78,7 +73,7 @@
             </button>
         </div>
         <div class="layui-input-inline">
-            <button class="layui-btn" type="button" onclick="layui.funcs.refresh()">
+            <button class="layui-btn" type="button" onclick="location.reload()">
                 <i class="layui-icon">&#xe608;</i> 刷新
             </button>
         </div>

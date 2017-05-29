@@ -3,9 +3,11 @@ package com.hx.blog_v2.controller.admin;
 import com.hx.blog_v2.domain.form.BeanIdForm;
 import com.hx.blog_v2.domain.form.ImageSaveForm;
 import com.hx.blog_v2.domain.form.MoodSaveForm;
+import com.hx.blog_v2.domain.form.UploadedImageSaveForm;
 import com.hx.blog_v2.domain.vo.AdminImageVO;
 import com.hx.blog_v2.domain.vo.AdminMoodVO;
 import com.hx.blog_v2.service.interf.ImageService;
+import com.hx.blog_v2.service.interf.UploadedImageService;
 import com.hx.blog_v2.util.BlogConstants;
 import com.hx.blog_v2.util.DateUtils;
 import com.hx.blog_v2.util.WebContext;
@@ -38,25 +40,14 @@ import java.util.Date;
 public class ImageController {
 
     @Autowired
+    private UploadedImageService uploadedImageService;
+    @Autowired
     private ImageService imageService;
 
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
-    public Result upload(@RequestParam("file") CommonsMultipartFile file) {
-        String relativePath = generateImgPath(file);
-        String filePath = Tools.getFilePath(WebContext.getImgRootPath(), relativePath);
+    public Result upload(UploadedImageSaveForm form) {
 
-        try {
-            FileUtils.createIfNotExists(filePath, true);
-            file.transferTo(new File(filePath));
-
-            JSONObject data = new JSONObject()
-                    .element("originFileName", file.getOriginalFilename()).element("length", file.getSize())
-                    .element("contentType", file.getContentType()).element("url", "http://localhost/imgs/" + relativePath);
-            return ResultUtils.success(data);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResultUtils.failed("failed !");
-        }
+        return uploadedImageService.add(form);
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
@@ -81,23 +72,6 @@ public class ImageController {
     public Result remove(BeanIdForm params) {
 
         return imageService.remove(params);
-    }
-
-
-    /**
-     * 根据给定的id生成该图片需要保存的路径 [相对]
-     *
-     * @param file 给定的文件信息
-     * @return java.lang.String
-     * @author Jerry.X.He
-     * @date 5/21/2017 3:09 PM
-     * @since 1.0
-     */
-    private String generateImgPath(CommonsMultipartFile file) {
-        String fileName = file.getOriginalFilename(), suffix = fileName.substring(fileName.indexOf("."));
-        String dateStr = DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD );
-        String folder = dateStr.replace("-", "/");
-        return Tools.getFilePath(folder, Codec.byte2Hex(Codec.md5(fileName.getBytes())) + suffix);
     }
 
 }

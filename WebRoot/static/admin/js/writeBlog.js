@@ -148,7 +148,7 @@ layui.define(['form', 'upload', 'layer'], function (exports) {
             if (result.success) {
                 var visitUrl = result.data.url
                 $("#coverUrl").attr("value", visitUrl)
-                $("#coverShow").attr("src", visitUrl)
+                $("#coverShow").attr("src", visitUrl);
             } else {
                 alert("上传文件失败");
             }
@@ -221,8 +221,8 @@ layui.define(['form', 'upload', 'layer'], function (exports) {
                 input.addClass("layui-form-checked")
             }
         },
-        refresh: function () {
-            window.location.href = window.location.href;
+        coverImgShow : function() {
+            $("#coverShow").attr("src", $("[name='coverUrl']").val());
         }
     };
 
