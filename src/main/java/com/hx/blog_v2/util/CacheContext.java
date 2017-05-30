@@ -1,9 +1,6 @@
 package com.hx.blog_v2.util;
 
-import com.hx.blog_v2.dao.interf.BlogTagDao;
-import com.hx.blog_v2.dao.interf.BlogTypeDao;
-import com.hx.blog_v2.dao.interf.LinkDao;
-import com.hx.blog_v2.dao.interf.RoleDao;
+import com.hx.blog_v2.dao.interf.*;
 import com.hx.blog_v2.domain.po.*;
 import com.hx.common.interf.cache.Cache;
 import com.hx.log.cache.mem.LRUMCache;
@@ -38,6 +35,8 @@ public class CacheContext {
     @Autowired
     private RoleDao roleDao;
     @Autowired
+    private ResourceDao resourceDao;
+    @Autowired
     private JdbcTemplate jdbcTemplate;
 
     /**
@@ -51,11 +50,15 @@ public class CacheContext {
     /**
      * 所有的友情链接
      */
-    private Map<String, LinkPO> linkById;
+    private Map<String, LinkPO> linksById;
     /**
      * 所有的角色
      */
-    private Map<String, RolePO> roleById;
+    private Map<String, RolePO> rolesById;
+    /**
+     * 所有的角色
+     */
+    private Map<String, ResourcePO> resourcesById;
     /**
      * blogId -> 给定的博客的下一个层数索引
      */
@@ -81,8 +84,9 @@ public class CacheContext {
     public void init() {
         blogTagsById = new LinkedHashMap<>();
         blogTypesById = new LinkedHashMap<>();
-        linkById = new LinkedHashMap<>();
-        roleById = new LinkedHashMap<>();
+        linksById = new LinkedHashMap<>();
+        rolesById = new LinkedHashMap<>();
+        resourcesById = new LinkedHashMap<>();
         try {
             List<BlogTagPO> tagList = blogTagDao.findMany(Criteria.eq("deleted", "0"), BlogConstants.LOAD_ALL_CONFIG);
             for (BlogTagPO po : tagList) {
@@ -94,11 +98,15 @@ public class CacheContext {
             }
             List<LinkPO> linkList = linkDao.findMany(Criteria.eq("deleted", "0"), BlogConstants.LOAD_ALL_CONFIG);
             for (LinkPO po : linkList) {
-                linkById.put(po.getId(), po);
+                linksById.put(po.getId(), po);
             }
             List<RolePO> roleList = roleDao.findMany(Criteria.eq("deleted", "0"), BlogConstants.LOAD_ALL_CONFIG);
             for (RolePO po : roleList) {
-                roleById.put(po.getId(), po);
+                rolesById.put(po.getId(), po);
+            }
+            List<ResourcePO> resourceList = resourceDao.findMany(Criteria.eq("deleted", "0"), BlogConstants.LOAD_ALL_CONFIG);
+            for (ResourcePO po : resourceList) {
+                resourcesById.put(po.getId(), po);
             }
         } catch (Exception e) {
             Log.err("error while load cached's data[tag, type, link, role] !");
@@ -146,11 +154,11 @@ public class CacheContext {
      * @since 1.0
      */
     public Map<String, LinkPO> allLinks() {
-        return linkById;
+        return linksById;
     }
 
     public LinkPO link(String id) {
-        return linkById.get(id);
+        return linksById.get(id);
     }
 
     /**
@@ -162,11 +170,27 @@ public class CacheContext {
      * @since 1.0
      */
     public Map<String, RolePO> allRoles() {
-        return roleById;
+        return rolesById;
     }
 
     public RolePO role(String id) {
-        return roleById.get(id);
+        return rolesById.get(id);
+    }
+
+    /**
+     * 获取所有的资源
+     *
+     * @return java.util.List<com.hx.blog_v2.domain.po.LinkPO>
+     * @author Jerry.X.He
+     * @date 5/27/2017 9:25 PM
+     * @since 1.0
+     */
+    public Map<String, ResourcePO> allResources() {
+        return resourcesById;
+    }
+
+    public ResourcePO resource(String id) {
+        return resourcesById.get(id);
     }
 
     /**
