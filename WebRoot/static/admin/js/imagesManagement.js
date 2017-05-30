@@ -82,9 +82,9 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
         $.ajax({
             url: "/admin/image/add",
             type: "POST",
-            data: $(".layui-form").serialize(),
-            success: function (result) {
-                if (result.success) {
+            data: $("#addImageForm").serialize(),
+            success: function (resp) {
+                if (resp.success) {
                     layer.alert('添加图片成功!', {
                         closeBtn: 0,
                         icon: 1
@@ -103,9 +103,9 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
         $.ajax({
             url: "/admin/image/update",
             type: "POST",
-            data: $(".layui-form").serialize(),
-            success: function (result) {
-                if (result.success) {
+            data: $("#updateImageForm").serialize(),
+            success: function (resp) {
+                if (resp.success) {
                     var addTopId = layer.alert('更新图片成功 !', {
                         closeBtn: 0,
                         icon: 1
@@ -124,7 +124,7 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
     var funcs = {
         addData: function () {
             var html = '';
-            html += '<form class="layui-form layui-form-pane" action="/admin/image/add" method="post">';
+            html += '<form id="addImageForm" class="layui-form layui-form-pane" action="/admin/image/add" method="post">';
             html += '<label class="layui-form-label" style="border: none" >图片标题:</label>';
             html += '<input  style="width:87%;margin: auto;color: #000!important;" lay-verify="required" id="title" name="title"  class="layui-input" >';
             html += '<div>';
@@ -155,7 +155,7 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
         },
         editData: function (item) {
             var html = '';
-            html += '<form class="layui-form layui-form-pane" action="/admin/image/update" method="post" >';
+            html += '<form id="updateImageForm" class="layui-form layui-form-pane" action="/admin/image/update" method="post" >';
             html += '<label class="layui-form-label" style="border: none" >图片标题:</label>';
             html += '<input type="hidden" id="id" name="id" value="' + item.id + '">';
             html += '<input  style="width:87%;margin: auto;color: #000!important;" id="title" name="title" lay-verify="required"  class="layui-input" value="' + item.title + '" >';
@@ -199,8 +199,8 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
                     url: '/admin/image/remove',
                     data: {"id": id},
                     type: 'POST',
-                    success: function (result) {
-                        if (result.success) {
+                    success: function (resp) {
+                        if (resp.success) {
                             layer.alert('删除图片成功 !', {
                                 closeBtn: 0,
                                 icon: 1
@@ -226,9 +226,9 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
                 type : "POST",
                 processData : false,
                 contentType : false,
-                success: function (result) { //上传成功后的回调
-                    if (result.success) {
-                        var visitUrl = result.data.url
+                success: function (resp) { //上传成功后的回调
+                    if (resp.success) {
+                        var visitUrl = resp.data.url
                         $("[name='url']").attr("value", visitUrl)
                         $("#coverShow").attr("src", visitUrl)
                     } else {

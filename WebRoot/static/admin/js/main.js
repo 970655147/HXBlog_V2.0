@@ -1,6 +1,11 @@
 ﻿var element;
 var $;
 
+// 初始化菜单列表, 同步加载, 否则 可能 layui 绑定不了事件
+initMenu()
+initStatistics()
+
+
 layui.define(['element', 'layer', 'util', 'pagesize', 'form'], function (exports) {
     $ = layui.jquery;
     element = layui.element();
@@ -8,6 +13,7 @@ layui.define(['element', 'layer', 'util', 'pagesize', 'form'], function (exports
     var util = layui.util;
     var form = layui.form();
     //form.render();
+
     //快捷菜单开关
     $('span.sys-title').click(function (e) {
         e.stopPropagation();    //阻止事件冒泡
@@ -33,7 +39,7 @@ layui.define(['element', 'layer', 'util', 'pagesize', 'form'], function (exports
     });
 
     //监听左侧导航点击
-    element.on('nav(leftnav)', function (elem) {
+    element.on('nav(leftNav)', function (elem) {
         var url = $(elem).children('a').attr('data-url');   //页面url
         var id = $(elem).children('a').attr('data-id');     //tab唯一Id
         var title = $(elem).children('a').text();           //菜单名称
@@ -41,9 +47,11 @@ layui.define(['element', 'layer', 'util', 'pagesize', 'form'], function (exports
             element.tabChange('tab', 0);
             return;
         }
-        if (url == undefined) return;
-        switchTab($, element, title, url, id);
+        if (url == undefined) {
+            return;
+        }
 
+        switchTab($, element, title, url, id);
     });
 
 
@@ -231,7 +239,6 @@ layui.define(['element', 'layer', 'util', 'pagesize', 'form'], function (exports
 });
 
 function switchTab($, element, title, url, id) {
-
     var tabTitleDiv = $('.layui-tab[lay-filter=\'tab\']').children('.layui-tab-title');
     var exist = tabTitleDiv.find('li[lay-id=' + id + ']');
     if (exist.length > 0) {
@@ -252,5 +259,78 @@ function switchTab($, element, title, url, id) {
             element.tabChange('tab', id);
         }, 500);
     }
-
 }
+
+/**
+ * 初始化菜单
+ */
+function initMenu() {
+    $.ajax({
+        url: "/admin/index/menus",
+        data: {},
+        async: false,
+        type: "GET",
+        success: function (resp) {
+            if (resp.success) {
+                var root = resp.data
+                if ("#root" === root.name) {
+                    var topLevel = root.childs
+                    var html = ''
+                    for (idx in topLevel) {
+                        var menu = topLevel[idx]
+                        var subMenus = menu.childs
+                        html += '<li class="layui-nav-item ">'
+                        html += '<a href="javascript:;">'
+                        html += '<i class="' + menu.iconClass + '"></i>' + menu.name + ''
+                        html += '<span class="layui-nav-more"></span>'
+                        html += '</a>'
+                        html += '<dl class="layui-nav-child">'
+                        for (idxOfSub in subMenus) {
+                            var subMenu = subMenus[idxOfSub]
+                            html += '<dd><a href="javascript:;" class="' + subMenu.iconClass + '" data-url="' + subMenu.url + '" data-id="' + subMenu.id + '">' + subMenu.name + '</a></dd>'
+                        }
+                        html += '</dl>'
+                        html += '</li>'
+                    }
+                    $("#leftNav").append(html)
+                } else {
+                    layer.alert("服务器返回数据异常 !", {icon: 5});
+                }
+            } else {
+                layer.alert("拉取菜单列表失败[" + resp.msg + "] !", {icon: 5});
+            }
+        }
+    });
+}
+
+/**
+ * 初始化首页统计数据
+ */
+function initStatistics() {
+    $.ajax({
+        url: "/admin/index/statistics",
+        data: {},
+        type: "GET",
+        success: function (resp) {
+            if (resp.success) {
+                var stats = resp.data
+                $("#lastLoginIp").text(stats.lastLoginIp)
+                $("#lastLoginAddr").text(stats.lastLoginAddr)
+                $("#lastLoginDate").text(stats.lastLoginDate)
+                $("#loginIp").text(stats.loginIp)
+                $("#loginAddr").text(stats.loginAddr)
+                $("#loginDate").text(stats.loginDate)
+
+                $("#todayVisited").text(stats.todayVisited)
+                $("#todayGoodSensed").text(stats.todayGoodSensed)
+                $("#totalVisited").text(stats.totalVisited)
+                $("#totalGoodSensed").text(stats.totalGoodSensed)
+                $("#totalCommentCnt").text(stats.totalCommentCnt)
+                $("#totalBlogCnt").text(stats.totalBlogCnt)
+            } else {
+                layer.alert("拉取菜单列表失败[" + resp.msg + "] !", {icon: 5});
+            }
+        }
+    });
+}
+

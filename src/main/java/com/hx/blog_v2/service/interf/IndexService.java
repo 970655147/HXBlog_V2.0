@@ -31,4 +31,24 @@ public interface IndexService extends BaseService<Object> {
      */
     Result latest();
 
+    /**
+     * 获取后台用户可使用的菜单
+     *
+     * @return
+     * @author Jerry.X.He
+     * @date 5/27/2017 9:15 PM
+     * @since 1.0
+     */
+    Result adminMenus();
+
+    /**
+     * 获取后台用户的统计数据
+     *
+     * @return
+     * @author Jerry.X.He
+     * @date 5/30/2017 11:06 AM
+     * @since 1.0
+     */
+    Result adminStatistics();
+
 }

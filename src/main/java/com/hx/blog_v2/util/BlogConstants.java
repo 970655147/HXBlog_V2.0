@@ -57,7 +57,8 @@ public final class BlogConstants {
     public static final Class[] ALL_PO_CLAZZ = new Class[]{
             BlogCommentPO.class, BlogExPO.class, BlogPO.class, BlogSensePO.class, BlogTagPO.class,
             BlogTypePO.class, ExceptionLogPO.class, ImagePO.class, LinkPO.class, MoodPO.class, RequestLogPO.class,
-            UserPO.class, VisitorPO.class, RltBlogTagPO.class, UploadFilePO.class
+            UserPO.class, VisitorPO.class, RltBlogTagPO.class, UploadFilePO.class,
+            RolePO.class, RltUserRolePO.class, ResourcePO.class, RltRoleResourcePO.class
     };
     /**
      * 下划线的注册了各个PO 的 KeyNodeParser
@@ -151,6 +152,14 @@ public final class BlogConstants {
     public static final String TABLE_IMAGES = "images";
     @Value("table.uploaded_files")
     public static final String TABLE_UPLOADED_FILES = "uploaded_files";
+    @Value("table.role")
+    public static final String TABLE_ROLE = "role";
+    @Value("table.resource")
+    public static final String TABLE_RESOURCE = "resource";
+    @Value("table.rlt_user_role")
+    public static final String TABLE_RLT_USER_ROLE = "rlt_user_role";
+    @Value("table.rlt_role_resource")
+    public static final String TABLE_ROLE_RESOURCE = "rlt_role_resource";
 
     @Value("table.id")
     public static final String TABLE_ID = "id";

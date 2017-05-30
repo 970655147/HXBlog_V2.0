@@ -58,9 +58,9 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
         $.ajax({
             url : "/admin/tag/add",
             type : "POST",
-            data : $(".layui-form").serialize(),
-            success : function (result) {
-                if(result.success) {
+            data : $("#addTagForm").serialize(),
+            success : function (resp) {
+                if(resp.success) {
                     layer.alert('添加标签成功!', {
                         closeBtn: 0,
                         icon: 1
@@ -79,9 +79,9 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
         $.ajax({
             url : "/admin/tag/update",
             type : "POST",
-            data : $(".layui-form").serialize(),
-            success : function (result) {
-                if(result.success) {
+            data : $("#updateTagForm").serialize(),
+            success : function (resp) {
+                if(resp.success) {
                     layer.alert('更新标签成功!', {
                         closeBtn: 0,
                         icon: 1
@@ -100,7 +100,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
     var funcs = {
         addData: function () {
             var html = '';
-            html += '<form class="layui-form layui-form-pane" action="/admin/tag/add" method="post">';
+            html += '<form id="addTagForm" class="layui-form layui-form-pane" action="/admin/tag/add" method="post">';
             html += '<label class="layui-form-label" style="border: none" name="content"  >标签名称:</label>';
             html += '<input  style="width:87%;margin: auto;color: #000!important;" name="name"  class="layui-input" lay-verify="required" >';
             html += '<div class="layui-form-item">';
@@ -121,7 +121,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
         },
         editData: function (id, tagName) {
             var html = '';
-            html += '<form class="layui-form layui-form-pane" action="/admin/tag/update" method="post">';
+            html += '<form id="updateTagForm" class="layui-form layui-form-pane" action="/admin/tag/update" method="post">';
             html += '<label class="layui-form-label" style="border: none" >标签名称:</label>';
             html += '<textarea  style="width:87%;margin: auto;color: #000!important;" name="name" class="layui-textarea" lay-verify="required" >' + tagName + '</textarea>';
             html += '<input type="hidden" name="id" value="' + id + '"/>';
@@ -149,8 +149,8 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
                     url: '/admin/tag/remove',
                     data: {"id" : id },
                     type: 'POST',
-                    success: function (result) {
-                        if (result.success) {
+                    success: function (resp) {
+                        if (resp.success) {
                             layer.alert('删除成功!', {
                                 closeBtn: 0,
                                 icon: 1

@@ -11,9 +11,10 @@ import java.awt.image.FilteredImageSource;
 import java.awt.image.ImageFilter;
 
 /**
+ * 图片工具类
+ *
  * @author Jerry.X.He
  * @version 1.0
- * @ImageUtils
  * @date 2017-01-10 15:42:24
  */
 public final class ImageUtils {

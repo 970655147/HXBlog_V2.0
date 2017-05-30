@@ -42,41 +42,12 @@
     <!--侧边导航-->
     <div class="layui-side">
         <div class="layui-side-scroll">
-            <ul class="layui-nav layui-nav-tree" lay-filter="leftnav">
+            <ul class="layui-nav layui-nav-tree" id="leftNav" lay-filter="leftNav">
                 <li class="layui-nav-item layui-this">
                     <a href="javascript:;"><i class="fa fa-home fa-fw"></i>首页</a>
                 </li>
-                <li class="layui-nav-item ">
-                    <a href="javascript:;"><i class="fa fa-file-text"></i>博客管理</a>
-                    <dl class="layui-nav-child">
-                        <dd><a href="javascript:;" data-url="/static/admin/writeBlog.html" data-id="1">写博客</a></dd>
-                        <dd><a href="javascript:;" data-url="/static/admin/blogManagement.html" data-id="2">博客信息管理</a></dd>
-                        <dd><a href="javascript:;" data-url="/static/admin/commentManagement.html" data-id="3">评论管理</a></dd>
-                    </dl>
-                </li>
-                <li class="layui-nav-item">
-                    <a href="javascript:;"><i class="fa fa-pencil-square-o"></i>标签类别管理</a>
-                    <dl class="layui-nav-child">
-                        <dd><a href="javascript:;" data-url="/static/admin/blogTagManagement.html" data-id="7">博客标签管理</a></dd>
-                        <dd><a href="javascript:;" data-url="/static/admin/blogTypeManagement.html" data-id="8">博客类别管理</a></dd>
-                    </dl>
-                </li>
-                <li class="layui-nav-item">
-                    <a href="javascript:;"><i class="fa fa-info-circle"></i>网站信息管理</a>
-                    <dl class="layui-nav-child">
-                        <dd><a href="javascript:;" data-url="/static/admin/linksManagement.html" data-id="9">友情链接管理</a></dd>
-                        <dd><a href="javascript:;" data-url="/static/admin/moodsManagement.html" data-id="5">心情管理</a></dd>
-                        <dd><a href="javascript:;" data-url="/static/admin/imagesManagement.html" data-id="13">图片管理</a></dd>
-                    </dl>
-                </li>
-                <li class="layui-nav-item">
-                    <a href="javascript:;"><i class="fa fa-cog"></i>系统管理</a>
-                    <dl class="layui-nav-child">
-                        <dd><a href="javascript:;" data-url="/static/admin/accountManagement.html" data-id="12">账号管理</a></dd>
-                        <dd><a href="javascript:;" data-url="/static/admin/accountPwdManagement.html" data-id="12">修改账号密码</a></dd>
-                        <dd><a href="javascript:;" onclick="refreshSystem()">刷新系统缓存</a></dd>
-                    </dl>
-                </li>
+                <!-- 菜单列表 -->
+
             </ul>
         </div>
     </div>
@@ -95,37 +66,42 @@
                 <div class="layui-tab-item layui-show">
                     <p style="padding: 10px 15px; margin-bottom: 20px; margin-top: 10px; border:1px solid #ddd;display:inline-block;">
                         上次登陆
-                        <span style="padding-left:1em;" th:text="'IP : '+${loginHistory.ip}">IP：192.168.1.101</span>
-                        <span style="padding-left:1em;" th:text="'地点 : '+${loginHistory.ipName}">地点：四川成都</span>
-                        <span style="padding-left:1em;"
-                              th:text="'时间 : '+${#calendars.format(loginHistory.loginTime,'yyyy-MM-dd HH:mm:ss')}">时间：2017-3-26 14：12</span>
+                        <span style="padding-left:1em;" id="lastLoginIp" >IP：192.168.0.119</span>
+                        <span style="padding-left:1em;" id="lastLoginAddr">地点：四川成都</span>
+                        <span style="padding-left:1em;" id="lastLoginDate">时间：2017-05-19 14：12</span>
+                    </p>
+                    <p style="padding: 10px 15px; margin-bottom: 20px; margin-top: 10px; border:1px solid #ddd;display:inline-block;">
+                        本次登陆
+                        <span style="padding-left:1em;" id="loginIp" >IP：192.168.0.119</span>
+                        <span style="padding-left:1em;" id="loginAddr">地点：四川成都</span>
+                        <span style="padding-left:1em;" id="loginDate">时间：2017-05-30 14：12</span>
                     </p>
                     <fieldset class="layui-elem-field layui-field-title">
                         <legend>统计信息</legend>
                         <div class="layui-field-box">
                             <div style="display: inline-block; width: 100%;">
                                 <div class="ht-box layui-bg-blue">
-                                    <p th:text="${todayReadNum}">123</p>
+                                    <p id="todayVisited" >123</p>
                                     <p>今日访问</p>
                                 </div>
                                 <div class="ht-box layui-bg-red">
-                                    <p th:text="${todayLike}">32</p>
+                                    <p id="todayGoodSensed">32</p>
                                     <p>今日点赞</p>
                                 </div>
                                 <div class="ht-box layui-bg-green">
-                                    <p th:text="${readNum}">55</p>
+                                    <p id="totalVisited">55</p>
                                     <p>访问总数</p>
                                 </div>
                                 <div class="ht-box layui-bg-orange">
-                                    <p th:text="${likeNum}">123</p>
+                                    <p id="totalGoodSensed">123</p>
                                     <p>点赞总数</p>
                                 </div>
                                 <div class="ht-box layui-bg-cyan">
-                                    <p th:text="${commentNum}">321</p>
+                                    <p id="totalCommentCnt">321</p>
                                     <p>评论总数</p>
                                 </div>
                                 <div class="ht-box layui-bg-black">
-                                    <p th:text="${session.blogNum}">231</p>
+                                    <p id="totalBlogCnt">231</p>
                                     <p>文章总数</p>
                                 </div>
                             </div>
@@ -172,7 +148,6 @@
     </div>
 </div>
 
-<!-- layui规范化用法 -->
 <script type="text/javascript">
     var notReplyNum = 3;
 
@@ -185,12 +160,10 @@
     function refreshSystem() {
         $.ajax({
             url: "/admin/system/flushCache",
-            data: {
-
-            },
+            data: { },
             type: "POST",
-            success: function (result) {
-                if (result.success) {
+            success: function (resp) {
+                if (resp.success) {
                     alert("刷新系统缓存成功!")
                 }
             }

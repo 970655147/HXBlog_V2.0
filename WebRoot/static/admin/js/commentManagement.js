@@ -54,7 +54,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
                             html += '<td>' + item.content + '</td>';
                             html += '<td>' + item.createdAt + '</td>';
                             html += '<td><i class="layui-icon layui-btn-small" style="cursor:pointer;font-size: 30px; color: #FA4B2A;vertical-align: middle;" onclick="layui.funcs.addReply(' + item.id + ', ' + item.blogId + ', ' + item.floorId + ',\'' + item.name + '\',\'' + item.content + '\')" >&#x1005;</i> </td>';
-                            html += '<td><button class="layui-btn layui-btn-small" onclick=\'layui.funcs.showData("' + item.blogName + '", ' + item.floorId + ')\'><i class="layui-icon">&#xe63a;</i></button></td>';
+                            html += '<td><button class="layui-btn layui-btn-small" onclick=\'layui.funcs.showData("' + item.blogName + '", ' + item.blogId + ', ' + item.floorId + ')\'><i class="layui-icon">&#xe63a;</i></button></td>';
                             html += '<td><button class="layui-btn layui-btn-small layui-btn-normal" onclick="layui.funcs.editData(' + item.id + ',\'' + item.toUser + '\',\'' + item.content + '\')"><i class="layui-icon">&#xe642;</i></button></td>';
                             html += '<td><button class="layui-btn layui-btn-small layui-btn-danger" onclick="layui.funcs.deleteData(' + item.id + ')"><i class="layui-icon">&#xe640;</i></button></td>';
                             html += '</tr>';
@@ -88,9 +88,9 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
         $.ajax({
             url : "/admin/comment/add",
             type : "POST",
-            data : $(".layui-form").serialize(),
-            success : function (result) {
-                if(result.success) {
+            data : $("#addReplyForm").serialize(),
+            success : function (resp) {
+                if(resp.success) {
                     addReplyConfirmDialog = layer.alert('添加评论成功!', {
                         closeBtn: 0,
                         icon: 1
@@ -110,9 +110,9 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
         $.ajax({
             url : "/admin/comment/update",
             type : "POST",
-            data : $(".layui-form").serialize(),
-            success : function (result) {
-                if(result.success) {
+            data : $("#updateReplyForm").serialize(),
+            success : function (resp) {
+                if(resp.success) {
                     layer.alert('更新评论成功!', {
                         closeBtn: 0,
                         icon: 1
@@ -129,11 +129,14 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
 
     //输出接口，主要是两个函数，一个删除一个编辑
     var funcs = {
-        showData: function (blogName, floorId) {
+        showData: function (blogName, blogId, floorId) {
             $.ajax({
                 url: "/admin/comment/comment/list",
                 type: "GET",
-                data: $(".layui-form").serialize(),
+                data: {
+                    "blogId" : blogId,
+                    "floorId" : floorId
+                },
                 success: function (resp) {
                     if(resp.success) {
                         var html = '';
@@ -169,7 +172,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
         },
         addReply: function (id, blogId, floorId, toUser, content) {
             var html = '';
-            html += '<form class="layui-form layui-form-pane" action="/admin/comment/reply" method="post">';
+            html += '<form id="addReplyForm" class="layui-form layui-form-pane" action="/admin/comment/reply" method="post">';
             html += '<input type="hidden" name="id" value="' + id + '"/>';
             html += '<input type="hidden" name="blogId" value="' + blogId + '"/>';
             html += '<input type="hidden" name="floorId" value="' + floorId + '"/>';
@@ -196,7 +199,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
         },
         editData: function (id, toUser, content) {
             var html = '';
-            html += '<form class="layui-form layui-form-pane" action="/admin/comment/update" method="post">';
+            html += '<form id="updateReplyForm" class="layui-form layui-form-pane" action="/admin/comment/update" method="post">';
             html += '<input type="hidden" name="id" value="' + id + '"/>';
             html += '<label class="layui-form-label" style="border: none" >目标用户:</label>';
             html += '<input  style="width:87%;margin: auto;color: #000!important;" name="toUser" value="' + toUser + '" class="layui-input" lay-verify="required" >';
@@ -226,8 +229,8 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
                     url: '/admin/comment/remove',
                     data: {"id" : id },
                     type: 'POST',
-                    success: function (result) {
-                        if (result.success) {
+                    success: function (resp) {
+                        if (resp.success) {
                             layer.alert('删除成功!', {
                                 closeBtn: 0,
                                 icon: 1

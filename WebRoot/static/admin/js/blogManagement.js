@@ -1,27 +1,6 @@
-﻿// 加载类型, 标签
-$.ajax({
-    url: "/composite/typeAndTags",
-    type: "GET",
-    success: function (result) {
-        if (result.success) {
-            var types = result.data.types
-            var typeIdEle = $("#typeId")
-            typeIdEle.append("<option value=''> 全部 </option>")
-            for (idx in types) {
-                typeIdEle.append("<option value='" + types[idx].id + "'> " + types[idx].name + " </option>")
-            }
-
-            var tags = result.data.tags
-            var tagIdEle = $("#tagId")
-            tagIdEle.append("<option value=''> 全部 </option>")
-            for (idx in tags) {
-                tagIdEle.append("<option value='" + tags[idx].id + "'> " + tags[idx].name + " </option>")
-            }
-        } else {
-            layer.alert("拉取类型/标签列表失败[" + resp.msg + "] !", {icon: 5});
-        }
-    }
-});
+﻿
+// 加载类型, 标签, 同步加载, 否则 可能 layui 绑定不了事件
+initTypeAndTags()
 
 layui.define(['element', 'laypage', 'layer', 'form', 'pagesize'], function (exports) {
     var $ = layui.jquery;
@@ -119,8 +98,8 @@ layui.define(['element', 'laypage', 'layer', 'form', 'pagesize'], function (expo
                     url: '/admin/blog/remove',
                     data: {"id": id},
                     type: 'POST',
-                    success: function (result) {
-                        if (result.success) {
+                    success: function (resp) {
+                        if (resp.success) {
                             layer.alert('删除成功!', {
                                 closeBtn: 0,
                                 icon: 1
@@ -139,3 +118,33 @@ layui.define(['element', 'laypage', 'layer', 'form', 'pagesize'], function (expo
     };
     exports('funcs', funcs);
 });
+
+/**
+ * 加载类型 和标签列表
+ */
+function initTypeAndTags() {
+    $.ajax({
+        url: "/composite/typeAndTags",
+        type: "GET",
+        success: function (resp) {
+            if (resp.success) {
+                var types = result.data.types
+                var typeIdEle = $("#typeId")
+                typeIdEle.append("<option value=''> 全部 </option>")
+                for (idx in types) {
+                    typeIdEle.append("<option value='" + types[idx].id + "'> " + types[idx].name + " </option>")
+                }
+
+                var tags = result.data.tags
+                var tagIdEle = $("#tagId")
+                tagIdEle.append("<option value=''> 全部 </option>")
+                for (idx in tags) {
+                    tagIdEle.append("<option value='" + tags[idx].id + "'> " + tags[idx].name + " </option>")
+                }
+            } else {
+                layer.alert("拉取类型/标签列表失败[" + resp.msg + "] !", {icon: 5});
+            }
+        }
+    });
+}
+

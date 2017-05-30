@@ -31,11 +31,12 @@ public final class POVOTransferUtils {
      */
     public static void main(String[] args) {
 
-        Class src = ImagePO.class;
-        Class dst = AdminImageVO.class;
+        Class src = ResourcePO.class;
+        Class dst = ResourceVO.class;
 
         String transfer = BeanTransferUtils.transferTo(src, dst);
         String transferList = BeanTransferUtils.transferListTo(src, dst);
+        info("    // -------------------- " + src.getSimpleName() + " <-> " + dst.getSimpleName() + " --------------------------");
         info(transfer);
         info(transferList);
 
@@ -137,7 +138,7 @@ public final class POVOTransferUtils {
 
     public static Collection<AdminBlogVO> blogPO2AdminBlogVOList(Collection<BlogPO> src) {
         List<AdminBlogVO> result = new ArrayList<>(src.size());
-        for(BlogPO ele : src) {
+        for (BlogPO ele : src) {
             result.add(blogPO2AdminBlogVO(ele));
         }
         return result;
@@ -159,7 +160,7 @@ public final class POVOTransferUtils {
 
     public static Collection<BlogPO> adminBlogVO2BlogPOList(Collection<AdminBlogVO> src) {
         List<BlogPO> result = new ArrayList<>(src.size());
-        for(AdminBlogVO ele : src) {
+        for (AdminBlogVO ele : src) {
             result.add(adminBlogVO2BlogPO(ele));
         }
         return result;
@@ -179,7 +180,7 @@ public final class POVOTransferUtils {
 
     public static Collection<AdminMoodVO> moodPO2AdminMoodVOList(Collection<MoodPO> src) {
         List<AdminMoodVO> result = new ArrayList<>(src.size());
-        for(MoodPO ele : src) {
+        for (MoodPO ele : src) {
             result.add(moodPO2AdminMoodVO(ele));
         }
         return result;
@@ -198,7 +199,7 @@ public final class POVOTransferUtils {
 
     public static Collection<MoodPO> adminMoodVO2MoodPOList(Collection<AdminMoodVO> src) {
         List<MoodPO> result = new ArrayList<>(src.size());
-        for(AdminMoodVO ele : src) {
+        for (AdminMoodVO ele : src) {
             result.add(adminMoodVO2MoodPO(ele));
         }
         return result;
@@ -216,7 +217,7 @@ public final class POVOTransferUtils {
 
     public static Collection<MoodVO> moodPO2MoodVOList(Collection<MoodPO> src) {
         List<MoodVO> result = new ArrayList<>(src.size());
-        for(MoodPO ele : src) {
+        for (MoodPO ele : src) {
             result.add(moodPO2MoodVO(ele));
         }
         return result;
@@ -233,7 +234,7 @@ public final class POVOTransferUtils {
 
     public static Collection<MoodPO> moodVO2MoodPOList(Collection<MoodVO> src) {
         List<MoodPO> result = new ArrayList<>(src.size());
-        for(MoodVO ele : src) {
+        for (MoodVO ele : src) {
             result.add(moodVO2MoodPO(ele));
         }
         return result;
@@ -257,7 +258,7 @@ public final class POVOTransferUtils {
 
     public static Collection<AdminUserVO> userPO2AdminUserVOList(Collection<UserPO> src) {
         List<AdminUserVO> result = new ArrayList<>(src.size());
-        for(UserPO ele : src) {
+        for (UserPO ele : src) {
             result.add(userPO2AdminUserVO(ele));
         }
         return result;
@@ -278,7 +279,7 @@ public final class POVOTransferUtils {
 
     public static Collection<UserPO> adminUserVO2UserPOList(Collection<AdminUserVO> src) {
         List<UserPO> result = new ArrayList<>(src.size());
-        for(AdminUserVO ele : src) {
+        for (AdminUserVO ele : src) {
             result.add(adminUserVO2UserPO(ele));
         }
         return result;
@@ -300,7 +301,7 @@ public final class POVOTransferUtils {
 
     public static Collection<AdminLinkVO> linkPO2AdminLinkVOList(Collection<LinkPO> src) {
         List<AdminLinkVO> result = new ArrayList<>(src.size());
-        for(LinkPO ele : src) {
+        for (LinkPO ele : src) {
             result.add(linkPO2AdminLinkVO(ele));
         }
         return result;
@@ -321,7 +322,7 @@ public final class POVOTransferUtils {
 
     public static Collection<LinkPO> adminLinkVO2LinkPOList(Collection<AdminLinkVO> src) {
         List<LinkPO> result = new ArrayList<>(src.size());
-        for(AdminLinkVO ele : src) {
+        for (AdminLinkVO ele : src) {
             result.add(adminLinkVO2LinkPO(ele));
         }
         return result;
@@ -346,7 +347,7 @@ public final class POVOTransferUtils {
 
     public static Collection<AdminCommentVO> blogCommentPO2AdminCommentVOList(Collection<BlogCommentPO> src) {
         List<AdminCommentVO> result = new ArrayList<>(src.size());
-        for(BlogCommentPO ele : src) {
+        for (BlogCommentPO ele : src) {
             result.add(blogCommentPO2AdminCommentVO(ele));
         }
         return result;
@@ -370,7 +371,7 @@ public final class POVOTransferUtils {
 
     public static Collection<BlogCommentPO> adminCommentVO2BlogCommentPOList(Collection<AdminCommentVO> src) {
         List<BlogCommentPO> result = new ArrayList<>(src.size());
-        for(AdminCommentVO ele : src) {
+        for (AdminCommentVO ele : src) {
             result.add(adminCommentVO2BlogCommentPO(ele));
         }
         return result;
@@ -395,7 +396,7 @@ public final class POVOTransferUtils {
 
     public static Collection<CommentVO> blogCommentPO2CommentVOList(Collection<BlogCommentPO> src) {
         List<CommentVO> result = new ArrayList<>(src.size());
-        for(BlogCommentPO ele : src) {
+        for (BlogCommentPO ele : src) {
             result.add(blogCommentPO2CommentVO(ele));
         }
         return result;
@@ -419,7 +420,7 @@ public final class POVOTransferUtils {
 
     public static Collection<BlogCommentPO> commentVO2BlogCommentPOList(Collection<CommentVO> src) {
         List<BlogCommentPO> result = new ArrayList<>(src.size());
-        for(CommentVO ele : src) {
+        for (CommentVO ele : src) {
             result.add(commentVO2BlogCommentPO(ele));
         }
         return result;
@@ -443,7 +444,7 @@ public final class POVOTransferUtils {
 
     public static Collection<BlogVO> blogPO2BlogVOList(Collection<BlogPO> src) {
         List<BlogVO> result = new ArrayList<>(src.size());
-        for(BlogPO ele : src) {
+        for (BlogPO ele : src) {
             result.add(blogPO2BlogVO(ele));
         }
         return result;
@@ -466,7 +467,7 @@ public final class POVOTransferUtils {
 
     public static Collection<BlogPO> blogVO2BlogPOList(Collection<BlogVO> src) {
         List<BlogPO> result = new ArrayList<>(src.size());
-        for(BlogVO ele : src) {
+        for (BlogVO ele : src) {
             result.add(blogVO2BlogPO(ele));
         }
         return result;
@@ -482,7 +483,7 @@ public final class POVOTransferUtils {
 
     public static Collection<BlogVO> blogExPO2BlogVOList(Collection<BlogExPO> src, Collection<BlogVO> voes) {
         Iterator<BlogVO> ite = voes.iterator();
-        for(BlogExPO ele : src) {
+        for (BlogExPO ele : src) {
             blogExPO2BlogVO(ele, ite.next());
         }
         return voes;
@@ -500,7 +501,7 @@ public final class POVOTransferUtils {
 
     public static Collection<ImageVO> imagePO2ImageVOList(Collection<ImagePO> src) {
         List<ImageVO> result = new ArrayList<>(src.size());
-        for(ImagePO ele : src) {
+        for (ImagePO ele : src) {
             result.add(imagePO2ImageVO(ele));
         }
         return result;
@@ -517,7 +518,7 @@ public final class POVOTransferUtils {
 
     public static Collection<ImagePO> imageVO2ImagePOList(Collection<ImageVO> src) {
         List<ImagePO> result = new ArrayList<>(src.size());
-        for(ImageVO ele : src) {
+        for (ImageVO ele : src) {
             result.add(imageVO2ImagePO(ele));
         }
         return result;
@@ -537,7 +538,7 @@ public final class POVOTransferUtils {
 
     public static Collection<AdminImageVO> imagePO2AdminImageVOList(Collection<ImagePO> src) {
         List<AdminImageVO> result = new ArrayList<>(src.size());
-        for(ImagePO ele : src) {
+        for (ImagePO ele : src) {
             result.add(imagePO2AdminImageVO(ele));
         }
         return result;
@@ -556,12 +557,56 @@ public final class POVOTransferUtils {
 
     public static Collection<ImagePO> adminImageVO2ImagePOList(Collection<AdminImageVO> src) {
         List<ImagePO> result = new ArrayList<>(src.size());
-        for(AdminImageVO ele : src) {
+        for (AdminImageVO ele : src) {
             result.add(adminImageVO2ImagePO(ele));
         }
         return result;
     }
 
+    // -------------------- ResourcePO <-> ResourceVO --------------------------
+    public static ResourceVO resourcePO2ResourceVO(ResourcePO src) {
+        ResourceVO result = new ResourceVO();
+        result.setName(src.getName());
+        result.setId(src.getId());
+        result.setUrl(src.getUrl());
+        result.setSort(src.getSort());
+        result.setUpdatedAt(src.getUpdatedAt());
+        result.setCreatedAt(src.getCreatedAt());
+        result.setEnable(src.getEnable());
+        result.setIconClass(src.getIconClass());
+        result.setParentId(src.getParentId());
+        return result;
+    }
+
+    public static Collection<ResourceVO> resourcePO2ResourceVOList(Collection<ResourcePO> src) {
+        List<ResourceVO> result = new ArrayList<>(src.size());
+        for(ResourcePO ele : src) {
+            result.add(resourcePO2ResourceVO(ele));
+        }
+        return result;
+    }
+
+    public static ResourcePO resourceVO2ResourcePO(ResourceVO src) {
+        ResourcePO result = new ResourcePO();
+        result.setName(src.getName());
+        result.setId(src.getId());
+        result.setUrl(src.getUrl());
+        result.setSort(src.getSort());
+        result.setUpdatedAt(src.getUpdatedAt());
+        result.setCreatedAt(src.getCreatedAt());
+        result.setEnable(src.getEnable());
+        result.setIconClass(src.getIconClass());
+        result.setParentId(src.getParentId());
+        return result;
+    }
+
+    public static Collection<ResourcePO> resourceVO2ResourcePOList(Collection<ResourceVO> src) {
+        List<ResourcePO> result = new ArrayList<>(src.size());
+        for(ResourceVO ele : src) {
+            result.add(resourceVO2ResourcePO(ele));
+        }
+        return result;
+    }
 
     // -------------------- 待续 --------------------------
 

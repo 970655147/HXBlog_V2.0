@@ -49,7 +49,7 @@ layui.define(['layer', 'form'], function (exports) {
         $.ajax({
             url : "/admin/type/add",
             type : "POST",
-            data :  $(".layui-form").serialize(),
+            data :  $("#addTypeForm").serialize(),
             success : function (resp) {
                 if (resp.success) {
                     layer.alert('添加类型成功!', {
@@ -71,7 +71,7 @@ layui.define(['layer', 'form'], function (exports) {
         $.ajax({
             url : "/admin/type/update",
             type : "POST",
-            data : $(".layui-form").serialize(),
+            data : $("#updateTypeForm").serialize(),
             success : function (resp) {
                 if (resp.success) {
                     layer.alert('更新类型成功!', {
@@ -93,7 +93,7 @@ layui.define(['layer', 'form'], function (exports) {
     var funcs = {
         addData: function () {
             var html = '';
-            html += '<form class="layui-form layui-form-pane" >';
+            html += '<form id="addTypeForm" class="layui-form layui-form-pane" >';
             html += '<label class="layui-form-label" style="border: none" name="content" >类别名称:</label>';
             html += '<input id="add_name"  style="width:87%;margin: auto;color: #000!important;" name="name" lay-verify="required" class="layui-input" >';
             html += '<div class="layui-form-item">';
@@ -114,7 +114,7 @@ layui.define(['layer', 'form'], function (exports) {
         },
         editData: function (id, typeName) {
             var html = '';
-            html += '<form class="layui-form layui-form-pane" >';
+            html += '<form id="updateTypeForm" class="layui-form layui-form-pane" >';
             html += '<label class="layui-form-label" style="border: none" >类别名称:</label>';
             html += '<textarea  id="edit_name" style="width:87%;margin: auto;color: #000!important;" name="name" class="layui-textarea" lay-verify="required" >' + typeName + '</textarea>';
             html += '<input id="edit_id" type="hidden" name="id" value="' + id + '"/>';

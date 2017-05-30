@@ -81,14 +81,14 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
         $.ajax({
             url: "/admin/user/add",
             type: "POST",
-            data: $(".layui-form").serialize(),
-            success: function (result) {
-                if (result.success) {
+            data: $("#addAccountForm").serialize(),
+            success: function (resp) {
+                if (resp.success) {
                     layer.alert('添加用户成功!', {
                         closeBtn: 0,
                         icon: 1
                     }, function () {
-                        window.location.href = "/static/admin/accountManagement.html"
+                        location.reload()
                     });
                 } else {
                     layer.alert("添加用户失败[" + resp.msg + "] !", {icon: 5});
@@ -102,14 +102,14 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
         $.ajax({
             url: "/admin/user/update",
             type: "POST",
-            data: $(".layui-form").serialize(),
-            success: function (result) {
-                if (result.success) {
+            data: $("#updateAccountForm").serialize(),
+            success: function (resp) {
+                if (resp.success) {
                     layer.alert('更新用户成功!', {
                         closeBtn: 0,
                         icon: 1
                     }, function () {
-                        window.location.href = "/static/admin/accountManagement.html"
+                        location.reload()
                     });
                 } else {
                     layer.alert("更新用户失败[" + resp.msg + "] !", {icon: 5});
@@ -123,7 +123,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
     var funcs = {
         addData: function () {
             var html = '';
-            html += '<form class="layui-form layui-form-pane" action="/admin/user/add" method="post">';
+            html += '<form id="addAccountForm" class="layui-form layui-form-pane" action="/admin/user/add" method="post">';
             html += '<label class="layui-form-label" style="border: none;width: 180px;" >用户名:</label>';
             html += '<input  style="width:87%;margin: auto;color: #000!important;" name="userName" lay-verify="required"  class="layui-input" >';
             html += '<label class="layui-form-label" style="border: none;width: 180px;" >密码:</label>';
@@ -159,7 +159,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
         editData: function (id, userName, nickName, email, headImgUrl, motto) {
             console.log(headImgUrl)
             var html = '';
-            html += '<form class="layui-form layui-form-pane" action="/admin/user/update" method="post">';
+            html += '<form id="updateAccountForm" class="layui-form layui-form-pane" action="/admin/user/update" method="post">';
             html += '<input type="hidden" name="id" value="' + id + '"/>';
             html += '<label class="layui-form-label" style="border: none;width: 180px;" >用户名:</label>';
             html += '<input  style="width:87%;margin: auto;color: #000!important;" name="userName" value="' + userName + '" lay-verify="required"  class="layui-input" >';
@@ -197,13 +197,13 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
                     url: '/admin/user/remove',
                     data: {"id" : id },
                     type: 'POST',
-                    success: function (result) {
-                        if (result.success) {
+                    success: function (resp) {
+                        if (resp.success) {
                             layer.alert('删除成功!', {
                                 closeBtn: 0,
                                 icon: 1
                             }, function () {
-                                window.location.href = "/static/admin/accountManagement.html"
+                                location.reload()
                             });
                         } else {
                             layer.alert("删除用户失败[" + resp.msg + "] !", {icon: 5});

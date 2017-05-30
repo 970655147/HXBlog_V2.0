@@ -39,9 +39,8 @@ layui.define([ 'layer', 'form'], function (exports) {
                 ip : ip,
                 ipName : ipName
             },
-            success : function (result) {
-                console.log(result)
-                if(result.success){
+            success : function (resp) {
+                if(resp.success){
                     layer.msg('登陆成功，正在跳转......', { icon: 6 });
                     layer.closeAll('page');
                     setTimeout(function () {

@@ -84,9 +84,9 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
         $.ajax({
             url : "/admin/link/add",
             type : "POST",
-            data : $(".layui-form").serialize(),
-            success : function (result) {
-                if(result.success) {
+            data : $("#addLinkForm").serialize(),
+            success : function (resp) {
+                if(resp.success) {
                     layer.alert('添加友情链接成功!', {
                         closeBtn: 0,
                         icon: 1
@@ -105,9 +105,9 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
         $.ajax({
             url : "/admin/link/update",
             type : "POST",
-            data : $(".layui-form").serialize(),
-            success : function (result) {
-                if(result.success) {
+            data : $("#updateLinkForm").serialize(),
+            success : function (resp) {
+                if(resp.success) {
                     var addTopId = layer.alert('修改友情链接成功 !', {
                         closeBtn: 0,
                         icon: 1
@@ -126,7 +126,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
     var funcs = {
         addData: function () {
             var html = '';
-            html += '<form class="layui-form layui-form-pane" action="/admin/link/add" method="post">';
+            html += '<form id="addLinkForm" class="layui-form layui-form-pane" action="/admin/link/add" method="post">';
             html += '<label class="layui-form-label" style="border: none;width: 180px;" >友情链接名称:</label>';
             html += '<input  style="width:87%;margin: auto;color: #000!important;" name="name" lay-verify="required"  class="layui-input" >';
             html += '<label class="layui-form-label" style="border: none;width: 180px;" >友情链接描述:</label>';
@@ -157,7 +157,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
         },
         editData: function (id, name, desc, url, sort, enable) {
             var html = '';
-            html += '<form class="layui-form layui-form-pane" action="/admin/link/update" method="post">';
+            html += '<form id="updateLinkForm" class="layui-form layui-form-pane" action="/admin/link/update" method="post">';
             html += '<input type="hidden" name="id" value="' + id + '"/>';
             html += '<label class="layui-form-label" style="border: none;width: 180px;"  >友情链接名称:</label>';
             html += '<input  style="width:87%;margin: auto;color: #000!important;" name="name" lay-verify="required" class="layui-input" value="' + name + '">';
@@ -200,8 +200,8 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
                     url: '/admin/link/remove',
                     data: {"id" : id },
                     type: 'POST',
-                    success: function (result) {
-                        if (result.success) {
+                    success: function (resp) {
+                        if (resp.success) {
                             layer.alert('删除成功!', {
                                 closeBtn: 0,
                                 icon: 1

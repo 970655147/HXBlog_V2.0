@@ -4,16 +4,11 @@ import com.hx.blog_v2.dao.interf.BlogCommentDao;
 import com.hx.blog_v2.dao.interf.BlogDao;
 import com.hx.blog_v2.dao.interf.BlogExDao;
 import com.hx.blog_v2.dao.interf.LinkDao;
-import com.hx.blog_v2.domain.mapper.BlogVOMapper;
-import com.hx.blog_v2.domain.mapper.CommentVOMapper;
-import com.hx.blog_v2.domain.mapper.FacetByMonthMapper;
-import com.hx.blog_v2.domain.mapper.OneIntMapper;
+import com.hx.blog_v2.domain.mapper.*;
 import com.hx.blog_v2.domain.po.BlogTagPO;
 import com.hx.blog_v2.domain.po.BlogTypePO;
-import com.hx.blog_v2.domain.vo.AdminBlogVO;
-import com.hx.blog_v2.domain.vo.BlogVO;
-import com.hx.blog_v2.domain.vo.CommentVO;
-import com.hx.blog_v2.domain.vo.FacetByMonthVO;
+import com.hx.blog_v2.domain.po.ResourcePO;
+import com.hx.blog_v2.domain.vo.*;
 import com.hx.blog_v2.service.interf.BaseServiceImpl;
 import com.hx.blog_v2.service.interf.IndexService;
 import com.hx.blog_v2.util.BlogConstants;
@@ -21,7 +16,10 @@ import com.hx.blog_v2.util.CacheContext;
 import com.hx.blog_v2.util.WebContext;
 import com.hx.common.interf.common.Result;
 import com.hx.common.util.ResultUtils;
+import com.hx.json.JSONArray;
 import com.hx.json.JSONObject;
+import com.hx.log.alogrithm.tree.TreeUtils;
+import com.hx.log.alogrithm.tree.interf.TreeInfoExtractor;
 import com.hx.log.collection.CollectionUtils;
 import com.hx.log.util.Log;
 import com.hx.log.util.Tools;
@@ -44,14 +42,6 @@ import java.util.Map;
 @Service
 public class IndexServiceImpl extends BaseServiceImpl<Object> implements IndexService {
 
-    @Autowired
-    private LinkDao linkDao;
-    @Autowired
-    private BlogDao blogDao;
-    @Autowired
-    private BlogExDao blogExDao;
-    @Autowired
-    private BlogCommentDao commentDao;
     @Autowired
     private CacheContext cacheContext;
     @Autowired
@@ -110,6 +100,42 @@ public class IndexServiceImpl extends BaseServiceImpl<Object> implements IndexSe
 
         return ResultUtils.success(data);
     }
+
+    @Override
+    public Result adminMenus() {
+        String resourceSql = " select * from resource where enable = 1 and deleted = 0 order by sort ";
+        List<ResourceVO> resources =jdbcTemplate.query(resourceSql, new ResourceVOMapper());
+        if(CollectionUtils.isEmpty(resources) ) {
+            return ResultUtils.success(new JSONObject());
+        }
+
+        JSONObject root = TreeUtils.generateTree(resources, new TreeInfoExtractor<ResourceVO>() {
+            @Override
+            public void extract(ResourceVO bean, JSONObject obj) {
+                obj.element("id", bean.getId());
+                obj.element("name", bean.getName());
+                obj.element("url", bean.getUrl());
+                obj.element("iconClass", bean.getIconClass());
+                obj.element("parentId", bean.getParentId());
+            }
+        }, "childs", "-1");
+        TreeUtils.childArrayify(root, "childs");
+        return ResultUtils.success(root);
+    }
+
+    @Override
+    public Result adminStatistics() {
+        JSONObject data = new JSONObject()
+                .element("lastLoginIp", "127.0.0.1").element("lastLoginDate", "2017-05-30").element("lastLoginAddr", "四川成都")
+                .element("loginIp", "127.0.0.1").element("loginDate", "2017-05-31").element("lastLoginAddr", "四川贵阳")
+                .element("todayVisited", "120").element("todayGoodSensed", "110")
+                .element("totalVisited", "2220").element("totalGoodSensed", "3330")
+                .element("totalCommentCnt", "120").element("totalBlogCnt", "1330");
+
+        return ResultUtils.success(data);
+    }
+
+    // -------------------- 辅助方法 --------------------------
 
     /**
      * 把给定的Map集合转换为List

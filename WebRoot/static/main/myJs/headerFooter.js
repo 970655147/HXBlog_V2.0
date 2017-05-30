@@ -18,8 +18,8 @@ function importHeaderFooter() {
         type: "GET",
         async: false,
         data: {},
-        success: function (result) {
-            var template = $(result)
+        success: function (resp) {
+            var template = $(resp)
             // resp 不能为 <html> 开头
             jq("#headerNav").html(template.find("#headerNav").html())
             jq("#bannerNav").html(template.find("#bannerNav").html())

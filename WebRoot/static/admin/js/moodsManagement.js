@@ -81,9 +81,9 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
         $.ajax({
             url: "/admin/mood/add",
             type: "POST",
-            data: $(".layui-form").serialize(),
-            success: function (result) {
-                if (result.success) {
+            data: $("#addMoodForm").serialize(),
+            success: function (resp) {
+                if (resp.success) {
                     layer.alert('添加心情成功!', {
                         closeBtn: 0,
                         icon: 1
@@ -102,9 +102,9 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
         $.ajax({
             url: "/admin/mood/update",
             type: "POST",
-            data: $(".layui-form").serialize(),
-            success: function (result) {
-                if (result.success) {
+            data: $("#updateMoodForm").serialize(),
+            success: function (resp) {
+                if (resp.success) {
                     var addTopId = layer.alert('修改心情成功 !', {
                         closeBtn: 0,
                         icon: 1
@@ -123,7 +123,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
     var funcs = {
         addData: function () {
             var html = '';
-            html += '<form class="layui-form layui-form-pane" action="/admin/mood/add" method="post">';
+            html += '<form id="addMoodForm" class="layui-form layui-form-pane" action="/admin/mood/add" method="post">';
             html += '<label class="layui-form-label" style="border: none" >心情标题:</label>';
             html += '<input  style="width:87%;margin: auto;color: #000!important;" lay-verify="required" id="title" name="title"  class="layui-input" >';
             html += '<label class="layui-form-label" style="border: none" >心情内容:</label>';
@@ -150,7 +150,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
         },
         editData: function (item) {
             var html = '';
-            html += '<form class="layui-form layui-form-pane" action="/admin/mood/update" method="post" >';
+            html += '<form id="updateMoodForm" class="layui-form layui-form-pane" action="/admin/mood/update" method="post" >';
             html += '<label class="layui-form-label" style="border: none" >心情标题:</label>';
             html += '<input type="hidden" id="id" name="id" value="' + item.id + '">';
             html += '<input  style="width:87%;margin: auto;color: #000!important;" id="title" name="title" lay-verify="required"  class="layui-input" value="' + item.title + '" >';
@@ -189,8 +189,8 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
                     url: '/admin/mood/remove',
                     data: {"id": id},
                     type: 'POST',
-                    success: function (result) {
-                        if (result.success) {
+                    success: function (resp) {
+                        if (resp.success) {
                             layer.alert('删除成功 !', {
                                 closeBtn: 0,
                                 icon: 1

@@ -9,47 +9,27 @@
     //实例化编辑器
 var ue = UE.getEditor('editor');
 
-// 加载类型, 标签
-$.ajax({
-    url : "/composite/typeAndTags",
-    type : "GET",
-    success : function (result) {
-        if(result.success) {
-            var typeIdEle = $("#typeId")
-            var types = result.data.types
-            for(idx in types) {
-                typeIdEle.append("<option value='" + types[idx].id + "'> " + types[idx].name + " </option>")
-            }
-
-            var tagIdEle = $("#tagIds")
-            var tags = result.data.tags
-            for(idx in tags) {
-                tagIdEle.append("<option value='" + tags[idx].id + "'> " + tags[idx].name + " </option>")
-            }
-        } else {
-            layer.alert("拉取类型/标签列表失败[" + resp.msg + "] !", {icon: 5});
-        }
-    }
-});
+// 加载类型, 标签, 同步加载, 否则 可能 layui 绑定不了事件
+initTypeAndTags()
 
 // 如果是更新博客的话, 更新加载博客原有的内容
 queryParams = getParamsFromUrl(window.location.href)
 var currentBlogId = queryParams.id
-if(!isEmpty(currentBlogId)) {
+if (!isEmpty(currentBlogId)) {
     $.ajax({
-        url : "/admin/blog/get",
-        type : "GET",
-        data : {"id" : currentBlogId },
-        success : function (result) {
-            if(result.success) {
-                var blog = result.data
+        url: "/admin/blog/get",
+        type: "GET",
+        data: {"id": currentBlogId},
+        success: function (resp) {
+            if (resp.success) {
+                var blog = resp.data
                 $("[name='id']").attr("value", currentBlogId)
                 $("[name='title']").attr("value", blog.title)
                 $("[name='author']").attr("value", blog.author)
                 $("[name='coverUrl']").attr("value", blog.coverUrl)
                 $("[id='coverShow']").attr("src", blog.coverUrl)
                 $("#blogTypeId option[value='" + blog.blogTypeId + "']").attr("selected", "")
-                for(idx in blog.blogTagIds) {
+                for (idx in blog.blogTagIds) {
                     var value = blog.blogTagIds[idx]
                     var text = blog.blogTagNames[idx]
                     $("#tagSelected").append(
@@ -61,7 +41,7 @@ if(!isEmpty(currentBlogId)) {
                 $("#tagIds option:eq(1)").attr("selected", "")
                 $("[name='summary']").val(blog.summary)
                 // Cannot read property 'getRange' of undefined
-                ue.ready(function() {
+                ue.ready(function () {
                     UE.getEditor('editor').execCommand('insertHtml', blog.content)
                 });
             } else {
@@ -85,9 +65,9 @@ layui.define(['form', 'upload', 'layer'], function (exports) {
         $.ajax({
             url: "/admin/blog/save",
             type: "POST",
-            data: $(".layui-form").serialize(),
-            success: function (result) {
-                if (result.success) {
+            data: $("#addBlogForm").serialize(),
+            success: function (resp) {
+                if (resp.success) {
                     addBlogLayer = layer.alert('保存博客成功!', {
                         closeBtn: 0,
                         icon: 1
@@ -107,7 +87,7 @@ layui.define(['form', 'upload', 'layer'], function (exports) {
         $.ajax({
             url: "/admin/type/add",
             type: "POST",
-            data: $(".layui-form").serialize(),
+            data: $("#addTypeForm").serialize(),
             success: function (resp) {
                 if (resp.success) {
                     addTypeConfirm = layer.alert('添加类型成功!', {
@@ -129,7 +109,7 @@ layui.define(['form', 'upload', 'layer'], function (exports) {
         $.ajax({
             url: "/admin/tag/add",
             type: "POST",
-            data: $(".layui-form").serialize(),
+            data: $("#addTagForm").serialize(),
             success: function (resp) {
                 if (resp.success) {
                     addTypeConfirm = layer.alert('添加标签成功!', {
@@ -148,7 +128,7 @@ layui.define(['form', 'upload', 'layer'], function (exports) {
     })
 
     layui.upload({
-        elem : "#uploadCoverImage",
+        elem: "#uploadCoverImage",
         url: '/admin/upload/image', //上传接口
         ext: "jpg|jpeg|png|bmp|gif",
         success: function (resp) { //上传成功后的回调
@@ -163,13 +143,13 @@ layui.define(['form', 'upload', 'layer'], function (exports) {
     });
 
     layui.upload({
-        elem : "#uploadEditorHtml",
+        elem: "#uploadEditorHtml",
         url: '/admin/upload/file', //上传接口
         ext: "html|txt",
-        before : function(input) {
+        before: function (input) {
             var reader = new FileReader();
             reader.readAsText(input.files[0], encoding);
-            reader.onload = function(evt){
+            reader.onload = function (evt) {
                 var content = evt.target.result;
                 UE.getEditor('editor').execCommand('insertHtml', content)
             }
@@ -201,7 +181,7 @@ layui.define(['form', 'upload', 'layer'], function (exports) {
     var funcs = {
         addTypeData: function () {
             var html = '';
-            html += '<form class="layui-form layui-form-pane" action="/admin/type/add" method="post" >';
+            html += '<form id="addTypeForm" class="layui-form layui-form-pane" action="/admin/type/add" method="post" >';
             html += '<label class="layui-form-label" style="border: none" name="content" >类别名称:</label>';
             html += '<input style="width:87%;margin: auto;color: #000!important;" name="name"  class="layui-input" >';
             html += '<div class="layui-form-item">';
@@ -221,7 +201,7 @@ layui.define(['form', 'upload', 'layer'], function (exports) {
         },
         addTagData: function () {
             var html = '';
-            html += '<form class="layui-form layui-form-pane" action="/admin/tag/add" method="post >';
+            html += '<form id="addTagForm" class="layui-form layui-form-pane" action="/admin/tag/add" method="post >';
             html += '<label class="layui-form-label" style="border: none" name="content" >标签名称:</label>';
             html += '<input style="width:87%;margin: auto;color: #000!important;" name="name"  class="layui-input" >';
             html += '<div class="layui-form-item">';
@@ -248,7 +228,7 @@ layui.define(['form', 'upload', 'layer'], function (exports) {
                 input.addClass("layui-form-checked")
             }
         },
-        coverImgShow : function() {
+        coverImgShow: function () {
             $("#coverShow").attr("src", $("[name='coverUrl']").val());
         }
     };
@@ -256,3 +236,31 @@ layui.define(['form', 'upload', 'layer'], function (exports) {
 
     exports('funcs', funcs);
 });
+
+/**
+ * 初始化类型, 标签列表
+ */
+function initTypeAndTags() {
+    $.ajax({
+        url: "/composite/typeAndTags",
+        type: "GET",
+        async: false,
+        success: function (resp) {
+            if (resp.success) {
+                var typeIdEle = $("#typeId")
+                var types = resp.data.types
+                for (idx in types) {
+                    typeIdEle.append("<option value='" + types[idx].id + "'> " + types[idx].name + " </option>")
+                }
+
+                var tagIdEle = $("#tagIds")
+                var tags = resp.data.tags
+                for (idx in tags) {
+                    tagIdEle.append("<option value='" + tags[idx].id + "'> " + tags[idx].name + " </option>")
+                }
+            } else {
+                layer.alert("拉取类型/标签列表失败[" + resp.msg + "] !", {icon: 5});
+            }
+        }
+    });
+}
