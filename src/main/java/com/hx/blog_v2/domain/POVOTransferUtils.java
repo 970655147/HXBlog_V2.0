@@ -31,12 +31,12 @@ public final class POVOTransferUtils {
      */
     public static void main(String[] args) {
 
-        Class src = ResourcePO.class;
-        Class dst = ResourceVO.class;
+        Class src = RltRoleResourcePO.class;
+        Class dst = RltRoleResourceVO.class;
 
         String transfer = BeanTransferUtils.transferTo(src, dst);
         String transferList = BeanTransferUtils.transferListTo(src, dst);
-        info("    // -------------------- " + src.getSimpleName() + " <-> " + dst.getSimpleName() + " --------------------------");
+        info("// -------------------- " + src.getSimpleName() + " <-> " + dst.getSimpleName() + " --------------------------");
         info(transfer);
         info(transferList);
 
@@ -604,6 +604,152 @@ public final class POVOTransferUtils {
         List<ResourcePO> result = new ArrayList<>(src.size());
         for(ResourceVO ele : src) {
             result.add(resourceVO2ResourcePO(ele));
+        }
+        return result;
+    }
+
+    // -------------------- RolePO <-> AdminRoleVO --------------------------
+    public static AdminRoleVO rolePO2AdminRoleVO(RolePO src) {
+        AdminRoleVO result = new AdminRoleVO();
+        result.setName(src.getName());
+        result.setId(src.getId());
+        result.setCreatedAt(src.getCreatedAt());
+        result.setEnable(src.getEnable());
+        result.setUpdatedAt(src.getUpdatedAt());
+        result.setDesc(src.getDesc());
+        return result;
+    }
+
+    public static Collection<AdminRoleVO> rolePO2AdminRoleVOList(Collection<RolePO> src) {
+        List<AdminRoleVO> result = new ArrayList<>(src.size());
+        for(RolePO ele : src) {
+            result.add(rolePO2AdminRoleVO(ele));
+        }
+        return result;
+    }
+
+    public static RolePO adminRoleVO2RolePO(AdminRoleVO src) {
+        RolePO result = new RolePO();
+        result.setName(src.getName());
+        result.setId(src.getId());
+        result.setCreatedAt(src.getCreatedAt());
+        result.setEnable(src.getEnable());
+        result.setUpdatedAt(src.getUpdatedAt());
+        result.setDesc(src.getDesc());
+        return result;
+    }
+
+    public static Collection<RolePO> adminRoleVO2RolePOList(Collection<AdminRoleVO> src) {
+        List<RolePO> result = new ArrayList<>(src.size());
+        for(AdminRoleVO ele : src) {
+            result.add(adminRoleVO2RolePO(ele));
+        }
+        return result;
+    }
+
+    // -------------------- UserPO <-> UserRoleVO --------------------------
+    public static UserRoleVO userPO2UserRoleVO(UserPO src) {
+        UserRoleVO result = new UserRoleVO();
+        result.setId(src.getId());
+        result.setCreatedAt(src.getCreatedAt());
+        result.setUserName(src.getUserName());
+        result.setNickName(src.getNickName());
+        result.setEmail(src.getEmail());
+        result.setHeadImgUrl(src.getHeadImgUrl());
+        return result;
+    }
+
+    public static Collection<UserRoleVO> userPO2UserRoleVOList(Collection<UserPO> src) {
+        List<UserRoleVO> result = new ArrayList<>(src.size());
+        for(UserPO ele : src) {
+            result.add(userPO2UserRoleVO(ele));
+        }
+        return result;
+    }
+
+    public static UserPO userRoleVO2UserPO(UserRoleVO src) {
+        UserPO result = new UserPO();
+        result.setId(src.getId());
+        result.setCreatedAt(src.getCreatedAt());
+        result.setUserName(src.getUserName());
+        result.setNickName(src.getNickName());
+        result.setEmail(src.getEmail());
+        result.setHeadImgUrl(src.getHeadImgUrl());
+        return result;
+    }
+
+    public static Collection<UserPO> userRoleVO2UserPOList(Collection<UserRoleVO> src) {
+        List<UserPO> result = new ArrayList<>(src.size());
+        for(UserRoleVO ele : src) {
+            result.add(userRoleVO2UserPO(ele));
+        }
+        return result;
+    }
+
+    // -------------------- RolePO <-> RoleResourceVO --------------------------
+    public static RoleResourceVO rolePO2RoleResourceVO(RolePO src) {
+        RoleResourceVO result = new RoleResourceVO();
+        result.setName(src.getName());
+        result.setId(src.getId());
+        result.setCreatedAt(src.getCreatedAt());
+        result.setDesc(src.getDesc());
+        return result;
+    }
+
+    public static Collection<RoleResourceVO> rolePO2RoleResourceVOList(Collection<RolePO> src) {
+        List<RoleResourceVO> result = new ArrayList<>(src.size());
+        for(RolePO ele : src) {
+            result.add(rolePO2RoleResourceVO(ele));
+        }
+        return result;
+    }
+
+    public static RolePO roleResourceVO2RolePO(RoleResourceVO src) {
+        RolePO result = new RolePO();
+        result.setName(src.getName());
+        result.setId(src.getId());
+        result.setCreatedAt(src.getCreatedAt());
+        result.setDesc(src.getDesc());
+        return result;
+    }
+
+    public static Collection<RolePO> roleResourceVO2RolePOList(Collection<RoleResourceVO> src) {
+        List<RolePO> result = new ArrayList<>(src.size());
+        for(RoleResourceVO ele : src) {
+            result.add(roleResourceVO2RolePO(ele));
+        }
+        return result;
+    }
+
+    // -------------------- RltRoleResourcePO <-> RltRoleResourceVO --------------------------
+    public static RltRoleResourceVO rltRoleResourcePO2RltRoleResourceVO(RltRoleResourcePO src) {
+        RltRoleResourceVO result = new RltRoleResourceVO();
+        result.setId(src.getId());
+        result.setResourceId(src.getResourceId());
+        result.setRoleId(src.getRoleId());
+        return result;
+    }
+
+    public static Collection<RltRoleResourceVO> rltRoleResourcePO2RltRoleResourceVOList(Collection<RltRoleResourcePO> src) {
+        List<RltRoleResourceVO> result = new ArrayList<>(src.size());
+        for(RltRoleResourcePO ele : src) {
+            result.add(rltRoleResourcePO2RltRoleResourceVO(ele));
+        }
+        return result;
+    }
+
+    public static RltRoleResourcePO rltRoleResourceVO2RltRoleResourcePO(RltRoleResourceVO src) {
+        RltRoleResourcePO result = new RltRoleResourcePO();
+        result.setId(src.getId());
+        result.setResourceId(src.getResourceId());
+        result.setRoleId(src.getRoleId());
+        return result;
+    }
+
+    public static Collection<RltRoleResourcePO> rltRoleResourceVO2RltRoleResourcePOList(Collection<RltRoleResourceVO> src) {
+        List<RltRoleResourcePO> result = new ArrayList<>(src.size());
+        for(RltRoleResourceVO ele : src) {
+            result.add(rltRoleResourceVO2RltRoleResourcePO(ele));
         }
         return result;
     }

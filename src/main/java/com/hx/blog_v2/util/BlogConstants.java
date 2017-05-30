@@ -58,7 +58,7 @@ public final class BlogConstants {
             BlogCommentPO.class, BlogExPO.class, BlogPO.class, BlogSensePO.class, BlogTagPO.class,
             BlogTypePO.class, ExceptionLogPO.class, ImagePO.class, LinkPO.class, MoodPO.class, RequestLogPO.class,
             UserPO.class, VisitorPO.class, RltBlogTagPO.class, UploadFilePO.class,
-            RolePO.class, RltUserRolePO.class, ResourcePO.class, RltRoleResourcePO.class
+            RolePO.class, RltUserRoleRolePO.class, ResourcePO.class, RltRoleResourcePO.class
     };
     /**
      * 下划线的注册了各个PO 的 KeyNodeParser
@@ -226,6 +226,11 @@ public final class BlogConstants {
      * 回复博主, 层主的时候的 parentCommentId
      */
     public static String REPLY_2_FLOOR_OWNER = "-1";
+
+    /**
+     * 资源列表的数据 的 根节点的 parentId
+     */
+    public static String RESOURCE_ROOT_PARENT_ID = "-1";
 
     /**
      * 上传到服务器的图片的 url 前缀

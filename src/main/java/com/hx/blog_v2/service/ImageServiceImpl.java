@@ -18,6 +18,7 @@ import com.hx.blog_v2.service.interf.BaseServiceImpl;
 import com.hx.blog_v2.service.interf.ImageService;
 import com.hx.blog_v2.util.BlogConstants;
 import com.hx.blog_v2.util.DateUtils;
+import com.hx.common.interf.common.Page;
 import com.hx.common.interf.common.Result;
 import com.hx.common.result.SimplePage;
 import com.hx.common.util.ResultUtils;
@@ -67,7 +68,7 @@ public class ImageServiceImpl extends BaseServiceImpl<ImagePO> implements ImageS
     }
 
     @Override
-    public Result adminList(SimplePage<AdminImageVO> page) {
+    public Result adminList(Page<AdminImageVO> page) {
         String sql = " select * from images where deleted = 0 order by created_at desc limit ?, ? ";
         Object[] params = new Object[]{page.recordOffset(), page.getPageSize()};
 

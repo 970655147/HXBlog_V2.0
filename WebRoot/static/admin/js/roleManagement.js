@@ -27,22 +27,19 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
         setTimeout(function () {
             layer.close(index);
             $.ajax({
-                url: "/admin/mood/list",
+                url: "/admin/role/list",
                 type: "GET",
-                data: {
-                    pageNow: currentIndex,
-                    pageSize: pageSize
-                },
+                data: {},
                 success: function (resp) {
                     if (resp.success) {
                         var html = '';
-                        var moods = resp.data.list
-                        for (var i in moods) {
-                            var item = moods[i];
+                        var roles = resp.data
+                        for (var i in roles) {
+                            var item = roles[i];
                             html += '<tr>';
                             html += '<td>' + item.id + '</td>';
-                            html += '<td>' + item.title + '</td>';
-                            html += '<td>' + item.content + '</td>';
+                            html += '<td>' + item.name + '</td>';
+                            html += '<td>' + item.desc + '</td>';
                             html += '<td>' + item.createdAt + '</td>';
                             if (item.enable) {
                                 html += '<td><i class="layui-icon" style="font-size: 30px; color: #009688;vertical-align: middle;">&#xe609;</i> </td>';
@@ -56,21 +53,8 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
                         $('#dataContent').html(html);
 
                         $('#dataConsole,#dataList').attr('style', 'display:block'); //显示FiledBox
-                        laypage({
-                            cont: laypageId,
-                            pages: resp.data.totalPage,
-                            groups: 5,
-                            skip: true,
-                            curr: currentIndex,
-                            jump: function (obj, first) {
-                                var currentIndex = obj.curr;
-                                if (!first) {
-                                    initilData(currentIndex, pageSize);
-                                }
-                            }
-                        });
                     } else {
-                        layer.alert("拉取心情列表失败[" + resp.msg + "] !", {icon: 5});
+                        layer.alert("拉取角色列表失败[" + resp.msg + "] !", {icon: 5});
                     }
                 }
             });
@@ -79,19 +63,19 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
 
     form.on('submit(addMoodSubmit)', function (data) {
         $.ajax({
-            url: "/admin/mood/add",
+            url: "/admin/role/add",
             type: "POST",
-            data: $("#addMoodForm").serialize(),
+            data: $("#addRoleForm").serialize(),
             success: function (resp) {
                 if (resp.success) {
-                    layer.alert('添加心情成功!', {
+                    layer.alert('添加角色成功!', {
                         closeBtn: 0,
                         icon: 1
                     }, function () {
                         location.reload()
                     });
                 } else {
-                    layer.alert("添加心情失败[" + resp.msg + "] !", {icon: 5});
+                    layer.alert("添加角色失败[" + resp.msg + "] !", {icon: 5});
                 }
             }
         });
@@ -100,19 +84,19 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
 
     form.on('submit(updateMoodSubmit)', function (data) {
         $.ajax({
-            url: "/admin/mood/update",
+            url: "/admin/role/update",
             type: "POST",
-            data: $("#updateMoodForm").serialize(),
+            data: $("#updateRoleForm").serialize(),
             success: function (resp) {
                 if (resp.success) {
-                    var addTopId = layer.alert('修改心情成功 !', {
+                    var addTopId = layer.alert('修改角色成功 !', {
                         closeBtn: 0,
                         icon: 1
                     }, function () {
                         location.reload()
                     });
                 } else {
-                    layer.alert("更新心情失败[" + resp.msg + "] !", {icon: 5});
+                    layer.alert("更新角色失败[" + resp.msg + "] !", {icon: 5});
                 }
             }
         });
@@ -123,11 +107,11 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
     var funcs = {
         addData: function () {
             var html = '';
-            html += '<form id="addMoodForm" class="layui-form layui-form-pane" action="/admin/mood/add" method="post">';
-            html += '<label class="layui-form-label" style="border: none" >心情标题:</label>';
-            html += '<input  style="width:87%;margin: auto;color: #000!important;" lay-verify="required" id="title" name="title"  class="layui-input" >';
-            html += '<label class="layui-form-label" style="border: none" >心情内容:</label>';
-            html += '<textarea  style="width:87%;margin: auto;color: #000!important;" lay-verify="required" id="content" name="content" class="layui-textarea " ></textarea>';
+            html += '<form id="addRoleForm" class="layui-form layui-form-pane" action="/admin/role/add" method="post">';
+            html += '<label class="layui-form-label" style="border: none" >角色名称:</label>';
+            html += '<input  style="width:87%;margin: auto;color: #000!important;" lay-verify="required" name="name"  class="layui-input" >';
+            html += '<label class="layui-form-label" style="border: none" >角色描述:</label>';
+            html += '<textarea  style="width:87%;margin: auto;color: #000!important;" lay-verify="required" name="desc" class="layui-textarea " ></textarea>';
             html += '<label class="layui-form-label" style="border: none" >是否显示:</label>';
             html += '<input type="radio" name="enable" value="1" title="是" checked />';
             html += '<input type="radio" name="enable" value="0" title="否" />';
@@ -143,19 +127,19 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
                 type: 1,
                 skin: 'layui-layer-rim', //加上边框
                 area: '620px', //宽高
-                title: '添加心情',
+                title: '添加角色',
                 content: html
             });
             form.render('radio');  //radio，编辑和添加的时候
         },
         editData: function (item) {
             var html = '';
-            html += '<form id="updateMoodForm" class="layui-form layui-form-pane" action="/admin/mood/update" method="post" >';
-            html += '<label class="layui-form-label" style="border: none" >心情标题:</label>';
+            html += '<form id="updateRoleForm" class="layui-form layui-form-pane" action="/admin/role/update" method="post" >';
+            html += '<label class="layui-form-label" style="border: none" >角色名称:</label>';
             html += '<input type="hidden" id="id" name="id" value="' + item.id + '">';
-            html += '<input  style="width:87%;margin: auto;color: #000!important;" id="title" name="title" lay-verify="required"  class="layui-input" value="' + item.title + '" >';
-            html += '<label class="layui-form-label" style="border: none" >心情内容:</label>';
-            html += '<textarea  style="width:87%;margin: auto;color: #000!important;" id="content" name="content" class="layui-textarea " lay-verify="required" >' + item.content + '</textarea>';
+            html += '<input  style="width:87%;margin: auto;color: #000!important;" name="name" lay-verify="required"  class="layui-input" value="' + item.name + '" >';
+            html += '<label class="layui-form-label" style="border: none" >角色描述:</label>';
+            html += '<textarea  style="width:87%;margin: auto;color: #000!important;" name="desc" class="layui-textarea " lay-verify="required" >' + item.desc + '</textarea>';
             html += '<label class="layui-form-label" style="border: none" >是否显示:</label>';
             if (item.enable) {
                 html += '<input type="radio" name="enable" value="1" title="是" checked />';
@@ -176,29 +160,29 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
                 type: 1,
                 skin: 'layui-layer-rim', //加上边框
                 area: '620px', //宽高
-                title: '修改心情',
+                title: '修改角色',
                 content: html
             });
             form.render('radio');  //radio，编辑和添加的时候
         },
         deleteData: function (id) {
-            layer.confirm('确定删除这条心情吗？', {
+            layer.confirm('确定删除这个角色吗？', {
                 btn: ['确定', '取消'] //按钮
             }, function () {
                 $.ajax({
-                    url: '/admin/mood/remove',
+                    url: '/admin/role/remove',
                     data: {"id": id},
                     type: 'POST',
                     success: function (resp) {
                         if (resp.success) {
-                            layer.alert('删除心情成功 !', {
+                            layer.alert('删除角色成功 !', {
                                 closeBtn: 0,
                                 icon: 1
                             }, function () {
                                 location.reload()
                             });
                         } else {
-                            layer.alert("删除心情失败[" + resp.msg + "] !", {icon: 5});
+                            layer.alert("删除角色失败[" + resp.msg + "] !", {icon: 5});
                         }
                     }
                 });

@@ -55,7 +55,7 @@ public class BlogCommentServiceImpl extends BaseServiceImpl<BlogCommentPO> imple
             po.setFloorId(cacheContext.nextFloorId(po.getBlogId()));
         }
         po.setCommentId(cacheContext.nextCommentId(po.getBlogId(), po.getFloorId()));
-        po.setParentCommentId(params.getId() == null ? BlogConstants.REPLY_2_FLOOR_OWNER : params.getId());
+        po.setParentCommentId(params.getId() == null ? BlogConstants.RESOURCE_ROOT_PARENT_ID : params.getId());
 
         try {
             commentDao.save(po, BlogConstants.ADD_BEAN_CONFIG);

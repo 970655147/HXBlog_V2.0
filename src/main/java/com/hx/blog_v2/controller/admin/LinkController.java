@@ -33,9 +33,9 @@ public class LinkController {
 
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
-    public Result list(SimplePage<AdminLinkVO> page) {
+    public Result list() {
 
-        return linkService.adminList(page);
+        return linkService.adminList();
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST)

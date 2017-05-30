@@ -4,9 +4,8 @@ import com.hx.blog_v2.domain.form.BeanIdForm;
 import com.hx.blog_v2.domain.form.ImageSaveForm;
 import com.hx.blog_v2.domain.po.ImagePO;
 import com.hx.blog_v2.domain.vo.AdminImageVO;
-import com.hx.blog_v2.domain.vo.ImageVO;
+import com.hx.common.interf.common.Page;
 import com.hx.common.interf.common.Result;
-import com.hx.common.result.SimplePage;
 
 /**
  * BlogService
@@ -45,7 +44,7 @@ public interface ImageService extends BaseService<ImagePO> {
      * @date 5/20/2017 6:21 PM
      * @since 1.0
      */
-    Result adminList(SimplePage<AdminImageVO> page);
+    Result adminList(Page<AdminImageVO> page);
 
     /**
      * 更新给定的照片

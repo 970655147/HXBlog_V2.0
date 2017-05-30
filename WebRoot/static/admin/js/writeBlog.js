@@ -30,8 +30,8 @@ if (!isEmpty(currentBlogId)) {
                 $("[id='coverShow']").attr("src", blog.coverUrl)
                 $("#blogTypeId option[value='" + blog.blogTypeId + "']").attr("selected", "")
                 for (idx in blog.blogTagIds) {
-                    var value = blog.blogTagIds[idx]
-                    var text = blog.blogTagNames[idx]
+                    var value = blog.blogTagIds[idx].trim()
+                    var text = blog.blogTagNames[idx].trim()
                     $("#tagSelected").append(
                         '<div value=' + value + ' class="layui-unselect layui-form-checkbox layui-form-checked" lay-skin="" onclick="layui.funcs.toggleCheckted(this)" >' +
                         '<span>' + text + '</span><i class="layui-icon"></i>' +

@@ -12,13 +12,13 @@ import java.util.LinkedList;
 import java.util.Map;
 
 /**
- * user -> role
+ * role -> resource
  *
  * @author Jerry.X.He <970655147@qq.com>
  * @version 1.0
  * @date 5/20/2017 10:05 AM
  */
-public class RltUserRolePO implements JSONTransferable<RltUserRolePO> {
+public class RltUserRoleRolePO implements JSONTransferable<RltUserRoleRolePO> {
 
     @JSONField({"id", "id"})
     private String id;
@@ -27,12 +27,12 @@ public class RltUserRolePO implements JSONTransferable<RltUserRolePO> {
     @JSONField({"roleId", "role_id"})
     private String roleId;
 
-    public RltUserRolePO(String userId, String roleId) {
+    public RltUserRoleRolePO(String userId, String roleId) {
         this.userId = userId;
         this.roleId = roleId;
     }
 
-    public RltUserRolePO() {
+    public RltUserRoleRolePO() {
     }
 
     public String getId() {
@@ -59,15 +59,15 @@ public class RltUserRolePO implements JSONTransferable<RltUserRolePO> {
         this.roleId = roleId;
     }
 
-    public static final RltUserRolePO PROTO_BEAN = new RltUserRolePO();
+    public static final RltUserRoleRolePO PROTO_BEAN = new RltUserRoleRolePO();
 
     @Override
-    public RltUserRolePO loadFromJSON(Map<String, Object> obj, JSONConfig config) {
+    public RltUserRoleRolePO loadFromJSON(Map<String, Object> obj, JSONConfig config) {
         if (Tools.isEmpty(obj)) {
             return this;
         }
 
-        JSONObject.fromObject(obj).toBean(RltUserRolePO.class, this, config);
+        JSONObject.fromObject(obj).toBean(RltUserRoleRolePO.class, this, config);
         return this;
     }
 
@@ -88,8 +88,8 @@ public class RltUserRolePO implements JSONTransferable<RltUserRolePO> {
     }
 
     @Override
-    public RltUserRolePO newInstance(Object... args) {
-        return new RltUserRolePO();
+    public RltUserRoleRolePO newInstance(Object... args) {
+        return new RltUserRoleRolePO();
     }
 
     @Override

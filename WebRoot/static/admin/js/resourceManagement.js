@@ -28,7 +28,7 @@ layui.define(['element', 'laypage', 'layer', 'form', 'tree'], function (exports)
             var prams = getParamsFromUrl(location.href)
 
             $.ajax({
-                url: "/admin/resource/list",
+                url: "/admin/resource/treeList",
                 type: "GET",
                 async : false,
                 data: prams,
@@ -155,7 +155,7 @@ layui.define(['element', 'laypage', 'layer', 'form', 'tree'], function (exports)
             html += '<label class="layui-form-label" style="border: none;width: 180px;" >样式:</label>';
             html += '<input  style="width:87%;margin: auto;color: #000!important;" name="iconClass" lay-verify="required"  class="layui-input" >';
             html += '<label class="layui-form-label" style="border: none;width: 180px;" >url:</label>';
-            html += '<input  style="width:87%;margin: auto;color: #000!important;" name="url" lay-verify="url"  class="layui-input" >';
+            html += '<input  style="width:87%;margin: auto;color: #000!important;" name="url" lay-verify="required"  class="layui-input" >';
             html += '<label class="layui-form-label" style="border: none;width: 180px;" >排序:</label>';
             html += '<input  style="width:87%;margin: auto;color: #000!important;" name="sort" lay-verify="required"  class="layui-input" >';
             html += '<label class="layui-form-label" style="border: none;width: 120px;" >父节点:</label>';

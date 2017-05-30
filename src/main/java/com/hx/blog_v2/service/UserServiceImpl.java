@@ -9,6 +9,7 @@ import com.hx.blog_v2.domain.vo.AdminUserVO;
 import com.hx.blog_v2.service.interf.UserService;
 import com.hx.blog_v2.util.BlogConstants;
 import com.hx.blog_v2.util.DateUtils;
+import com.hx.common.interf.common.Page;
 import com.hx.common.interf.common.Result;
 import com.hx.common.result.SimplePage;
 import com.hx.common.util.ResultUtils;
@@ -53,7 +54,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Result adminList(SimplePage<AdminUserVO> page) {
+    public Result adminList(Page<AdminUserVO> page) {
         String sql = " select * from `user` where deleted = 0 order by created_at desc limit ?, ? ";
         Object[] params = new Object[]{page.recordOffset(), page.getPageSize()};
 

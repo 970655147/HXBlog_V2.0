@@ -11,6 +11,7 @@ import com.hx.blog_v2.domain.po.ResourcePO;
 import com.hx.blog_v2.domain.vo.*;
 import com.hx.blog_v2.service.interf.BaseServiceImpl;
 import com.hx.blog_v2.service.interf.IndexService;
+import com.hx.blog_v2.service.interf.LinkService;
 import com.hx.blog_v2.util.BlogConstants;
 import com.hx.blog_v2.util.CacheContext;
 import com.hx.blog_v2.util.WebContext;
@@ -43,6 +44,8 @@ import java.util.Map;
 public class IndexServiceImpl extends BaseServiceImpl<Object> implements IndexService {
 
     @Autowired
+    private LinkService linkService;
+    @Autowired
     private CacheContext cacheContext;
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -70,7 +73,7 @@ public class IndexServiceImpl extends BaseServiceImpl<Object> implements IndexSe
         data.put("subTitle", "如果你浪费了自己的年龄, 那是挺可悲的 因为你的青春只能持续一点儿时间 -- 很短的一点儿时间 ");
         data.put("tags", tags2List(cacheContext.allBlogTags()));
         data.put("types", tags2List(cacheContext.allBlogTypes()));
-        data.put("links", cacheContext.allLinks());
+        data.put("links", linkService.adminList().getData());
 
         data.put("hotBlogs", hotBlogs);
         data.put("latestComments", latestComments);
@@ -118,7 +121,7 @@ public class IndexServiceImpl extends BaseServiceImpl<Object> implements IndexSe
                 obj.element("iconClass", bean.getIconClass());
                 obj.element("parentId", bean.getParentId());
             }
-        }, "childs", "-1");
+        }, "childs", BlogConstants.RESOURCE_ROOT_PARENT_ID);
         TreeUtils.childArrayify(root, "childs");
         return ResultUtils.success(root);
     }

@@ -22,6 +22,7 @@ import com.hx.json.JSONArray;
 import com.hx.json.JSONObject;
 import com.hx.log.alogrithm.tree.TreeUtils;
 import com.hx.log.alogrithm.tree.interf.TreeInfoExtractor;
+import com.hx.log.collection.CollectionUtils;
 import com.hx.log.file.FileUtils;
 import com.hx.log.util.Log;
 import com.hx.log.util.Tools;
@@ -220,7 +221,7 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
     /**
      * 封装 type, tag 的信息
      *
-     * @param list adminList
+     * @param list adminTreeList
      * @return void
      * @author Jerry.X.He
      * @date 5/21/2017 6:29 PM
@@ -339,15 +340,19 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
             }
 
             String[] tagIds = params.getBlogTagIds().split(",");
+            List<RltBlogTagPO> blogTags = null;
             if (!Tools.isEmpty(tagIds)) {
                 Tools.trimAllSpaces(tagIds);
-                List<RltBlogTagPO> blogTags = new ArrayList<>(tagIds.length);
+                blogTags = new ArrayList<>(tagIds.length);
                 for (String tagId : tagIds) {
                     blogTags.add(new RltBlogTagPO(po.getId(), tagId));
                 }
-                rltBlogTagDao.deleteMany(Criteria.eq("blog_id", po.getId()));
+            }
+            rltBlogTagDao.deleteMany(Criteria.eq("blog_id", po.getId()));
+            if(!CollectionUtils.isEmpty(blogTags)) {
                 rltBlogTagDao.insertMany(blogTags, BlogConstants.ADD_BEAN_CONFIG);
             }
+
             String blogFile = Tools.getFilePath(WebContext.getBlogRootPath(), po.getContentUrl());
             FileUtils.createIfNotExists(blogFile, true);
             Tools.save(params.getContent(), blogFile);

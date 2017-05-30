@@ -3,10 +3,8 @@ package com.hx.blog_v2.util;
 import com.hx.blog_v2.dao.interf.BlogTagDao;
 import com.hx.blog_v2.dao.interf.BlogTypeDao;
 import com.hx.blog_v2.dao.interf.LinkDao;
-import com.hx.blog_v2.domain.po.BlogTagPO;
-import com.hx.blog_v2.domain.po.BlogTypePO;
-import com.hx.blog_v2.domain.po.LinkPO;
-import com.hx.blog_v2.domain.po.UploadFilePO;
+import com.hx.blog_v2.dao.interf.RoleDao;
+import com.hx.blog_v2.domain.po.*;
 import com.hx.common.interf.cache.Cache;
 import com.hx.log.cache.mem.LRUMCache;
 import com.hx.log.util.Log;
@@ -38,6 +36,8 @@ public class CacheContext {
     @Autowired
     private LinkDao linkDao;
     @Autowired
+    private RoleDao roleDao;
+    @Autowired
     private JdbcTemplate jdbcTemplate;
 
     /**
@@ -51,7 +51,11 @@ public class CacheContext {
     /**
      * 所有的友情链接
      */
-    private List<LinkPO> links;
+    private Map<String, LinkPO> linkById;
+    /**
+     * 所有的角色
+     */
+    private Map<String, RolePO> roleById;
     /**
      * blogId -> 给定的博客的下一个层数索引
      */
@@ -77,26 +81,27 @@ public class CacheContext {
     public void init() {
         blogTagsById = new LinkedHashMap<>();
         blogTypesById = new LinkedHashMap<>();
+        linkById = new LinkedHashMap<>();
+        roleById = new LinkedHashMap<>();
         try {
-            List<BlogTagPO> list = blogTagDao.findMany(Criteria.eq("deleted", "0"), BlogConstants.LOAD_ALL_CONFIG);
-            for (BlogTagPO po : list) {
+            List<BlogTagPO> tagList = blogTagDao.findMany(Criteria.eq("deleted", "0"), BlogConstants.LOAD_ALL_CONFIG);
+            for (BlogTagPO po : tagList) {
                 blogTagsById.put(po.getId(), po);
             }
-        } catch (Exception e) {
-            Log.err("error while load blog_tag's data !");
-        }
-        try {
-            List<BlogTypePO> list = blogTypeDao.findMany(Criteria.eq("deleted", "0"), BlogConstants.LOAD_ALL_CONFIG);
-            for (BlogTypePO po : list) {
+            List<BlogTypePO> typeList = blogTypeDao.findMany(Criteria.eq("deleted", "0"), BlogConstants.LOAD_ALL_CONFIG);
+            for (BlogTypePO po : typeList) {
                 blogTypesById.put(po.getId(), po);
             }
+            List<LinkPO> linkList = linkDao.findMany(Criteria.eq("deleted", "0"), BlogConstants.LOAD_ALL_CONFIG);
+            for (LinkPO po : linkList) {
+                linkById.put(po.getId(), po);
+            }
+            List<RolePO> roleList = roleDao.findMany(Criteria.eq("deleted", "0"), BlogConstants.LOAD_ALL_CONFIG);
+            for (RolePO po : roleList) {
+                roleById.put(po.getId(), po);
+            }
         } catch (Exception e) {
-            Log.err("error while load blog_type's data !");
-        }
-        try {
-            links = linkDao.findMany(Criteria.eq("deleted", "0"), BlogConstants.LOAD_ALL_CONFIG);
-        } catch (Exception e) {
-            Log.err("error while load link's data !");
+            Log.err("error while load cached's data[tag, type, link, role] !");
         }
     }
 
@@ -140,8 +145,28 @@ public class CacheContext {
      * @date 5/27/2017 9:25 PM
      * @since 1.0
      */
-    public List<LinkPO> allLinks() {
-        return links;
+    public Map<String, LinkPO> allLinks() {
+        return linkById;
+    }
+
+    public LinkPO link(String id) {
+        return linkById.get(id);
+    }
+
+    /**
+     * 获取所有的角色
+     *
+     * @return java.util.List<com.hx.blog_v2.domain.po.LinkPO>
+     * @author Jerry.X.He
+     * @date 5/27/2017 9:25 PM
+     * @since 1.0
+     */
+    public Map<String, RolePO> allRoles() {
+        return roleById;
+    }
+
+    public RolePO role(String id) {
+        return roleById.get(id);
     }
 
     /**

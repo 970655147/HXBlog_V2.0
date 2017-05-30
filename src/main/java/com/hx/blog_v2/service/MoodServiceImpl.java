@@ -12,6 +12,7 @@ import com.hx.blog_v2.service.interf.BaseServiceImpl;
 import com.hx.blog_v2.service.interf.MoodService;
 import com.hx.blog_v2.util.BlogConstants;
 import com.hx.blog_v2.util.DateUtils;
+import com.hx.common.interf.common.Page;
 import com.hx.common.interf.common.Result;
 import com.hx.common.result.SimplePage;
 import com.hx.common.util.ResultUtils;
@@ -61,7 +62,7 @@ public class MoodServiceImpl extends BaseServiceImpl<MoodPO> implements MoodServ
     }
 
     @Override
-    public Result adminList(SimplePage<AdminMoodVO> page) {
+    public Result adminList(Page<AdminMoodVO> page) {
         String sql = " select * from mood where deleted = 0 order by created_at desc limit ?, ? ";
         Object[] params = new Object[]{page.recordOffset(), page.getPageSize()};
 

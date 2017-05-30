@@ -28,10 +28,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
             $.ajax({
                 url: "/admin/link/list",
                 type: "GET",
-                data: {
-                    "pageNow": pageNow,
-                    "pageSize": pageSize
-                },
+                data: { },
                 success: function (resp) {
                     if (resp.success) {
                         var links = resp.data.list

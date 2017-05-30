@@ -1,13 +1,10 @@
 package com.hx.blog_v2.controller.admin;
 
 import com.hx.blog_v2.domain.form.BeanIdForm;
-import com.hx.blog_v2.domain.form.MoodSaveForm;
 import com.hx.blog_v2.domain.form.ResourceSaveForm;
-import com.hx.blog_v2.domain.vo.AdminMoodVO;
-import com.hx.blog_v2.service.interf.MoodService;
+import com.hx.blog_v2.domain.form.RoleResourceUpdateForm;
 import com.hx.blog_v2.service.interf.ResourceService;
 import com.hx.common.interf.common.Result;
-import com.hx.common.result.SimplePage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -35,15 +32,34 @@ public class ResourceController {
     }
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
-    public Result list(@RequestParam(defaultValue = "false") boolean spread) {
+    public Result list() {
 
-        return resourceService.adminList(spread);
+        return resourceService.adminList();
+    }
+
+
+    @RequestMapping(value = "/treeList", method = RequestMethod.GET)
+    public Result treeList(@RequestParam(defaultValue = "false") boolean spread) {
+
+        return resourceService.adminTreeList(spread);
+    }
+
+    @RequestMapping(value = "/roleResource/list", method = RequestMethod.GET)
+    public Result roleResourceList() {
+
+        return resourceService.roleResourceList();
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     public Result update(ResourceSaveForm params) {
 
         return resourceService.update(params);
+    }
+
+    @RequestMapping(value = "/roleResource/update", method = RequestMethod.POST)
+    public Result roleResourceUpdate(RoleResourceUpdateForm params) {
+
+        return resourceService.roleResourceUpdate(params);
     }
 
     @RequestMapping(value = "/remove", method = RequestMethod.POST)

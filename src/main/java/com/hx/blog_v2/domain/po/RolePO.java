@@ -27,6 +27,8 @@ public class RolePO implements JSONTransferable<RolePO> {
     private String id;
     @JSONField({"name", "name"})
     private String name;
+    @JSONField({"desc", "desc"})
+    private String desc;
     @JSONField({"createdAt", "created_at"})
     private String createdAt;
     @JSONField({"updatedAt", "updated_at"})
@@ -36,9 +38,10 @@ public class RolePO implements JSONTransferable<RolePO> {
     @JSONField({"deleted", "deleted"})
     private int deleted;
 
-    public RolePO(String name, int enable) {
+    public RolePO(String name, String desc, int enable) {
         this();
         this.name = name;
+        this.desc = desc;
         this.enable = enable;
     }
 
@@ -63,6 +66,14 @@ public class RolePO implements JSONTransferable<RolePO> {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getDesc() {
+        return desc;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
     }
 
     public String getCreatedAt() {

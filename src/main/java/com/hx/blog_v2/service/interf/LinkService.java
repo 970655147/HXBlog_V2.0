@@ -4,6 +4,7 @@ import com.hx.blog_v2.domain.form.BeanIdForm;
 import com.hx.blog_v2.domain.form.LinkSaveForm;
 import com.hx.blog_v2.domain.po.LinkPO;
 import com.hx.blog_v2.domain.vo.AdminLinkVO;
+import com.hx.common.interf.common.Page;
 import com.hx.common.interf.common.Result;
 import com.hx.common.result.SimplePage;
 
@@ -34,7 +35,7 @@ public interface LinkService extends BaseService<LinkPO> {
      * @date 5/20/2017 6:21 PM
      * @since 1.0
      */
-    Result adminList(SimplePage<AdminLinkVO> page);
+    Result adminList();
 
     /**
      * 更新给定的心情
