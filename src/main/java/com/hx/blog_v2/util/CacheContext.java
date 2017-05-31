@@ -6,6 +6,7 @@ import com.hx.common.interf.cache.Cache;
 import com.hx.log.cache.mem.LRUMCache;
 import com.hx.log.util.Log;
 import com.hx.mongo.criteria.Criteria;
+import com.hx.mongo.criteria.SortByCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
@@ -87,30 +88,8 @@ public class CacheContext {
         linksById = new LinkedHashMap<>();
         rolesById = new LinkedHashMap<>();
         resourcesById = new LinkedHashMap<>();
-        try {
-            List<BlogTagPO> tagList = blogTagDao.findMany(Criteria.eq("deleted", "0"), BlogConstants.LOAD_ALL_CONFIG);
-            for (BlogTagPO po : tagList) {
-                blogTagsById.put(po.getId(), po);
-            }
-            List<BlogTypePO> typeList = blogTypeDao.findMany(Criteria.eq("deleted", "0"), BlogConstants.LOAD_ALL_CONFIG);
-            for (BlogTypePO po : typeList) {
-                blogTypesById.put(po.getId(), po);
-            }
-            List<LinkPO> linkList = linkDao.findMany(Criteria.eq("deleted", "0"), BlogConstants.LOAD_ALL_CONFIG);
-            for (LinkPO po : linkList) {
-                linksById.put(po.getId(), po);
-            }
-            List<RolePO> roleList = roleDao.findMany(Criteria.eq("deleted", "0"), BlogConstants.LOAD_ALL_CONFIG);
-            for (RolePO po : roleList) {
-                rolesById.put(po.getId(), po);
-            }
-            List<ResourcePO> resourceList = resourceDao.findMany(Criteria.eq("deleted", "0"), BlogConstants.LOAD_ALL_CONFIG);
-            for (ResourcePO po : resourceList) {
-                resourcesById.put(po.getId(), po);
-            }
-        } catch (Exception e) {
-            Log.err("error while load cached's data[tag, type, link, role] !");
-        }
+
+        refresh();
     }
 
     /**
@@ -279,5 +258,49 @@ public class CacheContext {
         }
     }
 
+    // -------------------- 辅助方法 --------------------------
+
+    /**
+     * 刷新当前系统的配置
+     *
+     * @return void
+     * @author Jerry.X.He
+     * @date 5/31/2017 7:49 PM
+     * @since 1.0
+     */
+    public void refresh() {
+        blogTagsById.clear();
+        blogTypesById.clear();
+        linksById.clear();
+        rolesById.clear();
+        resourcesById.clear();
+
+        try {
+            List<BlogTagPO> tagList = blogTagDao.findMany(Criteria.eq("deleted", "0"), BlogConstants.LOAD_ALL_CONFIG);
+            for (BlogTagPO po : tagList) {
+                blogTagsById.put(po.getId(), po);
+            }
+            List<BlogTypePO> typeList = blogTypeDao.findMany(Criteria.eq("deleted", "0"), BlogConstants.LOAD_ALL_CONFIG);
+            for (BlogTypePO po : typeList) {
+                blogTypesById.put(po.getId(), po);
+            }
+            List<LinkPO> linkList = linkDao.findMany(Criteria.eq("deleted", "0"), Criteria.limitNothing(),
+                    Criteria.sortBy("sort", SortByCriteria.ASC), BlogConstants.LOAD_ALL_CONFIG);
+            for (LinkPO po : linkList) {
+                linksById.put(po.getId(), po);
+            }
+            List<RolePO> roleList = roleDao.findMany(Criteria.eq("deleted", "0"), BlogConstants.LOAD_ALL_CONFIG);
+            for (RolePO po : roleList) {
+                rolesById.put(po.getId(), po);
+            }
+            List<ResourcePO> resourceList = resourceDao.findMany(Criteria.eq("deleted", "0"), Criteria.limitNothing(),
+                    Criteria.sortBy("sort", SortByCriteria.ASC), BlogConstants.LOAD_ALL_CONFIG);
+            for (ResourcePO po : resourceList) {
+                resourcesById.put(po.getId(), po);
+            }
+        } catch (Exception e) {
+            Log.err("error while load cached's data[tag, type, link, role] !");
+        }
+    }
 
 }

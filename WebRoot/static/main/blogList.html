@@ -34,6 +34,8 @@
 
 </head>
 <body>
+<div id="topEle"></div>
+
 <div class="header" id="headerNav"></div><!--头部导航结束-->
 
 <div class="header-bottom" id="bannerNav"></div><!--博客标题结束-->
@@ -51,13 +53,14 @@
                     <div class="col-md-6 wthree-left wow fadeInDown" data-wow-duration=".8s" data-wow-delay=".2s"
                          style="width: 250px;height: 250px;">
                         <div class="tch-img">
-                            <a :href="'/static/main/blogDetail.html?id=' + blog.id" >
+                            <a :href="'/static/main/blogDetail.html?id=' + blog.id">
                                 <img :src="blog.coverUrl" class="img-responsive" :alt="blog.author">
                             </a>
                         </div>
                     </div>
                     <div class="col-md-6 wthree-right wow fadeInDown" data-wow-duration=".8s" data-wow-delay=".2s">
-                        <h6><a :href="'/static/main/blogDetail.html?id=' + blog.id" th:text="${blog.title}">{{blog.title}}</a></h6>
+                        <h6><a :href="'/static/main/blogDetail.html?id=' + blog.id" th:text="${blog.title}">{{blog.title}}</a>
+                        </h6>
                         <h6> by <a> {{blog.author}} </a>
                             <span> {{blog.createdAt}} </span></h6>
                         <p class="summary"> {{blog.summary}} </p>

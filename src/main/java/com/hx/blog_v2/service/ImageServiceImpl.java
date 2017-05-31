@@ -3,6 +3,7 @@ package com.hx.blog_v2.service;
 import com.hx.blog_v2.dao.interf.ImageDao;
 import com.hx.blog_v2.domain.form.BeanIdForm;
 import com.hx.blog_v2.domain.form.ImageSaveForm;
+import com.hx.blog_v2.domain.form.ImageSearchForm;
 import com.hx.blog_v2.domain.form.MoodSaveForm;
 import com.hx.blog_v2.domain.mapper.AdminImageVOMapper;
 import com.hx.blog_v2.domain.mapper.AdminMoodVOMapper;
@@ -48,7 +49,7 @@ public class ImageServiceImpl extends BaseServiceImpl<ImagePO> implements ImageS
 
     @Override
     public Result add(ImageSaveForm params) {
-        ImagePO po = new ImagePO(params.getTitle(), params.getUrl(), params.getEnable());
+        ImagePO po = new ImagePO(params.getTitle(), params.getUrl(), params.getType(), params.getEnable());
 
         try {
             imageDao.save(po, BlogConstants.ADD_BEAN_CONFIG);
@@ -60,29 +61,29 @@ public class ImageServiceImpl extends BaseServiceImpl<ImagePO> implements ImageS
     }
 
     @Override
-    public Result list() {
-        String sql = " select * from images where deleted = 0 and enable = 1 order by created_at ";
+    public Result imgShowList() {
+        String sql = " select * from images where deleted = 0 and enable = 1 and type = '" + BlogConstants.IMG_TYPE_IMG_SHOW + "' order by created_at ";
 
         List<ImageVO> list = jdbcTemplate.query(sql, new ImageVOMapper());
         return ResultUtils.success(list);
     }
 
     @Override
-    public Result adminList(Page<AdminImageVO> page) {
-        String sql = " select * from images where deleted = 0 order by created_at desc limit ?, ? ";
-        Object[] params = new Object[]{page.recordOffset(), page.getPageSize()};
+    public Result adminList(ImageSearchForm params, Page<AdminImageVO> page) {
+        String sql = " select * from images where deleted = 0 and type = '" + params.getType() + "' order by created_at desc limit ?, ? ";
+        Object[] sqlParams = new Object[]{page.recordOffset(), page.getPageSize()};
 
-        List<AdminImageVO> list = jdbcTemplate.query(sql, params, new AdminImageVOMapper());
+        List<AdminImageVO> list = jdbcTemplate.query(sql, sqlParams, new AdminImageVOMapper());
         page.setList(list);
         return ResultUtils.success(page);
     }
 
     @Override
     public Result update(ImageSaveForm params) {
-        ImagePO po = new ImagePO(params.getTitle(), params.getUrl(), params.getEnable());
-
+        ImagePO po = new ImagePO(params.getTitle(), params.getUrl(), params.getType(), params.getEnable());
         po.setId(params.getId());
         po.setUpdatedAt(DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS));
+
         try {
             long modified = imageDao.updateById(po, BlogConstants.UPDATE_BEAN_CONFIG)
                     .getModifiedCount();
@@ -112,4 +113,8 @@ public class ImageServiceImpl extends BaseServiceImpl<ImagePO> implements ImageS
         }
         return ResultUtils.success(params.getId());
     }
+
+    // -------------------- 辅助方法 --------------------------
+
+
 }

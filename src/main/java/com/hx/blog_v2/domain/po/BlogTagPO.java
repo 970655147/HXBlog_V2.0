@@ -77,6 +77,14 @@ public class BlogTagPO implements JSONTransferable<BlogTagPO> {
         this.updatedAt = updatedAt;
     }
 
+    public int getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(int deleted) {
+        this.deleted = deleted;
+    }
+
     public static final BlogTagPO PROTO_BEAN = new BlogTagPO();
 
     @Override

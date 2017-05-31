@@ -62,9 +62,13 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourcePO> implements 
         if(contains(resourcesById, params.getName())) {
             return ResultUtils.failed("该资源已经存在 !");
         }
+        ResourcePO parentPo = resourcesById.get(params.getParentId());
+        if(parentPo == null) {
+            return ResultUtils.failed("该资源父节点不存在 !");
+        }
 
         ResourcePO po = new ResourcePO(params.getName(), params.getIconClass(), params.getUrl(),
-                params.getParentId(), params.getSort(), params.getEnable());
+                params.getParentId(), params.getSort(), parentPo.getLevel()+1, params.getEnable());
         try {
             resourceDao.save(po, BlogConstants.ADD_BEAN_CONFIG);
             resourcesById.put(po.getId(), po);

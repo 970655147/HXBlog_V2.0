@@ -5,6 +5,9 @@ var $;
 initMenu()
 initStatistics()
 
+$("#refreshConfig").click(function() {
+    refreshConfig();
+})
 
 layui.define(['element', 'layer', 'util', 'pagesize', 'form'], function (exports) {
     $ = layui.jquery;
@@ -238,6 +241,14 @@ layui.define(['element', 'layer', 'util', 'pagesize', 'form'], function (exports
     exports('main', {});
 });
 
+/**
+ * 切换选项卡
+ * @param $
+ * @param element
+ * @param title
+ * @param url
+ * @param id
+ */
 function switchTab($, element, title, url, id) {
     var tabTitleDiv = $('.layui-tab[lay-filter=\'tab\']').children('.layui-tab-title');
     var exist = tabTitleDiv.find('li[lay-id=' + id + ']');
@@ -332,5 +343,21 @@ function initStatistics() {
             }
         }
     });
+}
+
+/**
+ * 申请刷新系统缓存
+ */
+function refreshConfig() {
+    $.ajax({
+        url: "/admin/system/refreshConfig",
+        data: { },
+        type: "POST",
+        success: function (resp) {
+            if (resp.success) {
+                layer.alert("刷新缓存配置成功 !")
+            }
+        }
+    })
 }
 

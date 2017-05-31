@@ -2,6 +2,7 @@ package com.hx.blog_v2.controller.admin;
 
 import com.hx.blog_v2.domain.form.BeanIdForm;
 import com.hx.blog_v2.domain.form.ImageSaveForm;
+import com.hx.blog_v2.domain.form.ImageSearchForm;
 import com.hx.blog_v2.domain.vo.AdminImageVO;
 import com.hx.blog_v2.service.interf.ImageService;
 import com.hx.common.interf.common.Result;
@@ -32,9 +33,9 @@ public class ImageController {
     }
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
-    public Result list(SimplePage<AdminImageVO> page) {
+    public Result list(ImageSearchForm params, SimplePage<AdminImageVO> page) {
 
-        return imageService.adminList(page);
+        return imageService.adminList(params, page);
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST)

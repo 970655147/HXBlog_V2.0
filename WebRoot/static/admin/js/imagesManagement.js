@@ -16,6 +16,12 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
     var element = layui.element();
     var laypageId = 'pageNav';
 
+    /**
+     * 提取type
+     * @type {Object}
+     */
+    var params = getParamsFromUrl(location.href)
+    var imageType = isEmpty(params.type) ? "dummy" : params.type
 
     initilData(1);
     //页数据初始化
@@ -30,8 +36,9 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
                 url: "/admin/image/list",
                 type: "GET",
                 data: {
-                    pageNow: pageNow,
-                    pageSize: pageSize
+                    "type" : imageType,
+                    "pageNow": pageNow,
+                    "pageSize" : pageSize
                 },
                 success: function (resp) {
                     if (resp.success) {
@@ -78,11 +85,13 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
         }, 500);
     }
 
-    form.on('submit(addMoodSubmit)', function (data) {
+    form.on('submit(addImageSubmit)', function (data) {
+        var params = $("#addImageForm").serialize()
+        params += ("&type=" + imageType)
         $.ajax({
             url: "/admin/image/add",
             type: "POST",
-            data: $("#addImageForm").serialize(),
+            data: params,
             success: function (resp) {
                 if (resp.success) {
                     layer.alert('添加图片成功!', {
@@ -99,11 +108,13 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
         return false
     })
 
-    form.on('submit(updateMoodSubmit)', function (data) {
+    form.on('submit(updateImageSubmit)', function (data) {
+        var params = $("#addImageForm").serialize()
+        params += ("&type=" + imageType)
         $.ajax({
             url: "/admin/image/update",
             type: "POST",
-            data: $("#updateImageForm").serialize(),
+            data: params,
             success: function (resp) {
                 if (resp.success) {
                     var addTopId = layer.alert('更新图片成功 !', {
@@ -138,7 +149,7 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
             html += '<input type="radio" name="enable" value="0" title="否" />';
             html += '<div class="layui-form-item">';
             html += '<div class="layui-input-inline" style="margin:10px auto 0 auto;display: block;float: none;">';
-            html += '<button class="layui-btn" id="submit"  lay-submit="" lay-filter="addMoodSubmit" >添加</button>';
+            html += '<button class="layui-btn" id="submit"  lay-submit="" lay-filter="addImageSubmit" >添加</button>';
             html += '<button type="reset" class="layui-btn layui-btn-primary">重置</button>';
             html += '</div>';
             html += '</div>';
@@ -175,7 +186,7 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
             }
             html += '<div class="layui-form-item">';
             html += '<div class="layui-input-inline" style="margin:10px auto 0 auto;display: block;float: none;">';
-            html += '<button class="layui-btn" id="submit"  lay-submit="" lay-filter="updateMoodSubmit" >立即修改</button>';
+            html += '<button class="layui-btn" id="submit"  lay-submit="" lay-filter="updateImageSubmit" >立即修改</button>';
             html += '<button type="reset" class="layui-btn layui-btn-primary">重置</button>';
             html += '</div>';
             html += '</div>';

@@ -4,6 +4,7 @@ import com.hx.blog_v2.dao.interf.BlogCommentDao;
 import com.hx.blog_v2.dao.interf.BlogDao;
 import com.hx.blog_v2.dao.interf.BlogExDao;
 import com.hx.blog_v2.dao.interf.LinkDao;
+import com.hx.blog_v2.domain.POVOTransferUtils;
 import com.hx.blog_v2.domain.mapper.*;
 import com.hx.blog_v2.domain.po.BlogTagPO;
 import com.hx.blog_v2.domain.po.BlogTypePO;
@@ -106,10 +107,10 @@ public class IndexServiceImpl extends BaseServiceImpl<Object> implements IndexSe
 
     @Override
     public Result adminMenus() {
-        String resourceSql = " select * from resource where enable = 1 and deleted = 0 order by sort ";
-        List<ResourceVO> resources =jdbcTemplate.query(resourceSql, new ResourceVOMapper());
-        if(CollectionUtils.isEmpty(resources) ) {
-            return ResultUtils.success(new JSONObject());
+        Map<String, ResourcePO> resourcesById = cacheContext.allResources();
+        List<ResourceVO> resources = new ArrayList<>(resourcesById.size());
+        for(Map.Entry<String, ResourcePO> entry : resourcesById.entrySet()) {
+            resources.add(POVOTransferUtils.resourcePO2ResourceVO(entry.getValue()));
         }
 
         JSONObject root = TreeUtils.generateTree(resources, new TreeInfoExtractor<ResourceVO>() {

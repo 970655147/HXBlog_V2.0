@@ -29,6 +29,8 @@ public class ImagePO implements JSONTransferable<ImagePO> {
     private String title;
     @JSONField({"url", "url"})
     private String url;
+    @JSONField({"type", "type"})
+    private String type;
     @JSONField({"createdAt", "created_at"})
     private String createdAt;
     @JSONField({"updatedAt", "updated_at"})
@@ -38,10 +40,11 @@ public class ImagePO implements JSONTransferable<ImagePO> {
     @JSONField({"deleted", "deleted"})
     private int deleted;
 
-    public ImagePO(String title, String url, int enable) {
+    public ImagePO(String title, String url, String type, int enable) {
         this();
         this.title = title;
         this.url = url;
+        this.type = type;
         this.enable = enable;
     }
 
@@ -74,6 +77,14 @@ public class ImagePO implements JSONTransferable<ImagePO> {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getCreatedAt() {

@@ -35,6 +35,8 @@ public class ResourcePO implements JSONTransferable<ResourcePO> {
     private int sort;
     @JSONField({"parentId", "parent_id"})
     private String parentId;
+    @JSONField({"level", "level"})
+    private int level;
     @JSONField({"createdAt", "created_at"})
     private String createdAt;
     @JSONField({"updatedAt", "updated_at"})
@@ -44,13 +46,15 @@ public class ResourcePO implements JSONTransferable<ResourcePO> {
     @JSONField({"deleted", "deleted"})
     private int deleted;
 
-    public ResourcePO(String name, String iconClass, String url, String parentId, int sort, int enable) {
+    public ResourcePO(String name, String iconClass, String url, String parentId, int sort,
+                      int level, int enable) {
         this();
         this.name = name;
         this.iconClass = iconClass;
         this.url = url;
         this.parentId = parentId;
         this.sort = sort;
+        this.level = level;
         this.enable = enable;
     }
 
@@ -107,6 +111,14 @@ public class ResourcePO implements JSONTransferable<ResourcePO> {
 
     public void setParentId(String parentId) {
         this.parentId = parentId;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
     }
 
     public String getCreatedAt() {

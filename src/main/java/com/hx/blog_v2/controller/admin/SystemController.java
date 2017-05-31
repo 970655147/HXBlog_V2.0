@@ -1,7 +1,9 @@
 package com.hx.blog_v2.controller.admin;
 
+import com.hx.blog_v2.util.CacheContext;
 import com.hx.common.interf.common.Result;
 import com.hx.common.util.ResultUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,9 +19,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/admin/system")
 public class SystemController {
 
-    @RequestMapping(value = "/flushCache", method = RequestMethod.POST)
+    @Autowired
+    private CacheContext cacheContext;
+
+    @RequestMapping(value = "/refreshConfig", method = RequestMethod.POST)
     public Result login() {
 
+        cacheContext.refresh();
         return ResultUtils.success("succ");
 
     }

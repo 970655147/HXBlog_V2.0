@@ -12,6 +12,7 @@ public class ImageSaveForm {
     private String id;
     private String title;
     private String url;
+    private String type;
     private int enable;
 
     public ImageSaveForm() {
@@ -39,6 +40,14 @@ public class ImageSaveForm {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public int getEnable() {

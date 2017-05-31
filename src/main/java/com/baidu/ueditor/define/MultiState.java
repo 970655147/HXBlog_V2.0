@@ -83,7 +83,7 @@ public class MultiState implements State {
 			
 		}
 		
-		builder.append( ", \"list\": [" );
+		builder.append( ", \"imgShowList\": [" );
 		
 		
 		Iterator<State> statIte = this.stateList.iterator();

@@ -73,8 +73,8 @@ public class ActionEnter {
 			
 //			case ActionMap.CATCH_IMAGE:
 //				conf = configManager.getConfig( actionCode );
-//				String[] list = this.request.getParameterValues( (String)conf.get( "fieldName" ) );
-//				state = new ImageHunter( conf ).capture( list );
+//				String[] imgShowList = this.request.getParameterValues( (String)conf.get( "fieldName" ) );
+//				state = new ImageHunter( conf ).capture( imgShowList );
 //				break;
 //				
 //			case ActionMap.LIST_IMAGE:

@@ -233,6 +233,19 @@ public final class BlogConstants {
     public static String RESOURCE_ROOT_PARENT_ID = "-1";
 
     /**
+     * 图片类型 - 图片墙
+     */
+    public static String IMG_TYPE_IMG_SHOW = "imgShow";
+    /**
+     * 图片类型 - 头像
+     */
+    public static String IMG_TYPE_HEAD_IMG = "headImg";
+    /**
+     * 系统所支持的图片类型枚举
+     */
+    public static final Set<String> SUPPORTED_IMAGE_TYPES = Tools.asSet(IMG_TYPE_IMG_SHOW, IMG_TYPE_HEAD_IMG);
+
+    /**
      * 上传到服务器的图片的 url 前缀
      */
     @Value("image.url.prefix")

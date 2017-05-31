@@ -29,6 +29,9 @@
         </div>
         <ul class="ht-nav">
             <li class="ht-nav-item">
+                <a href="javascript:;" id="refreshConfig"><i class="fa fa-refresh fa-fw" style="padding-right:5px;"></i>刷新缓存</a>
+            </li>
+            <li class="ht-nav-item">
                 <a target="_blank" href="/static/main/index.html">前台入口</a>
             </li>
             <li class="ht-nav-item">
@@ -154,21 +157,6 @@
     layui.config({
         base: './js/'
     }).use('main');
-</script>
-
-<script type="text/javascript" >
-    function refreshSystem() {
-        $.ajax({
-            url: "/admin/system/flushCache",
-            data: { },
-            type: "POST",
-            success: function (resp) {
-                if (resp.success) {
-                    alert("刷新系统缓存成功!")
-                }
-            }
-        })
-    }
 </script>
 
 

@@ -1,49 +1,10 @@
-function b() {
-	h = $(window).height();
-	t = $(document).scrollTop();
-	if (t > h) {
-		$('#gotop').show();
-	} else {
-		$('#gotop').hide();
-	}
-}
-$(document).ready(function(e) {
-	b();
-	$('#gotop').click(function() {
-		$(document).scrollTop(0);
-	})
-});
-
-$(window).scroll(function(e) {
-	b();
-})
-
-
-/*绑定事件*/
-function addEvent(obj, sType, fn) {
-	if (obj.addEventListener) {
-		obj.addEventListener(sType, fn, false);
-	} else {
-		obj.attachEvent('on' + sType, fn);
-	}
-};
-function removeEvent(obj, sType, fn) {
-	if (obj.removeEventListener) {
-		obj.removeEventListener(sType, fn, false);
-	} else {
-		obj.detachEvent('on' + sType, fn);
-	}
-};
-function prEvent(ev) {
-	var oEvent = ev || window.event;
-	if (oEvent.preventDefault) {
-		oEvent.preventDefault();
-	}
-	return oEvent;
-}
 
 /*页面载入后*/
-window.onload = function() {
+$(document).ready(function() {
+    $('#oImg').dblclick(function() {
+        $("html,body").animate({scrollTop: $("#topEle").offset().top}, 1000);
+    })
+
 	var oImg = document.getElementById('oImg');
 	/*拖拽功能*/
 	(function() {
@@ -78,4 +39,27 @@ window.onload = function() {
 				});
 
 	})();
+});
+
+/*绑定事件*/
+function addEvent(obj, sType, fn) {
+    if (obj.addEventListener) {
+        obj.addEventListener(sType, fn, false);
+    } else {
+        obj.attachEvent('on' + sType, fn);
+    }
 };
+function removeEvent(obj, sType, fn) {
+    if (obj.removeEventListener) {
+        obj.removeEventListener(sType, fn, false);
+    } else {
+        obj.detachEvent('on' + sType, fn);
+    }
+};
+function prEvent(ev) {
+    var oEvent = ev || window.event;
+    if (oEvent.preventDefault) {
+        oEvent.preventDefault();
+    }
+    return oEvent;
+}

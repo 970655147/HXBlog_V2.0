@@ -117,7 +117,7 @@
                                                 </a>
                                                 <a href="javascript:void(0)"
                                                    class="wow fadeInUp animated animated" data-wow-delay=".3s"
-                                                   style="visibility: visible; animation-delay: 0.5s; animation-name: fadeInUp;">
+                                                   style="visibility: visible; animation-delay: 0.5s; animation-name: fadeInUp;" v-if="idx+1 < images.length" >
                                                     <img :src="images[idx+1].url" :alt="images[idx+1].title"
                                                          class="img-responsive zoom-img">
                                                 </a>
@@ -125,13 +125,13 @@
                                             <div class="gallery-grid">
                                                 <a href="javascript:void(0)"
                                                    class="wow fadeInUp animated animated" data-wow-delay=".3s"
-                                                   style="visibility: visible; animation-delay: 0.5s; animation-name: fadeInUp;">
+                                                   style="visibility: visible; animation-delay: 0.5s; animation-name: fadeInUp;" v-if="idx+2 < images.length">
                                                     <img :src="images[idx+2].url" :alt="images[idx+2].title"
                                                          class="img-responsive zoom-img">
                                                 </a>
                                                 <a href="javascript:void(0)"
                                                    class="wow fadeInUp animated animated" data-wow-delay=".3s"
-                                                   style="visibility: visible; animation-delay: 0.5s; animation-name: fadeInUp;">
+                                                   style="visibility: visible; animation-delay: 0.5s; animation-name: fadeInUp;" v-if="idx+3 < images.length">
                                                     <img :src="images[idx+3].url" :alt="images[idx+3].title"
                                                          class="img-responsive zoom-img">
                                                 </a>

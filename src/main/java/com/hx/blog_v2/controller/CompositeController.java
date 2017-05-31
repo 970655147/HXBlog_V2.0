@@ -55,7 +55,7 @@ public class CompositeController {
         if(! moodsResult.isSuccess()) {
             return moodsResult;
         }
-        Result imagesResult = imageService.list();
+        Result imagesResult = imageService.imgShowList();
         if(! imagesResult.isSuccess()) {
             return imagesResult;
         }

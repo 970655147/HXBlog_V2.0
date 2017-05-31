@@ -2,6 +2,7 @@ package com.hx.blog_v2.service.interf;
 
 import com.hx.blog_v2.domain.form.BeanIdForm;
 import com.hx.blog_v2.domain.form.ImageSaveForm;
+import com.hx.blog_v2.domain.form.ImageSearchForm;
 import com.hx.blog_v2.domain.po.ImagePO;
 import com.hx.blog_v2.domain.vo.AdminImageVO;
 import com.hx.common.interf.common.Page;
@@ -17,7 +18,7 @@ import com.hx.common.interf.common.Result;
 public interface ImageService extends BaseService<ImagePO> {
 
     /**
-     * 增加一个 照片
+     * 增加一个 图片墙照片
      *
      * @return result
      * @author Jerry.X.He
@@ -34,7 +35,7 @@ public interface ImageService extends BaseService<ImagePO> {
      * @date 5/20/2017 6:21 PM
      * @since 1.0
      */
-    Result list();
+    Result imgShowList();
 
     /**
      * 搜索符合的条件的照片列表
@@ -44,7 +45,7 @@ public interface ImageService extends BaseService<ImagePO> {
      * @date 5/20/2017 6:21 PM
      * @since 1.0
      */
-    Result adminList(Page<AdminImageVO> page);
+    Result adminList(ImageSearchForm params, Page<AdminImageVO> page);
 
     /**
      * 更新给定的照片

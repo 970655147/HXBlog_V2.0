@@ -55,7 +55,7 @@ public class MoodServiceImpl extends BaseServiceImpl<MoodPO> implements MoodServ
 
     @Override
     public Result list() {
-        String sql = " select * from mood where deleted = 0 and enable = 1 order by created_at ";
+        String sql = " select * from mood where deleted = 0 and enable = 1 order by created_at desc ";
 
         List<MoodVO> list = jdbcTemplate.query(sql, new MoodVOMapper());
         return ResultUtils.success(list);
