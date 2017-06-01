@@ -30,12 +30,13 @@ public interface ImageService extends BaseService<ImagePO> {
     /**
      * 搜索符合的条件的照片列表
      *
+     * @param params 搜索的图片的参数
      * @return result
      * @author Jerry.X.He
      * @date 5/20/2017 6:21 PM
      * @since 1.0
      */
-    Result imgShowList();
+    Result imageList(ImageSearchForm params);
 
     /**
      * 搜索符合的条件的照片列表

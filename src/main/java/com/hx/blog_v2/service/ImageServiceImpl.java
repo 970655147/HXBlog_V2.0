@@ -60,9 +60,8 @@ public class ImageServiceImpl extends BaseServiceImpl<ImagePO> implements ImageS
         return ResultUtils.success(po.getId());
     }
 
-    @Override
-    public Result imgShowList() {
-        String sql = " select * from images where deleted = 0 and enable = 1 and type = '" + BlogConstants.IMG_TYPE_IMG_SHOW + "' order by created_at ";
+    public Result imageList(ImageSearchForm params) {
+        String sql = " select * from images where deleted = 0 and enable = 1 and type = '" + params.getType() + "' order by created_at ";
 
         List<ImageVO> list = jdbcTemplate.query(sql, new ImageVOMapper());
         return ResultUtils.success(list);

@@ -97,7 +97,7 @@ function headerFooterInit() {
                 $("#todayVisited").text(data.todayVisited)
 
                 heartClick("#projHeart", "#projLikeCnt", function (isPrise) {
-                    console.log(isPrise)
+
                 })
                 selectHeader()
             }

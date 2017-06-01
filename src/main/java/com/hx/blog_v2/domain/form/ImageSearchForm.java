@@ -11,6 +11,10 @@ public class ImageSearchForm {
 
     private String type;
 
+    public ImageSearchForm(String type) {
+        this.type = type;
+    }
+
     public ImageSearchForm() {
     }
 

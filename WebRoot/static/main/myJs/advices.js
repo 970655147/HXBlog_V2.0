@@ -42,12 +42,11 @@ function contentInit() {
             that.initEmoji()
 
             heartClick("#blogHeart", "#blogLikeCount", function(isPrise) {
-                console.log(isPrise)
+
             })
         },
         methods: {
             replyFunc : function(event) {
-                console.log($(event.currentTarget))
                 var floorInfo = $(event.currentTarget).parents(".replyDiv").find(".floorInfo")
 
                 $("#comment").text("[reply]" + floorInfo.attr("name") + "[/reply]\r\n")

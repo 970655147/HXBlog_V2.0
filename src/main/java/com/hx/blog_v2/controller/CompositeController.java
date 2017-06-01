@@ -1,9 +1,11 @@
 package com.hx.blog_v2.controller;
 
+import com.hx.blog_v2.domain.form.ImageSearchForm;
 import com.hx.blog_v2.service.interf.BlogTagService;
 import com.hx.blog_v2.service.interf.BlogTypeService;
 import com.hx.blog_v2.service.interf.ImageService;
 import com.hx.blog_v2.service.interf.MoodService;
+import com.hx.blog_v2.util.BlogConstants;
 import com.hx.common.interf.common.Result;
 import com.hx.common.util.ResultUtils;
 import com.hx.json.JSONObject;
@@ -55,7 +57,8 @@ public class CompositeController {
         if(! moodsResult.isSuccess()) {
             return moodsResult;
         }
-        Result imagesResult = imageService.imgShowList();
+        ImageSearchForm imgShowSearch = new ImageSearchForm(BlogConstants.IMG_TYPE_IMG_SHOW);
+        Result imagesResult = imageService.imageList(imgShowSearch);
         if(! imagesResult.isSuccess()) {
             return imagesResult;
         }

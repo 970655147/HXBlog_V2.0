@@ -142,8 +142,8 @@ public class UploadFileServiceImpl extends BaseServiceImpl<UploadFilePO> impleme
             }
 //			case ActionMap.CATCH_IMAGE:
 //				conf = configManager.getConfig( actionCode );
-//				String[] imgShowList = this.request.getParameterValues( (String)conf.get( "fieldName" ) );
-//				state = new ImageHunter( conf ).capture( imgShowList );
+//				String[] imageList = this.request.getParameterValues( (String)conf.get( "fieldName" ) );
+//				state = new ImageHunter( conf ).capture( imageList );
 //				break;
 //
 //			case ActionMap.LIST_IMAGE:

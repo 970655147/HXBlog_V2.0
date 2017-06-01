@@ -1,6 +1,8 @@
 package com.hx.blog_v2.controller;
 
+import com.hx.blog_v2.domain.form.ImageSearchForm;
 import com.hx.blog_v2.service.interf.ImageService;
+import com.hx.blog_v2.util.BlogConstants;
 import com.hx.common.interf.common.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,10 +23,18 @@ public class ImageController {
     @Autowired
     private ImageService imageService;
 
-    @RequestMapping(value = "/list", method = RequestMethod.GET)
-    public Result list() {
+    @RequestMapping(value = "/imgShowList", method = RequestMethod.GET)
+    public Result imgShowList() {
 
-        return imageService.imgShowList();
+        ImageSearchForm params = new ImageSearchForm(BlogConstants.IMG_TYPE_IMG_SHOW);
+        return imageService.imageList(params);
+    }
+
+    @RequestMapping(value = "/headImgList", method = RequestMethod.GET)
+    public Result headImgList() {
+
+        ImageSearchForm params = new ImageSearchForm(BlogConstants.IMG_TYPE_IMG_SHOW);
+        return imageService.imageList(params);
     }
 
 }

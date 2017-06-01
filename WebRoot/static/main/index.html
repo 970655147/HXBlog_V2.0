@@ -121,22 +121,22 @@
                     <div class="tech-no">
                         <div class="tc-ch ">
                             <h3>
-                                <a :href="'/static/main/blogList.html?id=' + recommend.id">推荐 :
+                                <a :href="'/static/main/blogDetail.html?id=' + recommend.id">推荐 :
                                     <span>{{recommend.title}}</span>
                                 </a>
                             </h3>
                             <h6></h6>
                             <div class="tch-img">
-                                <a :href="'/static/main/blogList.html?id=' + recommend.id">
+                                <a :href="'/static/main/blogDetail.html?id=' + recommend.id">
                                     <img :src="recommend.coverUrl" class="img-responsive"
                                          :alt="recommend.author" width="300px" height="300px">
                                 </a>
                             </div>
-                            <h6> by <a> {{recommend.author}} </a> <span> {{recommend.createdAt}} </span>
+                            <h6> by <a :href="'/static/main/userHome.html?id=' + recommend.author" > {{recommend.author}} </a> <span> {{recommend.createdAt}} </span>
                             </h6>
                             <p> {{recommend.summary}} </p>
                             <div class="bht1">
-                                <a :href="'/static/main/blogList?id=' + recommend.id" href="blog.html">继续阅读</a>
+                                <a :href="'/static/main/blogDetail.html?id=' + recommend.id">继续阅读</a>
                             </div>
 
                             <div class="clearfix"></div>
@@ -151,19 +151,19 @@
                                     <div class="col-md-6  w3ls-left wow fadeInDown" v-for="blog in latestBlogL1">
                                         <div class="tc-ch">
                                             <div class="tch-img">
-                                                <a :href="'/static/main/blogList?id=' + blog.id">
+                                                <a :href="'/static/main/blogDetail.html?id=' + blog.id">
                                                     <img :src="blog.coverUrl" class="img-responsive" width="300px"
                                                          height="300px">
                                                 </a>
                                             </div>
-                                            <h6><a :href="'/static/main/blogList?id=' + blog.id" href="blog.html">{{blog.title}}</a>
+                                            <h6><a :href="'/static/main/blogDetail.html?id=' + blog.id">{{blog.title}}</a>
                                             </h6>
                                             <h6> by <a>{{blog.author}}</a>
                                                 <span>{{blog.createdAt}}</span>
                                             </h6>
                                             <p class="summary">{{blog.summary}}</p>
                                             <div class="bht1">
-                                                <a :href="'/static/main/blogList?id=' + blog.id">查看更多</a>
+                                                <a :href="'/static/main/blogDetail.html?id=' + blog.id">查看更多</a>
                                             </div>
                                             <div class="soci">
                                                 <p style="padding-right: 1.8em">
@@ -193,7 +193,7 @@
                                 <div class="col-md-6 wthree-left wow fadeInDown" data-wow-duration=".8s"
                                      data-wow-delay=".2s" style="width: 250px;height: 250px;">
                                     <div class="tch-img">
-                                        <a :href="'/blog/' + blog.id" href="blog.html">
+                                        <a :href="'/static/main/blogDetail.html?id=' + blog.id" >
                                             <img :src="blog.coverUrl" class="img-responsive" width="300px"
                                                  height="300px">
                                         </a>
@@ -202,7 +202,7 @@
                                 <div class="col-md-6 wthree-right wow fadeInDown" data-wow-duration=".8s"
                                      data-wow-delay=".2s">
                                     <h6>
-                                        <a :href="'/blog/' + blog.id">{{blog.title}}</a>
+                                        <a :href="'/static/main/blogDetail.html?id=' + blog.id">{{blog.title}}</a>
                                     </h6>
                                     <h6> by
                                         <a>{{blog.author}}</a>
@@ -210,7 +210,7 @@
                                     </h6>
                                     <p class="summary">{{blog.summary}}</p>
                                     <div class="bht1">
-                                        <a :href="'/blog/' + blog.id">查看更多</a>
+                                        <a :href="'/static/main/blogDetail.html?id=' + blog.id">查看更多</a>
                                     </div>
                                     <div class="soci">
                                         <p>
