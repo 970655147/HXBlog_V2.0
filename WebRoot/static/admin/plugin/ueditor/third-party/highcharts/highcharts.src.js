@@ -13753,7 +13753,7 @@ Series.prototype = {
 			i,
 			tooltipPoints = []; // a lookup array for each pixel in the x dimension
 
-		// don't waste resources if tracker is disabled
+		// don't waste interfs if tracker is disabled
 		if (series.options.enableMouseTracking === false) {
 			return;
 		}

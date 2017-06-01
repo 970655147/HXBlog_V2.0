@@ -1,30 +1,23 @@
 package com.hx.blog_v2.domain.vo;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
- * 用户角色关联信息
+ * 博客的一条记录
  *
  * @author Jerry.X.He <970655147@qq.com>
  * @version 1.0
- * @date 5/30/2017 4:57 PM
+ * @date 5/20/2017 9:42 AM
  */
-public class RoleResourceVO {
+public class AdminInterfVO {
 
-    /**
-     * resourceId
-     */
     private String id;
     private String name;
     private String desc;
     private String createdAt;
-    private List<String> resourceIds;
-    private List<String> resourceNames;
+    private String updatedAt;
+    private int enable;
 
-    public RoleResourceVO() {
-        resourceIds = new ArrayList<>();
-        resourceNames = new ArrayList<>();
+    public AdminInterfVO() {
+
     }
 
     public String getId() {
@@ -59,19 +52,19 @@ public class RoleResourceVO {
         this.createdAt = createdAt;
     }
 
-    public List<String> getResourceIds() {
-        return resourceIds;
+    public String getUpdatedAt() {
+        return updatedAt;
     }
 
-    public void setResourceIds(List<String> resourceIds) {
-        this.resourceIds = resourceIds;
+    public void setUpdatedAt(String updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
-    public List<String> getResourceNames() {
-        return resourceNames;
+    public int getEnable() {
+        return enable;
     }
 
-    public void setResourceNames(List<String> resourceNames) {
-        this.resourceNames = resourceNames;
+    public void setEnable(int enable) {
+        this.enable = enable;
     }
 }

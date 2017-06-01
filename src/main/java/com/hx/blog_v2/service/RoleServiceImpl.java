@@ -112,17 +112,17 @@ public class RoleServiceImpl extends BaseServiceImpl<RolePO> implements RoleServ
 
     @Override
     public Result update(RoleSaveForm params) {
-        RolePO role = cacheContext.allRoles().get(params.getId());
-        if (role == null) {
+        RolePO po = cacheContext.allRoles().get(params.getId());
+        if (po == null) {
             return ResultUtils.failed("该角色不存在 !");
         }
 
-        role.setName(params.getName());
-        role.setDesc(params.getDesc());
-        role.setEnable(params.getEnable());
-        role.setUpdatedAt(DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS));
+        po.setName(params.getName());
+        po.setDesc(params.getDesc());
+        po.setEnable(params.getEnable());
+        po.setUpdatedAt(DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS));
         try {
-            long modified = roleDao.updateById(role, BlogConstants.UPDATE_BEAN_CONFIG)
+            long modified = roleDao.updateById(po, BlogConstants.UPDATE_BEAN_CONFIG)
                     .getModifiedCount();
             if (modified == 0) {
                 return ResultUtils.failed("没有找到对应的角色 !");
@@ -131,7 +131,7 @@ public class RoleServiceImpl extends BaseServiceImpl<RolePO> implements RoleServ
             e.printStackTrace();
             return ResultUtils.failed(Tools.errorMsg(e));
         }
-        return ResultUtils.success(role.getId());
+        return ResultUtils.success(po.getId());
     }
 
     @Override
@@ -160,8 +160,8 @@ public class RoleServiceImpl extends BaseServiceImpl<RolePO> implements RoleServ
 
     @Override
     public Result remove(BeanIdForm params) {
-        RolePO role = cacheContext.allRoles().remove(params.getId());
-        if (role == null) {
+        RolePO po = cacheContext.allRoles().remove(params.getId());
+        if (po == null) {
             return ResultUtils.failed("该角色不存在 !");
         }
 

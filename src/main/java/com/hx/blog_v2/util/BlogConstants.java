@@ -58,7 +58,7 @@ public final class BlogConstants {
             BlogCommentPO.class, BlogExPO.class, BlogPO.class, BlogSensePO.class, BlogTagPO.class,
             BlogTypePO.class, ExceptionLogPO.class, ImagePO.class, LinkPO.class, MoodPO.class, RequestLogPO.class,
             UserPO.class, VisitorPO.class, RltBlogTagPO.class, UploadFilePO.class,
-            RolePO.class, RltUserRoleRolePO.class, ResourcePO.class, RltRoleResourcePO.class
+            RolePO.class, RltUserRoleRolePO.class, ResourcePO.class, RltRoleResourcePO.class, InterfPO.class, RltResourceInterfPO.class
     };
     /**
      * 下划线的注册了各个PO 的 KeyNodeParser
@@ -160,6 +160,10 @@ public final class BlogConstants {
     public static final String TABLE_RLT_USER_ROLE = "rlt_user_role";
     @Value("table.rlt_role_resource")
     public static final String TABLE_ROLE_RESOURCE = "rlt_role_resource";
+    @Value("table.interf")
+    public static final String TABLE_INTERF = "interf";
+    @Value("table.rlt_resource_interf")
+    public static final String TABLE_RESOURCE_INTERF = "rlt_resource_interf";
 
     @Value("table.id")
     public static final String TABLE_ID = "id";
@@ -231,6 +235,10 @@ public final class BlogConstants {
      * 资源列表的数据 的 根节点的 parentId
      */
     public static String RESOURCE_ROOT_PARENT_ID = "-1";
+    /**
+     * 叶子资源的层级
+     */
+    public static int RESOURCE_LEAVE_LEVEL = 2;
 
     /**
      * 图片类型 - 图片墙

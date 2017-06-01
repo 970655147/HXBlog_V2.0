@@ -82,16 +82,10 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourcePO> implements 
     @Override
     public Result adminList() {
         Map<String, ResourcePO> resourcesById = cacheContext.allResources();
-        String keyOfRoot = idxOfResource(resourcesById, BlogConstants.RESOURCE_ROOT_PARENT_ID);
-        if (keyOfRoot == null) {
-            return ResultUtils.failed("没有 根节点, 请配置 根节点");
-        }
-
-        ResourcePO rootPo = resourcesById.get(keyOfRoot);
         List<ResourcePO> leaves = new ArrayList<>(resourcesById.size());
         for(Map.Entry<String, ResourcePO> entry : resourcesById.entrySet()) {
             ResourcePO resource = entry.getValue();
-            if((! rootPo.getId().equals(resource.getId())) && (! rootPo.getId().equals(resource.getParentId())) ) {
+            if(resource.getLevel() == BlogConstants.RESOURCE_LEAVE_LEVEL) {
                 leaves.add(resource);
             }
         }
@@ -280,25 +274,6 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourcePO> implements 
         }
 
         return -1;
-    }
-
-    /**
-     * 获取 resourcesById 中parentId 为给定的parentId 的entry 的key
-     *
-     * @param resourcesById resourcesById
-     * @param parentId      parentId
-     * @return java.lang.String
-     * @author Jerry.X.He
-     * @date 5/30/2017 9:57 PM
-     * @since 1.0
-     */
-    private String idxOfResource(Map<String, ResourcePO> resourcesById, String parentId) {
-        for (Map.Entry<String, ResourcePO> entry : resourcesById.entrySet()) {
-            if (entry.getValue().getParentId().equals(parentId)) {
-                return entry.getKey();
-            }
-        }
-        return null;
     }
 
     /**

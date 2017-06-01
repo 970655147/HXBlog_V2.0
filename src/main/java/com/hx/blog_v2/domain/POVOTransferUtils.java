@@ -31,8 +31,8 @@ public final class POVOTransferUtils {
      */
     public static void main(String[] args) {
 
-        Class src = RltRoleResourcePO.class;
-        Class dst = RltRoleResourceVO.class;
+        Class src = ResourcePO.class;
+        Class dst = ResourceInterfVO.class;
 
         String transfer = BeanTransferUtils.transferTo(src, dst);
         String transferList = BeanTransferUtils.transferListTo(src, dst);
@@ -580,7 +580,7 @@ public final class POVOTransferUtils {
 
     public static Collection<ResourceVO> resourcePO2ResourceVOList(Collection<ResourcePO> src) {
         List<ResourceVO> result = new ArrayList<>(src.size());
-        for(ResourcePO ele : src) {
+        for (ResourcePO ele : src) {
             result.add(resourcePO2ResourceVO(ele));
         }
         return result;
@@ -602,7 +602,7 @@ public final class POVOTransferUtils {
 
     public static Collection<ResourcePO> resourceVO2ResourcePOList(Collection<ResourceVO> src) {
         List<ResourcePO> result = new ArrayList<>(src.size());
-        for(ResourceVO ele : src) {
+        for (ResourceVO ele : src) {
             result.add(resourceVO2ResourcePO(ele));
         }
         return result;
@@ -622,7 +622,7 @@ public final class POVOTransferUtils {
 
     public static Collection<AdminRoleVO> rolePO2AdminRoleVOList(Collection<RolePO> src) {
         List<AdminRoleVO> result = new ArrayList<>(src.size());
-        for(RolePO ele : src) {
+        for (RolePO ele : src) {
             result.add(rolePO2AdminRoleVO(ele));
         }
         return result;
@@ -641,7 +641,7 @@ public final class POVOTransferUtils {
 
     public static Collection<RolePO> adminRoleVO2RolePOList(Collection<AdminRoleVO> src) {
         List<RolePO> result = new ArrayList<>(src.size());
-        for(AdminRoleVO ele : src) {
+        for (AdminRoleVO ele : src) {
             result.add(adminRoleVO2RolePO(ele));
         }
         return result;
@@ -661,7 +661,7 @@ public final class POVOTransferUtils {
 
     public static Collection<UserRoleVO> userPO2UserRoleVOList(Collection<UserPO> src) {
         List<UserRoleVO> result = new ArrayList<>(src.size());
-        for(UserPO ele : src) {
+        for (UserPO ele : src) {
             result.add(userPO2UserRoleVO(ele));
         }
         return result;
@@ -680,7 +680,7 @@ public final class POVOTransferUtils {
 
     public static Collection<UserPO> userRoleVO2UserPOList(Collection<UserRoleVO> src) {
         List<UserPO> result = new ArrayList<>(src.size());
-        for(UserRoleVO ele : src) {
+        for (UserRoleVO ele : src) {
             result.add(userRoleVO2UserPO(ele));
         }
         return result;
@@ -698,7 +698,7 @@ public final class POVOTransferUtils {
 
     public static Collection<RoleResourceVO> rolePO2RoleResourceVOList(Collection<RolePO> src) {
         List<RoleResourceVO> result = new ArrayList<>(src.size());
-        for(RolePO ele : src) {
+        for (RolePO ele : src) {
             result.add(rolePO2RoleResourceVO(ele));
         }
         return result;
@@ -715,7 +715,7 @@ public final class POVOTransferUtils {
 
     public static Collection<RolePO> roleResourceVO2RolePOList(Collection<RoleResourceVO> src) {
         List<RolePO> result = new ArrayList<>(src.size());
-        for(RoleResourceVO ele : src) {
+        for (RoleResourceVO ele : src) {
             result.add(roleResourceVO2RolePO(ele));
         }
         return result;
@@ -732,7 +732,7 @@ public final class POVOTransferUtils {
 
     public static Collection<RltRoleResourceVO> rltRoleResourcePO2RltRoleResourceVOList(Collection<RltRoleResourcePO> src) {
         List<RltRoleResourceVO> result = new ArrayList<>(src.size());
-        for(RltRoleResourcePO ele : src) {
+        for (RltRoleResourcePO ele : src) {
             result.add(rltRoleResourcePO2RltRoleResourceVO(ele));
         }
         return result;
@@ -748,8 +748,86 @@ public final class POVOTransferUtils {
 
     public static Collection<RltRoleResourcePO> rltRoleResourceVO2RltRoleResourcePOList(Collection<RltRoleResourceVO> src) {
         List<RltRoleResourcePO> result = new ArrayList<>(src.size());
-        for(RltRoleResourceVO ele : src) {
+        for (RltRoleResourceVO ele : src) {
             result.add(rltRoleResourceVO2RltRoleResourcePO(ele));
+        }
+        return result;
+    }
+
+    // -------------------- ResourcePO <-> ResourceInterfVO --------------------------
+    public static ResourceInterfVO resourcePO2ResourceInterfVO(ResourcePO src) {
+        ResourceInterfVO result = new ResourceInterfVO();
+        result.setName(src.getName());
+        result.setId(src.getId());
+        result.setParentId(src.getParentId());
+        result.setUrl(src.getUrl());
+        result.setLevel(src.getLevel());
+        result.setCreatedAt(src.getCreatedAt());
+        return result;
+    }
+
+    public static Collection<ResourceInterfVO> resourcePO2ResourceInterfVOList(Collection<ResourcePO> src) {
+        List<ResourceInterfVO> result = new ArrayList<>(src.size());
+        for(ResourcePO ele : src) {
+            result.add(resourcePO2ResourceInterfVO(ele));
+        }
+        return result;
+    }
+
+    public static ResourcePO resourceInterfVO2ResourcePO(ResourceInterfVO src) {
+        ResourcePO result = new ResourcePO();
+        result.setName(src.getName());
+        result.setId(src.getId());
+        result.setParentId(src.getParentId());
+        result.setUrl(src.getUrl());
+        result.setLevel(src.getLevel());
+        result.setCreatedAt(src.getCreatedAt());
+        return result;
+    }
+
+    public static Collection<ResourcePO> resourceInterfVO2ResourcePOList(Collection<ResourceInterfVO> src) {
+        List<ResourcePO> result = new ArrayList<>(src.size());
+        for(ResourceInterfVO ele : src) {
+            result.add(resourceInterfVO2ResourcePO(ele));
+        }
+        return result;
+    }
+
+    // -------------------- InterfPO <-> AdminInterfVO --------------------------
+    public static AdminInterfVO interfPO2AdminInterfVO(InterfPO src) {
+        AdminInterfVO result = new AdminInterfVO();
+        result.setName(src.getName());
+        result.setId(src.getId());
+        result.setEnable(src.getEnable());
+        result.setUpdatedAt(src.getUpdatedAt());
+        result.setCreatedAt(src.getCreatedAt());
+        result.setDesc(src.getDesc());
+        return result;
+    }
+
+    public static Collection<AdminInterfVO> interfPO2AdminInterfVOList(Collection<InterfPO> src) {
+        List<AdminInterfVO> result = new ArrayList<>(src.size());
+        for (InterfPO ele : src) {
+            result.add(interfPO2AdminInterfVO(ele));
+        }
+        return result;
+    }
+
+    public static InterfPO adminInterfVO2InterfPO(AdminInterfVO src) {
+        InterfPO result = new InterfPO();
+        result.setName(src.getName());
+        result.setId(src.getId());
+        result.setEnable(src.getEnable());
+        result.setUpdatedAt(src.getUpdatedAt());
+        result.setCreatedAt(src.getCreatedAt());
+        result.setDesc(src.getDesc());
+        return result;
+    }
+
+    public static Collection<InterfPO> adminInterfVO2InterfPOList(Collection<AdminInterfVO> src) {
+        List<InterfPO> result = new ArrayList<>(src.size());
+        for (AdminInterfVO ele : src) {
+            result.add(adminInterfVO2InterfPO(ele));
         }
         return result;
     }
