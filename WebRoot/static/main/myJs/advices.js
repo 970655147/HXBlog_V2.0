@@ -15,7 +15,11 @@ function contentInit() {
         el: '#bodyContent',
         data: {
             blog: {},
-            comments: []
+            comments: [],
+            userName : "",
+            email : "",
+            selectedHeadImgUrl : "",
+            headImages : []
         },
         mounted: function () {
             var that = this
@@ -34,6 +38,26 @@ function contentInit() {
                                 replies: comments[idx].slice(1)
                             })
                         }
+
+                        var userInfo = resp.extra
+                        if(userInfo !== null) {
+                            that.userName = userInfo.userName
+                            that.email = userInfo.email
+                            that.selectedHeadImgUrl = userInfo.headImgUrl
+                        }
+                    }
+                }
+            });
+            $.ajax({
+                url: "/image/headImgList",
+                data: {},
+                type : "GET",
+                success: function (resp) {
+                    if (resp.success) {
+                        that.headImages = resp.data
+                        that.selectedHeadImgUrl = that.headImages[0].url
+                    } else {
+                        console.log("拉取头像列表失败")
                     }
                 }
             });
@@ -74,8 +98,10 @@ function contentInit() {
                         placeholder: "#qq_{alias}#"
                     }]
                 });
+            },
+            updateHeadImg : function(event) {
+                this.selectedHeadImgUrl = $(event.target).find("option:selected").attr("imgUrl")
             }
-
         }
     })
 

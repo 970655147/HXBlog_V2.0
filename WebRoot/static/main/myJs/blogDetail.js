@@ -25,6 +25,8 @@ function contentInit() {
         data: {
             blog: {},
             comments: [],
+            userName : "",
+            email : "",
             selectedHeadImgUrl : "",
             headImages : []
         },
@@ -45,6 +47,13 @@ function contentInit() {
                                 replies: comments[idx].slice(1)
                             })
                         }
+
+                        var userInfo = resp.extra
+                        if(userInfo !== null) {
+                            that.userName = userInfo.userName
+                            that.email = userInfo.email
+                            that.selectedHeadImgUrl = userInfo.headImgUrl
+                        }
                     } else {
                         console.log("拉取博客列表失败")
                     }
@@ -57,7 +66,9 @@ function contentInit() {
                 success: function (resp) {
                     if (resp.success) {
                         that.headImages = resp.data
-                        that.selectedHeadImgUrl = that.headImages[0].url
+                        if(that.selectedHeadImgUrl === "") {
+                            that.selectedHeadImgUrl = that.headImages[0].url
+                        }
                     } else {
                         console.log("拉取头像列表失败")
                     }

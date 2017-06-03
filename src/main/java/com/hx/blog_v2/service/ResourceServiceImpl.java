@@ -3,15 +3,15 @@ package com.hx.blog_v2.service;
 import com.hx.blog_v2.dao.interf.ResourceDao;
 import com.hx.blog_v2.dao.interf.RltRoleResourceDao;
 import com.hx.blog_v2.domain.POVOTransferUtils;
+import com.hx.blog_v2.domain.comparator.ResourceSortComparator;
 import com.hx.blog_v2.domain.form.BeanIdForm;
 import com.hx.blog_v2.domain.form.ResourceSaveForm;
 import com.hx.blog_v2.domain.form.RoleResourceUpdateForm;
-import com.hx.blog_v2.domain.mapper.ResourceVOMapper;
 import com.hx.blog_v2.domain.mapper.RltRoleResourcePOMapper;
-import com.hx.blog_v2.domain.mapper.RltRoleResourceVOMapper;
-import com.hx.blog_v2.domain.po.*;
+import com.hx.blog_v2.domain.po.ResourcePO;
+import com.hx.blog_v2.domain.po.RltRoleResourcePO;
+import com.hx.blog_v2.domain.po.RolePO;
 import com.hx.blog_v2.domain.vo.ResourceVO;
-import com.hx.blog_v2.domain.vo.RltRoleResourceVO;
 import com.hx.blog_v2.domain.vo.RoleResourceVO;
 import com.hx.blog_v2.service.interf.BaseServiceImpl;
 import com.hx.blog_v2.service.interf.ResourceService;
@@ -32,10 +32,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * BlogServiceImpl
@@ -59,16 +56,16 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourcePO> implements 
     @Override
     public Result add(ResourceSaveForm params) {
         Map<String, ResourcePO> resourcesById = cacheContext.allResources();
-        if(contains(resourcesById, params.getName())) {
+        if (contains(resourcesById, params.getName())) {
             return ResultUtils.failed("该资源已经存在 !");
         }
         ResourcePO parentPo = resourcesById.get(params.getParentId());
-        if(parentPo == null) {
+        if (parentPo == null) {
             return ResultUtils.failed("该资源父节点不存在 !");
         }
 
         ResourcePO po = new ResourcePO(params.getName(), params.getIconClass(), params.getUrl(),
-                params.getParentId(), params.getSort(), parentPo.getLevel()+1, params.getEnable());
+                params.getParentId(), params.getSort(), parentPo.getLevel() + 1, params.getEnable());
         try {
             resourceDao.save(po, BlogConstants.ADD_BEAN_CONFIG);
             resourcesById.put(po.getId(), po);
@@ -83,9 +80,9 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourcePO> implements 
     public Result adminList() {
         Map<String, ResourcePO> resourcesById = cacheContext.allResources();
         List<ResourcePO> leaves = new ArrayList<>(resourcesById.size());
-        for(Map.Entry<String, ResourcePO> entry : resourcesById.entrySet()) {
+        for (Map.Entry<String, ResourcePO> entry : resourcesById.entrySet()) {
             ResourcePO resource = entry.getValue();
-            if(resource.getLevel() == BlogConstants.RESOURCE_LEAVE_LEVEL) {
+            if (resource.getLevel() == BlogConstants.RESOURCE_LEAVE_LEVEL) {
                 leaves.add(resource);
             }
         }
@@ -96,7 +93,7 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourcePO> implements 
     public Result adminTreeList(boolean spread) {
         Map<String, ResourcePO> resourcesById = cacheContext.allResources();
         List<ResourceVO> resources = new ArrayList<>(resourcesById.size());
-        for(Map.Entry<String, ResourcePO> entry : resourcesById.entrySet()) {
+        for (Map.Entry<String, ResourcePO> entry : resourcesById.entrySet()) {
             resources.add(POVOTransferUtils.resourcePO2ResourceVO(entry.getValue()));
         }
 
@@ -192,6 +189,38 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourcePO> implements 
     }
 
     @Override
+    public Result reSort() {
+        Map<String, ResourcePO> resourcesById = cacheContext.allResources();
+        List<ResourcePO> allResources = new ArrayList<>(resourcesById.size());
+
+        for (Map.Entry<String, ResourcePO> entry : resourcesById.entrySet()) {
+            allResources.add(entry.getValue());
+        }
+        Collections.sort(allResources, new ResourceSortComparator());
+
+        Map<String, Integer> parent2Sort = new HashMap<>();
+        for(ResourcePO po : allResources) {
+            Integer sortNow = parent2Sort.get(po.getParentId());
+            if(sortNow == null) {
+                sortNow = 0;
+            }
+
+            Integer newSort = sortNow + 10;
+            parent2Sort.put(po.getParentId(), newSort);
+            if (po.getLevel() != newSort.intValue()) {
+                po.setLevel(newSort);
+                try {
+                    resourceDao.updateOne(Criteria.eq("id", po.getId()), Criteria.set("sort", newSort));
+                } catch (Exception e) {
+                    Log.err("update ResourcePO[" + po.getId() + "] failed !");
+                }
+            }
+        }
+
+        return ResultUtils.success("success");
+    }
+
+    @Override
     public Result remove(BeanIdForm params) {
         ResourcePO po = cacheContext.allResources().remove(params.getId());
         if (po == null) {
@@ -280,7 +309,7 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourcePO> implements 
      * 判断当前所有的 Resource 中 是否有名字为 name的 BlogType
      *
      * @param resourcesById resourcesById
-     * @param name      name
+     * @param name          name
      * @return boolean
      * @author Jerry.X.He
      * @date 5/21/2017 6:20 PM

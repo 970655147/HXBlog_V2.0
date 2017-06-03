@@ -11,40 +11,44 @@
 
 </head>
 <body>
-<fieldset id="dataList" class="layui-elem-field layui-field-title sys-list-field" style="display:none;">
-    <legend style="text-align:center;">博客标签列表</legend>
-    <button class="layui-btn" style="margin:10px auto auto auto;display: block" onclick="layui.funcs.addData()">
-        <i class="layui-icon">&#xe608;</i> 添加标签
+    <button class="layui-btn" style="margin-left: 30px" onclick="refresh()">
+        <i class="layui-icon">&#x1002;</i> 刷新
     </button>
-    <div class="layui-field-box layui-form">
-        <div class="">
-            <table style="table-layout: fixed" class="layui-table" lay-even>
-                <colgroup>
-                    <col width="40">
-                    <col width="200">
-                    <col width="40">
-                    <col width="40">
-                </colgroup>
-                <thead>
-                <tr>
-                    <th>编号</th>
-                    <th>博客标签名</th>
-                    <th colspan="2">操作</th>
-                </tr>
-                </thead>
-                <tbody id="dataContent">
 
-                </tbody>
-            </table>
+    <fieldset id="dataList" class="layui-elem-field layui-field-title sys-list-field" style="display:none;">
+        <legend style="text-align:center;">博客标签列表</legend>
+        <button class="layui-btn" style="margin:10px auto auto auto;display: block" onclick="layui.funcs.addData()">
+            <i class="layui-icon">&#xe608;</i> 添加标签
+        </button>
+        <div class="layui-field-box layui-form">
+            <div class="">
+                <table style="table-layout: fixed" class="layui-table" lay-even>
+                    <colgroup>
+                        <col width="40">
+                        <col width="200">
+                        <col width="40">
+                        <col width="40">
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th>编号</th>
+                        <th>博客标签名</th>
+                        <th colspan="2">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody id="dataContent">
+
+                    </tbody>
+                </table>
+            </div>
+            <div id="pageNav"></div>
         </div>
-        <div id="pageNav"></div>
-    </div>
-</fieldset>
+    </fieldset>
 
-<script type="text/javascript">
-    layui.config({
-        base: './js/'
-    }).use('blogTagManagement');
-</script>
+    <script type="text/javascript">
+        layui.config({
+            base: './js/'
+        }).use('blogTagManagement');
+    </script>
 </body>
 </html>

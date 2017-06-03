@@ -10,10 +10,7 @@ import com.hx.log.json.interf.JSONTransferable;
 import com.hx.log.util.Constants;
 import com.hx.log.util.Tools;
 
-import java.util.Date;
-import java.util.Deque;
-import java.util.LinkedList;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 心情
@@ -129,5 +126,14 @@ public class ResourceVO implements TreeIdExtractor<ResourceVO, String> {
     @Override
     public String parentId() {
         return parentId;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(! (obj instanceof ResourceVO)) {
+            return false;
+        }
+
+        return id.equals(((ResourceVO) obj).getId());
     }
 }

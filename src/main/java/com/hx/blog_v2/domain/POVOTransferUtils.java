@@ -1,5 +1,6 @@
 package com.hx.blog_v2.domain;
 
+import com.hx.blog_v2.domain.dto.SessionUser;
 import com.hx.blog_v2.domain.po.*;
 import com.hx.blog_v2.domain.vo.*;
 import com.hx.log.util.BeanTransferUtils;
@@ -31,8 +32,8 @@ public final class POVOTransferUtils {
      */
     public static void main(String[] args) {
 
-        Class src = ResourcePO.class;
-        Class dst = ResourceInterfVO.class;
+        Class src = UserPO.class;
+        Class dst = SessionUser.class;
 
         String transfer = BeanTransferUtils.transferTo(src, dst);
         String transferList = BeanTransferUtils.transferListTo(src, dst);
@@ -252,6 +253,7 @@ public final class POVOTransferUtils {
         result.setNickName(src.getNickName());
         result.setHeadImgUrl(src.getHeadImgUrl());
         result.setEmail(src.getEmail());
+        result.setTitle(src.getTitle());
         result.setMotto(src.getMotto());
         return result;
     }
@@ -273,6 +275,7 @@ public final class POVOTransferUtils {
         result.setNickName(src.getNickName());
         result.setHeadImgUrl(src.getHeadImgUrl());
         result.setEmail(src.getEmail());
+        result.setTitle(src.getTitle());
         result.setMotto(src.getMotto());
         return result;
     }
@@ -828,6 +831,43 @@ public final class POVOTransferUtils {
         List<InterfPO> result = new ArrayList<>(src.size());
         for (AdminInterfVO ele : src) {
             result.add(adminInterfVO2InterfPO(ele));
+        }
+        return result;
+    }
+
+    // -------------------- UserPO <-> SessionUser --------------------------
+    public static SessionUser userPO2SessionUser(UserPO src) {
+        SessionUser result = new SessionUser();
+        result.setId(src.getId());
+        result.setTitle(src.getTitle());
+        result.setUserName(src.getUserName());
+        result.setHeadImgUrl(src.getHeadImgUrl());
+        result.setEmail(src.getEmail());
+        return result;
+    }
+
+    public static Collection<SessionUser> userPO2SessionUserList(Collection<UserPO> src) {
+        List<SessionUser> result = new ArrayList<>(src.size());
+        for(UserPO ele : src) {
+            result.add(userPO2SessionUser(ele));
+        }
+        return result;
+    }
+
+    public static UserPO sessionUser2UserPO(SessionUser src) {
+        UserPO result = new UserPO();
+        result.setId(src.getId());
+        result.setTitle(src.getTitle());
+        result.setUserName(src.getUserName());
+        result.setHeadImgUrl(src.getHeadImgUrl());
+        result.setEmail(src.getEmail());
+        return result;
+    }
+
+    public static Collection<UserPO> sessionUser2UserPOList(Collection<SessionUser> src) {
+        List<UserPO> result = new ArrayList<>(src.size());
+        for(SessionUser ele : src) {
+            result.add(sessionUser2UserPO(ele));
         }
         return result;
     }

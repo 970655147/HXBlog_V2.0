@@ -1,6 +1,10 @@
 package com.hx.blog_v2.interceptor;
 
-import com.hx.log.util.Log;
+import com.hx.blog_v2.domain.dto.SessionUser;
+import com.hx.blog_v2.util.BlogConstants;
+import com.hx.blog_v2.util.WebContext;
+import com.hx.common.interf.common.Result;
+import com.hx.common.util.ResultUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
@@ -19,7 +23,13 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
                              Object handler) throws Exception {
-        Log.info("LoginInterceptor-Before");
+        SessionUser user = (SessionUser) WebContext.getAttributeFromSession(BlogConstants.SESSION_USER);
+        if(user == null) {
+            Result result = ResultUtils.failed("请先登录 !");
+            WebContext.responseJson(result);
+            return false;
+        }
+
         return super.preHandle(request, response, handler);
     }
 
@@ -27,7 +37,6 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
     public void postHandle(HttpServletRequest request, HttpServletResponse response,
                            Object handler, ModelAndView modelAndView) throws Exception {
         super.postHandle(request, response, handler, modelAndView);
-        Log.info("LoginInterceptor-After");
     }
 
     @Override

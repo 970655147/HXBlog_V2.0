@@ -1,6 +1,8 @@
 package com.hx.blog_v2.dao;
 
+import com.hx.blog_v2.dao.interf.BaseDaoImpl;
 import com.hx.blog_v2.dao.interf.UploadFileDao;
+import com.hx.blog_v2.domain.po.RolePO;
 import com.hx.blog_v2.domain.po.UploadFilePO;
 import com.hx.blog_v2.util.BlogConstants;
 import com.hx.blog_v2.util.MyMysqlConnectionProvider;
@@ -20,30 +22,21 @@ import java.sql.Connection;
  * @date 5/20/2017 10:38 AM
  */
 @Repository
-public class UploadFileDaoImpl extends MysqlBaseDaoImpl<UploadFilePO> implements UploadFileDao {
-
-    public UploadFileDaoImpl(UploadFilePO bean) {
-        super(bean);
-    }
-
-    public UploadFileDaoImpl(UploadFilePO bean, DbConfig config) {
-        super(bean, config);
-    }
-
-    public UploadFileDaoImpl(UploadFilePO bean, ConnectionProvider<Connection> connectionProvider) {
-        super(bean, connectionProvider);
-    }
-
-    public UploadFileDaoImpl(UploadFilePO bean, DbConfig config, ConnectionProvider<Connection> connectionProvider) {
-        super(bean, config, connectionProvider);
-    }
+public class UploadFileDaoImpl extends BaseDaoImpl<UploadFilePO> implements UploadFileDao {
 
     public UploadFileDaoImpl() {
         super(UploadFilePO.PROTO_BEAN,
-                new MysqlDbConfig(BlogConstants.MYSQL_DB_CONFIG).table(BlogConstants.TABLE_UPLOADED_FILES).id(BlogConstants.TABLE_ID),
-                new MyMysqlConnectionProvider()
-        );
+                new MysqlDbConfig(BlogConstants.MYSQL_DB_CONFIG).table(tableName()).id(id()),
+                new MyMysqlConnectionProvider());
     }
 
+
+    public static String tableName() {
+        return BlogConstants.getInstance().tableUploadedFiles;
+    }
+
+    public static String id() {
+        return BlogConstants.getInstance().tableId;
+    }
 
 }

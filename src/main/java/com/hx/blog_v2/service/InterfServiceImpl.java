@@ -230,7 +230,7 @@ public class InterfServiceImpl extends BaseServiceImpl<InterfPO> implements Inte
         List<ResourcePO> list = new ArrayList<>(resourcesById.size());
         for (Map.Entry<String, ResourcePO> entry : resourcesById.entrySet()) {
             ResourcePO role = entry.getValue();
-            if (role.getEnable() != 0) {
+            if ((role.getEnable() != 0) && (BlogConstants.RESOURCE_LEAVE_LEVEL == role.getLevel())) {
                 list.add(role);
             }
         }

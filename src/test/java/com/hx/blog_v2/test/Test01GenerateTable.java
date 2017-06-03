@@ -9,6 +9,7 @@ import com.hx.json.JSONObject;
 import com.hx.json.config.simple.SimpleJSONConfig;
 import com.hx.log.str.MysqlSqlGenerator;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import static com.hx.log.util.Log.info;
 
@@ -21,6 +22,8 @@ import static com.hx.log.util.Log.info;
  */
 public class Test01GenerateTable {
 
+    @Autowired
+    private BlogConstants constants;
 
     @Test
     public void blog() throws Exception {
@@ -29,7 +32,7 @@ public class Test01GenerateTable {
         blog.setId("2");
 
         JSONObject blogObj = blog.encapJSON(new SimpleJSONConfig());
-        String sql = MysqlSqlGenerator.generateCreateTableSql(BlogConstants.TABLE_BLOG, blogObj);
+        String sql = MysqlSqlGenerator.generateCreateTableSql(constants.tableBlog, blogObj);
         info(sql);
 
     }
@@ -46,7 +49,7 @@ public class Test01GenerateTable {
         blog.setNotGoodCnt(12);
 
         JSONObject blogObj = blog.encapJSON(new SimpleJSONConfig());
-        String sql = MysqlSqlGenerator.generateCreateTableSql(BlogConstants.TABLE_BLOG_EX, blogObj);
+        String sql = MysqlSqlGenerator.generateCreateTableSql(constants.tableBlogEx, blogObj);
         info(sql);
 
     }
@@ -55,7 +58,8 @@ public class Test01GenerateTable {
     @Test
     public void blogComment() throws Exception {
 
-        BlogCommentPO blog = new BlogCommentPO("name", "email", "url", "toUser", "role", "content");
+        BlogCommentPO blog = new BlogCommentPO("name", "email", "url", "toUser",
+                "role", "content");
         blog.setId("2");
         blog.setBlogId("11");
         blog.setFloorId("11");
@@ -63,7 +67,7 @@ public class Test01GenerateTable {
 
 
         JSONObject blogObj = blog.encapJSON(new SimpleJSONConfig());
-        String sql = MysqlSqlGenerator.generateCreateTableSql(BlogConstants.TABLE_BLOG_COMMENT, blogObj);
+        String sql = MysqlSqlGenerator.generateCreateTableSql(constants.tableBlogComment, blogObj);
         info(sql);
 
     }

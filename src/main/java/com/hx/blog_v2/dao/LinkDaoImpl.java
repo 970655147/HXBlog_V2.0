@@ -1,16 +1,12 @@
 package com.hx.blog_v2.dao;
 
+import com.hx.blog_v2.dao.interf.BaseDaoImpl;
 import com.hx.blog_v2.dao.interf.LinkDao;
 import com.hx.blog_v2.domain.po.LinkPO;
 import com.hx.blog_v2.util.BlogConstants;
 import com.hx.blog_v2.util.MyMysqlConnectionProvider;
 import com.hx.mongo.config.MysqlDbConfig;
-import com.hx.mongo.config.interf.DbConfig;
-import com.hx.mongo.connection.interf.ConnectionProvider;
-import com.hx.mongo.dao.MysqlBaseDaoImpl;
 import org.springframework.stereotype.Repository;
-
-import java.sql.Connection;
 
 /**
  * BlogDaoImpl
@@ -20,30 +16,21 @@ import java.sql.Connection;
  * @date 5/20/2017 10:38 AM
  */
 @Repository
-public class LinkDaoImpl extends MysqlBaseDaoImpl<LinkPO> implements LinkDao {
-
-    public LinkDaoImpl(LinkPO bean) {
-        super(bean);
-    }
-
-    public LinkDaoImpl(LinkPO bean, DbConfig config) {
-        super(bean, config);
-    }
-
-    public LinkDaoImpl(LinkPO bean, ConnectionProvider<Connection> connectionProvider) {
-        super(bean, connectionProvider);
-    }
-
-    public LinkDaoImpl(LinkPO bean, DbConfig config, ConnectionProvider<Connection> connectionProvider) {
-        super(bean, config, connectionProvider);
-    }
+public class LinkDaoImpl extends BaseDaoImpl<LinkPO> implements LinkDao {
 
     public LinkDaoImpl() {
         super(LinkPO.PROTO_BEAN,
-                new MysqlDbConfig(BlogConstants.MYSQL_DB_CONFIG).table(BlogConstants.TABLE_LINK).id(BlogConstants.TABLE_ID),
-                new MyMysqlConnectionProvider()
-        );
+                new MysqlDbConfig(BlogConstants.MYSQL_DB_CONFIG).table(tableName()).id(id()),
+                new MyMysqlConnectionProvider());
     }
 
+
+    public static String tableName() {
+        return BlogConstants.getInstance().tableLink;
+    }
+
+    public static String id() {
+        return BlogConstants.getInstance().tableId;
+    }
 
 }

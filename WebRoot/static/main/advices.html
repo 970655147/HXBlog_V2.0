@@ -78,24 +78,18 @@
                                 <div class="input-group">
                                     <div class="input-group-addon">用户名 <span style="color:red">*</span></div>
                                     <input id="resourceName" name="resourceName" type="text" class="form-control"
-                                           placeholder="resourceName"/>
+                                           :value="userName" placeholder="userName"/>
 
                                     <div class="input-group-addon">邮箱</div>
-                                    <input id="email" name="email" type="text" class="form-control" placeholder="email"/>
+                                    <input id="email" name="email" type="text" class="form-control"
+                                           :value="email" placeholder="email"/>
                                 </div>
                                 <br/>
-                                头像选择 :
-                                <select class="form-control" id="imageIdx">
-                                    <option id="0" selected="selected">撸多了</option>
-                                    <option id="1">帅哥</option>
-                                    <option id="2">美女</option>
-                                    <option id="3">草稚京</option>
-                                    <option id="4">雅典娜</option>
-                                    <option id="5">女王</option>
-                                    <option id="6">孙悟空</option>
-                                    <option id="7">尼娜</option>
-                                    <option id="8">赛亚人</option>
-                                    <option id="9">小魔女</option>
+                                头像选择 : <img :src="selectedHeadImgUrl" width="40px" height="40px" /> <br/>
+                                <select class="form-control" id="imageIdx" @change="updateHeadImg($event)" >
+                                    <option :id="headImage.id" v-for="headImage in headImages" :imgUrl="headImage.url" >
+                                        {{headImage.title}}
+                                    </option>
                                 </select>
                                 <br/>
                                 <div title="reply" id="comment" class="editor form-control" contenteditable="true"></div>

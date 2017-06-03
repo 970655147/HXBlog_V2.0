@@ -8,6 +8,9 @@ initStatistics()
 $("#refreshConfig").click(function() {
     refreshConfig();
 })
+$("#logout").click(function() {
+    logout();
+})
 
 layui.define(['element', 'layer', 'util', 'pagesize', 'form'], function (exports) {
     $ = layui.jquery;
@@ -356,8 +359,32 @@ function refreshConfig() {
         success: function (resp) {
             if (resp.success) {
                 layer.alert("刷新缓存配置成功 !")
+            } else {
+                layer.alert("刷新缓存配置出现了点问题, 请联系管理员 !")
             }
         }
     })
 }
+
+/**
+ * 登出系统
+ */
+function logout() {
+    $.ajax({
+        url: "/admin/user/logout",
+        data: { },
+        type: "POST",
+        success: function (resp) {
+            if (resp.success) {
+                layer.alert("登出成功 !", function(){
+                    location.href = "/static/admin/index.html"
+                })
+            } else {
+                layer.alert("登出失败 ??")
+            }
+        }
+    })
+}
+
+
 

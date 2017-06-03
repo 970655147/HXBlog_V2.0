@@ -2,8 +2,11 @@ package com.hx.blog_v2.controller;
 
 import com.hx.blog_v2.domain.form.BeanIdForm;
 import com.hx.blog_v2.domain.form.BlogSearchForm;
+import com.hx.blog_v2.domain.dto.SessionUser;
 import com.hx.blog_v2.domain.vo.BlogVO;
 import com.hx.blog_v2.service.interf.BlogService;
+import com.hx.blog_v2.util.BlogConstants;
+import com.hx.blog_v2.util.WebContext;
 import com.hx.common.interf.common.Result;
 import com.hx.common.result.SimplePage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,21 +30,28 @@ public class BlogController {
     private BlogService blogService;
 
     @RequestMapping("/list")
-    public Result list(BlogSearchForm form, SimplePage<BlogVO> page) {
+    public Result list(BlogSearchForm prams, SimplePage<BlogVO> page) {
 
-        return blogService.list(form, page);
+        return blogService.list(prams, page);
     }
 
     @RequestMapping("/get")
-    public Result get(BeanIdForm form) {
+    public Result get(BeanIdForm prams) {
 
-        return blogService.get(form);
+        Result result = blogService.get(prams);
+        SessionUser user = (SessionUser) WebContext.getAttributeFromSession(BlogConstants.SESSION_USER);
+        result.setExtra(user);
+        return result;
     }
 
     @RequestMapping("/advices")
     public Result advices() {
-        BeanIdForm from = new BeanIdForm("-1");
-        return blogService.get(from);
+
+        BeanIdForm prams = new BeanIdForm(BlogConstants.ADVICE_BLOG_ID);
+        Result result = blogService.get(prams);
+        SessionUser user = (SessionUser) WebContext.getAttributeFromSession(BlogConstants.SESSION_USER);
+        result.setExtra(user);
+        return result;
     }
 
 }

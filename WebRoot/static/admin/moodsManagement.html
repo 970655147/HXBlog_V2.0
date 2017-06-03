@@ -11,48 +11,52 @@
 
 </head>
 <body>
-<fieldset id="dataList" class="layui-elem-field layui-field-title sys-list-field" style="display:none;">
-    <legend style="text-align:center;">心情列表</legend>
-    <button class="layui-btn" style="margin:10px auto auto auto;display: block" onclick="layui.funcs.addData()">
-        <i class="layui-icon">&#xe608;</i> 添加心情
+    <button class="layui-btn" style="margin-left: 30px" onclick="refresh()">
+        <i class="layui-icon">&#x1002;</i> 刷新
     </button>
-    <div class="layui-field-box layui-form">
-        <div class="">
-            <table style="table-layout: fixed" class="layui-table" lay-even>
-                <colgroup>
-                    <col width="30">
-                    <col width="80">
-                    <col width="250">
-                    <col width="90">
-                    <col width="30">
-                    <col width="30">
-                    <col width="30">
-                </colgroup>
-                <thead>
-                <tr>
-                    <th>编号</th>
-                    <th>标题</th>
-                    <th>内容</th>
-                    <th>创建时间</th>
-                    <th>状态</th>
-                    <th>操作</th>
-                    <th>删除</th>
-                </tr>
-                </thead>
-                <tbody id="dataContent">
 
-                </tbody>
-            </table>
+    <fieldset id="dataList" class="layui-elem-field layui-field-title sys-list-field" style="display:none;">
+        <legend style="text-align:center;">心情列表</legend>
+        <button class="layui-btn" style="margin:10px auto auto auto;display: block" onclick="layui.funcs.addData()">
+            <i class="layui-icon">&#xe608;</i> 添加心情
+        </button>
+        <div class="layui-field-box layui-form">
+            <div class="">
+                <table style="table-layout: fixed" class="layui-table" lay-even>
+                    <colgroup>
+                        <col width="30">
+                        <col width="80">
+                        <col width="250">
+                        <col width="90">
+                        <col width="30">
+                        <col width="30">
+                        <col width="30">
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th>编号</th>
+                        <th>标题</th>
+                        <th>内容</th>
+                        <th>创建时间</th>
+                        <th>状态</th>
+                        <th>操作</th>
+                        <th>删除</th>
+                    </tr>
+                    </thead>
+                    <tbody id="dataContent">
+
+                    </tbody>
+                </table>
+            </div>
+            <div id="pageNav"></div>
         </div>
-        <div id="pageNav"></div>
-    </div>
-</fieldset>
+    </fieldset>
 
-<script type="text/javascript">
-    layui.config({
-        base: './js/'
-    }).use('moodsManagement');
-</script>
+    <script type="text/javascript">
+        layui.config({
+            base: './js/'
+        }).use('moodsManagement');
+    </script>
 
 </body>
 </html>

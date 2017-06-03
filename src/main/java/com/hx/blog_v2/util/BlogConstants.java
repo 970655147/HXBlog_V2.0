@@ -7,12 +7,23 @@ import com.hx.json.config.interf.JSONKeyNodeParser;
 import com.hx.json.config.interf.JSONValueNodeParser;
 import com.hx.json.config.simple.*;
 import com.hx.log.util.Constants;
+import com.hx.log.util.Log;
 import com.hx.log.util.Tools;
 import com.hx.mongo.config.MysqlDbConfig;
 import com.hx.mongo.config.interf.DbConfig;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.config.BeanPostProcessor;
+import org.springframework.core.env.PropertyResolver;
 
+import javax.annotation.PostConstruct;
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
+
+import static com.hx.log.util.Log.info;
 
 /**
  * BlogConstants
@@ -23,9 +34,17 @@ import java.util.Set;
  */
 public final class BlogConstants {
 
-    // disable constructor
-    private BlogConstants() {
-        Tools.assert0("can't instantiate !");
+    /**
+     * BlogConstants 实例
+     */
+    private static BlogConstants INSTANCE;
+
+    public BlogConstants() {
+
+    }
+
+    public static BlogConstants getInstance() {
+        return INSTANCE;
     }
 
     /**
@@ -80,6 +99,10 @@ public final class BlogConstants {
      * 向数据库中 增加bean 是需要过滤掉 "created_at", "deleted"
      */
     public static final JSONBeanProcessor UPDATE_BEAN_BEAN_PROCESSOR = regFilterBeanProcessor(Tools.asSet("created_at", "deleted"));
+    /**
+     * 向数据库中 增加bean 是需要过滤掉 "created_at", "deleted", "password"
+     */
+    public static final JSONBeanProcessor USER_UPDATE_BEAN_BEAN_PROCESSOR = regFilterBeanProcessor(Tools.asSet("created_at", "deleted", "user_name", "pwd_salt", "password"));
 
     /**
      * 从数据库加载所有数据的 JSONConfig
@@ -105,80 +128,14 @@ public final class BlogConstants {
             DEFAULT_VALUE_NODE_PARSER,
             UPDATE_BEAN_BEAN_PROCESSOR
     );
-
-    @Value("jdbc.driver_clazz")
-    public static String DB_DRIVER = "com.mysql.jdbc.Driver";
-    @Value("jdbc.ip")
-    public static String DB_IP = "192.168.0.190";
-    @Value("jdbc.port")
-    public static int DB_PORT = 3306;
-    @Value("jdbc.db")
-    public static String DB_DB = "blog";
     /**
-     * table, id 在各自的dao中配置
+     * 向数据库更新记录的的 JSONConfig
      */
-    @Value("jdbc.username")
-    public static String DB_USERNAME = "root";
-    @Value("jdbc.password")
-    public static String DB_PASSWORD = "root";
-
-    @Value("table.blog")
-    public static final String TABLE_BLOG = "blog";
-    @Value("table.blog_ex")
-    public static final String TABLE_BLOG_EX = "blog_ex";
-    @Value("table.blog_tag")
-    public static final String TABLE_BLOG_TAG = "blog_tag";
-    @Value("table.blog_type")
-    public static final String TABLE_BLOG_TYPE = "blog_type";
-    @Value("table.blog_comment")
-    public static final String TABLE_BLOG_COMMENT = "blog_comment";
-    @Value("table.rlt_blog_tag")
-    public static final String TABLE_RLT_BLOG_TAG = "rlt_blog_tag";
-    @Value("table.blog_sense")
-    public static final String TABLE_BLOG_SENSE = "blog_sense";
-    @Value("table.visitor")
-    public static final String TABLE_VISITOR = "visitor";
-    @Value("table.request_log")
-    public static final String TABLE_REQUEST_LOG = "request_log";
-    @Value("table.exception_log")
-    public static final String TABLE_EXCEPTION_LOG = "exception_log";
-    @Value("table.mood")
-    public static final String TABLE_MOOD = "mood";
-    @Value("table.user")
-    public static final String TABLE_USER = "user";
-    @Value("table.link")
-    public static final String TABLE_LINK = "link";
-    @Value("table.images")
-    public static final String TABLE_IMAGES = "images";
-    @Value("table.uploaded_files")
-    public static final String TABLE_UPLOADED_FILES = "uploaded_files";
-    @Value("table.role")
-    public static final String TABLE_ROLE = "role";
-    @Value("table.resource")
-    public static final String TABLE_RESOURCE = "resource";
-    @Value("table.rlt_user_role")
-    public static final String TABLE_RLT_USER_ROLE = "rlt_user_role";
-    @Value("table.rlt_role_resource")
-    public static final String TABLE_ROLE_RESOURCE = "rlt_role_resource";
-    @Value("table.interf")
-    public static final String TABLE_INTERF = "interf";
-    @Value("table.rlt_resource_interf")
-    public static final String TABLE_RESOURCE_INTERF = "rlt_resource_interf";
-
-    @Value("table.id")
-    public static final String TABLE_ID = "id";
-
-    /**
-     * HXMongo 相关
-     */
-    public static final DbConfig MYSQL_DB_CONFIG = new MysqlDbConfig().ip(DB_IP).port(DB_PORT)
-            .db(DB_DB).username(DB_USERNAME).password(DB_PASSWORD);
-
-
-    /**
-     * 默认的字符集
-     */
-    public static String DEFAULT_CHARSET = Constants.DEFAULT_CHARSET;
+    public static final JSONConfig USER_UPDATE_BEAN_CONFIG = new SimpleJSONConfig(
+            UNDER_LINE_KEY_NODE_PARSER,
+            DEFAULT_VALUE_NODE_PARSER,
+            USER_UPDATE_BEAN_BEAN_PROCESSOR
+    );
 
     /**
      * WebContext 中threadLocalMap 的request的key
@@ -201,66 +158,229 @@ public final class BlogConstants {
      */
     public static final String SESSION_USER = "session:user";
     /**
-     * 缓存的 blogId -> nextFloorId 的个数
+     * 用户验证码的key
      */
-    @Value("cache.blog_2_floorId")
-    public static int MAX_CACHED_BLOG_2_FLOOR_ID = 100;
-    /**
-     * 缓存的 blogId, floorId -> nextCommentId 的个数
-     */
-    @Value("cache.blog_floor_2_commentId")
-    public static int MAX_CACHED_BLOG_FLOOR_2_COMMENT_ID = 1000;
-    /**
-     * 缓存的 blogId, floorId -> nextCommentId 的个数
-     */
-    @Value("cache.uploaded_image")
-    public static int MAX_CACHED_UPLOADED_IMAGE = 1000;
+    public static final String SESSION_CHECK_CODE = "session:check_code";
 
-    @Value("blog.dir")
-    public static String BLOG_ROOT_DIR = "D:\\HXBlog_V2.0\\post";
-    @Value("files.dir")
-    public static String IMG_ROOT_DIR = "D:\\HXBlog_V2.0\\files";
-
+    /**
+     * 作为记录当前项目的一些信息的 "id"
+     */
+    public static final String CONTEXT_BLOG_ID = "-1";
     /**
      * 作为意见收集信息的"帖子的id"
      */
-    public static final String CONTEXT_BLOG_ID = "-1";
+    public static final String ADVICE_BLOG_ID = "-2";
+    /**
+     * 作为自我介绍的"帖子的id"
+     */
+    public static final String SELF_PROFILE_BLOG_ID = "-3";
 
     /**
      * 回复博主, 层主的时候的 parentCommentId
      */
-    public static String REPLY_2_FLOOR_OWNER = "-1";
+    public static final String REPLY_2_FLOOR_OWNER = "-1";
 
     /**
      * 资源列表的数据 的 根节点的 parentId
      */
-    public static String RESOURCE_ROOT_PARENT_ID = "-1";
+    public static final String RESOURCE_ROOT_PARENT_ID = "-1";
     /**
      * 叶子资源的层级
      */
-    public static int RESOURCE_LEAVE_LEVEL = 2;
+    public static final int RESOURCE_LEAVE_LEVEL = 2;
+
+    // ----------------------------------------- configurable -------------------------------------------------
+
+    @Value("${jdbc.driver_clazz}")
+    public String dbDriver = "com.mysql.jdbc.Driver";
+    @Value("${jdbc.ip}")
+    public String dbIp = "192.168.0.190";
+    //    @Value("${jdbc.port}")
+    public int dbPort = 3306;
+    @Value("${jdbc.db}")
+    public String dbDb = "blog";
+    @Value("${jdbc.username}")
+    public String dbUsername = "root";
+    @Value("${jdbc.password}")
+    public String dbPassword = "root";
+    /**
+     * table, id 在各自的dao中配置
+     */
+    @Value("${table.blog}")
+    public String tableBlog = "blog";
+    @Value("${table.blog_ex}")
+    public String tableBlogEx = "blog_ex";
+    @Value("${table.blog_tag}")
+    public String tableBlogTag = "blog_tag";
+    @Value("${table.blog_type}")
+    public String tableBlogType = "blog_type";
+    @Value("${table.blog_comment}")
+    public String tableBlogComment = "blog_comment";
+    @Value("${table.rlt_blog_tag}")
+    public String tableRltBlogTag = "rlt_blog_tag";
+    @Value("${table.blog_sense}")
+    public String tableBlogSense = "blog_sense";
+    @Value("${table.visitor}")
+    public String tableVisitor = "visitor";
+    @Value("${table.request_log}")
+    public String tableRequestLog = "request_log";
+    @Value("${table.exception_log}")
+    public String tableExceptionLog = "exception_log";
+    @Value("${table.mood}")
+    public String tableMood = "mood";
+    @Value("${table.user}")
+    public String tableUser = "user";
+    @Value("${table.link}")
+    public String tableLink = "link";
+    @Value("${table.images}")
+    public String tableImages = "images";
+    @Value("${table.uploaded_files}")
+    public String tableUploadedFiles = "uploaded_files";
+    @Value("${table.role}")
+    public String tableRole = "role";
+    @Value("${table.resource}")
+    public String tableResource = "resource";
+    @Value("${table.rlt_user_role}")
+    public String tableRltUserRole = "rlt_user_role";
+    @Value("${table.rlt_role_resource}")
+    public String tableRltRoleResource = "rlt_role_resource";
+    @Value("${table.interf}")
+    public String tableInterf = "interf";
+    @Value("${table.rlt_resource_interf}")
+    public String tableRltResourceInterf = "rlt_resource_interf";
+
+    @Value("${table.id}")
+    public String tableId = "id";
+
+    /**
+     * HXMongo 相关
+     */
+    public static DbConfig MYSQL_DB_CONFIG = null;
+
+
+    /**
+     * 默认的字符集
+     */
+    @Value("${charset}")
+    public String defaultCharset = Constants.DEFAULT_CHARSET;
+
+    /**
+     * 缓存的 blogId -> nextFloorId 的个数
+     */
+//    @Value("${cache.blog_2_floorId}")
+    public int maxCachedBlog2FloorId = 100;
+    /**
+     * 缓存的 blogId, floorId -> nextCommentId 的个数
+     */
+//    @Value("${cache.blog_floor_2_commentId}")
+    public int maxCachedBlogFloor2CommentId = 1000;
+    /**
+     * 缓存的 blogId, floorId -> nextCommentId 的个数
+     */
+//    @Value("${cache.uploaded_image}")
+    public int maxCachedUploadedImage = 1000;
+    /**
+     * 缓存的 roleIds -> resourceIds 的个数
+     */
+//    @Value("${cache.role_ids2resource_ids}")
+    public int maxRoleIds2ResourceIds = 20;
+
+    /**
+     * 存放博客, 图像的地址
+     */
+    @Value("${blog.dir}")
+    public String blogRootDir = "D:\\HXBlog_V2.0\\post";
+    @Value("${files.dir}")
+    public String fileRootDir = "D:\\HXBlog_V2.0\\files";
 
     /**
      * 图片类型 - 图片墙
      */
-    public static String IMG_TYPE_IMG_SHOW = "imgShow";
+    @Value("${img.type.img_show}")
+    public String imgTypeImgShow = "imgShow";
     /**
      * 图片类型 - 头像
      */
-    public static String IMG_TYPE_HEAD_IMG = "headImg";
+    @Value("${img.type.head_img}")
+    public String imgTypeHeadImg = "headImg";
     /**
      * 系统所支持的图片类型枚举
      */
-    public static final Set<String> SUPPORTED_IMAGE_TYPES = Tools.asSet(IMG_TYPE_IMG_SHOW, IMG_TYPE_HEAD_IMG);
+    public final Set<String> supportedImageTypes = Tools.asSet(imgTypeImgShow, imgTypeHeadImg);
 
     /**
      * 上传到服务器的图片的 url 前缀
      */
-    @Value("image.url.prefix")
-    public static String IMAGE_URL_RREFIX = "http://localhost/files/";
+    @Value("${image.url.prefix}")
+    public String imageUrlPrefix = "http://localhost/files/";
 
+    /**
+     * 用户密码的salt的位数
+     */
+//    @Value("${user.pwd_salt_nums}")
+    public int pwdSaltNums = 8;
+
+    /**
+     * 验证码的长度
+     */
+//    @Value("${${check_code.length}}")
+    public int checkCodeLength = 4;
+    /**
+     * 验证码的宽度
+     */
+//    @Value("${check_code.img.width}")
+    public int checkCodeImgWidth = 160;
+    /**
+     * 验证码的高度
+     */
+//    @Value("${check_code.img.height}")
+    public int checkCodeImgHeight = 80;
+    /**
+     * 验证码的高度
+     */
+    public Color checkCodeImgBgColor = Color.WHITE;
+    /**
+     * 验证码的高度
+     */
+    public Font checkCodeImgFont = new Font("微软雅黑", Font.ITALIC, 40);
+
+    /**
+     * 验证码备选字符的集合
+     */
+    @Value("${check_code.img.candidates}")
+    public String checkCodeCandidatesStr = "123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTVUWXYZ";
+    public List<Character> checkCodeCandidates = new ArrayList<>(checkCodeCandidatesStr.length());
+    /**
+     * 验证码备选字符的最少的干扰线的数量
+     */
+//    @Value("${check_code.img.min_interference}")
+    public int checkCodeMinInterference = 30;
+    /**
+     * 验证码备选字符的最少的干扰线的可控区间
+     */
+//    @Value("${check_code.img.interference_off}")
+    public int checkCodeInterferenceOff = 10;
+
+    {
+        for (int i = 0, len = checkCodeCandidatesStr.length(); i < len; i++) {
+            checkCodeCandidates.add(checkCodeCandidatesStr.charAt(i));
+        }
+    }
 
     // -------------------- 辅助方法 --------------------------
+
+    @PostConstruct
+    public void init() {
+        INSTANCE = this;
+        MYSQL_DB_CONFIG = new MysqlDbConfig().ip(dbIp).port(dbPort)
+                .db(dbDb).username(dbUsername).password(dbPassword);
+
+        try {
+            Class.forName(dbDriver);
+        } catch (Exception e) {
+            Log.err("error while load jdbc driver !");
+        }
+    }
 
     /**
      * 注册监听所有的 POClass 的给定索引的 JSONField 的 KeyNodeParser

@@ -1,6 +1,7 @@
 package com.hx.blog_v2.service;
 
 import com.hx.blog_v2.dao.interf.BlogCommentDao;
+import com.hx.blog_v2.domain.dto.SessionUser;
 import com.hx.blog_v2.domain.form.*;
 import com.hx.blog_v2.domain.mapper.AdminCommentVOMapper;
 import com.hx.blog_v2.domain.mapper.CommentVOMapper;
@@ -9,10 +10,7 @@ import com.hx.blog_v2.domain.vo.AdminCommentVO;
 import com.hx.blog_v2.domain.vo.CommentVO;
 import com.hx.blog_v2.service.interf.BaseServiceImpl;
 import com.hx.blog_v2.service.interf.BlogCommentService;
-import com.hx.blog_v2.util.BlogConstants;
-import com.hx.blog_v2.util.CacheContext;
-import com.hx.blog_v2.util.DateUtils;
-import com.hx.blog_v2.util.SqlUtils;
+import com.hx.blog_v2.util.*;
 import com.hx.common.interf.common.Page;
 import com.hx.common.interf.common.Result;
 import com.hx.common.util.ResultUtils;
@@ -45,9 +43,9 @@ public class BlogCommentServiceImpl extends BaseServiceImpl<BlogCommentPO> imple
 
     @Override
     public Result add(CommentSaveForm params) {
-        SessionUser user = getSessionUser();
+        SessionUser user = (SessionUser) WebContext.getAttributeFromSession(BlogConstants.SESSION_USER);
         BlogCommentPO po = new BlogCommentPO(user.getUserName(), user.getEmail(), user.getHeadImgUrl(), params.getToUser(),
-                user.getRole(), params.getContent());
+                user.getTitle(), params.getContent());
         po.setBlogId(params.getBlogId());
         if(! Tools.isEmpty(params.getFloorId())) {
             po.setFloorId(params.getFloorId());
@@ -172,10 +170,7 @@ public class BlogCommentServiceImpl extends BaseServiceImpl<BlogCommentPO> imple
         return ResultUtils.success(params.getId());
     }
 
-    private SessionUser getSessionUser() {
-//        HttpSession session = WebContext.getSession();
-//        SessionUser user = (SessionUser) session.getAttribute(BlogConstants.SESSION_USER);
-        return new SessionUser("Jerry.X.He", "970655147@qq.com", "https://gss0.bdstatic.com/6LZ1dD3d1sgCo2Kml5_Y_D3/sys/portrait/item/48c0c0b6b7e7393730363535313437f02d", "admin");
-    }
+    // -------------------- 辅助方法 --------------------------
+
 
 }

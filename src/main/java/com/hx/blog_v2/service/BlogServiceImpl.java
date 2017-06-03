@@ -53,6 +53,8 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
     private JdbcTemplate jdbcTemplate;
     @Autowired
     private CacheContext cacheContext;
+    @Autowired
+    private BlogConstants constants;
 
     @Override
     public Result save(BlogSaveForm params) {
@@ -152,7 +154,7 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
     public Result adminList(AdminBlogSearchForm params, Page<AdminBlogVO> page) {
         StringBuilder sql = new StringBuilder(
                 " select b.*, GROUP_CONCAT(rlt.tag_id) as tagIds from blog as b inner join rlt_blog_tag as rlt on b.id = rlt.blog_id " +
-                        " where b.deleted = 0 and b.id >= 0 ");
+                        " where b.deleted = 0 ");
         List<Object> sqlParams = new ArrayList<>(3);
         if (!Tools.isEmpty(params.getId())) {
             sql.append(" and b.id = ? ");
@@ -261,7 +263,7 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
     private void encapContent(AdminBlogVO vo) {
         if (!Tools.isEmpty(vo.getContentUrl())) {
             try {
-                vo.setContent(Tools.getContent(Tools.getFilePath(WebContext.getBlogRootPath(), vo.getContentUrl())));
+                vo.setContent(Tools.getContent(Tools.getFilePath(constants.blogRootDir, vo.getContentUrl())));
             } catch (Exception e) {
                 Log.err(Tools.errorMsg(e));
             }
@@ -295,7 +297,7 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
                 rltBlogTagDao.save(blogTags, BlogConstants.ADD_BEAN_CONFIG);
                 tagsInserted = true;
             }
-            String blogFile = Tools.getFilePath(WebContext.getBlogRootPath(), po.getContentUrl());
+            String blogFile = Tools.getFilePath(constants.blogRootDir, po.getContentUrl());
             FileUtils.createIfNotExists(blogFile, true);
             Tools.save(params.getContent(), blogFile);
         } catch (Exception e) {
@@ -353,7 +355,7 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
                 rltBlogTagDao.insertMany(blogTags, BlogConstants.ADD_BEAN_CONFIG);
             }
 
-            String blogFile = Tools.getFilePath(WebContext.getBlogRootPath(), po.getContentUrl());
+            String blogFile = Tools.getFilePath(constants.blogRootDir, po.getContentUrl());
             FileUtils.createIfNotExists(blogFile, true);
             Tools.save(params.getContent(), blogFile);
         } catch (Exception e) {
@@ -408,7 +410,7 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
     private void encapContent(BlogVO vo) {
         if (!Tools.isEmpty(vo.getContentUrl())) {
             try {
-                vo.setContent(Tools.getContent(Tools.getFilePath(WebContext.getBlogRootPath(), vo.getContentUrl())));
+                vo.setContent(Tools.getContent(Tools.getFilePath(constants.blogRootDir, vo.getContentUrl())));
             } catch (Exception e) {
                 Log.err(Tools.errorMsg(e));
             }

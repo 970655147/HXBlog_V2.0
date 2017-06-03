@@ -1,6 +1,8 @@
 package com.hx.blog_v2.dao;
 
+import com.hx.blog_v2.dao.interf.BaseDaoImpl;
 import com.hx.blog_v2.dao.interf.ResourceDao;
+import com.hx.blog_v2.domain.po.RequestLogPO;
 import com.hx.blog_v2.domain.po.ResourcePO;
 import com.hx.blog_v2.util.BlogConstants;
 import com.hx.blog_v2.util.MyMysqlConnectionProvider;
@@ -20,29 +22,21 @@ import java.sql.Connection;
  * @date 5/20/2017 10:38 AM
  */
 @Repository
-public class ResourceDaoImpl extends MysqlBaseDaoImpl<ResourcePO> implements ResourceDao {
-
-    public ResourceDaoImpl(ResourcePO bean) {
-        super(bean);
-    }
-
-    public ResourceDaoImpl(ResourcePO bean, DbConfig config) {
-        super(bean, config);
-    }
-
-    public ResourceDaoImpl(ResourcePO bean, ConnectionProvider<Connection> connectionProvider) {
-        super(bean, connectionProvider);
-    }
-
-    public ResourceDaoImpl(ResourcePO bean, DbConfig config, ConnectionProvider<Connection> connectionProvider) {
-        super(bean, config, connectionProvider);
-    }
+public class ResourceDaoImpl extends BaseDaoImpl<ResourcePO> implements ResourceDao {
 
     public ResourceDaoImpl() {
         super(ResourcePO.PROTO_BEAN,
-                new MysqlDbConfig(BlogConstants.MYSQL_DB_CONFIG).table(BlogConstants.TABLE_RESOURCE).id(BlogConstants.TABLE_ID),
-                new MyMysqlConnectionProvider()
-        );
+                new MysqlDbConfig(BlogConstants.MYSQL_DB_CONFIG).table(tableName()).id(id()),
+                new MyMysqlConnectionProvider());
+    }
+
+
+    public static String tableName() {
+        return BlogConstants.getInstance().tableResource;
+    }
+
+    public static String id() {
+        return BlogConstants.getInstance().tableId;
     }
 
 

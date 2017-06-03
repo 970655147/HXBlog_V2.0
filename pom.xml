@@ -155,7 +155,7 @@
             </activation>
             <properties>
                 <profiles.active>dev</profiles.active>
-                <war.exclude>**/*</war.exclude>
+                <war.exclude>.idea/**</war.exclude>
                 <war.packagingExcludes>%regex[.*\.pkg]</war.packagingExcludes>
             </properties>
         </profile>
@@ -163,7 +163,7 @@
             <id>test</id>
             <properties>
                 <profiles.active>test</profiles.active>
-                <war.exclude>**/*</war.exclude>
+                <war.exclude>.idea/**</war.exclude>
                 <war.packagingExcludes>%regex[.*\.pkg]</war.packagingExcludes>
             </properties>
         </profile>
@@ -171,7 +171,7 @@
             <id>prod</id>
             <properties>
                 <profiles.active>prod</profiles.active>
-                <war.exclude>**/*</war.exclude>
+                <war.exclude>.idea/**</war.exclude>
                 <war.packagingExcludes>%regex[.*\.pkg]</war.packagingExcludes>
             </properties>
         </profile>

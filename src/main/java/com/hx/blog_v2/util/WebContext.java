@@ -31,6 +31,11 @@ public final class WebContext {
     }
 
     /**
+     * 输出的 字符集
+     */
+    public static String RESP_CHARSET = "utf-8";
+
+    /**
      * 保存线程特有的相关对象
      */
     private static Map<String, ThreadLocal<Object>> threadLocalMap = new HashMap<>();
@@ -45,29 +50,11 @@ public final class WebContext {
      * 项目的绝对路径
      */
     private static String PROJ_PATH = null;
-    /**
-     * 存放博客的文件夹
-     */
-    private static String BLOG_ROOT_PATH = null;
-    /**
-     * 存放图片的文件夹
-     */
-    private static String IMG_ROOT_PATH = null;
-
-    static {
-        try {
-            Class.forName(BlogConstants.DB_DRIVER);
-        } catch (Exception e) {
-            Log.err("error while loading driver !");
-        }
-    }
 
     // -------------------- 文件系统相关 --------------------------
 
     public static void init(ServletContext servletContext) {
         PROJ_PATH = servletContext.getRealPath("/");
-        BLOG_ROOT_PATH = BlogConstants.BLOG_ROOT_DIR;
-        IMG_ROOT_PATH = BlogConstants.IMG_ROOT_DIR;
     }
 
     /**
@@ -80,30 +67,6 @@ public final class WebContext {
      */
     public static String getProjPath() {
         return PROJ_PATH;
-    }
-
-    /**
-     * 获取博客的根路径
-     *
-     * @return java.lang.String
-     * @author Jerry.X.He
-     * @date 5/21/2017 3:17 PM
-     * @since 1.0
-     */
-    public static String getBlogRootPath() {
-        return BLOG_ROOT_PATH;
-    }
-
-    /**
-     * 获取图片的根路径
-     *
-     * @return java.lang.String
-     * @author Jerry.X.He
-     * @date 5/21/2017 3:17 PM
-     * @since 1.0
-     */
-    public static String getImgRootPath() {
-        return IMG_ROOT_PATH;
     }
 
     // -------------------- req/resp --------------------------
@@ -351,7 +314,7 @@ public final class WebContext {
      */
     public static void responseText(String text) {
         HttpServletResponse resp = getResponse();
-        resp.setHeader("Content-Type", "text/plain;charset=" + BlogConstants.DEFAULT_CHARSET);
+        resp.setHeader("Content-Type", "text/plain;charset=" + RESP_CHARSET);
         responseWrite(resp, text);
     }
 
@@ -366,7 +329,7 @@ public final class WebContext {
      */
     public static void responseHtml(String text) {
         HttpServletResponse resp = getResponse();
-        resp.setHeader("Content-Type", "text/html;charset=" + BlogConstants.DEFAULT_CHARSET);
+        resp.setHeader("Content-Type", "text/html;charset=" + RESP_CHARSET);
         responseWrite(resp, text);
     }
 
@@ -381,7 +344,7 @@ public final class WebContext {
      */
     public static void responseXml(String text) {
         HttpServletResponse resp = getResponse();
-        resp.setHeader("Content-Type", "text/xml;charset=" + BlogConstants.DEFAULT_CHARSET);
+        resp.setHeader("Content-Type", "text/xml;charset=" + RESP_CHARSET);
         responseWrite(resp, text);
     }
 
@@ -396,7 +359,7 @@ public final class WebContext {
      */
     public static void responseJson(String text) {
         HttpServletResponse resp = getResponse();
-        resp.setHeader("Content-Type", "application/json;charset=" + BlogConstants.DEFAULT_CHARSET);
+        resp.setHeader("Content-Type", "application/json;charset=" + RESP_CHARSET);
         responseWrite(resp, text);
     }
 
@@ -420,7 +383,7 @@ public final class WebContext {
      */
     public static void responseImage(RenderedImage img, String format) {
         HttpServletResponse resp = getResponse();
-        resp.setHeader("Content-Type", "image;charset=" + BlogConstants.DEFAULT_CHARSET);
+        resp.setHeader("Content-Type", "image;charset=" + RESP_CHARSET);
 
         try {
             ImageIO.write(img, format, resp.getOutputStream());

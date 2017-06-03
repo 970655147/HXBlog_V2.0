@@ -1,6 +1,7 @@
 package com.hx.blog_v2.service.interf;
 
 import com.hx.blog_v2.domain.form.BeanIdForm;
+import com.hx.blog_v2.domain.form.LoginForm;
 import com.hx.blog_v2.domain.form.UserSaveForm;
 import com.hx.blog_v2.domain.po.UserPO;
 import com.hx.blog_v2.domain.vo.AdminUserVO;
@@ -56,5 +57,27 @@ public interface UserService extends BaseService<UserPO> {
      * @since 1.0
      */
     Result remove(BeanIdForm params);
+
+    // -------------------- 核心业务方法 --------------------------
+
+    /**
+     * 处理登录的逻辑
+     *
+     * @return result
+     * @author Jerry.X.He
+     * @date 5/20/2017 6:21 PM
+     * @since 1.0
+     */
+    Result login(LoginForm params);
+
+    /**
+     * 处理登出的逻辑
+     *
+     * @return result
+     * @author Jerry.X.He
+     * @date 5/20/2017 6:21 PM
+     * @since 1.0
+     */
+    Result logout();
 
 }

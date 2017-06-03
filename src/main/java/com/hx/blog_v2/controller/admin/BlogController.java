@@ -5,6 +5,7 @@ import com.hx.blog_v2.domain.form.BeanIdForm;
 import com.hx.blog_v2.domain.form.BlogSaveForm;
 import com.hx.blog_v2.domain.vo.AdminBlogVO;
 import com.hx.blog_v2.service.interf.BlogService;
+import com.hx.blog_v2.util.BlogConstants;
 import com.hx.common.interf.common.Result;
 import com.hx.common.result.SimplePage;
 import org.springframework.beans.factory.annotation.Autowired;

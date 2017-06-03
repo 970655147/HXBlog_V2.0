@@ -33,6 +33,8 @@ public class CompositeController {
     private MoodService moodService;
     @Autowired
     private ImageService imageService;
+    @Autowired
+    private BlogConstants constants;
 
 
     @RequestMapping(value = "/typeAndTags", method = RequestMethod.GET)
@@ -57,7 +59,7 @@ public class CompositeController {
         if(! moodsResult.isSuccess()) {
             return moodsResult;
         }
-        ImageSearchForm imgShowSearch = new ImageSearchForm(BlogConstants.IMG_TYPE_IMG_SHOW);
+        ImageSearchForm imgShowSearch = new ImageSearchForm(constants.imgTypeImgShow);
         Result imagesResult = imageService.imageList(imgShowSearch);
         if(! imagesResult.isSuccess()) {
             return imagesResult;

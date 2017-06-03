@@ -11,8 +11,9 @@ public class LoginForm {
 
     private String userName;
     private String password;
+    private String checkCode;
     private String ip;
-    private String ipName;
+    private String ipAddr;
 
     public LoginForm() {
     }
@@ -33,6 +34,14 @@ public class LoginForm {
         this.password = password;
     }
 
+    public String getCheckCode() {
+        return checkCode;
+    }
+
+    public void setCheckCode(String checkCode) {
+        this.checkCode = checkCode;
+    }
+
     public String getIp() {
         return ip;
     }
@@ -41,11 +50,11 @@ public class LoginForm {
         this.ip = ip;
     }
 
-    public String getIpName() {
-        return ipName;
+    public String getIpAddr() {
+        return ipAddr;
     }
 
-    public void setIpName(String ipName) {
-        this.ipName = ipName;
+    public void setIpAddr(String ipAddr) {
+        this.ipAddr = ipAddr;
     }
 }

@@ -17,6 +17,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
+import static com.hx.log.util.Log.info;
+
 /**
  * 缓存了一部分的数据
  *
@@ -41,43 +43,50 @@ public class CacheContext {
     private InterfDao interfDao;
     @Autowired
     private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private BlogConstants constants;
 
     /**
      * id -> blogTag
      */
-    private Map<String, BlogTagPO> blogTagsById;
+    private Map<String, BlogTagPO> blogTagsById = new LinkedHashMap<>();
     /**
      * id -> blogType
      */
-    private Map<String, BlogTypePO> blogTypesById;
+    private Map<String, BlogTypePO> blogTypesById = new LinkedHashMap<>();
     /**
      * 所有的友情链接
      */
-    private Map<String, LinkPO> linksById;
+    private Map<String, LinkPO> linksById = new LinkedHashMap<>();
     /**
      * 所有的角色
      */
-    private Map<String, RolePO> rolesById;
+    private Map<String, RolePO> rolesById = new LinkedHashMap<>();
     /**
      * 所有的角色
      */
-    private Map<String, ResourcePO> resourcesById;
+    private Map<String, ResourcePO> resourcesById = new LinkedHashMap<>();
     /**
      * 所有的接口
      */
-    private Map<String, InterfPO> interfsById;
+    private Map<String, InterfPO> interfsById = new LinkedHashMap<>();
+
     /**
      * blogId -> 给定的博客的下一个层数索引
      */
-    private final Cache<String, AtomicLong> blog2NextFloorId = new LRUMCache<>(BlogConstants.MAX_CACHED_BLOG_2_FLOOR_ID);
+    private Cache<String, AtomicLong> blog2NextFloorId;
     /**
      * blogId, floorId -> 给定的博客给定的层级下一个评论索引
      */
-    private final Cache<String, AtomicLong> blogFloor2NextCommentId = new LRUMCache<>(BlogConstants.MAX_CACHED_BLOG_2_FLOOR_ID);
+    private Cache<String, AtomicLong> blogFloor2NextCommentId;
     /**
      * digest -> uploadedImage 的缓存
      */
-    private final Cache<String, UploadFilePO> digest2UploadedFiles = new LRUMCache<>(BlogConstants.MAX_CACHED_UPLOADED_IMAGE);
+    private Cache<String, UploadFilePO> digest2UploadedFiles;
+    /**
+     * roleIds -> resourceIds 的缓存
+     */
+    private Cache<String, List<String>> roles2ResourceIds;
 
     /**
      * 初始化 CacheContext
@@ -89,14 +98,12 @@ public class CacheContext {
      */
     @PostConstruct
     public void init() {
-        blogTagsById = new LinkedHashMap<>();
-        blogTypesById = new LinkedHashMap<>();
-        linksById = new LinkedHashMap<>();
-        rolesById = new LinkedHashMap<>();
-        resourcesById = new LinkedHashMap<>();
-        interfsById = new LinkedHashMap<>();
+        blog2NextFloorId = new LRUMCache<>(constants.maxCachedBlog2FloorId, false);
+        blogFloor2NextCommentId = new LRUMCache<>(constants.maxCachedBlogFloor2CommentId, false);
+        digest2UploadedFiles = new LRUMCache<>(constants.maxCachedUploadedImage, false);
+        roles2ResourceIds = new LRUMCache<>(constants.maxRoleIds2ResourceIds, false);
 
-        refresh();
+        loadFullCachedResources();
     }
 
     /**
@@ -115,36 +122,12 @@ public class CacheContext {
         resourcesById.clear();
         interfsById.clear();
 
-        try {
-            List<BlogTagPO> tagList = blogTagDao.findMany(Criteria.eq("deleted", "0"), BlogConstants.LOAD_ALL_CONFIG);
-            for (BlogTagPO po : tagList) {
-                blogTagsById.put(po.getId(), po);
-            }
-            List<BlogTypePO> typeList = blogTypeDao.findMany(Criteria.eq("deleted", "0"), BlogConstants.LOAD_ALL_CONFIG);
-            for (BlogTypePO po : typeList) {
-                blogTypesById.put(po.getId(), po);
-            }
-            List<LinkPO> linkList = linkDao.findMany(Criteria.eq("deleted", "0"), Criteria.limitNothing(),
-                    Criteria.sortBy("sort", SortByCriteria.ASC), BlogConstants.LOAD_ALL_CONFIG);
-            for (LinkPO po : linkList) {
-                linksById.put(po.getId(), po);
-            }
-            List<RolePO> roleList = roleDao.findMany(Criteria.eq("deleted", "0"), BlogConstants.LOAD_ALL_CONFIG);
-            for (RolePO po : roleList) {
-                rolesById.put(po.getId(), po);
-            }
-            List<ResourcePO> resourceList = resourceDao.findMany(Criteria.eq("deleted", "0"), Criteria.limitNothing(),
-                    Criteria.sortBy("sort", SortByCriteria.ASC), BlogConstants.LOAD_ALL_CONFIG);
-            for (ResourcePO po : resourceList) {
-                resourcesById.put(po.getId(), po);
-            }
-            List<InterfPO> interfList = interfDao.findMany(Criteria.eq("deleted", "0"), BlogConstants.LOAD_ALL_CONFIG);
-            for (InterfPO po : interfList) {
-                interfsById.put(po.getId(), po);
-            }
-        } catch (Exception e) {
-            Log.err("error while load cached's data[tag, type, link, role] !");
-        }
+        blog2NextFloorId.clear();
+        blogFloor2NextCommentId.clear();
+        digest2UploadedFiles.clear();
+        roles2ResourceIds.clear();
+
+        loadFullCachedResources();
     }
 
     /**
@@ -329,7 +312,65 @@ public class CacheContext {
         }
     }
 
+    /**
+     * 根据给定的role集合, 获取所有的可以访问的资源
+     *
+     * @param roleIds roleIds
+     * @return java.util.List<java.lang.String>
+     * @author Jerry.X.He
+     * @date 6/3/2017 3:02 PM
+     * @since 1.0
+     */
+    public List<String> resourceIdsByRoleIds(String roleIds) {
+        return roles2ResourceIds.get(roleIds);
+    }
+
+    public void putResourceIdsByRoleIds(String roleIds, List<String> resourceIds) {
+        roles2ResourceIds.put(roleIds, resourceIds);
+    }
+
     // -------------------- 辅助方法 --------------------------
 
+    /**
+     * 加载 全部缓存的数据
+     *
+     * @return void
+     * @author Jerry.X.He
+     * @date 6/3/2017 3:04 PM
+     * @since 1.0
+     */
+    private void loadFullCachedResources() {
+        try {
+            List<BlogTagPO> tagList = blogTagDao.findMany(Criteria.eq("deleted", "0"), BlogConstants.LOAD_ALL_CONFIG);
+            for (BlogTagPO po : tagList) {
+                blogTagsById.put(po.getId(), po);
+            }
+            List<BlogTypePO> typeList = blogTypeDao.findMany(Criteria.eq("deleted", "0"), BlogConstants.LOAD_ALL_CONFIG);
+            for (BlogTypePO po : typeList) {
+                blogTypesById.put(po.getId(), po);
+            }
+            List<LinkPO> linkList = linkDao.findMany(Criteria.eq("deleted", "0"), Criteria.limitNothing(),
+                    Criteria.sortBy("sort", SortByCriteria.ASC), BlogConstants.LOAD_ALL_CONFIG);
+            for (LinkPO po : linkList) {
+                linksById.put(po.getId(), po);
+            }
+            List<RolePO> roleList = roleDao.findMany(Criteria.eq("deleted", "0"), BlogConstants.LOAD_ALL_CONFIG);
+            for (RolePO po : roleList) {
+                rolesById.put(po.getId(), po);
+            }
+            List<ResourcePO> resourceList = resourceDao.findMany(Criteria.eq("deleted", "0"), Criteria.limitNothing(),
+                    Criteria.sortBy("sort", SortByCriteria.ASC), BlogConstants.LOAD_ALL_CONFIG);
+            for (ResourcePO po : resourceList) {
+                resourcesById.put(po.getId(), po);
+            }
+            List<InterfPO> interfList = interfDao.findMany(Criteria.eq("deleted", "0"), BlogConstants.LOAD_ALL_CONFIG);
+            for (InterfPO po : interfList) {
+                interfsById.put(po.getId(), po);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.err("error while load cached's data[tag, type, link, role] !");
+        }
+    }
 
 }

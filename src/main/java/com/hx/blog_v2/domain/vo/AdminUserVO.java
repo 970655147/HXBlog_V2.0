@@ -12,6 +12,7 @@ public class AdminUserVO {
     private String id;
     private String userName;
     private String nickName;
+    private String title;
     private String email;
     private String headImgUrl;
     private String motto;
@@ -45,6 +46,14 @@ public class AdminUserVO {
 
     public void setNickName(String nickName) {
         this.nickName = nickName;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getEmail() {

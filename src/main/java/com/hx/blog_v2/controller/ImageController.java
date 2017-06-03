@@ -1,13 +1,18 @@
 package com.hx.blog_v2.controller;
 
+import com.hx.blog_v2.domain.dto.CheckCode;
 import com.hx.blog_v2.domain.form.ImageSearchForm;
 import com.hx.blog_v2.service.interf.ImageService;
 import com.hx.blog_v2.util.BlogConstants;
+import com.hx.blog_v2.util.CheckCodeUtils;
+import com.hx.blog_v2.util.WebContext;
 import com.hx.common.interf.common.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.awt.image.BufferedImage;
 
 /**
  * ImageController
@@ -22,19 +27,32 @@ public class ImageController {
 
     @Autowired
     private ImageService imageService;
+    @Autowired
+    private BlogConstants constants;
 
     @RequestMapping(value = "/imgShowList", method = RequestMethod.GET)
     public Result imgShowList() {
 
-        ImageSearchForm params = new ImageSearchForm(BlogConstants.IMG_TYPE_IMG_SHOW);
+        ImageSearchForm params = new ImageSearchForm(constants.imgTypeImgShow);
         return imageService.imageList(params);
     }
 
     @RequestMapping(value = "/headImgList", method = RequestMethod.GET)
     public Result headImgList() {
 
-        ImageSearchForm params = new ImageSearchForm(BlogConstants.IMG_TYPE_IMG_SHOW);
+        ImageSearchForm params = new ImageSearchForm(constants.imgTypeHeadImg);
         return imageService.imageList(params);
+    }
+
+    @RequestMapping("/checkCode")
+    public void checkCode() {
+        CheckCode checkCode = CheckCodeUtils.getCheckCode(constants.checkCodeImgWidth, constants.checkCodeImgHeight,
+                constants.checkCodeImgBgColor, constants.checkCodeImgFont, constants.checkCodeLength,
+                constants.checkCodeCandidates, constants.checkCodeMinInterference, constants.checkCodeInterferenceOff);
+        WebContext.setAttributeForSession(BlogConstants.SESSION_CHECK_CODE, checkCode.getCheckCode());
+
+        WebContext.responseNoCache();
+        WebContext.responseImage((BufferedImage) checkCode.getCheckCodeImg(), "jpg");
     }
 
 }

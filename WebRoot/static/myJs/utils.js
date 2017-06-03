@@ -134,3 +134,10 @@ Date.prototype.format = function (fmt) { //author: meizz
     return fmt;
 }
 
+/**
+ * 刷新当前页面
+ */
+refresh = function() {
+    location.reload()
+}
+

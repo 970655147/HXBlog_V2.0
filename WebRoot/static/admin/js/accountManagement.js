@@ -42,6 +42,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
                             html += '<td>' + item.id + '</td>';
                             html += '<td>' + item.userName + '</td>';
                             html += '<td>' + item.nickName + '</td>';
+                            html += '<td>' + item.title + '</td>';
                             html += '<td>' + item.email + '</td>';
                             html += '<td><img src="' + item.headImgUrl + '" width="60px" height="60px" /></td>';
                             html += '<td>' + item.motto + '</td>';
@@ -130,6 +131,8 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
             html += '<input  style="width:87%;margin: auto;color: #000!important;" name="password" type="password"  class="layui-input" >';
             html += '<label class="layui-form-label" style="border: none;width: 180px;" >昵称:</label>';
             html += '<input  style="width:87%;margin: auto;color: #000!important;" name="nickName" lay-verify="required"  class="layui-input" >';
+            html += '<label class="layui-form-label" style="border: none;width: 180px;" >称号:</label>';
+            html += '<input  style="width:87%;margin: auto;color: #000!important;" name="title" lay-verify="required"  class="layui-input" >';
             html += '<label class="layui-form-label" style="border: none;width: 180px;" >邮箱:</label>';
             html += '<input  style="width:87%;margin: auto;color: #000!important;" name="email" lay-verify="required"  class="layui-input" >';
             html += '<label class="layui-form-label" style="border: none;width: 120px;" >头像地址:</label>';
@@ -162,9 +165,11 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
             html += '<form id="updateAccountForm" class="layui-form layui-form-pane" action="/admin/user/update" method="post">';
             html += '<input type="hidden" name="id" value="' + id + '"/>';
             html += '<label class="layui-form-label" style="border: none;width: 180px;" >用户名:</label>';
-            html += '<input  style="width:87%;margin: auto;color: #000!important;" name="userName" value="' + userName + '" lay-verify="required"  class="layui-input" >';
+            html += '<input  style="width:87%;margin: auto;color: #000!important;" name="userName" value="' + userName + '" lay-verify="required"  class="layui-input" readonly >';
             html += '<label class="layui-form-label" style="border: none;width: 180px;" >昵称:</label>';
             html += '<input  style="width:87%;margin: auto;color: #000!important;" name="nickName" value="' + nickName + '" lay-verify="required"  class="layui-input" >';
+            html += '<label class="layui-form-label" style="border: none;width: 180px;" >称号:</label>';
+            html += '<input  style="width:87%;margin: auto;color: #000!important;" name="title" lay-verify="required"  class="layui-input" >';
             html += '<label class="layui-form-label" style="border: none;width: 180px;" >邮箱:</label>';
             html += '<input  style="width:87%;margin: auto;color: #000!important;" name="email" value="' + email + '" lay-verify="required"  class="layui-input" >';
             html += '<label class="layui-form-label" style="border: none;width: 120px;" >头像地址:</label>';

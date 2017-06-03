@@ -1,7 +1,9 @@
 package com.hx.blog_v2.dao;
 
+import com.hx.blog_v2.dao.interf.BaseDaoImpl;
 import com.hx.blog_v2.dao.interf.BlogExDao;
 import com.hx.blog_v2.domain.po.BlogExPO;
+import com.hx.blog_v2.domain.po.BlogPO;
 import com.hx.blog_v2.util.BlogConstants;
 import com.hx.blog_v2.util.MyMysqlConnectionProvider;
 import com.hx.mongo.config.MysqlDbConfig;
@@ -20,29 +22,21 @@ import java.sql.Connection;
  * @date 5/20/2017 10:38 AM
  */
 @Repository
-public class BlogExDaoImpl extends MysqlBaseDaoImpl<BlogExPO> implements BlogExDao {
-
-    public BlogExDaoImpl(BlogExPO bean) {
-        super(bean);
-    }
-
-    public BlogExDaoImpl(BlogExPO bean, DbConfig config) {
-        super(bean, config);
-    }
-
-    public BlogExDaoImpl(BlogExPO bean, ConnectionProvider<Connection> connectionProvider) {
-        super(bean, connectionProvider);
-    }
-
-    public BlogExDaoImpl(BlogExPO bean, DbConfig config, ConnectionProvider<Connection> connectionProvider) {
-        super(bean, config, connectionProvider);
-    }
+public class BlogExDaoImpl extends BaseDaoImpl<BlogExPO> implements BlogExDao {
 
     public BlogExDaoImpl() {
         super(BlogExPO.PROTO_BEAN,
-                new MysqlDbConfig(BlogConstants.MYSQL_DB_CONFIG).table(BlogConstants.TABLE_BLOG_EX).id(BlogConstants.TABLE_ID),
-                new MyMysqlConnectionProvider()
-        );
+                new MysqlDbConfig(BlogConstants.MYSQL_DB_CONFIG).table(tableName()).id(id()),
+                new MyMysqlConnectionProvider());
+    }
+
+
+    public static String tableName() {
+        return BlogConstants.getInstance().tableBlogEx;
+    }
+
+    public static String id() {
+        return BlogConstants.getInstance().tableId;
     }
 
 

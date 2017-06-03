@@ -62,6 +62,12 @@ public class ResourceController {
         return resourceService.roleResourceUpdate(params);
     }
 
+    @RequestMapping(value = "/reSort", method = RequestMethod.POST)
+    public Result reSort() {
+
+        return resourceService.reSort();
+    }
+
     @RequestMapping(value = "/remove", method = RequestMethod.POST)
     public Result remove(BeanIdForm params) {
 

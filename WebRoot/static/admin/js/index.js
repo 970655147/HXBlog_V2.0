@@ -28,16 +28,20 @@ layui.define([ 'layer', 'form'], function (exports) {
         var index = layer.load(1);
         layer.close(index);
 
+        var userName = data.field.userName
+        var password = hex_md5(data.field.password)
+        var checkCode = data.field.checkCode
         var ip = returnCitySN["cip"];
-        var ipName = returnCitySN["cname"];
+        var ipAddr = returnCitySN["cname"];
         $.ajax({
             url : "/admin/user/login",
             type : "POST",
             data:{
-                userName : data.field.userName,
-                password : data.field.password,
-                ip : ip,
-                ipName : ipName
+                "userName" : userName,
+                "password" : password,
+                "checkCode" : checkCode,
+                "ip" : ip,
+                "ipAddr" : ipAddr
             },
             success : function (resp) {
                 if(resp.success){
@@ -47,7 +51,8 @@ layui.define([ 'layer', 'form'], function (exports) {
                         location.href = "/static/admin/main.html";
                     }, 1000);
                 }else{
-                    layer.msg('账号或者密码错误', { icon: 5 });
+                    refreshCheckCode()
+                    layer.msg(resp.data, { icon: 5 })
                 }
             }
         });
@@ -81,6 +86,14 @@ layui.define([ 'layer', 'form'], function (exports) {
         loginHtml += '</div>';
         loginHtml += '</div>';
         loginHtml += '<div class="layui-form-item">';
+        loginHtml += '<label class="layui-form-label">验证码</label>';
+        loginHtml += '<div class="layui-input-inline pm-login-input">';
+        loginHtml += '<input type="text" name="checkCode" placeholder="请输入验证码"  autocomplete="off" class="layui-input">';
+        loginHtml += '<br />';
+        loginHtml += '<img name="checkCodeImg" width="160px" height="80px" onclick="refreshCheckCode()" />';
+        loginHtml += '</div>';
+        loginHtml += '</div>';
+        loginHtml += '<div class="layui-form-item">';
         loginHtml += '<label class="layui-form-label">人机验证</label>';
         loginHtml += '<div class="layui-input-inline pm-login-input">';
         loginHtml += '<div class="l-captcha" lay-verify="result_response" data-site-key="0c5f2ddcf3eb0f58a678e0c50e0d736e"></div>';
@@ -100,15 +113,23 @@ layui.define([ 'layer', 'form'], function (exports) {
             title: false,
             shade: 0.4,
             shadeClose: true,
-            area: ['480px', '270px'],
+            area: ['540px', '420px'],
             closeBtn: 0,
             anim: 1,
             skin: 'pm-layer-login',
             content: loginHtml
         });
         layui.form().render('checkbox');
+        refreshCheckCode()
     }
 
     exports('index', {});
 });
+
+/**
+ * 刷新验证码
+ */
+function refreshCheckCode() {
+    $("[name='checkCodeImg']").attr("src", "/image/checkCode?ts=" + Date.parse(new Date()))
+}
 

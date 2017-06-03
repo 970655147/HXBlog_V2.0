@@ -1,4 +1,4 @@
-package com.hx.blog_v2.domain.form;
+package com.hx.blog_v2.domain.dto;
 
 /**
  * 存放在session中的用户信息[登录的, 非登录的]
@@ -9,19 +9,33 @@ package com.hx.blog_v2.domain.form;
  */
 public class SessionUser {
 
+    /**
+     * userId
+     */
+    private String id;
     private String userName;
     private String email;
     private String headImgUrl;
-    private String role;
+    private String title;
+    private String roleIds;
 
-    public SessionUser(String userName, String email, String headImgUrl, String role) {
+    public SessionUser(String userName, String email, String headImgUrl, String title, String roleIds) {
         this.userName = userName;
         this.email = email;
         this.headImgUrl = headImgUrl;
-        this.role = role;
+        this.title = title;
+        this.roleIds = roleIds;
     }
 
     public SessionUser() {
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getUserName() {
@@ -48,11 +62,19 @@ public class SessionUser {
         this.headImgUrl = headImgUrl;
     }
 
-    public String getRole() {
-        return role;
+    public String getTitle() {
+        return title;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getRoleIds() {
+        return roleIds;
+    }
+
+    public void setRoleIds(String roleIds) {
+        this.roleIds = roleIds;
     }
 }

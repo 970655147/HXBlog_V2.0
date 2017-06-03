@@ -11,92 +11,99 @@
 
 </head>
 <body>
-<fieldset id="dataList" class="layui-elem-field layui-field-title sys-list-field" style="display:none;">
-    <legend style="text-align:center;">资源管理</legend>
-    <div class="layui-form-item" style="margin:10px auto auto auto;display: block" >
-        <label class="layui-form-label" style="width: 200px"> 根节点的id为 :  <span name="rootId" style="color: red" > 7 </span> </label>
-        <button class="layui-btn" onclick="layui.funcs.spreadAll()">
-            <i class="layui-icon">&#xe608;</i> 展开资源
-        </button>
-    </div>
-    <button class="layui-btn" style="margin:10px auto auto auto;display: block" onclick="layui.funcs.addData()">
-        <i class="layui-icon">&#xe608;</i> 添加资源链接
+    <button class="layui-btn" style="margin-left: 30px" onclick="refresh()">
+        <i class="layui-icon">&#x1002;</i> 刷新
     </button>
-    <div class="layui-field-box">
-        <div>
-            <ul id="resourceTree" style="display: inline; float:left; margin-left: 36%; width: 200px ">
-                <!-- 资源树的数据 -->
-            </ul>
 
-            <form id="updateResourceForm" class="layui-form" action="/admin/resource/update" method="post"
-                  style="display: inline; float:right; margin-right: 30%">
-                <div class="layui-form-item">
-                    <label class="layui-form-label">id</label>
-                    <div class="layui-input-inline">
-                        <input type="text" name="id" lay-verify="required" autocomplete="off" readonly="readonly"
-                               class="layui-input"/>
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label">名称</label>
-                    <div class="layui-input-inline">
-                        <input type="text" name="name" lay-verify="required" autocomplete="off"
-                               class="layui-input"/>
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label">图标样式</label>
-                    <div class="layui-input-inline">
-                        <input type="text" name="iconClass" lay-verify="required" autocomplete="off"
-                               class="layui-input"/>
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label">链接</label>
-                    <div class="layui-input-inline">
-                        <input type="text" name="url" lay-verify="required" autocomplete="off"
-                               class="layui-input"/>
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label">排序</label>
-                    <div class="layui-input-inline">
-                        <input type="text" name="sort" lay-verify="required" autocomplete="off"
-                               class="layui-input"/>
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label">父级菜单</label>
-                    <div class="layui-input-inline">
-                        <input type="text" name="parentId" lay-verify="required" autocomplete="off"
-                               class="layui-input"/>
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label" style="border: none">是否显示:</label>
-                    <div name="enableRatioGroup">
-                        <input type="radio" name="enable" value="1" title="是" checked />
-                        <input type="radio" name="enable" value="0" title="否"/>
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <button class="layui-btn" lay-submit="" lay-filter="updateResourceSubmit">修改</button>
-                    <button class="layui-btn" lay-submit="" lay-filter="deleteResourceSubmit" >删除</button>
-                </div>
-            </form>
+    <fieldset id="dataList" class="layui-elem-field layui-field-title sys-list-field" style="display:none;">
+        <legend style="text-align:center;">资源管理</legend>
+        <div class="layui-form-item" style="margin:10px auto auto auto;display: block" >
+            <label class="layui-form-label" style="width: 200px"> 根节点的id为 :  <span name="rootId" style="color: red" > 7 </span> </label>
+            <button class="layui-btn" onclick="layui.funcs.spreadAll()">
+                <i class="layui-icon">&#xe608;</i> 展开资源
+            </button>
+            <button class="layui-btn" onclick="layui.funcs.reSort()">
+                <i class="layui-icon">&#x1002;</i> 刷新排序
+            </button>
         </div>
+        <button class="layui-btn" style="margin:10px auto auto auto;display: block" onclick="layui.funcs.addData()">
+            <i class="layui-icon">&#xe608;</i> 添加资源链接
+        </button>
+        <div class="layui-field-box">
+            <div>
+                <ul id="resourceTree" style="display: inline; float:left; margin-left: 36%; width: 200px ">
+                    <!-- 资源树的数据 -->
+                </ul>
 
-    </div>
-</fieldset>
-<!-- layui.js -->
-<script src="./plugin/layui/layui.js"></script>
-<script src="../js/jquery-1.11.1.min.js"></script>
-<script src="../myJs/constants.js"></script>
+                <form id="updateResourceForm" class="layui-form" action="/admin/resource/update" method="post"
+                      style="display: inline; float:right; margin-right: 30%">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">id</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="id" lay-verify="required" autocomplete="off" readonly="readonly"
+                                   class="layui-input"/>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">名称</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="name" lay-verify="required" autocomplete="off"
+                                   class="layui-input"/>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">图标样式</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="iconClass" lay-verify="required" autocomplete="off"
+                                   class="layui-input"/>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">链接</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="url" lay-verify="required" autocomplete="off"
+                                   class="layui-input"/>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">排序</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="sort" lay-verify="required" autocomplete="off"
+                                   class="layui-input"/>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">父级菜单</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="parentId" lay-verify="required" autocomplete="off"
+                                   class="layui-input"/>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label" style="border: none">是否显示:</label>
+                        <div name="enableRatioGroup">
+                            <input type="radio" name="enable" value="1" title="是" checked />
+                            <input type="radio" name="enable" value="0" title="否"/>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <button class="layui-btn" lay-submit="" lay-filter="updateResourceSubmit">修改</button>
+                        <button class="layui-btn" lay-submit="" lay-filter="deleteResourceSubmit" >删除</button>
+                    </div>
+                </form>
+            </div>
 
-<script type="text/javascript">
-    layui.config({
-        base: './js/'
-    }).use('resourceManagement');
-</script>
+        </div>
+    </fieldset>
+    <!-- layui.js -->
+    <script src="./plugin/layui/layui.js"></script>
+    <script src="../js/jquery-1.11.1.min.js"></script>
+    <script src="../myJs/constants.js"></script>
+
+    <script type="text/javascript">
+        layui.config({
+            base: './js/'
+        }).use('resourceManagement');
+    </script>
 </body>
 </html>

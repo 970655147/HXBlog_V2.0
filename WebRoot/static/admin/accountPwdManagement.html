@@ -11,34 +11,37 @@
 
 </head>
 <body>
+    <button class="layui-btn" style="margin-left: 30px" onclick="refresh()">
+        <i class="layui-icon">&#x1002;</i> 刷新
+    </button>
+
     <fieldset id="dataList" class="layui-elem-field layui-field-title sys-list-field" >
         <legend style="text-align:center;">修改账号密码</legend>
         <form class="layui-form" action="/admin/admin" method="post">
             <div class="layui-form-item">
                 <label class="layui-form-label">原账号</label>
                 <div class="layui-input-inline">
-                    <input type="text" id="oldUserName" lay-verify="required" autocomplete="off"  class="layui-input">
-                    <input type="hidden" name="id" th:value="${session.currentAdmin.id}">
+                    <input type="text" id="userName" lay-verify="required" autocomplete="off"  class="layui-input" readonly >
                 </div>
             </div>
             <div class="layui-form-item">
                 <label class="layui-form-label">原密码</label>
                 <div class="layui-input-inline">
-                    <input type="password" id="oldPassword" lay-verify="required" autocomplete="off" class="layui-input">
+                    <input type="password" id="password" lay-verify="required" autocomplete="off" class="layui-input">
                 </div>
             </div>
 
             <div class="layui-form-item">
                 <label class="layui-form-label">新密码</label>
                 <div class="layui-input-inline">
-                    <input type="text" name="resourceName" lay-verify="required"  autocomplete="off" class="layui-input">
+                    <input type="text" name="newPassword" lay-verify="required"  autocomplete="off" class="layui-input">
                 </div>
             </div>
 
             <div class="layui-form-item">
                 <label class="layui-form-label">确认密码</label>
                 <div class="layui-input-inline">
-                    <input type="password" name="password" lay-verify="required"  autocomplete="off" class="layui-input">
+                    <input type="password" name="confirmPassword" lay-verify="required"  autocomplete="off" class="layui-input">
                 </div>
             </div>
             <div class="layui-form-item">

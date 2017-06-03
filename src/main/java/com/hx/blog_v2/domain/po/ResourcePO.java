@@ -5,6 +5,7 @@ import com.hx.blog_v2.util.DateUtils;
 import com.hx.json.JSONObject;
 import com.hx.json.config.interf.JSONConfig;
 import com.hx.json.interf.JSONField;
+import com.hx.log.alogrithm.tree.interf.TreeIdExtractor;
 import com.hx.log.json.interf.JSONTransferable;
 import com.hx.log.util.Constants;
 import com.hx.log.util.Tools;
@@ -21,7 +22,7 @@ import java.util.Map;
  * @version 1.0
  * @date 5/22/2017 8:03 PM
  */
-public class ResourcePO implements JSONTransferable<ResourcePO> {
+public class ResourcePO implements JSONTransferable<ResourcePO>, TreeIdExtractor<ResourcePO, String> {
 
     @JSONField({"id", "id"})
     private String id;
@@ -196,4 +197,8 @@ public class ResourcePO implements JSONTransferable<ResourcePO> {
         this.id = id;
     }
 
+    @Override
+    public String parentId() {
+        return parentId;
+    }
 }

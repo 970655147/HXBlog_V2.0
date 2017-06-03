@@ -1,15 +1,16 @@
 package com.hx.blog_v2.service;
 
-import com.hx.blog_v2.dao.interf.BlogCommentDao;
-import com.hx.blog_v2.dao.interf.BlogDao;
-import com.hx.blog_v2.dao.interf.BlogExDao;
-import com.hx.blog_v2.dao.interf.LinkDao;
 import com.hx.blog_v2.domain.POVOTransferUtils;
+import com.hx.blog_v2.domain.extractor.ResourceTreeInfoExtractor;
+import com.hx.blog_v2.domain.dto.SessionUser;
 import com.hx.blog_v2.domain.mapper.*;
 import com.hx.blog_v2.domain.po.BlogTagPO;
 import com.hx.blog_v2.domain.po.BlogTypePO;
 import com.hx.blog_v2.domain.po.ResourcePO;
-import com.hx.blog_v2.domain.vo.*;
+import com.hx.blog_v2.domain.vo.BlogVO;
+import com.hx.blog_v2.domain.vo.CommentVO;
+import com.hx.blog_v2.domain.vo.FacetByMonthVO;
+import com.hx.blog_v2.domain.vo.ResourceVO;
 import com.hx.blog_v2.service.interf.BaseServiceImpl;
 import com.hx.blog_v2.service.interf.IndexService;
 import com.hx.blog_v2.service.interf.LinkService;
@@ -18,21 +19,15 @@ import com.hx.blog_v2.util.CacheContext;
 import com.hx.blog_v2.util.WebContext;
 import com.hx.common.interf.common.Result;
 import com.hx.common.util.ResultUtils;
-import com.hx.json.JSONArray;
 import com.hx.json.JSONObject;
 import com.hx.log.alogrithm.tree.TreeUtils;
-import com.hx.log.alogrithm.tree.interf.TreeInfoExtractor;
-import com.hx.log.collection.CollectionUtils;
 import com.hx.log.util.Log;
 import com.hx.log.util.Tools;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * BlogServiceImpl
@@ -50,6 +45,8 @@ public class IndexServiceImpl extends BaseServiceImpl<Object> implements IndexSe
     private CacheContext cacheContext;
     @Autowired
     private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private BlogConstants constants;
 
     @Override
     public Result index() {
@@ -107,23 +104,30 @@ public class IndexServiceImpl extends BaseServiceImpl<Object> implements IndexSe
 
     @Override
     public Result adminMenus() {
-        Map<String, ResourcePO> resourcesById = cacheContext.allResources();
-        List<ResourceVO> resources = new ArrayList<>(resourcesById.size());
-        for(Map.Entry<String, ResourcePO> entry : resourcesById.entrySet()) {
-            resources.add(POVOTransferUtils.resourcePO2ResourceVO(entry.getValue()));
+        SessionUser user = (SessionUser) WebContext.getAttributeFromSession(BlogConstants.SESSION_USER);
+        String roleIds = user.getRoleIds();
+        List<String> resourceIds = cacheContext.resourceIdsByRoleIds(roleIds);
+        if(resourceIds == null) {
+            String resourceIdSql = " select resource_id from rlt_role_resource as rr inner join resource as r on rr.resource_id = r.id " +
+                    " where role_id in ( %s ) order by r.sort ";
+            String inSnippet = user.getRoleIds();
+            inSnippet = inSnippet.substring(1, inSnippet.length()-1);
+            resourceIds = jdbcTemplate.query(String.format(resourceIdSql, inSnippet), new OneStringMapper("resource_id"));
+            cacheContext.putResourceIdsByRoleIds(roleIds, resourceIds);
         }
 
-        JSONObject root = TreeUtils.generateTree(resources, new TreeInfoExtractor<ResourceVO>() {
-            @Override
-            public void extract(ResourceVO bean, JSONObject obj) {
-                obj.element("id", bean.getId());
-                obj.element("name", bean.getName());
-                obj.element("url", bean.getUrl());
-                obj.element("iconClass", bean.getIconClass());
-                obj.element("parentId", bean.getParentId());
+        Map<String, ResourcePO> resourcesById = cacheContext.allResources();
+        Set<String> needToGet = collectAllParentIds(resourceIds, resourcesById);
+        List<ResourceVO> resources = new ArrayList<>(resourcesById.size());
+        for (Map.Entry<String, ResourcePO> entry : resourcesById.entrySet()) {
+            if(needToGet.contains(entry.getKey())) {
+                resources.add(POVOTransferUtils.resourcePO2ResourceVO(entry.getValue()));
             }
-        }, "childs", BlogConstants.RESOURCE_ROOT_PARENT_ID);
-        TreeUtils.childArrayify(root, "childs");
+        }
+
+        final String childStr = "childs";
+        JSONObject root = TreeUtils.generateTree(resources, new ResourceTreeInfoExtractor(), childStr, BlogConstants.RESOURCE_ROOT_PARENT_ID);
+        TreeUtils.childArrayify(root, childStr);
         return ResultUtils.success(root);
     }
 
@@ -168,7 +172,7 @@ public class IndexServiceImpl extends BaseServiceImpl<Object> implements IndexSe
      * @since 1.0
      */
     private void encapBlogVo(List<BlogVO> voes) {
-        for(BlogVO vo : voes) {
+        for (BlogVO vo : voes) {
             encapTypeTagInfo(vo);
             encapContent(vo);
         }
@@ -202,11 +206,42 @@ public class IndexServiceImpl extends BaseServiceImpl<Object> implements IndexSe
     private void encapContent(BlogVO vo) {
         if (!Tools.isEmpty(vo.getContentUrl())) {
             try {
-                vo.setContent(Tools.getContent(Tools.getFilePath(WebContext.getBlogRootPath(), vo.getContentUrl())));
+                vo.setContent(Tools.getContent(Tools.getFilePath(constants.blogRootDir, vo.getContentUrl())));
             } catch (Exception e) {
                 Log.err(Tools.errorMsg(e));
             }
         }
+    }
+
+    /**
+     * 根据给定的叶节点的资源, 收集其所有的上层节点
+     *
+     * @param resourceIds resourceIds
+     * @param resourcesById resourcesById
+     * @return java.util.Set<java.lang.String>
+     * @author Jerry.X.He
+     * @date 6/3/2017 3:41 PM
+     * @since 1.0
+     */
+    private Set<String> collectAllParentIds(List<String> resourceIds, Map<String, ResourcePO> resourcesById) {
+        Set<String> needToGet = new HashSet<>(Tools.estimateMapSize(resourcesById.size()));
+        needToGet.addAll(resourceIds);
+        List<String> parentIds = new ArrayList<>(resourcesById.size());
+        for (Map.Entry<String, ResourcePO> entry : resourcesById.entrySet()) {
+            ResourcePO po = entry.getValue();
+            if(BlogConstants.RESOURCE_ROOT_PARENT_ID.equals(po.getParentId() )) {
+                continue ;
+            }
+
+            if(resourceIds.contains(po.getId())) {
+                parentIds.add(po.getParentId());
+            }
+        }
+        if(! parentIds.isEmpty()) {
+            needToGet.addAll(collectAllParentIds(parentIds, resourcesById));
+        }
+
+        return needToGet;
     }
 
 }

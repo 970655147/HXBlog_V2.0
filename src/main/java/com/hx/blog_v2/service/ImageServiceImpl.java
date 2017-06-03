@@ -46,6 +46,8 @@ public class ImageServiceImpl extends BaseServiceImpl<ImagePO> implements ImageS
     private ImageDao imageDao;
     @Autowired
     private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private BlogConstants constants;
 
     @Override
     public Result add(ImageSaveForm params) {

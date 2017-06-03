@@ -55,7 +55,14 @@ public class UserController {
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public Result login(LoginForm params) {
 
-        return ResultUtils.success("succ");
+        return userService.login(params);
+
+    }
+
+    @RequestMapping(value = "/logout", method = RequestMethod.POST)
+    public Result logout() {
+
+        return userService.logout();
 
     }
 

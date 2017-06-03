@@ -12,13 +12,7 @@
     <description>核心配置</description>
 
     <!-- spring启动时扫描项目路径下的properties文件,后续用${key}方式取出对应值,这样可以代码解耦和，后续只需修改properties文件即可 -->
-    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-        <property name="locations">
-            <list>
-                <value>classpath:props/*.properties</value>
-            </list>
-        </property>
-    </bean>
+    <context:property-placeholder location="classpath:props/*.properties" ignore-unresolvable="true" />
 
     <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
         <property name="dataSource" ref="dataSource" />

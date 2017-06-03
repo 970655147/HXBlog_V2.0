@@ -85,8 +85,6 @@ layui.define(['element', 'laypage', 'layer', 'form', 'tree'], function (exports)
                     layer.alert('添加资源成功!', {
                         closeBtn: 0,
                         icon: 1
-                    }, function () {
-                        location.reload()
                     });
                 } else {
                     layer.alert("添加资源失败[" + resp.msg + "] !", {icon: 5});
@@ -106,11 +104,9 @@ layui.define(['element', 'laypage', 'layer', 'form', 'tree'], function (exports)
                     layer.alert('更新资源成功!', {
                         closeBtn: 0,
                         icon: 1
-                    }, function () {
-                        location.reload()
                     });
                 } else {
-                    layer.alert("更新资源失败[" + resp.msg + "] !", {icon: 5});
+                    layer.alert('更新资源失败, 请联系管理人员!');
                 }
             }
         });
@@ -131,8 +127,6 @@ layui.define(['element', 'laypage', 'layer', 'form', 'tree'], function (exports)
                         layer.alert('删除资源成功!', {
                             closeBtn: 0,
                             icon: 1
-                        }, function () {
-                            location.reload()
                         });
                     } else {
                         layer.alert("删除资源失败[" + resp.msg + "] !", {icon: 5});
@@ -191,6 +185,20 @@ layui.define(['element', 'laypage', 'layer', 'form', 'tree'], function (exports)
             }
             newHref.append("spread=true")
             location.href = newHref.toString()
+        },
+        reSort : function() {
+            $.ajax({
+                url: "/admin/resource/reSort",
+                type: "POST",
+                data: { },
+                success: function (resp) {
+                    if (resp.success) {
+                        layer.alert('刷新排序成功!');
+                    } else {
+                        layer.alert('刷新排序失败, 请联系管理人员!');
+                    }
+                }
+            });
         }
     };
     exports('funcs', funcs);

@@ -84,10 +84,11 @@
                         <div class="input-group">
                             <div class="input-group-addon">用户名 <span style="color:red">*</span></div>
                             <input id="resourceName" name="resourceName" type="text" class="form-control"
-                                   placeholder="resourceName"/>
+                                   :value="userName" placeholder="userName"/>
 
                             <div class="input-group-addon">邮箱</div>
-                            <input id="email" name="email" type="text" class="form-control" placeholder="email"/>
+                            <input id="email" name="email" type="text" class="form-control"
+                                   :value="email" placeholder="email"/>
                         </div>
                         <br/>
                         头像选择 : <img :src="selectedHeadImgUrl" width="40px" height="40px" /> <br/>

@@ -27,10 +27,14 @@ public class UserPO implements JSONTransferable<UserPO> {
     private String id;
     @JSONField({"userName", "user_name"})
     private String userName;
+    @JSONField({"pwdSalt", "pwd_salt"})
+    private String pwdSalt;
     @JSONField({"password", "password"})
     private String password;
     @JSONField({"nickName", "nick_name"})
     private String nickName;
+    @JSONField({"title", "title"})
+    private String title;
     @JSONField({"email", "email"})
     private String email;
     @JSONField({"headImgUrl", "head_img_url"})
@@ -48,11 +52,13 @@ public class UserPO implements JSONTransferable<UserPO> {
     @JSONField({"deleted", "deleted"})
     private int deleted;
 
-    public UserPO(String userName, String password, String nickName, String email, String headImgUrl, String motto) {
+    public UserPO(String userName, String password, String nickName, String title, String email,
+                  String headImgUrl, String motto) {
         this();
         this.userName = userName;
         this.password = password;
         this.nickName = nickName;
+        this.title = title;
         this.email = email;
         this.headImgUrl = headImgUrl;
         this.motto = motto;
@@ -82,6 +88,14 @@ public class UserPO implements JSONTransferable<UserPO> {
         this.userName = userName;
     }
 
+    public String getPwdSalt() {
+        return pwdSalt;
+    }
+
+    public void setPwdSalt(String pwdSalt) {
+        this.pwdSalt = pwdSalt;
+    }
+
     public String getPassword() {
         return password;
     }
@@ -96,6 +110,14 @@ public class UserPO implements JSONTransferable<UserPO> {
 
     public void setNickName(String nickName) {
         this.nickName = nickName;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getEmail() {

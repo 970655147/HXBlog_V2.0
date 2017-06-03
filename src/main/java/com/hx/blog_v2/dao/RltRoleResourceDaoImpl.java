@@ -1,6 +1,8 @@
 package com.hx.blog_v2.dao;
 
+import com.hx.blog_v2.dao.interf.BaseDaoImpl;
 import com.hx.blog_v2.dao.interf.RltRoleResourceDao;
+import com.hx.blog_v2.domain.po.RltResourceInterfPO;
 import com.hx.blog_v2.domain.po.RltRoleResourcePO;
 import com.hx.blog_v2.util.BlogConstants;
 import com.hx.blog_v2.util.MyMysqlConnectionProvider;
@@ -20,29 +22,21 @@ import java.sql.Connection;
  * @date 5/20/2017 10:38 AM
  */
 @Repository
-public class RltRoleResourceDaoImpl extends MysqlBaseDaoImpl<RltRoleResourcePO> implements RltRoleResourceDao {
-
-    public RltRoleResourceDaoImpl(RltRoleResourcePO bean) {
-        super(bean);
-    }
-
-    public RltRoleResourceDaoImpl(RltRoleResourcePO bean, DbConfig config) {
-        super(bean, config);
-    }
-
-    public RltRoleResourceDaoImpl(RltRoleResourcePO bean, ConnectionProvider<Connection> connectionProvider) {
-        super(bean, connectionProvider);
-    }
-
-    public RltRoleResourceDaoImpl(RltRoleResourcePO bean, DbConfig config, ConnectionProvider<Connection> connectionProvider) {
-        super(bean, config, connectionProvider);
-    }
+public class RltRoleResourceDaoImpl extends BaseDaoImpl<RltRoleResourcePO> implements RltRoleResourceDao {
 
     public RltRoleResourceDaoImpl() {
         super(RltRoleResourcePO.PROTO_BEAN,
-                new MysqlDbConfig(BlogConstants.MYSQL_DB_CONFIG).table(BlogConstants.TABLE_ROLE_RESOURCE).id(BlogConstants.TABLE_ID),
-                new MyMysqlConnectionProvider()
-        );
+                new MysqlDbConfig(BlogConstants.MYSQL_DB_CONFIG).table(tableName()).id(id()),
+                new MyMysqlConnectionProvider());
+    }
+
+
+    public static String tableName() {
+        return BlogConstants.getInstance().tableRltRoleResource;
+    }
+
+    public static String id() {
+        return BlogConstants.getInstance().tableId;
     }
 
 

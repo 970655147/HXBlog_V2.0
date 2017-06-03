@@ -1,13 +1,7 @@
 package com.hx.blog_v2.service;
 
-import com.baidu.ueditor.ActionEnter;
 import com.baidu.ueditor.ConfigManager;
 import com.baidu.ueditor.define.ActionMap;
-import com.baidu.ueditor.define.AppInfo;
-import com.baidu.ueditor.define.BaseState;
-import com.baidu.ueditor.define.State;
-import com.baidu.ueditor.upload.ImageMultiDpiUploader;
-import com.baidu.ueditor.upload.Uploader;
 import com.baidu.ueditor.utils.Constants;
 import com.hx.blog_v2.dao.interf.UploadFileDao;
 import com.hx.blog_v2.domain.form.UploadedImageSaveForm;
@@ -20,20 +14,17 @@ import com.hx.blog_v2.util.DateUtils;
 import com.hx.blog_v2.util.WebContext;
 import com.hx.common.interf.common.Result;
 import com.hx.common.util.ResultUtils;
-import com.hx.json.JSONObj;
 import com.hx.json.JSONObject;
 import com.hx.log.alogrithm.code.Codec;
 import com.hx.log.file.FileUtils;
 import com.hx.log.util.Log;
 import com.hx.log.util.Tools;
 import com.hx.mongo.criteria.Criteria;
-import com.sun.org.apache.xpath.internal.operations.Mult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
@@ -57,6 +48,10 @@ public class UploadFileServiceImpl extends BaseServiceImpl<UploadFilePO> impleme
     private JdbcTemplate jdbcTemplate;
     @Autowired
     private CacheContext cacheContext;
+    @Autowired
+    private BlogConstants blogConstants;
+    @Autowired
+    private BlogConstants constants;
 
     @Override
     public Result add(UploadedImageSaveForm params) {
@@ -77,7 +72,7 @@ public class UploadFileServiceImpl extends BaseServiceImpl<UploadFilePO> impleme
         }
 
         String relativePath = generateImgPath(file);
-        String filePath = Tools.getFilePath(WebContext.getImgRootPath(), relativePath);
+        String filePath = Tools.getFilePath(constants.fileRootDir, relativePath);
         try {
             FileUtils.createIfNotExists(filePath, true);
             file.transferTo(new File(filePath));
@@ -200,7 +195,7 @@ public class UploadFileServiceImpl extends BaseServiceImpl<UploadFilePO> impleme
      * @since 1.0
      */
     private String getImageVisitUrl(String relativePath) {
-        return BlogConstants.IMAGE_URL_RREFIX + relativePath;
+        return blogConstants.imageUrlPrefix + relativePath;
     }
 
     /**
