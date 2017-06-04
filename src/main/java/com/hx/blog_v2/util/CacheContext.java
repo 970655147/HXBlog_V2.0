@@ -293,13 +293,14 @@ public class CacheContext {
      * @since 1.0
      */
     public String nextCommentId(String blogId, String floorId) {
-        AtomicLong idx = blogFloor2NextCommentId.get(blogId);
+        String blogFloorId = blogFloorIdx(blogId, floorId);
+        AtomicLong idx = blogFloor2NextCommentId.get(blogFloorId);
         if (idx != null) {
             return String.valueOf(idx.getAndIncrement());
         }
 
         synchronized (blogFloor2NextCommentId) {
-            idx = blogFloor2NextCommentId.get(blogId);
+            idx = blogFloor2NextCommentId.get(blogFloorId);
             if (idx != null) {
                 return String.valueOf(idx.getAndIncrement());
             }
@@ -371,6 +372,20 @@ public class CacheContext {
             e.printStackTrace();
             Log.err("error while load cached's data[tag, type, link, role] !");
         }
+    }
+
+    /**
+     * 获取给定的博客, 给定的层数的索引[在blogFloor2NextCommentId中使用]
+     *
+     * @param blogId blogId
+     * @param floorId floorId
+     * @return java.lang.String
+     * @author Jerry.X.He
+     * @date 6/4/2017 1:02 PM
+     * @since 1.0
+     */
+    private String blogFloorIdx(String blogId, String floorId) {
+        return blogId + "_" + floorId;
     }
 
 }

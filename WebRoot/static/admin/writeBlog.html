@@ -23,10 +23,6 @@
         <div class="layui-input-inline">
             <input type="text" name="title" lay-verify="required" autocomplete="off" placeholder="请输入标题" class="layui-input" th:value="${blog}==null?'':${blog.title}"/>
         </div>
-        <label class="layui-form-label">博文作者</label>
-        <div class="layui-input-inline">
-            <input type="text" name="author" lay-verify="required" autocomplete="off"  class="layui-input" th:value="${blog}==null?'':${blog.author}">
-        </div>
     </div>
 
 
@@ -45,7 +41,7 @@
     <div class="layui-form-item">
         <label class="layui-form-label">所属类别</label>
         <div class="layui-input-inline">
-            <select lay-verify="required" name="blogTypeId" id="typeId" >
+            <select id="typeId" name="blogTypeId" lay-verify="required" >
                 <option value=""></option>
             </select>
         </div>
@@ -62,7 +58,7 @@
 
         </div>
         <div class="layui-input-inline">
-            <select id="tagIds" lay-verify="required" lay-filter="tagIds" >
+            <select id="tagIds" lay-filter="tagIds" lay-verify="required" >
                 <option value="" ></option>
             </select>
         </div>

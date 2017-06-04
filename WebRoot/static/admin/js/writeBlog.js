@@ -28,7 +28,7 @@ if (!isEmpty(currentBlogId)) {
                 $("[name='author']").attr("value", blog.author)
                 $("[name='coverUrl']").attr("value", blog.coverUrl)
                 $("[id='coverShow']").attr("src", blog.coverUrl)
-                $("#blogTypeId option[value='" + blog.blogTypeId + "']").attr("selected", "")
+                $("#typeId option[value='" + blog.blogTypeId + "']").attr("selected", "")
                 for (idx in blog.blogTagIds) {
                     var value = blog.blogTagIds[idx].trim()
                     var text = blog.blogTagNames[idx].trim()
@@ -45,7 +45,7 @@ if (!isEmpty(currentBlogId)) {
                     UE.getEditor('editor').execCommand('insertHtml', blog.content)
                 });
             } else {
-                layer.alert("拉取博客信息失败[" + resp.msg + "] !", {icon: 5});
+                layer.alert("拉取博客信息失败[" + resp.data + "] !", {icon: 5});
             }
         }
     });
@@ -75,7 +75,7 @@ layui.define(['form', 'upload', 'layer'], function (exports) {
                         layer.close(addBlogLayer)
                     });
                 } else {
-                    layer.alert("保存博客失败[" + resp.msg + "] !", {icon: 5});
+                    layer.alert("保存博客失败[" + resp.data + "] !", {icon: 5});
                 }
             }
         });
@@ -98,7 +98,7 @@ layui.define(['form', 'upload', 'layer'], function (exports) {
                         layer.close(addTypeLayer)
                     });
                 } else {
-                    layer.alert("添加类型失败[" + resp.msg + "] !", {icon: 5});
+                    layer.alert("添加类型失败[" + resp.data + "] !", {icon: 5});
                 }
             }
         });
@@ -120,7 +120,7 @@ layui.define(['form', 'upload', 'layer'], function (exports) {
                         layer.close(addTypeLayer)
                     });
                 } else {
-                    layer.alert("保存标签失败[" + resp.msg + "] !", {icon: 5});
+                    layer.alert("保存标签失败[" + resp.data + "] !", {icon: 5});
                 }
             }
         });
@@ -137,7 +137,7 @@ layui.define(['form', 'upload', 'layer'], function (exports) {
                 $("#coverUrl").attr("value", visitUrl)
                 $("#coverShow").attr("src", visitUrl);
             } else {
-                layer.alert("保存图片失败[" + resp.msg + "] !", {icon: 5});
+                layer.alert("保存图片失败[" + resp.data + "] !", {icon: 5});
             }
         }
     });
@@ -157,7 +157,7 @@ layui.define(['form', 'upload', 'layer'], function (exports) {
         success: function (resp) { //上传成功后的回调
             if (resp.success) {
             } else {
-                layer.alert("保存文件失败[" + resp.msg + "] !", {icon: 5});
+                layer.alert("保存文件失败[" + resp.data + "] !", {icon: 5});
             }
         }
     });
@@ -259,7 +259,7 @@ function initTypeAndTags() {
                     tagIdEle.append("<option value='" + tags[idx].id + "'> " + tags[idx].name + " </option>")
                 }
             } else {
-                layer.alert("拉取类型/标签列表失败[" + resp.msg + "] !", {icon: 5});
+                layer.alert("拉取类型/标签列表失败[" + resp.data + "] !", {icon: 5});
             }
         }
     });

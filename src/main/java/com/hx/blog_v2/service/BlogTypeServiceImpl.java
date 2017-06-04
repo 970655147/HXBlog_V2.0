@@ -3,7 +3,9 @@ package com.hx.blog_v2.service;
 import com.hx.blog_v2.dao.interf.BlogTypeDao;
 import com.hx.blog_v2.domain.POVOTransferUtils;
 import com.hx.blog_v2.domain.form.BlogTypeSaveForm;
+import com.hx.blog_v2.domain.mapper.OneIntMapper;
 import com.hx.blog_v2.domain.po.BlogTypePO;
+import com.hx.blog_v2.domain.vo.BlogTypeVO;
 import com.hx.blog_v2.service.interf.BaseServiceImpl;
 import com.hx.blog_v2.service.interf.BlogTypeService;
 import com.hx.blog_v2.util.BlogConstants;
@@ -14,6 +16,7 @@ import com.hx.common.util.ResultUtils;
 import com.hx.log.util.Tools;
 import com.hx.mongo.criteria.Criteria;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -35,6 +38,8 @@ public class BlogTypeServiceImpl extends BaseServiceImpl<BlogTypePO> implements 
     private BlogTypeDao blogTypeDao;
     @Autowired
     private CacheContext cacheContext;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     @Override
     public Result add(BlogTypeSaveForm params) {
@@ -57,11 +62,11 @@ public class BlogTypeServiceImpl extends BaseServiceImpl<BlogTypePO> implements 
     @Override
     public Result list() {
         Map<String, BlogTypePO> blogTypes = cacheContext.allBlogTypes();
-        List<BlogTypePO> all = new ArrayList<>(blogTypes.size());
+        List<BlogTypeVO> all = new ArrayList<>(blogTypes.size());
         for (Map.Entry<String, BlogTypePO> entry : blogTypes.entrySet()) {
-            all.add(entry.getValue());
+            all.add(POVOTransferUtils.blogTypePO2BlogTypeVO(entry.getValue()));
         }
-        return ResultUtils.success(POVOTransferUtils.blogTypePO2BlogTypeVOList(all));
+        return ResultUtils.success(all);
     }
 
 
@@ -89,11 +94,17 @@ public class BlogTypeServiceImpl extends BaseServiceImpl<BlogTypePO> implements 
 
     @Override
     public Result remove(BlogTypeSaveForm params) {
-        BlogTypePO po = cacheContext.allBlogTypes().remove(params.getId());
+        BlogTypePO po = cacheContext.allBlogTypes().get(params.getId());
         if (po == null) {
             return ResultUtils.failed("该类型不存在 !");
         }
+        String countSql = " select count(*) as totalRecord from blog where deleted = 0 and blog_type_id = ? ";
+        Integer totalRecord = jdbcTemplate.queryForObject(countSql, new Object[]{params.getId() }, new OneIntMapper("totalRecord"));
+        if(totalRecord > 0) {
+            return ResultUtils.failed("该类型下面还有 " + totalRecord + "篇博客, 请先迁移这部分博客 !");
+        }
 
+        cacheContext.allBlogTypes().remove(params.getId());
         String updatedAt = DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
         try {
             long modified = blogTypeDao.updateOne(Criteria.eq("id", params.getId()),

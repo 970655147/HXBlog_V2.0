@@ -7,6 +7,7 @@ import com.hx.blog_v2.domain.comparator.ResourceSortComparator;
 import com.hx.blog_v2.domain.form.BeanIdForm;
 import com.hx.blog_v2.domain.form.ResourceSaveForm;
 import com.hx.blog_v2.domain.form.RoleResourceUpdateForm;
+import com.hx.blog_v2.domain.mapper.OneIntMapper;
 import com.hx.blog_v2.domain.mapper.RltRoleResourcePOMapper;
 import com.hx.blog_v2.domain.po.ResourcePO;
 import com.hx.blog_v2.domain.po.RltRoleResourcePO;
@@ -222,11 +223,17 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourcePO> implements 
 
     @Override
     public Result remove(BeanIdForm params) {
-        ResourcePO po = cacheContext.allResources().remove(params.getId());
+        ResourcePO po = cacheContext.allResources().get(params.getId());
         if (po == null) {
             return ResultUtils.failed("该资源不存在 !");
         }
+        String countSql = " select count(*) as totalRecord from `role` where deleted = 0 and id in ( select role_id from rlt_role_resource where resource_id = ? ) ";
+        Integer totalRecord = jdbcTemplate.queryForObject(countSql, new Object[]{params.getId() }, new OneIntMapper("totalRecord"));
+        if(totalRecord > 0) {
+            return ResultUtils.failed("该资源下面还有 " + totalRecord + "个角色, 请先迁移这部分角色 !");
+        }
 
+        cacheContext.allResources().remove(params.getId());
         String updatedAt = DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
         try {
             long deleted = resourceDao.updateOne(Criteria.eq("id", params.getId()),

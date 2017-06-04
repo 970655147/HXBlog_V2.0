@@ -5,6 +5,7 @@ import com.hx.blog_v2.domain.form.BeanIdForm;
 import com.hx.blog_v2.domain.form.MoodSaveForm;
 import com.hx.blog_v2.domain.mapper.AdminMoodVOMapper;
 import com.hx.blog_v2.domain.mapper.MoodVOMapper;
+import com.hx.blog_v2.domain.mapper.OneIntMapper;
 import com.hx.blog_v2.domain.po.MoodPO;
 import com.hx.blog_v2.domain.vo.AdminMoodVO;
 import com.hx.blog_v2.domain.vo.MoodVO;
@@ -63,11 +64,14 @@ public class MoodServiceImpl extends BaseServiceImpl<MoodPO> implements MoodServ
 
     @Override
     public Result adminList(Page<AdminMoodVO> page) {
-        String sql = " select * from mood where deleted = 0 order by created_at desc limit ?, ? ";
+        String selectSql = " select * from mood where deleted = 0 order by created_at desc limit ?, ? ";
+        String countSql = " select count(*) as totalRecord from mood where deleted = 0 ";
         Object[] params = new Object[]{page.recordOffset(), page.getPageSize()};
 
-        List<AdminMoodVO> list = jdbcTemplate.query(sql, params, new AdminMoodVOMapper());
+        List<AdminMoodVO> list = jdbcTemplate.query(selectSql, params, new AdminMoodVOMapper());
+        Integer totalRecord = jdbcTemplate.queryForObject(countSql, new OneIntMapper("totalRecord"));
         page.setList(list);
+        page.setTotalRecord(totalRecord);
         return ResultUtils.success(page);
     }
 

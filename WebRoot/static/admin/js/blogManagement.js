@@ -16,20 +16,21 @@ layui.define(['element', 'laypage', 'layer', 'form', 'pagesize'], function (expo
         return false;
     });
 
-    initilData(1, 8);
+    initilData(1);
     //页数据初始化
 
-    function initilData() {
+    function initilData(pageNow) {
         var index = layer.load(1);
+
         //模拟数据加载
-        setTimeout(doSearch(layer, index, 1), 500);
+        setTimeout(doSearch(layer, index, pageNow), 1000);
     }
 
     function doSearch(layer, index, pageNow) {
         layer.close(index);
         var params = $("#blogSearchForm").serialize()
-        params.pageNow = pageNow
-        params.pageSize = pageSize
+        params += "&pageNow=" + pageNow
+        params += "&pageSize=" + pageSize
 
         $.ajax({
             url: "/admin/blog/list",
@@ -62,23 +63,16 @@ layui.define(['element', 'laypage', 'layer', 'form', 'pagesize'], function (expo
                         pages: resp.data.totalPage,
                         groups: 5,
                         skip: true,
-                        curr: params.pageNow,
+                        curr: pageNow,
                         jump: function (obj, first) {
-                            var currentIndex = obj.curr;
-                            if (!first) {
-                                initilData(currentIndex, pageSize);
+                            var pageNow = obj.curr;
+                            if (! first) {
+                                initilData(pageNow);
                             }
                         }
                     });
-
-                    //laypageId:laypage对象的id同laypage({})里面的cont属性
-                    //pagesize当前页容量，用于显示当前页容量
-                    //callback用于设置pagesize确定按钮点击时的回掉函数，返回新的页容量
-                    layui.pagesize(laypageId, params.pageSize).callback(function (newPageSize) {
-                        initilData(1, newPageSize);
-                    });
                 } else {
-                    layer.alert("拉取博客列表失败[" + resp.msg + "] !", {icon: 5});
+                    layer.alert("拉取博客列表失败[" + resp.data + "] !", {icon: 5});
                 }
             }
         });
@@ -128,21 +122,21 @@ function initTypeAndTags() {
         type: "GET",
         success: function (resp) {
             if (resp.success) {
-                var types = result.data.types
+                var types = resp.data.types
                 var typeIdEle = $("#typeId")
                 typeIdEle.append("<option value=''> 全部 </option>")
                 for (idx in types) {
                     typeIdEle.append("<option value='" + types[idx].id + "'> " + types[idx].name + " </option>")
                 }
 
-                var tags = result.data.tags
+                var tags = resp.data.tags
                 var tagIdEle = $("#tagId")
                 tagIdEle.append("<option value=''> 全部 </option>")
                 for (idx in tags) {
                     tagIdEle.append("<option value='" + tags[idx].id + "'> " + tags[idx].name + " </option>")
                 }
             } else {
-                layer.alert("拉取类型/标签列表失败[" + resp.msg + "] !", {icon: 5});
+                layer.alert("拉取类型/标签列表失败[" + resp.data + "] !", {icon: 5});
             }
         }
     });

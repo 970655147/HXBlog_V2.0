@@ -1,6 +1,5 @@
 package com.hx.blog_v2.service.interf;
 
-import com.hx.blog_v2.domain.form.AdminBlogSearchForm;
 import com.hx.blog_v2.domain.form.BeanIdForm;
 import com.hx.blog_v2.domain.form.BlogSaveForm;
 import com.hx.blog_v2.domain.form.BlogSearchForm;
@@ -67,7 +66,7 @@ public interface BlogService extends BaseService<BlogPO> {
      * @date 5/20/2017 6:21 PM
      * @since 1.0
      */
-    Result adminList(AdminBlogSearchForm params, Page<AdminBlogVO> page);
+    Result adminList(BlogSearchForm params, Page<AdminBlogVO> page);
 
     /**
      * 移除给定的博客

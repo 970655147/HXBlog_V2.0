@@ -50,10 +50,10 @@ public class IndexServiceImpl extends BaseServiceImpl<Object> implements IndexSe
 
     @Override
     public Result index() {
-        String hotBlogsSql = " select * from blog as b inner join blog_ex as e on b.id = e.blog_id " +
+        String hotBlogsSql = " select e.*, b.* from blog as b inner join blog_ex as e on b.id = e.blog_id " +
                 " where b.deleted = 0 and b.id >= 0 order by e.comment_cnt desc limit 0, 5 ";
-        String latestCommentsSql = " select * from blog_comment order by created_at limit 0, 5 ";
-        String contextBlogSql = " select * from blog as b inner join blog_ex as e on b.id = e.blog_id " +
+        String latestCommentsSql = " select * from blog_comment order by created_at desc limit 0, 5 ";
+        String contextBlogSql = " select e.*, b.* from blog as b inner join blog_ex as e on b.id = e.blog_id " +
                 " where b.id = " + BlogConstants.CONTEXT_BLOG_ID;
         String facetByMogroupnthSql = " select b.created_at_month as month, count(*) as cnt from blog as b " +
                 "where b.deleted = 0 and b.id >= 0 group by b.created_at_month ";
@@ -85,14 +85,21 @@ public class IndexServiceImpl extends BaseServiceImpl<Object> implements IndexSe
 
     @Override
     public Result latest() {
-        String recommendBlogsSql = " select * from blog as b inner join blog_ex as e on b.id = e.blog_id " +
+        String recommendBlogsSql = " select e.*, b.* from blog as b inner join blog_ex as e on b.id = e.blog_id " +
                 " where b.deleted = 0 and b.id >= 0 order by e.comment_cnt desc limit 0, 1 ";
-        String latestBlogsSql = " select * from blog as b inner join blog_ex as e on b.id = e.blog_id " +
+        String latestBlogsSql = " select e.*, b.* from blog as b inner join blog_ex as e on b.id = e.blog_id " +
                 " where b.deleted = 0 and b.id >= 0 order by b.created_at desc limit 0, 5 ";
 
-        BlogVO recommendBlog = jdbcTemplate.queryForObject(recommendBlogsSql, new BlogVOMapper());
+        BlogVO recommendBlog = null;
+        try {
+            recommendBlog = jdbcTemplate.queryForObject(recommendBlogsSql, new BlogVOMapper());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         List<BlogVO> latestBlogs = jdbcTemplate.query(latestBlogsSql, new BlogVOMapper());
-        encapBlogVo(Collections.singletonList(recommendBlog));
+        if(recommendBlog != null) {
+            encapBlogVo(Collections.singletonList(recommendBlog));
+        }
         encapBlogVo(latestBlogs);
 
         JSONObject data = new JSONObject();

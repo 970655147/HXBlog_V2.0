@@ -22,7 +22,7 @@
     color: #FA4B2A;
 }
 
-#oImg {
+#xiaolongbao {
     position: fixed;
     right: 0%;
     bottom: 0%;
@@ -321,7 +321,7 @@ display: inline-block;
     .likeCount {
         margin-top: 0.8em;
     }
-    #oImg {
+    #xiaolongbao {
         height: 130px;
     }
     .media-body.response-text-right{

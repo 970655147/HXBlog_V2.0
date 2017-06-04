@@ -8,6 +8,9 @@
     <script type="text/javascript" src="../js/jquery-1.11.1.min.js" ></script>
     <script type="text/javascript" src="./js/commonImport.js" ></script>
     <script type="text/javascript" src="./plugin/layui/layui.js" ></script>
+    <script type="text/javascript" src="./js/md5.js" ></script>
+    <script type="text/javascript" src="./js/accountPwdManagement.js" ></script>
+    <script type="text/javascript" src="../myJs/utils.js" ></script>
 
 </head>
 <body>
@@ -17,38 +20,33 @@
 
     <fieldset id="dataList" class="layui-elem-field layui-field-title sys-list-field" >
         <legend style="text-align:center;">修改账号密码</legend>
-        <form class="layui-form" action="/admin/admin" method="post">
-            <div class="layui-form-item">
-                <label class="layui-form-label">原账号</label>
-                <div class="layui-input-inline">
-                    <input type="text" id="userName" lay-verify="required" autocomplete="off"  class="layui-input" readonly >
-                </div>
-            </div>
+        <form class="layui-form" id="updatePwdForm" action="/admin/user/updatePwd" method="post">
             <div class="layui-form-item">
                 <label class="layui-form-label">原密码</label>
                 <div class="layui-input-inline">
-                    <input type="password" id="password" lay-verify="required" autocomplete="off" class="layui-input">
+                    <input type="password" name="oldPwd" lay-verify="required" autocomplete="off" class="layui-input">
                 </div>
             </div>
 
             <div class="layui-form-item">
                 <label class="layui-form-label">新密码</label>
                 <div class="layui-input-inline">
-                    <input type="text" name="newPassword" lay-verify="required"  autocomplete="off" class="layui-input">
+                    <input type="password" name="newPwd" lay-verify="required" autocomplete="off" class="layui-input">
                 </div>
             </div>
 
             <div class="layui-form-item">
                 <label class="layui-form-label">确认密码</label>
                 <div class="layui-input-inline">
-                    <input type="password" name="confirmPassword" lay-verify="required"  autocomplete="off" class="layui-input">
+                    <input type="password" name="confirmNewPwd" lay-verify="required"  autocomplete="off" class="layui-input">
                 </div>
             </div>
             <div class="layui-form-item">
-                <button class="layui-btn" style="margin-left: 55px;" lay-submit="" lay-filter="submit" type="submit">修改</button>
+                <button class="layui-btn" style="margin-left: 55px;" lay-submit="" lay-filter="updatePwdSubmit">修改</button>
                 <button class="layui-btn" type="reset">重置</button>
             </div>
         </form>
+
     </fieldset>
 
     <script type="text/javascript">

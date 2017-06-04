@@ -5,11 +5,13 @@ import com.hx.blog_v2.domain.po.BlogExPO;
 import com.hx.blog_v2.domain.po.BlogPO;
 import com.hx.blog_v2.domain.vo.BlogVO;
 import com.hx.blog_v2.util.BlogConstants;
+import com.hx.log.util.Tools;
 import com.hx.mongo.util.ResultSet2MapAdapter;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.Map;
 
 /**
@@ -32,6 +34,13 @@ public class BlogVOMapper implements RowMapper<BlogVO> {
 
         BlogVO vo = POVOTransferUtils.blogPO2BlogVO(po);
         vo = POVOTransferUtils.blogExPO2BlogVO(exPo, vo);
+        String tagIds = (String) resultMap.get("tagIds");
+        if(!Tools.isEmpty(tagIds)) {
+            String[] tagIdArr = tagIds.split(",");
+            if (tagIdArr.length > 0) {
+                vo.setBlogTagIds(Arrays.asList(tagIdArr));
+            }
+        }
         return vo;
     }
 

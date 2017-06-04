@@ -5,10 +5,7 @@ import com.hx.blog_v2.domain.form.BeanIdForm;
 import com.hx.blog_v2.domain.form.ImageSaveForm;
 import com.hx.blog_v2.domain.form.ImageSearchForm;
 import com.hx.blog_v2.domain.form.MoodSaveForm;
-import com.hx.blog_v2.domain.mapper.AdminImageVOMapper;
-import com.hx.blog_v2.domain.mapper.AdminMoodVOMapper;
-import com.hx.blog_v2.domain.mapper.ImageVOMapper;
-import com.hx.blog_v2.domain.mapper.MoodVOMapper;
+import com.hx.blog_v2.domain.mapper.*;
 import com.hx.blog_v2.domain.po.ImagePO;
 import com.hx.blog_v2.domain.po.MoodPO;
 import com.hx.blog_v2.domain.vo.AdminImageVO;
@@ -62,6 +59,7 @@ public class ImageServiceImpl extends BaseServiceImpl<ImagePO> implements ImageS
         return ResultUtils.success(po.getId());
     }
 
+    @Override
     public Result imageList(ImageSearchForm params) {
         String sql = " select * from images where deleted = 0 and enable = 1 and type = '" + params.getType() + "' order by created_at ";
 
@@ -71,11 +69,14 @@ public class ImageServiceImpl extends BaseServiceImpl<ImagePO> implements ImageS
 
     @Override
     public Result adminList(ImageSearchForm params, Page<AdminImageVO> page) {
-        String sql = " select * from images where deleted = 0 and type = '" + params.getType() + "' order by created_at desc limit ?, ? ";
+        String selectSql = " select * from images where deleted = 0 and type = '" + params.getType() + "' order by created_at desc limit ?, ? ";
+        String countSql = " select count(*) as totalRecord from images where deleted = 0 and type = ' " + params.getType() + " ' ";
         Object[] sqlParams = new Object[]{page.recordOffset(), page.getPageSize()};
 
-        List<AdminImageVO> list = jdbcTemplate.query(sql, sqlParams, new AdminImageVOMapper());
+        List<AdminImageVO> list = jdbcTemplate.query(selectSql, sqlParams, new AdminImageVOMapper());
+        Integer totalRecord = jdbcTemplate.queryForObject(countSql, new OneIntMapper("totalRecord"));
         page.setList(list);
+        page.setTotalRecord(totalRecord);
         return ResultUtils.success(page);
     }
 

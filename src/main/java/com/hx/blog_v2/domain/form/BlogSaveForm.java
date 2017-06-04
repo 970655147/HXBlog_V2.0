@@ -16,7 +16,6 @@ public class BlogSaveForm {
 
     private String id;
     private String title;
-    private String author;
     /**
      * 封面的url
      */
@@ -46,7 +45,6 @@ public class BlogSaveForm {
                         String summary, String content) {
         this();
         this.title = title;
-        this.author = author;
         this.coverUrl = coverUrl;
         this.blogTypeId = blogTypeId;
         this.blogTagIds = blogTagIds;
@@ -75,14 +73,6 @@ public class BlogSaveForm {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public String getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
     }
 
     public String getCoverUrl() {

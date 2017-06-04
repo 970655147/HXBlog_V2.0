@@ -141,3 +141,46 @@ refresh = function() {
     location.reload()
 }
 
+/**
+ * 根据给定的url, 以及参数, 封装查询字符串
+ *
+ * @param baseUrl
+ * @param params
+ * @returns {*}
+ */
+encapGetUrl = function(baseUrl, params) {
+    var sb = new StringBuilder()
+    for(key in params) {
+        sb.append(key + "=" + params[key])
+    }
+    var sep = baseUrl.indexOf("?") > 0 ? "&" : "?";
+
+    return baseUrl + sep + sb.join("&")
+}
+
+/**
+ * 根据给定的分页信息, 收集需要展示的分页信息
+ *
+ * @param pagination
+ * @param pageInfo
+ * @param pageNow
+ * @param getPageUrlFunc
+ */
+function collectPagination (pagination, pageInfo, pageNow, getPageUrlFunc) {
+    pageNow = parseInt(pageNow)
+    pagination.push({active : false, pageUrl : getPageUrlFunc(1), pageNo : "首页"})
+    if(pageNow !== 1) {
+        pagination.push({active : false, pageUrl : getPageUrlFunc(pageNow-1), pageNo : "上一页"})
+    }
+    var start = (pageNow - 3) >= 1 ? pageNow - 3 : 1
+    var end = pageNow + 3 <= pageInfo.totalPage ? pageNow + 3 : pageInfo.totalPage
+    for(var i=start; i<=end; i++) {
+        pagination.push({active : (i === pageNow) ? "active" : "false", pageUrl : getPageUrlFunc(i), pageNo : i})
+    }
+    if(pageNow !== pageInfo.totalPage) {
+        pagination.push({active : false, pageUrl : getPageUrlFunc(pageNow+1), pageNo : "下一页"})
+    }
+    pagination.push({active : false, pageUrl : getPageUrlFunc(pageInfo.totalPage), pageNo : "尾页"})
+}
+
+

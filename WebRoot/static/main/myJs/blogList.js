@@ -20,11 +20,14 @@ function contentInit() {
     var app = new Vue({
         el: '#bodyContent',
         data: {
+            params : {},
             pageInfo: {},
-            blogs: []
+            blogs: [],
+            pagination : []
         },
         mounted: function () {
             var that = this
+            that.params = params
             $.ajax({
                 url: "/blog/list",
                 data: params,
@@ -32,11 +35,24 @@ function contentInit() {
                     if (resp.success) {
                         that.pageInfo = resp.data
                         that.blogs = resp.data.list
+
+                        var pageNow = params.pageNow
+                        if(isEmpty(pageNow)) {
+                            pageNow = 1
+                        }
+                        collectPagination(that.pagination, that.pageInfo, pageNow, that.getUrlWithPage)
                     }
                 }
             });
         },
-        methods: {}
+        methods: {
+            getUrlWithPage : function(pageNow) {
+                var baseUrl = "/static/main/blogList.html"
+                params.pageNow = pageNow
+                return encapGetUrl(baseUrl, params)
+            }
+
+        }
     })
 
 }

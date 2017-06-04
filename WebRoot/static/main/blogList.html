@@ -13,6 +13,22 @@
     <link href="./css/dropdown.css" rel="stylesheet"/>
     <link href="./css/jquery.mCustomScrollbar.min.css" rel="stylesheet"/>
     <link href="./css/jquery.emoji.css" rel="stylesheet"/>
+    <style rel="stylesheet" >
+        .taogongzai {
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 40px;
+            width: 80px;
+            height: 90px;
+            background: url(//img.alicdn.com/tps/i1/T1ocbJXjxiXXXZPI3b-100-270.png) no-repeat 0 0;
+        }
+        .item-not-found {
+            display: inline-block;
+            vertical-align: middle;
+            text-align: left;
+            line-height: 30px;
+        }
+    </style>
     <!-- common imports -->
     <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
     <script type="text/javascript" src="./js/jquery.svg3dtagcloud.min.js"></script>
@@ -20,8 +36,9 @@
     <script type="text/javascript" src="../js/vue.js"></script>
     <script type="text/javascript" src="./myJs/commonImport.js"></script>
     <script type="text/javascript" src="./myJs/headerFooter.js"></script>
-    <script type="text/javascript" src="./myJs/blogList.js"></script>
+    <script type="text/javascript" src="../myJs/stringBuilder.js"></script>
     <script type="text/javascript" src="../myJs/utils.js"></script>
+    <script type="text/javascript" src="./myJs/blogList.js"></script>
     <script type="text/javascript">
         importCss()
         $(document).ready(function () {
@@ -44,12 +61,26 @@
 
 </div>
 
-
 <div class="technology" id="bodyContent">
     <div class="container">
-        <div class="col-md-9 technology-left" v-for="blog in blogs">
-            <div class="tech-no">
-                <div class="wthree" th:each="blog:${blogList}">
+        <div class="col-md-9 technology-left">
+            <div class="col-md-9 technology-left" v-if="blogs.length == 0">
+                <div class="inner">
+                    <div class="taogongzai"></div>
+                    <div class="item-not-found">
+                        <div>没有找到与 "
+                            <span class="h">
+                            {{params.typeName}} {{params.tagName}}
+                        </span>" 相关的博客
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="tech-no" >
+                <div v-for="blog in blogs" >
+                <div class="wthree">
                     <div class="col-md-6 wthree-left wow fadeInDown" data-wow-duration=".8s" data-wow-delay=".2s"
                          style="width: 250px;height: 250px;">
                         <div class="tch-img">
@@ -83,10 +114,14 @@
                     </div>
                     <div class="clearfix"></div>
                 </div>
+                </div>
 
                 <nav class="paging wow fadeInDown" data-wow-duration=".5s" data-wow-delay=".2s"
                      style="text-align: center">
-                    <ul class="pagination pagination-mg" th:utext="${pageNation}">
+                    <ul class="pagination pagination-mg" >
+                        <li v-for="page in pagination" :class="page.active">
+                            <a :href="page.pageUrl">{{page.pageNo}}</a>
+                        </li>
                     </ul>
                 </nav> <!--分页结束-->
             </div>
@@ -102,7 +137,7 @@
 
 <div class="copyright wow fadeInDown" id="copyrightNav" data-wow-duration=".8s" data-wow-delay=".2s"></div><!--版权区结束-->
 
-<img id="oImg" src="./images/xiaolongbao.gif"/>
+<img id="xiaolongbao" src="./images/xiaolongbao.gif"/>
 
 
 </body>

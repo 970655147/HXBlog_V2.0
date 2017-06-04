@@ -2,10 +2,6 @@ package com.hx.blog_v2.domain.vo;
 
 import com.hx.blog_v2.util.BlogConstants;
 import com.hx.blog_v2.util.DateUtils;
-import com.hx.json.JSONObject;
-import com.hx.log.json.interf.JSONTransferable;
-import com.hx.log.util.Constants;
-import com.hx.log.util.Tools;
 
 import java.util.*;
 
@@ -29,18 +25,18 @@ public class AdminCommentVO {
     private String headImgUrl;
     private String toUser;
     private String role;
-    private String content;
+    private String comment;
 
     private String createdAt;
 
-    public AdminCommentVO(String name, String email, String headImgUrl, String toUser, String role, String content) {
+    public AdminCommentVO(String name, String email, String headImgUrl, String toUser, String role, String comment) {
         this();
         this.name = name;
         this.email = email;
         this.headImgUrl = headImgUrl;
         this.toUser = toUser;
         this.role = role;
-        this.content = content;
+        this.comment = comment;
     }
 
     public AdminCommentVO() {
@@ -128,12 +124,12 @@ public class AdminCommentVO {
         this.role = role;
     }
 
-    public String getContent() {
-        return content;
+    public String getComment() {
+        return comment;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
     public String getCreatedAt() {

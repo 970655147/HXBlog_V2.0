@@ -6,6 +6,7 @@ import com.hx.blog_v2.domain.POVOTransferUtils;
 import com.hx.blog_v2.domain.form.BeanIdForm;
 import com.hx.blog_v2.domain.form.RoleSaveForm;
 import com.hx.blog_v2.domain.form.UserRoleUpdateForm;
+import com.hx.blog_v2.domain.mapper.OneIntMapper;
 import com.hx.blog_v2.domain.mapper.RltUserRolePOMapper;
 import com.hx.blog_v2.domain.mapper.UserRoleVOMapper;
 import com.hx.blog_v2.domain.po.RltUserRoleRolePO;
@@ -57,7 +58,7 @@ public class RoleServiceImpl extends BaseServiceImpl<RolePO> implements RoleServ
     public Result add(RoleSaveForm params) {
         Map<String, RolePO> roles = cacheContext.allRoles();
         if (contains(roles, params.getName())) {
-            return ResultUtils.failed("该角色已经存在 !");
+            return ResultUtils.failed("角色[" + params.getName() + "]已经存在 !");
         }
 
         RolePO po = new RolePO(params.getName(), params.getDesc(), params.getEnable());
@@ -160,11 +161,17 @@ public class RoleServiceImpl extends BaseServiceImpl<RolePO> implements RoleServ
 
     @Override
     public Result remove(BeanIdForm params) {
-        RolePO po = cacheContext.allRoles().remove(params.getId());
+        RolePO po = cacheContext.allRoles().get(params.getId());
         if (po == null) {
             return ResultUtils.failed("该角色不存在 !");
         }
+        String countSql = " select count(*) as totalRecord from `user` where deleted = 0 and id in ( select user_id from rlt_user_role where role_id = ? ) ";
+        Integer totalRecord = jdbcTemplate.queryForObject(countSql, new Object[]{params.getId() }, new OneIntMapper("totalRecord"));
+        if(totalRecord > 0) {
+            return ResultUtils.failed("该角色下面还有 " + totalRecord + "个用户, 请先迁移这部分用户 !");
+        }
 
+        cacheContext.allRoles().remove(params.getId());
         String updatedAt = DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
         try {
             long deleted = roleDao.updateOne(Criteria.eq("id", params.getId()),

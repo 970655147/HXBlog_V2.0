@@ -6,6 +6,7 @@ import com.hx.blog_v2.domain.POVOTransferUtils;
 import com.hx.blog_v2.domain.form.BeanIdForm;
 import com.hx.blog_v2.domain.form.InterfSaveForm;
 import com.hx.blog_v2.domain.form.ResourceInterfUpdateForm;
+import com.hx.blog_v2.domain.mapper.OneIntMapper;
 import com.hx.blog_v2.domain.mapper.RltResourceInterfPOMapper;
 import com.hx.blog_v2.domain.po.InterfPO;
 import com.hx.blog_v2.domain.po.ResourcePO;
@@ -154,11 +155,17 @@ public class InterfServiceImpl extends BaseServiceImpl<InterfPO> implements Inte
 
     @Override
     public Result remove(BeanIdForm params) {
-        InterfPO po = cacheContext.allInterfs().remove(params.getId());
+        InterfPO po = cacheContext.allInterfs().get(params.getId());
         if (po == null) {
             return ResultUtils.failed("该接口不存在 !");
         }
+        String countSql = " select count(*) as totalRecord from `resource` where deleted = 0 and id in ( select resource_id from rlt_resource_interf where interf_id = ? ) ";
+        Integer totalRecord = jdbcTemplate.queryForObject(countSql, new Object[]{params.getId() }, new OneIntMapper("totalRecord"));
+        if(totalRecord > 0) {
+            return ResultUtils.failed("该接口下面还有 " + totalRecord + "个资源, 请先迁移这部分资源 !");
+        }
 
+        cacheContext.allInterfs().remove(params.getId());
         String updatedAt = DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
         try {
             long deleted = interfDao.updateOne(Criteria.eq("id", params.getId()),

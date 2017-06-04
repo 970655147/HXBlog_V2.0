@@ -9,12 +9,18 @@ package com.hx.blog_v2.domain.form;
  */
 public class CommentSaveForm {
 
+    /**
+     * 回复的评论的id
+     */
     private String id;
     private String blogId;
     private String floorId;
     private String commentId;
+    private String name;
+    private String email;
+    private String headImgUrl;
     private String toUser;
-    private String content;
+    private String comment;
 
     public String getId() {
         return id;
@@ -48,6 +54,30 @@ public class CommentSaveForm {
         this.commentId = commentId;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getHeadImgUrl() {
+        return headImgUrl;
+    }
+
+    public void setHeadImgUrl(String headImgUrl) {
+        this.headImgUrl = headImgUrl;
+    }
+
     public String getToUser() {
         return toUser;
     }
@@ -56,11 +86,11 @@ public class CommentSaveForm {
         this.toUser = toUser;
     }
 
-    public String getContent() {
-        return content;
+    public String getComment() {
+        return comment;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 }

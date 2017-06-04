@@ -24,7 +24,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
                              Object handler) throws Exception {
         SessionUser user = (SessionUser) WebContext.getAttributeFromSession(BlogConstants.SESSION_USER);
-        if(user == null) {
+        if((user == null) || (! user.isSystemUser()) ) {
             Result result = ResultUtils.failed("请先登录 !");
             WebContext.responseJson(result);
             return false;

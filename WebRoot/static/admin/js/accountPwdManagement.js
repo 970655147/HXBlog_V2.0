@@ -11,14 +11,33 @@ layui.define(['form', 'upload', 'layer'], function (exports) {
     var layer = layui.layer;
     var form = layui.form();
 
-    var oldPassword = [[${session.currentAdmin.password}]];
-    var oldUserName = [[${session.currentAdmin.userName}]];
-
-    form.on('submit(submit)', function (data) {
-        if (oldUserName !== $("#oldUserName").val() || oldPassword !== $("#oldPassword").val()) {
-            layer.alert('原账号名或密码错误!', {icon: 5});
+    form.on('submit(updatePwdSubmit)', function (data) {
+        if(data.field.newPwd !== data.field.confirmNewPwd) {
+            layer.alert(" 新密码 和确认的密码 不一致 !")
             return false;
         }
-        return true;
+
+        var prams = {
+            oldPwd : hex_md5(data.field.oldPwd),
+            newPwd : hex_md5(data.field.newPwd),
+            confirmNewPwd : hex_md5(data.field.confirmNewPwd)
+        }
+        $.ajax({
+            url: "/admin/user/updatePwd",
+            type: "POST",
+            data: prams,
+            success: function (resp) {
+                if (resp.success) {
+                    layer.alert('修改密码成功!', function () {
+                        refresh()
+                    })
+                } else {
+                    layer.alert("修改密码失败[" + resp.data + "] !", {icon: 5})
+                }
+            }
+        });
+
+        return false;
     });
+
 });

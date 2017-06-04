@@ -43,8 +43,8 @@ public class BlogCommentPO implements JSONTransferable<BlogCommentPO> {
     private String toUser;
     @JSONField({"role", "role"})
     private String role;
-    @JSONField({"content", "content"})
-    private String content;
+    @JSONField({"comment", "comment"})
+    private String comment;
     @JSONField({"createdAt", "created_at"})
     private String createdAt;
     @JSONField({"updatedAt", "updated_at"})
@@ -52,14 +52,14 @@ public class BlogCommentPO implements JSONTransferable<BlogCommentPO> {
     @JSONField({"deleted", "deleted"})
     private int deleted;
 
-    public BlogCommentPO(String name, String email, String headImgUrl, String toUser, String role, String content) {
+    public BlogCommentPO(String name, String email, String headImgUrl, String toUser, String role, String comment) {
         this();
         this.name = name;
         this.email = email;
         this.headImgUrl = headImgUrl;
         this.toUser = toUser;
         this.role = role;
-        this.content = content;
+        this.comment = comment;
     }
 
     public BlogCommentPO() {
@@ -67,6 +67,7 @@ public class BlogCommentPO implements JSONTransferable<BlogCommentPO> {
         createdAt = DateUtils.formate(now, BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
         updatedAt = createdAt;
         deleted = 0;
+        parentCommentId = BlogConstants.RESOURCE_ROOT_PARENT_ID;
     }
 
     public String getId() {
@@ -149,12 +150,12 @@ public class BlogCommentPO implements JSONTransferable<BlogCommentPO> {
         this.role = role;
     }
 
-    public String getContent() {
-        return content;
+    public String getComment() {
+        return comment;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
     public String getCreatedAt() {

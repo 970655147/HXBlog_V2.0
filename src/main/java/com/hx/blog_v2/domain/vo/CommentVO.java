@@ -21,7 +21,7 @@ public class CommentVO implements TreeIdExtractor<CommentVO, String> {
     private String headImgUrl;
     private String toUser;
     private String role;
-    private String content;
+    private String comment;
 
     private String createdAt;
 
@@ -100,12 +100,12 @@ public class CommentVO implements TreeIdExtractor<CommentVO, String> {
         this.role = role;
     }
 
-    public String getContent() {
-        return content;
+    public String getComment() {
+        return comment;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
     public String getCreatedAt() {

@@ -1,11 +1,11 @@
 
 /*页面载入后*/
 $(document).ready(function() {
-    $('#oImg').dblclick(function() {
+    $('#xiaolongbao').dblclick(function() {
         $("html,body").animate({scrollTop: $("#topEle").offset().top}, 1000);
     })
 
-	var oImg = document.getElementById('oImg');
+	var oImg = document.getElementById('xiaolongbao');
 	/*拖拽功能*/
 	(function() {
 		addEvent(

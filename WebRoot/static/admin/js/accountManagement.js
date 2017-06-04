@@ -49,7 +49,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
                             html += '<td>' + item.lastLoginIp + '</td>';
                             html += '<td>' + item.lastLoginAt + '</td>';
                             html += '<td>' + item.createdAt + '</td>';
-                            html += '<td><button class="layui-btn layui-btn-small layui-btn-normal" onclick="layui.funcs.editData(' + item.id + ',\'' + item.userName + '\',\'' + item.nickName + '\',\'' + item.email + '\',\'' + item.headImgUrl + '\',\'' + item.motto + '\')" ><i class="layui-icon">&#xe642;</i></button></td>';
+                            html += '<td><button class="layui-btn layui-btn-small layui-btn-normal" onclick="layui.funcs.editData(' + item.id + ',\'' + item.userName + '\',\'' + item.nickName + '\',\'' + item.title + '\',\'' + item.email + '\',\'' + item.headImgUrl + '\',\'' + item.motto + '\')" ><i class="layui-icon">&#xe642;</i></button></td>';
                             html += '<td><button class="layui-btn layui-btn-small layui-btn-danger" onclick="layui.funcs.deleteData(' + item.id + ')"><i class="layui-icon">&#xe640;</i></button></td>';
                             html += '</tr>';
                         }
@@ -71,7 +71,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
                             }
                         });
                     } else {
-                        layer.alert("拉取用户列表失败[" + resp.msg + "] !", {icon: 5});
+                        layer.alert("拉取用户列表失败[" + resp.data + "] !", {icon: 5});
                     }
                 }
             });
@@ -92,7 +92,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
                         location.reload()
                     });
                 } else {
-                    layer.alert("添加用户失败[" + resp.msg + "] !", {icon: 5});
+                    layer.alert("添加用户失败[" + resp.data + "] !", {icon: 5});
                 }
             }
         });
@@ -113,7 +113,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
                         location.reload()
                     });
                 } else {
-                    layer.alert("更新用户失败[" + resp.msg + "] !", {icon: 5});
+                    layer.alert("更新用户失败[" + resp.data + "] !", {icon: 5});
                 }
             }
         });
@@ -159,7 +159,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
             $("[name='headImgUrl']").val("http://tb.himg.baidu.com/sys/portrait/item/48c0c0b6b7e7393730363535313437f02d")
             layui.funcs.headImgShow()
         },
-        editData: function (id, userName, nickName, email, headImgUrl, motto) {
+        editData: function (id, userName, nickName, title, email, headImgUrl, motto) {
             console.log(headImgUrl)
             var html = '';
             html += '<form id="updateAccountForm" class="layui-form layui-form-pane" action="/admin/user/update" method="post">';
@@ -169,7 +169,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
             html += '<label class="layui-form-label" style="border: none;width: 180px;" >昵称:</label>';
             html += '<input  style="width:87%;margin: auto;color: #000!important;" name="nickName" value="' + nickName + '" lay-verify="required"  class="layui-input" >';
             html += '<label class="layui-form-label" style="border: none;width: 180px;" >称号:</label>';
-            html += '<input  style="width:87%;margin: auto;color: #000!important;" name="title" lay-verify="required"  class="layui-input" >';
+            html += '<input  style="width:87%;margin: auto;color: #000!important;" name="title" value="' + title + '" lay-verify="required"  class="layui-input" >';
             html += '<label class="layui-form-label" style="border: none;width: 180px;" >邮箱:</label>';
             html += '<input  style="width:87%;margin: auto;color: #000!important;" name="email" value="' + email + '" lay-verify="required"  class="layui-input" >';
             html += '<label class="layui-form-label" style="border: none;width: 120px;" >头像地址:</label>';
@@ -211,7 +211,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
                                 location.reload()
                             });
                         } else {
-                            layer.alert("删除用户失败[" + resp.msg + "] !", {icon: 5});
+                            layer.alert("删除用户失败[" + resp.data + "] !", {icon: 5});
                         }
                     }
                 });

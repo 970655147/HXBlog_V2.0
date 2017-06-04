@@ -2,9 +2,10 @@ package com.hx.blog_v2.service;
 
 import com.hx.blog_v2.dao.interf.UserDao;
 import com.hx.blog_v2.domain.POVOTransferUtils;
+import com.hx.blog_v2.domain.dto.SessionUser;
 import com.hx.blog_v2.domain.form.BeanIdForm;
 import com.hx.blog_v2.domain.form.LoginForm;
-import com.hx.blog_v2.domain.dto.SessionUser;
+import com.hx.blog_v2.domain.form.UpdatePwdForm;
 import com.hx.blog_v2.domain.form.UserSaveForm;
 import com.hx.blog_v2.domain.mapper.AdminUserVOMapper;
 import com.hx.blog_v2.domain.mapper.OneIntMapper;
@@ -49,7 +50,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Result add(UserSaveForm params) {
-        UserPO po = new UserPO(params.getUserName(), params.getPassword(), params.getNickName(), params.getTitle(),
+        String countSql = "select count(*) as totalRecord from `user` where user_name = ? ";
+        Integer totalRecord = jdbcTemplate.queryForObject(countSql, new String[]{params.getUserName()}, new OneIntMapper("totalRecord"));
+        if (totalRecord > 0) {
+            return ResultUtils.failed("用户[" + params.getUserName() + "]已经存在 !");
+        }
+
+        UserPO po = new UserPO(params.getUserName(), params.getPassword(), params.getTitle(), params.getNickName(),
                 params.getEmail(), params.getHeadImgUrl(), params.getMotto());
 
         String pwdSalt = newSalt();
@@ -67,17 +74,20 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Result adminList(Page<AdminUserVO> page) {
-        String sql = " select * from `user` where deleted = 0 order by created_at desc limit ?, ? ";
+        String selectSql = " select * from `user` where deleted = 0 order by created_at desc limit ?, ? ";
+        String countSql = " select count(*) as totalRecord from `user` where deleted = 0 ";
         Object[] params = new Object[]{page.recordOffset(), page.getPageSize()};
 
-        List<AdminUserVO> list = jdbcTemplate.query(sql, params, new AdminUserVOMapper());
+        List<AdminUserVO> list = jdbcTemplate.query(selectSql, params, new AdminUserVOMapper());
+        Integer totalRecord = jdbcTemplate.queryForObject(countSql, new OneIntMapper("totalRecord"));
         page.setList(list);
+        page.setTotalRecord(totalRecord);
         return ResultUtils.success(page);
     }
 
     @Override
     public Result update(UserSaveForm params) {
-        UserPO po = new UserPO(null, null, params.getNickName(), params.getEmail(), params.getTitle(),
+        UserPO po = new UserPO(null, null, params.getNickName(), params.getTitle(), params.getEmail(),
                 params.getHeadImgUrl(), params.getMotto());
         po.setId(params.getId());
         po.setUpdatedAt(DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS));
@@ -93,6 +103,34 @@ public class UserServiceImpl implements UserService {
             return ResultUtils.failed(Tools.errorMsg(e));
         }
         return ResultUtils.success(po.getId());
+    }
+
+    @Override
+    public Result updatePwd(UpdatePwdForm params) {
+        SessionUser user = (SessionUser) WebContext.getAttributeFromSession(BlogConstants.SESSION_USER);
+        try {
+            UserPO po = userDao.findById(user.getId(), BlogConstants.LOAD_ALL_CONFIG);
+            if (po == null) {
+                return ResultUtils.failed("用户[" + user.getId() + "]不存在 !");
+            }
+            if (!po.getPassword().equalsIgnoreCase(encodePwd(params.getOldPwd(), po.getPwdSalt()))) {
+                return ResultUtils.failed("用户密码不正确 !");
+            }
+
+            String updatedAt = DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
+            String newSalt = newSalt();
+            String newPwd = encodePwd(params.getNewPwd(), newSalt);
+            long deleted = userDao.updateOne(Criteria.eq("id", user.getId()),
+                    Criteria.set("updated_at", updatedAt).add("pwd_salt", newSalt).add("password", newPwd)
+            ).getModifiedCount();
+            if (deleted == 0) {
+                return ResultUtils.failed("用户[" + user.getId() + "]不存在 !");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResultUtils.failed(Tools.errorMsg(e));
+        }
+        return ResultUtils.success(user.getId());
     }
 
     @Override
@@ -115,12 +153,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public Result login(LoginForm params) {
         String checkCodeInServer = (String) WebContext.getAttributeFromSession(BlogConstants.SESSION_CHECK_CODE);
-        if(Tools.isEmpty(checkCodeInServer) ) {
+        if (Tools.isEmpty(checkCodeInServer)) {
             return ResultUtils.failed("您还没有验证码 !");
         }
-        if(! checkCodeInServer.equalsIgnoreCase(params.getCheckCode())) {
-            return ResultUtils.failed("验证码不正确 !");
-        }
+        // TODO: 6/3/2017 完成之后 增加验证码的校验
+//        if(! checkCodeInServer.equalsIgnoreCase(params.getCheckCode())) {
+//            return ResultUtils.failed("验证码不正确 !");
+//        }
 
         UserPO user = null;
         IQueryCriteria query = Criteria.and(Criteria.eq("user_name", params.getUserName()))
@@ -144,6 +183,7 @@ public class UserServiceImpl implements UserService {
         List<Integer> roleIds = jdbcTemplate.query(sql, new Object[]{user.getId()}, new OneIntMapper("role_id"));
         String roleIdsStr = collectRoleIds(roleIds);
         sessionUser.setRoleIds(roleIdsStr);
+        sessionUser.setSystemUser(true);
         WebContext.setAttributeForSession(BlogConstants.SESSION_USER, sessionUser);
 
         try {
@@ -156,7 +196,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Result logout() {
-        WebContext.removeAttributeFromRequest(BlogConstants.SESSION_USER);
+        WebContext.removeAttributeFromSession(BlogConstants.SESSION_USER);
+        WebContext.removeAttributeFromSession(BlogConstants.SESSION_CHECK_CODE);
 
         return ResultUtils.success("success");
     }

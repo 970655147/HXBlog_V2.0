@@ -18,13 +18,15 @@ public class SessionUser {
     private String headImgUrl;
     private String title;
     private String roleIds;
+    private boolean isSystemUser;
 
-    public SessionUser(String userName, String email, String headImgUrl, String title, String roleIds) {
+    public SessionUser(String userName, String email, String headImgUrl, String title, String roleIds, boolean isSystemUser) {
         this.userName = userName;
         this.email = email;
         this.headImgUrl = headImgUrl;
         this.title = title;
         this.roleIds = roleIds;
+        this.isSystemUser = isSystemUser;
     }
 
     public SessionUser() {
@@ -76,5 +78,13 @@ public class SessionUser {
 
     public void setRoleIds(String roleIds) {
         this.roleIds = roleIds;
+    }
+
+    public boolean isSystemUser() {
+        return isSystemUser;
+    }
+
+    public void setSystemUser(boolean systemUser) {
+        isSystemUser = systemUser;
     }
 }

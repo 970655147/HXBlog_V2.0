@@ -2,12 +2,12 @@ package com.hx.blog_v2.controller.admin;
 
 import com.hx.blog_v2.domain.form.BeanIdForm;
 import com.hx.blog_v2.domain.form.LoginForm;
+import com.hx.blog_v2.domain.form.UpdatePwdForm;
 import com.hx.blog_v2.domain.form.UserSaveForm;
 import com.hx.blog_v2.domain.vo.AdminUserVO;
 import com.hx.blog_v2.service.interf.UserService;
 import com.hx.common.interf.common.Result;
 import com.hx.common.result.SimplePage;
-import com.hx.common.util.ResultUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -44,6 +44,12 @@ public class UserController {
     public Result update(UserSaveForm params) {
 
         return userService.update(params);
+    }
+
+    @RequestMapping(value = "/updatePwd", method = RequestMethod.POST)
+    public Result updatePwd(UpdatePwdForm params) {
+
+        return userService.updatePwd(params);
     }
 
     @RequestMapping(value = "/remove", method = RequestMethod.POST)

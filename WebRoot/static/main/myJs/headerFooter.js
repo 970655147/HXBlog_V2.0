@@ -46,7 +46,7 @@ function headerFooterInit() {
                 var typesEle = $("#cd-dropdown")
                 for (idx in data.types) {
                     var type = data.types[idx]
-                    typesEle.append("<option name='type' value='/static/main/blogList.html?typeId=" + type.id + "' >" + type.name + "</option>")
+                    typesEle.append("<option name='type' value='/static/main/blogList.html?typeId=" + type.id + "&typeName=" + type.name + "' >" + type.name + "</option>")
                 }
 
                 var linksEle = $("#links")
@@ -89,7 +89,7 @@ function headerFooterInit() {
                         "<span>" +
                         "<a href='/static/main/blogDetail.html?id=" + comment.blogId + "'>" + comment.name + "@" + comment.toUser + " </a> - " + comment.createdAt + " " +
                         "</span>" +
-                        "<p><span class='sourceText'>" + comment.content + "</span></p>"
+                        "<p><span class='sourceText'>" + comment.comment + "</span></p>"
                     )
                 }
 
@@ -113,7 +113,7 @@ function headerFooterInit() {
         for (var idx in tags) {
             var entry = {
                 label: tags[idx].name,
-                url: '/static/main/blogList.html?tagId=' + tags[idx].id
+                url: '/static/main/blogList.html?tagId=' + tags[idx].id + '&tagName=' + tags[idx].name
             }
             tagEntries.push(entry);
         }

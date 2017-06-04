@@ -68,7 +68,7 @@ layui.define(['element', 'laypage', 'layer', 'form', 'tree'], function (exports)
                             layer.alert("服务器返回数据异常 !", {icon: 5});
                         }
                     } else {
-                        layer.alert("拉取资源列表失败[" + resp.msg + "] !", {icon: 5});
+                        layer.alert("拉取资源列表失败[" + resp.data + "] !", {icon: 5});
                     }
                 }
             });
@@ -87,10 +87,11 @@ layui.define(['element', 'laypage', 'layer', 'form', 'tree'], function (exports)
                         icon: 1
                     });
                 } else {
-                    layer.alert("添加资源失败[" + resp.msg + "] !", {icon: 5});
+                    layer.alert("添加资源失败[" + resp.data + "] !", {icon: 5});
                 }
             }
         });
+
         return false
     })
 
@@ -106,10 +107,11 @@ layui.define(['element', 'laypage', 'layer', 'form', 'tree'], function (exports)
                         icon: 1
                     });
                 } else {
-                    layer.alert('更新资源失败, 请联系管理人员!');
+                    layer.alert('更新资源失败[' + resp.data + '], 请联系管理人员!');
                 }
             }
         });
+
         return false
     })
 
@@ -129,13 +131,14 @@ layui.define(['element', 'laypage', 'layer', 'form', 'tree'], function (exports)
                             icon: 1
                         });
                     } else {
-                        layer.alert("删除资源失败[" + resp.msg + "] !", {icon: 5});
+                        layer.alert("删除资源失败[" + resp.data + "] !", {icon: 5});
                     }
                 }
             });
         }, function () {
 
         });
+
         return false
     })
 
@@ -193,9 +196,9 @@ layui.define(['element', 'laypage', 'layer', 'form', 'tree'], function (exports)
                 data: { },
                 success: function (resp) {
                     if (resp.success) {
-                        layer.alert('刷新排序成功!');
+                        layer.alert('刷新排序成功 !');
                     } else {
-                        layer.alert('刷新排序失败, 请联系管理人员!');
+                        layer.alert('刷新排序失败[' + resp.data + '], 请联系管理人员!');
                     }
                 }
             });

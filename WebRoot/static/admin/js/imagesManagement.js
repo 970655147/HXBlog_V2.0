@@ -109,7 +109,7 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
     })
 
     form.on('submit(updateImageSubmit)', function (data) {
-        var params = $("#addImageForm").serialize()
+        var params = $("#updateImageForm").serialize()
         params += ("&type=" + imageType)
         $.ajax({
             url: "/admin/image/update",

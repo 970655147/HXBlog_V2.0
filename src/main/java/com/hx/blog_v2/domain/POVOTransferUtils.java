@@ -336,7 +336,7 @@ public final class POVOTransferUtils {
         AdminCommentVO result = new AdminCommentVO();
         result.setName(src.getName());
         result.setId(src.getId());
-        result.setContent(src.getContent());
+        result.setComment(src.getComment());
         result.setCreatedAt(src.getCreatedAt());
         result.setHeadImgUrl(src.getHeadImgUrl());
         result.setEmail(src.getEmail());
@@ -360,7 +360,7 @@ public final class POVOTransferUtils {
         BlogCommentPO result = new BlogCommentPO();
         result.setName(src.getName());
         result.setId(src.getId());
-        result.setContent(src.getContent());
+        result.setComment(src.getComment());
         result.setCreatedAt(src.getCreatedAt());
         result.setHeadImgUrl(src.getHeadImgUrl());
         result.setEmail(src.getEmail());
@@ -385,7 +385,7 @@ public final class POVOTransferUtils {
         CommentVO result = new CommentVO();
         result.setName(src.getName());
         result.setId(src.getId());
-        result.setContent(src.getContent());
+        result.setComment(src.getComment());
         result.setCommentId(src.getCommentId());
         result.setEmail(src.getEmail());
         result.setToUser(src.getToUser());
@@ -409,7 +409,7 @@ public final class POVOTransferUtils {
         BlogCommentPO result = new BlogCommentPO();
         result.setName(src.getName());
         result.setId(src.getId());
-        result.setContent(src.getContent());
+        result.setComment(src.getComment());
         result.setCommentId(src.getCommentId());
         result.setEmail(src.getEmail());
         result.setToUser(src.getToUser());

@@ -35,7 +35,7 @@ layui.define(['layer', 'form'], function (exports) {
                             html += '</tr>';
                         }
                     } else {
-                        layer.alert("拉取类型列表失败[" + resp.msg + "] !", {icon: 5});
+                        layer.alert("拉取类型列表失败[" + resp.data + "] !", {icon: 5});
                     }
                     $('#dataContent').html(html);
                 }
@@ -59,7 +59,7 @@ layui.define(['layer', 'form'], function (exports) {
                         location.reload()
                     });
                 } else {
-                    layer.alert("添加类型失败[" + resp.msg + "] !", {icon: 5});
+                    layer.alert("添加类型失败[" + resp.data + "] !", {icon: 5});
                 }
             }
         });
@@ -81,7 +81,7 @@ layui.define(['layer', 'form'], function (exports) {
                         location.reload()
                     });
                 } else {
-                    layer.alert("更新类型失败[" + resp.msg + "] !", {icon: 5});
+                    layer.alert("更新类型失败[" + resp.data + "] !", {icon: 5});
                 }
             }
         });
@@ -153,7 +153,7 @@ layui.define(['layer', 'form'], function (exports) {
                                 location.reload()
                             });
                         } else {
-                            layer.alert("删除类型失败[" + resp.msg + "] !", {icon: 5});
+                            layer.alert("删除类型失败[" + resp.data + "] !", {icon: 5});
                         }
                     }
                 });

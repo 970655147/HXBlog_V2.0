@@ -54,7 +54,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
 
                         $('#dataConsole,#dataList').attr('style', 'display:block'); //显示FiledBox
                     } else {
-                        layer.alert("拉取角色列表失败[" + resp.msg + "] !", {icon: 5});
+                        layer.alert("拉取角色列表失败[" + resp.data + "] !", {icon: 5});
                     }
                 }
             });
@@ -75,7 +75,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
                         location.reload()
                     });
                 } else {
-                    layer.alert("添加角色失败[" + resp.msg + "] !", {icon: 5});
+                    layer.alert("添加角色失败[" + resp.data + "] !", {icon: 5});
                 }
             }
         });
@@ -96,7 +96,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
                         location.reload()
                     });
                 } else {
-                    layer.alert("更新角色失败[" + resp.msg + "] !", {icon: 5});
+                    layer.alert("更新角色失败[" + resp.data + "] !", {icon: 5});
                 }
             }
         });
@@ -182,7 +182,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
                                 location.reload()
                             });
                         } else {
-                            layer.alert("删除角色失败[" + resp.msg + "] !", {icon: 5});
+                            layer.alert("删除角色失败[" + resp.data + "] !", {icon: 5});
                         }
                     }
                 });

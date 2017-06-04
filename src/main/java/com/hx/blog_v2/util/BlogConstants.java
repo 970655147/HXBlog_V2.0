@@ -61,11 +61,11 @@ public final class BlogConstants {
     /**
      * yyyy-MM-dd hh:mm:ss
      */
-    public static final String FORMAT_YYYY_MM_DD_HH_MM_SS = "yyyy-MM-dd hh:mm:ss";
+    public static final String FORMAT_YYYY_MM_DD_HH_MM_SS = "yyyy-MM-dd HH:mm:ss";
     /**
      * yyyy-MM-dd_hh-mm-ss
      */
-    public static final String FORMAT_FILENAME = "yyyy-MM-dd_hh-mm-ss";
+    public static final String FORMAT_FILENAME = "yyyy-MM-dd_HH-mm-ss";
 
     /**
      * JSONTransferable
@@ -102,7 +102,10 @@ public final class BlogConstants {
     /**
      * 向数据库中 增加bean 是需要过滤掉 "created_at", "deleted", "password"
      */
-    public static final JSONBeanProcessor USER_UPDATE_BEAN_BEAN_PROCESSOR = regFilterBeanProcessor(Tools.asSet("created_at", "deleted", "user_name", "pwd_salt", "password"));
+    public static final JSONBeanProcessor USER_UPDATE_BEAN_BEAN_PROCESSOR = regFilterBeanProcessor(
+            Tools.asSet("created_at", "deleted", "user_name", "pwd_salt", "password",
+                    "last_login_ip", "last_login_at")
+    );
 
     /**
      * 从数据库加载所有数据的 JSONConfig
@@ -188,6 +191,15 @@ public final class BlogConstants {
      * 叶子资源的层级
      */
     public static final int RESOURCE_LEAVE_LEVEL = 2;
+
+    /**
+     * 回复评论的前缀
+     */
+    public static final String REPLY_COMMENT_PREFIX = "[reply]";
+    /**
+     * 回复评论的后缀
+     */
+    public static final String REPLY_COMMENT_SUFFIX = "[/reply]";
 
     // ----------------------------------------- configurable -------------------------------------------------
 
