@@ -26,9 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * BlogServiceImpl
@@ -90,6 +88,26 @@ public class BlogCommentServiceImpl extends BaseServiceImpl<BlogCommentPO> imple
     }
 
     @Override
+    public Result list(BeanIdForm params, Page<List<CommentVO>> page) {
+        String selectSql = " select * from blog_comment where blog_id = ? and deleted = 0 and floor_id in ( %s ) order by created_at asc ";
+        String selectFloorSql = " select distinct(floor_id) as floor_id from blog_comment where blog_id = ? and deleted = 0 order by floor_id asc limit ?, ? ";
+        String countSql = " select count(distinct(floor_id)) as totalRecord from blog_comment where blog_id = ? and deleted = 0 ";
+
+        Object[] sqlParams = new Object[]{params.getId() };
+        List<Integer> floorIds = jdbcTemplate.query(selectFloorSql, new Object[]{params.getId(), page.recordOffset(), page.getPageSize()}, new OneIntMapper("floor_id"));
+        Integer totalRecord = jdbcTemplate.queryForObject(countSql, sqlParams, new OneIntMapper("totalRecord"));
+        List<CommentVO> comments = Collections.emptyList();
+        if (! Tools.isEmpty(floorIds)) {
+            comments = jdbcTemplate.query(String.format(selectSql, SqlUtils.wrapInSnippet(floorIds)), sqlParams, new CommentVOMapper());
+        }
+        List<List<CommentVO>> result = generateCommentTree(comments);
+
+        page.setList(result);
+        page.setTotalRecord(totalRecord);
+        return ResultUtils.success(page);
+    }
+
+    @Override
     public Result adminList(AdminCommentSearchForm params, Page<AdminCommentVO> page) {
         String selectSql = " select c.*, b.title as blog_name from blog_comment as c " +
                 " inner join blog as b on c.blog_id = b.id where c.deleted = 0 ";
@@ -108,7 +126,7 @@ public class BlogCommentServiceImpl extends BaseServiceImpl<BlogCommentPO> imple
         selectParams.add(page.recordOffset());
         selectParams.add(page.getPageSize());
 
-        List<AdminCommentVO> list = jdbcTemplate.query(selectSql + condSql + selectSuffix , selectParams.toArray(), new AdminCommentVOMapper());
+        List<AdminCommentVO> list = jdbcTemplate.query(selectSql + condSql + selectSuffix, selectParams.toArray(), new AdminCommentVOMapper());
         Integer totalRecord = jdbcTemplate.queryForObject(countSql + condSql, countParams, new OneIntMapper("totalRecord"));
         page.setList(list);
         page.setTotalRecord(totalRecord);
@@ -196,7 +214,7 @@ public class BlogCommentServiceImpl extends BaseServiceImpl<BlogCommentPO> imple
      * @param blogId    blogId
      * @param floorId   floorId
      * @param commentId commentId
-     * @return com.hx.blog_v2.domain.po.BlogCommentPO
+     * @return com.hx.blog_v2.domain.po.CommentVO
      * @author Jerry.X.He
      * @date 6/4/2017 3:18 PM
      * @since 1.0
@@ -257,5 +275,35 @@ public class BlogCommentServiceImpl extends BaseServiceImpl<BlogCommentPO> imple
             selectParams.add(SqlUtils.wrapWildcard(params.getKeywords()));
         }
     }
+
+
+    /**
+     * 生成评论树
+     *
+     * @param comments comments
+     * @return com.hx.json.JSONArray
+     * @author Jerry.X.He
+     * @date 5/28/2017 2:48 PM
+     * @since 1.0
+     */
+    public List<List<CommentVO>> generateCommentTree(List<CommentVO> comments) {
+        Map<String, List<CommentVO>> commentsByFloor = new LinkedHashMap<>();
+        for (CommentVO comment : comments) {
+            List<CommentVO> floorComments = commentsByFloor.get(comment.getFloorId());
+            if (floorComments == null) {
+                floorComments = new ArrayList<>();
+                commentsByFloor.put(comment.getFloorId(), floorComments);
+            }
+
+            floorComments.add(comment);
+        }
+
+        List<List<CommentVO>> result = new ArrayList<>(commentsByFloor.size());
+        for (Map.Entry<String, List<CommentVO>> entry : commentsByFloor.entrySet()) {
+            result.add(entry.getValue());
+        }
+        return result;
+    }
+
 
 }

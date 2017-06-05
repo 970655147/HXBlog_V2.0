@@ -1,8 +1,10 @@
 package com.hx.blog_v2.service;
 
+import com.hx.blog_v2.domain.form.BlogSenseForm;
 import com.hx.blog_v2.domain.po.BlogSensePO;
 import com.hx.blog_v2.service.interf.BaseServiceImpl;
 import com.hx.blog_v2.service.interf.BlogSenseService;
+import com.hx.common.interf.common.Result;
 import org.springframework.stereotype.Service;
 
 /**
@@ -15,5 +17,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class BlogSenseServiceImpl extends BaseServiceImpl<BlogSensePO> implements BlogSenseService {
 
+    @Override
+    public Result sense(BlogSenseForm params) {
+        return null;
+    }
 
 }

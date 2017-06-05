@@ -10,6 +10,8 @@ import com.hx.blog_v2.domain.vo.CommentVO;
 import com.hx.common.interf.common.Page;
 import com.hx.common.interf.common.Result;
 
+import java.util.List;
+
 /**
  * BlogService
  *
@@ -28,6 +30,16 @@ public interface BlogCommentService extends BaseService<BlogCommentPO> {
      * @since 1.0
      */
     Result add(CommentSaveForm params);
+
+    /**
+     * 搜索评论列表
+     *
+     * @return result
+     * @author Jerry.X.He
+     * @date 5/20/2017 6:21 PM
+     * @since 1.0
+     */
+    Result list(BeanIdForm params, Page<List<CommentVO>> page);
 
     /**
      * 搜索符合的条件的心情列表

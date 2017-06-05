@@ -26,7 +26,8 @@
     <script type="text/javascript" src="./layer/layer.js"></script>
     <script type="text/javascript" src="./myJs/commonImport.js"></script>
     <script type="text/javascript" src="./myJs/headerFooter.js"></script>
-    <script type="text/javascript" src="./myJs/advices.js"></script>
+    <script type="text/javascript" src="./myJs/blogDetail.js"></script>
+    <script type="text/javascript" src="../myJs/stringBuilder.js"></script>
     <script type="text/javascript" src="../myJs/utils.js"></script>
     <!--代码高亮-->
     <link href="http://cdn.bootcss.com/SyntaxHighlighter/3.0.83/styles/shCore.min.css" rel="stylesheet">
@@ -60,143 +61,14 @@
 <div class="technology" id="bodyContent">
     <div class="container">
         <div class="col-md-12 technology-left" style="width: 100%">
-            <div class="blog">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="services w3l ">
-                            <fieldset>
-                                <legend style="text-align: center">本页面可留言、吐槽、提问。欢迎灌水，杜绝广告！</legend>
-                            </fieldset>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="services w3l ">
+                        <fieldset>
+                            <legend style="text-align: center">本页面可留言、吐槽、提问。欢迎灌水，杜绝广告！</legend>
+                        </fieldset>
 
-                            <div class="response">
-                                <h4>
-                                    评论
-                                    <span class="feed" id="feed2" style="float:right">
-                                    <span class="heart" id="blogHeart" liked="unlike"></span>
-                                    <span class="likeCount" id="blogLikeCount">0</span>
-                                    </span>
-                                </h4>
-                                <div id="replyForm">
-                                    <a id="inputComment" name="inputComment" href="javascript:void(0)"></a>
-                                    <div class="input-group">
-                                        <div class="input-group-addon">用户名 <span style="color:red">*</span></div>
-                                        <input id="name" name="name" type="text" class="form-control"
-                                               :value="userInfo.userName" v-model="userInfo.userName"
-                                               placeholder="name"/>
-
-                                        <div class="input-group-addon">邮箱</div>
-                                        <input id="email" name="email" type="text" class="form-control"
-                                               :value="userInfo.email" v-model="userInfo.email" placeholder="email"/>
-                                    </div>
-                                    <br/>
-                                    头像选择 :
-                                    <img :src="userInfo.headImgUrl" name="headImgUrl" width="40px" height="40px"/>
-                                    <span v-if="(userInfo != null)">
-                                            <button type="button" class="btn btn-xs btn-success"
-                                                    @click="reUseMyHeadImg($event)">自己的头像</button>
-                                         </span>
-                                    <br/>
-                                    <select class="form-control" id="imageIdx" @change="updateHeadImg($event)">
-                                        <option v-for="headImage in headImages" :id="headImage.id"
-                                                :value="headImage.url">
-                                            {{headImage.title}}
-                                        </option>
-                                    </select>
-                                    <br/>
-                                    <div title="reply" id="comment" name="comment" class="editor form-control"
-                                         contenteditable="true"></div>
-
-                                    <br/>
-                                    <span style="float:left">
-                                    <button id="looks" type="button" class="btn btn-default">放图吧</button>
-                                </span>
-                                    <span style="float:right">
-                                    <button id="submitBtn" @click="addComment()" class="btn btn-default">提交评论</button>
-                                </span>
-                                </div>
-                            </div><!--回复框结束-->
-
-                            <!-- 回复列表 -->
-                            <div class="response">
-                            <span id="submitNotice" style="padding : 10px 10px 30px 20px; color : red"
-                                  v-for="floor in comments">
-                                <div class="floor">
-                                    <hr/>
-                                    <dl class='comment_item comment_topic'>
-                                    <div class="replyDiv">
-                                        <dt class='comment_head'>
-                                        <span> {{floor.floorComment.floorId}} 楼</span>&nbsp;&nbsp;&nbsp;&nbsp;
-                                        <span class='floorInfo'
-                                              :floorId='floor.floorComment.floorId'
-                                              :commentId='floor.floorComment.commentId'
-                                              :name='floor.floorComment.name'
-                                              :role="floor.floorComment.role"
-                                        >
-                                        <span name='commenter' class='text-warning'> {{floor.floorComment.name}} </span>&nbsp;&nbsp;&nbsp;&nbsp;
-                                        <span name='role' class='text-error'>[{{floor.floorComment.role}}]</span>&nbsp;&nbsp;&nbsp;&nbsp;
-                                        <span name='date'
-                                              class='text-success'>发表于 {{floor.floorComment.createdAt}} </span>&nbsp;&nbsp;&nbsp;&nbsp;
-                                        <span class='comment_manage'>
-                                        <span class='commentReply'>
-                                            <a href='javascript:void(0)' class='cmt_btn reply' title='回复'
-                                               @click="replyFunc($event)">[回复]</a>
-                                        </span>&nbsp;&nbsp;
-                                        <a href='javascript:void(0)' class='cmt_btn quote' title='引用'>[引用]</a>&nbsp;&nbsp;
-                                        <a href='javascript:void(0)' class='cmt_btn report' title='举报'>[举报]</a>&nbsp;&nbsp;
-                                        </span>
-                                        </span>
-                                        </dt>
-                                        <dd class='comment_userface'>
-                                        <a href='javascript:void(0)'>
-                                            <img :src='floor.floorComment.headImgUrl' width='40' height='40'
-                                                 :title='floor.floorComment.email'/>
-                                        </a>
-                                        </dd>
-                                        <dd class='comment_body'> [@{{floor.floorComment.toUser}}] : <span v-html="floor.floorComment.comment"></span>  </dd>
-                                    </div>
-
-                                    <div class='replyDiv comment_reply' v-for="reply in floor.replies">
-                                        <dl class='comment_item'>
-                                        <dt class='comment_head'>
-                                        Re:
-                                        <span class='floorInfo'
-                                              :floorId='floor.floorComment.floorId'
-                                              :commentId='floor.floorComment.commentId'
-                                              :name='floor.floorComment.name'
-                                              :role="floor.floorComment.role"
-                                        >
-                                        <span name='commenter' class='text-warning'> {{reply.name}} </span>&nbsp;&nbsp;&nbsp;&nbsp;
-                                        <span name='role' class='text-error'>[{{reply.role}}]</span>&nbsp;&nbsp;&nbsp;&nbsp;
-                                        <span name='date' class='text-success'>发表于  {{reply.createdAt}}</span>&nbsp;&nbsp;&nbsp;&nbsp;
-                                        <span class='comment_manage'>
-                                        <span class='commentReply'>
-                                            <a href='javascript:void(0)' class='cmt_btn reply' title='回复'
-                                               @click="replyFunc($event)">[回复]</a>
-                                        </span>&nbsp;&nbsp;
-                                        <a href='javascript:void(0)' class='cmt_btn quote' title='引用'>[引用]</a>&nbsp;&nbsp;
-                                        <a href='javascript:void(0)' class='cmt_btn report' title='举报'>[举报]</a>&nbsp;&nbsp;
-                                        </span>
-                                        </span>
-                                        </dt>
-
-                                        <dd class='comment_userface'>
-                                        <a href='javascript:void(0)'>
-                                            <img :src='reply.headImgUrl' width='40' height='40' :title='reply.email'/>
-                                        </a>
-                                        </dd>
-                                        <dd class='comment_body'> [@{{reply.toUser}}] : <span v-html="reply.comment"></span>  </dd>
-                                        </dl>
-                                    </div>
-                                    </dl>
-                                </div>
-                            </span>
-                            </div>
-                            <nav class="paging wow fadeInDown" data-wow-duration=".5s" data-wow-delay=".2s"
-                                 style="text-align: center">
-                                <ul class="pagination pagination-mg" th:utext="${pageNation}">
-                                </ul>
-                            </nav> <!--分页结束-->
-                        </div>
+                        <div id="replyNav" ></div>
                     </div>
                 </div>
             </div>

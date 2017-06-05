@@ -1,4 +1,6 @@
 <div>
+
+    <!-- 顶部导航框 -->
     <div class="header" id="headerNav">
         <div class="container">
             <div class="head-left wow fadeInLeft animated animated" data-wow-delay=".3s"
@@ -32,8 +34,8 @@
                     </div>
 
                     <!-- Collect the nav links, forms, and other content for toggling -->
-                    <div class="collapse navbar-collapse nav-wil" id="headerNav0">
-                        <nav class="link-effect-7" id="link-effect-7">
+                    <div class="collapse navbar-collapse nav-wil" >
+                        <nav class="link-effect-7" >
                             <ul class="nav navbar-nav">
                                 <li><a href="/static/main/index.html">首页</a></li>
                                 <li><a href="/static/main/blogList.html">所有博客</a></li>
@@ -41,27 +43,25 @@
                                 <li><a href="#">实验基地</a></li>
                                 <li><a href="#">资源导航</a></li>
                                 <li><a href="/static/main/moods.html">点点滴滴</a></li>
-                                <li><a href="/static/main/advices.html">给我留言</a></li>
+                                <li><a href="/static/main/advices.html?id=-2">给我留言</a></li>
                                 <li><a href="/static/main/blogDetail.html?id=-3">关于博主</a></li>
                             </ul>
                         </nav>
                     </div>
-
-                    <!-- /.navbar-collapse -->
-                </nav><!--导航条结束-->
+                </nav>
             </div>
             <div class="nav navbar-nav navbar-right social-icons wow fadeInRight animated animated" data-wow-delay=".5s"
                  style="visibility: visible; animation-delay: 0.5s; animation-name: fadeInRight;">
-                <div class="heart " id="projHeart" rel="unlike">
-                    <span class="likeCount" id="projLikeCnt"> 0 </span>
+                <div class="heart " name="projHeartEle" rel="unlike">
+                    <span class="likeCount" name="projLikeCntEle"> 0 </span>
                 </div>
 
-            </div><!--点赞按钮结束-->
+            </div>
             <div class="clearfix"></div>
         </div>
-    </div><!--头部导航结束-->
+    </div>
 
-
+    <!-- 博客标题部分 -->
     <div class="header-bottom" id="bannerNav">
         <div class="container">
             <div class="logo wow fadeInDown" data-wow-duration=".8s" data-wow-delay=".2s">
@@ -69,9 +69,9 @@
                 <p><label class="of"></label><span>stay hungry, stay foolish</span><label class="on"></label></p>
             </div>
         </div>
-    </div><!--博客标题结束-->
+    </div>
 
-
+    <!-- 右侧导航部分 -->
     <div class="col-md-3 technology-right" id="rightNav">
         <div class="blo-top1">
             <div class="tech-btm">
@@ -87,7 +87,7 @@
                 </div><!--搜索结束-->
 
                 <div class="insta wow fadeInDown" data-wow-duration=".8s" data-wow-delay=".2s">
-                    <select id="cd-dropdown" class="cd-select">
+                    <select name="typesEle" class="cd-select cd-dropdown">
                         <option selected>博客类别</option>
 
                     </select>
@@ -97,25 +97,25 @@
                      style="border: none">
                     <h4 style="margin: 0">热门点击</h4>
                 </div>
-                <div id="hotBlogs">
+                <div name="hotBlogsEle">
 
                 </div>
                 <!--热门点击结束-->
 
                 <div class="insta wow fadeInDown" data-wow-duration=".8s" data-wow-delay=".2s">
                     <h4>标签云</h4>
-                    <div id="tag-cloud"></div>
+                    <div name="tagCloudEle"></div>
                 </div><!--标签云结束-->
 
                 <div class="dateCategory wow fadeInDown" data-wow-duration=".8s" data-wow-delay=".2s">
                     <h4>日期归档</h4>
-                    <nav class="cl-effect-1" id="facetByMonth">
+                    <nav class="cl-effect-1" name="facetByMonthEle">
 
                     </nav>
 
                 </div><!--日期归档结束-->
 
-                <div class="insta wow fadeInDown" id="links" data-wow-duration=".8s" data-wow-delay=".2s">
+                <div class="insta wow fadeInDown" name="linksEle" data-wow-duration=".8s" data-wow-delay=".2s">
                     <h4>友情链接</h4>
 
                 </div><!--友情链接结束-->
@@ -124,20 +124,156 @@
     </div><!--右侧内容结束-->
 
 
+    <div id="replyNav">
+        <div class="response">
+            <h4>
+                评论
+                <span class="feed" style="float:right">
+                    <span class="heart" name="blogHeart" liked="unlike"></span>
+                    <span class="likeCount" name="blogLikeCount">0</span>
+                </span>
+            </h4>
+            <div id="replyForm">
+                <a name="inputComment" href="javascript:void(0)"></a>
+                <div class="input-group">
+                    <div class="input-group-addon">用户名 <span style="color:red">*</span></div>
+                    <input name="name" type="text" class="form-control"
+                           :value="userInfo.userName" v-model="userInfo.userName" placeholder="name"/>
+
+                    <div class="input-group-addon">邮箱</div>
+                    <input name="email" type="text" class="form-control"
+                           :value="userInfo.email" v-model="userInfo.email" placeholder="email"/>
+                </div>
+                <br/>
+                头像选择 :
+                <img :src="userInfo.headImgUrl" name="headImgUrl" width="40px" height="40px"/>
+                <span v-if="(userInfo.systemUser)">
+                    <button type="button" class="btn btn-xs btn-success" @click="reUseMyHeadImg($event)">
+                        自己的头像
+                    </button>
+                </span>
+                <br/>
+                <select class="form-control" @change="updateHeadImg($event)">
+                    <option v-for="headImage in headImages" :id="headImage.id" :value="headImage.url">
+                        {{headImage.title}}
+                    </option>
+                </select>
+                <br/>
+                <div title="reply" name="comment" class="editor form-control" contenteditable="true">
+                </div>
+
+                <br/>
+                <span style="float:left">
+                    <button name="looks" type="button" class="btn btn-default">放图吧</button>
+                </span>
+                <span style="float:right">
+                    <button name="submitBtn" @click="addComment()" class="btn btn-default">提交评论</button>
+                </span>
+            </div>
+        </div>
+
+        <div id="topOfResp"></div>
+        <div class="response">
+            <span style="padding : 10px 10px 30px 20px; color : red"
+                  v-for="floor in comments">
+                <div class="floor">
+                    <hr/>
+                    <dl class='comment_item comment_topic'>
+                    <div class="replyDiv">
+                        <dt class='comment_head'>
+                        <span> {{floor.floorComment.floorId}} 楼</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <span class='floorInfo'
+                              :floorId='floor.floorComment.floorId'
+                              :commentId='floor.floorComment.commentId'
+                              :name='floor.floorComment.name'
+                              :role="floor.floorComment.role"
+                        >
+                        <span name='commenter' class='text-warning'> {{floor.floorComment.name}} </span>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <span name='role' class='text-error'>[{{floor.floorComment.role}}]</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <span name='date' class='text-success'>发表于 {{floor.floorComment.createdAt}} </span>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <span class='comment_manage'>
+                        <span class='commentReply'>
+                            <a href='javascript:void(0)' class='cmt_btn reply' title='回复'
+                               @click="replyFunc($event)">[回复]</a>
+                        </span>&nbsp;&nbsp;
+                        <a href='javascript:void(0)' class='cmt_btn quote' title='引用'>[引用]</a>&nbsp;&nbsp;
+                        <a href='javascript:void(0)' class='cmt_btn report' title='举报'>[举报]</a>&nbsp;&nbsp;
+                        </span>
+                        </span>
+                        </dt>
+                        <dd class='comment_userface'>
+                        <a href='javascript:void(0)'>
+                            <img :src='floor.floorComment.headImgUrl' width='40' height='40'
+                                 :title='floor.floorComment.email'/>
+                        </a>
+                        </dd>
+                        <dd class='comment_body'> [@{{floor.floorComment.toUser}}] : <span
+                                v-html="floor.floorComment.comment"></span>  </dd>
+                    </div>
+
+                    <div class='replyDiv comment_reply' v-for="reply in floor.replies">
+                        <dl class='comment_item'>
+                        <dt class='comment_head'>
+                        Re:
+                        <span class='floorInfo'
+                              :floorId='reply.floorId'
+                              :commentId='reply.commentId'
+                              :name='reply.name'
+                              :role="reply.role"
+                        >
+                        <span name='commenter' class='text-warning'> {{reply.name}} </span>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <span name='role' class='text-error'>[{{reply.role}}]</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <span name='date' class='text-success'>发表于  {{reply.createdAt}}</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <span class='comment_manage'>
+                        <span class='commentReply'>
+                            <a href='javascript:void(0)' class='cmt_btn reply' title='回复'
+                               @click="replyFunc($event)">[回复]</a>
+                        </span>&nbsp;&nbsp;
+                        <a href='javascript:void(0)' class='cmt_btn quote' title='引用'>[引用]</a>&nbsp;&nbsp;
+                        <a href='javascript:void(0)' class='cmt_btn report' title='举报'>[举报]</a>&nbsp;&nbsp;
+                        </span>
+                        </span>
+                        </dt>
+
+                        <dd class='comment_userface'>
+                        <a href='javascript:void(0)'>
+                            <img :src='reply.headImgUrl' width='40' height='40' :title='reply.email'/>
+                        </a>
+                        </dd>
+                        <dd class='comment_body'> [@{{reply.toUser}}] : <span
+                                v-html="reply.comment"></span>  </dd>
+                        </dl>
+                    </div>
+                    </dl>
+                </div>
+            </span>
+        </div>
+
+        <nav class="paging wow fadeInDown" data-wow-duration=".5s" data-wow-delay=".2s"
+             style="text-align: center">
+            <ul class="pagination pagination-mg">
+                <li v-for="page in pagination" :class="page.active">
+                    <a href="javascript:void(0)" @click="updateComment(page.pageUrl)">{{page.pageNo}}</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- 底部导航框 -->
     <div class="footer" id="footerNav">
         <div class="container">
             <div class="col-md-4 footer-left wow fadeInDown" data-wow-duration=".8s" data-wow-delay=".2s">
                 <h4>关于本站</h4>
-                <p id="siteTime"></p>
-                <p>网站总访问量: <span id="todayVisited"> </span> </p>
+                <p name="siteTime"></p>
+                <p>网站总访问量: <span name="todayVisitedEle"> </span></p>
                 <img src="http://op93pqovl.bkt.clouddn.com/images/t4.jpg" class="img-responsive" alt="">
                 <div class="bht1">
-                    <a href="blog.html">Read More</a>
+                    <a href="/">Read More</a>
                 </div>
             </div>
             <div class="col-md-8 footer-middle wow fadeInDown" data-wow-duration=".8s" data-wow-delay=".2s">
                 <h4>最新评论</h4>
-                <div class="mid-btm" id="latestComments">
+                <div class="mid-btm" name="latestCommentsEle">
 
                 </div>
 
@@ -145,14 +281,15 @@
 
             <div class="clearfix"></div>
         </div>
-    </div><!--脚部结束-->
+    </div>
 
 
+    <!-- 版权导航框 -->
     <div class="copyright wow fadeInDown" id="copyrightNav">
         <div class="container">
             <p>Copyright &copy; 2017 970655147 All rights reserved.</p>
         </div>
-    </div><!--版权区结束-->
+    </div>
 
 </div>
 

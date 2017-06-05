@@ -98,26 +98,20 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
                 " inner join rlt_blog_tag as rlt on b.id = rlt.blog_id " +
                 " inner join blog_ex as e on b.id = e.blog_id " +
                 " where b.deleted = 0 and b.id = ? group by b.id ";
-        String commentsSql = " select * from blog_comment where deleted = 0 and blog_id = ? order by created_at asc ";
         Object[] sqlParams = new Object[]{params.getId()};
 
         BlogVO vo = null;
-        List<BlogCommentPO> comments = null;
         try {
             // 如果 没有找到记录, 或者 找到多条记录, 都会抛出异常, ex.*, b.* 这个顺序, 避免 po.id 被 exPo.id 覆盖
             vo = jdbcTemplate.queryForObject(blogSql, sqlParams, new BlogVOMapper());
-            comments = jdbcTemplate.query(commentsSql, sqlParams, new CommentPOMapper());
         } catch (Exception e) {
             e.printStackTrace();
             return ResultUtils.failed("给定的博客[" + params.getId() + "]不存在 !");
         }
+
         encapTypeTagInfo(vo);
         encapContent(vo);
-
-        JSONArray commentsArr = generateCommentTree(comments);
-        JSONObject data = new JSONObject()
-                .element("blog", vo).element("comments", commentsArr);
-        return ResultUtils.success(data);
+        return ResultUtils.success(vo);
     }
 
     @Override
@@ -402,34 +396,6 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
                 Log.err(Tools.errorMsg(e));
             }
         }
-    }
-
-    /**
-     * 生成评论树
-     *
-     * @param comments comments
-     * @return com.hx.json.JSONArray
-     * @author Jerry.X.He
-     * @date 5/28/2017 2:48 PM
-     * @since 1.0
-     */
-    public JSONArray generateCommentTree(List<BlogCommentPO> comments) {
-        Map<String, List<BlogCommentPO>> treeMap = new LinkedHashMap<>();
-        for (BlogCommentPO comment : comments) {
-            List<BlogCommentPO> floorComments = treeMap.get(comment.getFloorId());
-            if (floorComments == null) {
-                floorComments = new ArrayList<>();
-                treeMap.put(comment.getFloorId(), floorComments);
-            }
-
-            floorComments.add(comment);
-        }
-
-        JSONArray arr = new JSONArray();
-        for (Map.Entry<String, List<BlogCommentPO>> entry : treeMap.entrySet()) {
-            arr.add(entry.getValue());
-        }
-        return arr;
     }
 
     /**

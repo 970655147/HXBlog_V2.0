@@ -24,10 +24,12 @@ function contentInit() {
         el: '#bodyContent',
         data: {
             blog: {},
+            originalHeadImgUrl : "",
             userInfo: {
                 userName: "",
                 email: "",
                 headImgUrl: "",
+                systemUser : false
             },
             comments: [],
             headImages: [],
@@ -36,7 +38,9 @@ function contentInit() {
                 floorId: "",
                 commentId: "",
                 toUser: ""
-            }
+            },
+            pageInfo : {},
+            pagination : []
         },
         mounted: function () {
             var that = this
@@ -46,7 +50,7 @@ function contentInit() {
             SyntaxHighlighter.all()
             that.initEmoji()
 
-            heartClick("#blogHeart", "#blogLikeCount", function (isPrise) {
+            heartClick("[name='blogHeart']", "[name='blogLikeCount']", function (isPrise) {
 
             })
         },
@@ -57,12 +61,13 @@ function contentInit() {
                 this.replyInfo.floorId = floorInfo.attr("floorId")
                 this.replyInfo.commentId = floorInfo.attr("commentId")
                 this.replyInfo.toUser = floorInfo.attr("name")
-                $("#comment").text("[reply]" + floorInfo.attr("name") + "[/reply]\r\n")
-                $("html,body").animate({scrollTop: $("#comment").offset().top}, 1000);
+                console.log(this.replyInfo)
+                $("[name='comment']").text("[reply]" + floorInfo.attr("name") + "[/reply]\r\n")
+                $("html,body").animate({scrollTop: $("[name='comment']").offset().top}, 1000);
             },
             initEmoji: function () {
-                $("#comment").emoji({
-                    button: "#looks",
+                $("[name='comment']").emoji({
+                    button: "[name='looks']",
                     showTab: true,
                     animation: 'fade',
                     icons: [{
@@ -93,23 +98,15 @@ function contentInit() {
                     data: params,
                     success: function (resp) {
                         if (resp.success) {
-                            that.blog = resp.data.blog
-                            var comments = resp.data.comments
+                            that.blog = resp.data
                             $("#blogContent").html(that.blog.content)
                             that.replyInfo.blogId = that.blog.id
                             that.replyInfo.toUser = that.blog.author
 
-                            for (idx in comments) {
-                                that.comments.push({
-                                    floorComment: comments[idx][0],
-                                    replies: comments[idx].slice(1)
-                                })
-                            }
-
                             var userInfo = resp.extra
                             if (userInfo !== null) {
                                 that.userInfo = userInfo
-                                that.userInfo.headImgUrl = userInfo.headImgUrl
+                                that.originalHeadImgUrl = userInfo.headImgUrl
                                 if(userInfo.systemUser) {
                                     $("[name='name']").attr("readonly", "readonly")
                                     $("[name='email']").attr("readonly", "readonly")
@@ -120,6 +117,8 @@ function contentInit() {
                         }
                     }
                 });
+
+                that.updateComment(that.getUrlWithPage(1))
             },
             initHeadImages: function (that) {
                 $.ajax({
@@ -148,7 +147,7 @@ function contentInit() {
             },
             reUseMyHeadImg: function (event) {
                 if (this.userInfo !== null) {
-                    this.userInfo.headImgUrl = this.userInfo.headImgUrl
+                    this.userInfo.headImgUrl = this.originalHeadImgUrl
                 }
             },
             addComment: function () {
@@ -163,6 +162,15 @@ function contentInit() {
                     "headImgUrl": that.userInfo.headImgUrl,
                     "toUser": that.replyInfo.toUser,
                     "comment": replyForm.find("[name='comment']").html()
+                }
+                console.log(params)
+                if(isEmpty(params.name) ) {
+                    layer.tips('请输入用户名', "[name='name']");
+                    return ;
+                }
+                if(isEmpty(params.comment)) {
+                    layer.tips('请输入评论内容', "[name='comment']");
+                    return ;
                 }
 
                 $.ajax({
@@ -186,11 +194,13 @@ function contentInit() {
 
                             var endReplyFlag = "[/reply]"
                             if (isEmpty(params.floorId) || (addedComment.comment.indexOf(endReplyFlag) < 0)) {
-                                addedComment.floorId = that.comments.length + 1
-                                that.comments.push({
-                                    floorComment: addedComment,
-                                    replies: []
-                                })
+                                if(that.comments.length < pageSize) {
+                                    addedComment.floorId = parseInt(that.comments[that.comments.length-1].floorComment.floorId) + 1
+                                    that.comments.push({
+                                        floorComment: addedComment,
+                                        replies: []
+                                    })
+                                }
                             } else {
                                 var floorId = params.floorId
                                 var floorComments = that.locateFloorComment(that.comments, floorId)
@@ -227,6 +237,44 @@ function contentInit() {
                     }
                 }
                 return null;
+            },
+            getUrlWithPage : function(pageNow) {
+                var baseUrl = "/comment/list"
+                params.pageNow = pageNow
+                return encapGetUrl(baseUrl, params)
+            },
+            updateComment : function(url) {
+                var that = this
+                var params = getParamsFromUrl(url)
+
+                var loadCommentIdx = layer.load(0, {shade: false})
+                $.ajax({
+                    url: "/comment/list",
+                    data: params,
+                    success: function (resp) {
+                        if (resp.success) {
+                            that.comments = []
+                            that.pagination = []
+
+                            that.pageInfo = resp.data
+                            var comments = resp.data.list
+
+                            for (idx in comments) {
+                                that.comments.push({
+                                    floorComment: comments[idx][0],
+                                    replies: comments[idx].slice(1)
+                                })
+                            }
+
+                            var pageNow = params.pageNow
+                            collectPagination(that.pagination, that.pageInfo, pageNow, that.getUrlWithPage)
+                        } else {
+                            layer.alert("拉取评论列表失败 !")
+                        }
+                        $("html,body").animate({scrollTop: $("#topOfResp").offset().top}, 1000);
+                        layer.close(loadCommentIdx)
+                    }
+                });
             }
 
         }

@@ -24,6 +24,7 @@ function importHeaderFooter() {
             jq("#headerNav").html(template.find("#headerNav").html())
             jq("#bannerNav").html(template.find("#bannerNav").html())
             jq("#rightNav").html(template.find("#rightNav").html())
+            jq("#replyNav").html(template.find("#replyNav").html())
             jq("#footerNav").html(template.find("#footerNav").html())
             jq("#copyrightNav").html(template.find("#copyrightNav").html())
         }
@@ -40,16 +41,16 @@ function headerFooterInit() {
             if (resp.success) {
                 var data = resp.data
 
-                $("#title").text(data.title)
-                $("#subTitle").text(data.subTitle)
+                $("[name='title']").text(data.title)
+                $("[name='subTitle']").text(data.subTitle)
 
-                var typesEle = $("#cd-dropdown")
+                var typesEle = $("[name='typesEle']")
                 for (idx in data.types) {
                     var type = data.types[idx]
                     typesEle.append("<option name='type' value='/static/main/blogList.html?typeId=" + type.id + "&typeName=" + type.name + "' >" + type.name + "</option>")
                 }
 
-                var linksEle = $("#links")
+                var linksEle = $("[name='linksEle']")
                 for (idx in data.links) {
                     var link = data.links[idx]
                     linksEle.append(
@@ -61,7 +62,7 @@ function headerFooterInit() {
                 var tags = data.tags
                 initTags(tags)
 
-                var hotBlogsEle = $("#hotBlogs")
+                var hotBlogsEle = $("[name='hotBlogsEle']")
                 for (idx in data.hotBlogs) {
                     var blog = data.hotBlogs[idx]
                     hotBlogsEle.append(
@@ -76,13 +77,13 @@ function headerFooterInit() {
                         "</div>")
                 }
 
-                var facetByMonthEle = $("#facetByMonth")
+                var facetByMonthEle = $("[name='facetByMonthEle']")
                 for (idx in data.facetByMonth) {
                     var facetByMonth = data.facetByMonth[idx]
-                    facetByMonthEle.append("<a>" + facetByMonth.month + " " + facetByMonth.cnt + "</a>")
+                    facetByMonthEle.append("<a>" + facetByMonth.month + " (" + facetByMonth.cnt + ")</a>")
                 }
 
-                var latestComments = $("#latestComments")
+                var latestComments = $("[name='latestCommentsEle']")
                 for (idx in data.latestComments) {
                     var comment = data.latestComments[idx]
                     latestComments.append(
@@ -93,10 +94,10 @@ function headerFooterInit() {
                     )
                 }
 
-                $("#projLikeCnt").text(data.goodSensed)
-                $("#todayVisited").text(data.todayVisited)
+                $("[name='projLikeCntEle']").text(data.goodSensed)
+                $("[name='todayVisitedEle']").text(data.todayVisited)
 
-                heartClick("#projHeart", "#projLikeCnt", function (isPrise) {
+                heartClick("[name='projHeartEle']", "[name='projLikeCntEle']", function (isPrise) {
 
                 })
                 selectHeader()
@@ -141,7 +142,7 @@ function headerFooterInit() {
 
         };
         //var svg3DTagCloud = new SVG3DTagCloud( document.getElementById( 'holder'  ), settings );
-        $('#tag-cloud').svg3DTagCloud(settings);
+        $("[name='tagCloudEle']").svg3DTagCloud(settings);
         parse()
     }
 
@@ -190,7 +191,7 @@ function heartClick(heart, likeCnt, callback) {
 function selectHeader() {
     var url = location.href
 
-    var allA = $("#headerNav0 li a")
+    var allA = $("[name='headerNav0'] li a")
     for(idx in allA) {
         if(url.indexOf(allA[idx].href) >= 0) {
             $(allA[idx]).parent().addClass("active act")

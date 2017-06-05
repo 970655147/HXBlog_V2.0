@@ -1,5 +1,7 @@
 package com.hx.blog_v2.domain.form;
 
+import com.hx.blog_v2.domain.form.interf.UserInfoExtractor;
+
 /**
  * BlogSenseForm
  *
@@ -7,16 +9,19 @@ package com.hx.blog_v2.domain.form;
  * @version 1.0
  * @date 6/2/2017 11:43 PM
  */
-public class BlogSenseForm {
+public class BlogSenseForm implements UserInfoExtractor {
 
     /**
      * blogId
      */
     private String id;
+    private String name;
+    private String headImgUrl;
+    private String email;
     /**
      * good or not good
      */
-    private boolean sense;
+    private String sense;
 
     public BlogSenseForm() {
     }
@@ -29,11 +34,38 @@ public class BlogSenseForm {
         this.id = id;
     }
 
-    public boolean isSense() {
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    @Override
+    public String getHeadImgUrl() {
+        return headImgUrl;
+    }
+
+    public void setHeadImgUrl(String headImgUrl) {
+        this.headImgUrl = headImgUrl;
+    }
+
+    public String getSense() {
         return sense;
     }
 
-    public void setSense(boolean sense) {
+    public void setSense(String sense) {
         this.sense = sense;
     }
 }

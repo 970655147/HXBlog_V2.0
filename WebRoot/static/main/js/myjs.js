@@ -1,7 +1,7 @@
 new WOW().init();
 
 $(document).ready(function () {
-    $( '#cd-dropdown' ).dropdown( {
+    $( '.cd-dropdown' ).dropdown( {
         gutter : 5,
         delay : 100,
         random : true

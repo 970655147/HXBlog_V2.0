@@ -2,17 +2,11 @@ package com.hx.blog_v2.dao;
 
 import com.hx.blog_v2.dao.interf.BaseDaoImpl;
 import com.hx.blog_v2.dao.interf.BlogDao;
-import com.hx.blog_v2.domain.po.BlogCommentPO;
 import com.hx.blog_v2.domain.po.BlogPO;
 import com.hx.blog_v2.util.BlogConstants;
 import com.hx.blog_v2.util.MyMysqlConnectionProvider;
 import com.hx.mongo.config.MysqlDbConfig;
-import com.hx.mongo.config.interf.DbConfig;
-import com.hx.mongo.connection.interf.ConnectionProvider;
-import com.hx.mongo.dao.MysqlBaseDaoImpl;
 import org.springframework.stereotype.Repository;
-
-import java.sql.Connection;
 
 /**
  * BlogDaoImpl

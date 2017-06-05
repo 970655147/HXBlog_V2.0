@@ -1,5 +1,7 @@
 package com.hx.blog_v2.domain.form;
 
+import com.hx.blog_v2.domain.form.interf.UserInfoExtractor;
+
 /**
  * CommentSaveForm
  *
@@ -7,7 +9,7 @@ package com.hx.blog_v2.domain.form;
  * @version 1.0
  * @date 5/24/2017 7:44 PM
  */
-public class CommentSaveForm {
+public class CommentSaveForm implements UserInfoExtractor {
 
     /**
      * 回复的评论的id
@@ -54,6 +56,7 @@ public class CommentSaveForm {
         this.commentId = commentId;
     }
 
+    @Override
     public String getName() {
         return name;
     }
@@ -62,6 +65,7 @@ public class CommentSaveForm {
         this.name = name;
     }
 
+    @Override
     public String getEmail() {
         return email;
     }
@@ -70,6 +74,7 @@ public class CommentSaveForm {
         this.email = email;
     }
 
+    @Override
     public String getHeadImgUrl() {
         return headImgUrl;
     }

@@ -1,6 +1,9 @@
 package com.hx.blog_v2.util;
 
+import com.hx.json.JSONArray;
 import com.hx.log.util.Tools;
+
+import java.util.Collection;
 
 /**
  * sql 处理的相关工具
@@ -28,6 +31,21 @@ public final class SqlUtils {
      */
     public static String wrapWildcard(String keywords) {
         return "%" + keywords + "%";
+    }
+
+    /**
+     * 封装 in 查询的 in代码片
+     *
+     * @param col col
+     * @return java.lang.String
+     * @author Jerry.X.He
+     * @date 6/5/2017 7:32 PM
+     * @since 1.0
+     */
+    public static <T> String wrapInSnippet(Collection<T> col) {
+        JSONArray arr = JSONArray.fromObject(col);
+        String result = arr.toString();
+        return result.substring(result.indexOf("[")+1, result.lastIndexOf("]"));
     }
 
 
