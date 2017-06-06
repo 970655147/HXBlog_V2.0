@@ -52,7 +52,7 @@
             </div>
             <div class="nav navbar-nav navbar-right social-icons wow fadeInRight animated animated" data-wow-delay=".5s"
                  style="visibility: visible; animation-delay: 0.5s; animation-name: fadeInRight;">
-                <div class="heart " name="projHeartEle" rel="unlike">
+                <div class="heart " name="projHeartEle" >
                     <span class="likeCount" name="projLikeCntEle"> 0 </span>
                 </div>
 
@@ -131,6 +131,7 @@
                 <span class="feed" style="float:right">
                     <span class="heart" name="blogHeart" liked="unlike"></span>
                     <span class="likeCount" name="blogLikeCount">0</span>
+
                 </span>
             </h4>
             <div id="replyForm">
@@ -138,7 +139,7 @@
                 <div class="input-group">
                     <div class="input-group-addon">用户名 <span style="color:red">*</span></div>
                     <input name="name" type="text" class="form-control"
-                           :value="userInfo.userName" v-model="userInfo.userName" placeholder="name"/>
+                           :value="userInfo.name" v-model="userInfo.name" placeholder="name"/>
 
                     <div class="input-group-addon">邮箱</div>
                     <input name="email" type="text" class="form-control"

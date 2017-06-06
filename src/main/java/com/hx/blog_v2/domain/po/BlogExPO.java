@@ -91,6 +91,18 @@ public class BlogExPO implements JSONTransferable<BlogExPO> {
         this.notGoodCnt = notGoodCnt;
     }
 
+    public void incCommentCnt(int inc) {
+        commentCnt += inc;
+    }
+
+    public void incViewCnt(int inc) {
+        viewCnt += inc;
+    }
+
+    public void incGoodCnt(int inc) {
+        goodCnt += inc;
+    }
+
     public static final BlogExPO PROTO_BEAN = new BlogExPO();
 
     @Override

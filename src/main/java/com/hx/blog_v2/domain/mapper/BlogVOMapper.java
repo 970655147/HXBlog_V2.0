@@ -26,14 +26,10 @@ public class BlogVOMapper implements RowMapper<BlogVO> {
     @Override
     public BlogVO mapRow(ResultSet resultSet, int i) throws SQLException {
         BlogPO po = new BlogPO();
-        BlogExPO exPo = new BlogExPO();
-
         Map<String, Object> resultMap = new ResultSet2MapAdapter(resultSet);
         po.loadFromJSON(resultMap, BlogConstants.LOAD_ALL_CONFIG);
-        exPo.loadFromJSON(resultMap, BlogConstants.LOAD_ALL_CONFIG);
 
         BlogVO vo = POVOTransferUtils.blogPO2BlogVO(po);
-        vo = POVOTransferUtils.blogExPO2BlogVO(exPo, vo);
         String tagIds = (String) resultMap.get("tagIds");
         if(!Tools.isEmpty(tagIds)) {
             String[] tagIdArr = tagIds.split(",");

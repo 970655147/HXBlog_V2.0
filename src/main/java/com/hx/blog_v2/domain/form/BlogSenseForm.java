@@ -14,7 +14,7 @@ public class BlogSenseForm implements UserInfoExtractor {
     /**
      * blogId
      */
-    private String id;
+    private String blogId;
     private String name;
     private String headImgUrl;
     private String email;
@@ -22,16 +22,17 @@ public class BlogSenseForm implements UserInfoExtractor {
      * good or not good
      */
     private String sense;
+    private Boolean clicked;
 
     public BlogSenseForm() {
     }
 
-    public String getId() {
-        return id;
+    public String getBlogId() {
+        return blogId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setBlogId(String blogId) {
+        this.blogId = blogId;
     }
 
     @Override
@@ -67,5 +68,13 @@ public class BlogSenseForm implements UserInfoExtractor {
 
     public void setSense(String sense) {
         this.sense = sense;
+    }
+
+    public Boolean isClicked() {
+        return clicked;
+    }
+
+    public void setClicked(Boolean clicked) {
+        this.clicked = clicked;
     }
 }

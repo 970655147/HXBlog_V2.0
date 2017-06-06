@@ -1,6 +1,7 @@
 package com.hx.blog_v2.util;
 
 import com.hx.blog_v2.dao.interf.*;
+import com.hx.blog_v2.domain.form.BlogSenseForm;
 import com.hx.blog_v2.domain.po.*;
 import com.hx.common.interf.cache.Cache;
 import com.hx.log.cache.mem.LRUMCache;
@@ -17,8 +18,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
-import static com.hx.log.util.Log.info;
-
 /**
  * 缓存了一部分的数据
  *
@@ -28,6 +27,11 @@ import static com.hx.log.util.Log.info;
  */
 @Component
 public class CacheContext {
+
+    /**
+     * blogSense 的key 的分隔符
+     */
+    public static final String BLOG_SENSE_KEY_SEP = "&%$";
 
     @Autowired
     private BlogTagDao blogTagDao;
@@ -87,6 +91,14 @@ public class CacheContext {
      * roleIds -> resourceIds 的缓存
      */
     private Cache<String, List<String>> roles2ResourceIds;
+    /**
+     * (blogId, userName, email, sense) -> clicked 的缓存
+     */
+    private Cache<String, Boolean> sense2Clicked;
+    /**
+     * blogId -> BlogEx 的缓存
+     */
+    private Cache<String, BlogExPO> blogId2BlogEx;
 
     /**
      * 初始化 CacheContext
@@ -102,6 +114,8 @@ public class CacheContext {
         blogFloor2NextCommentId = new LRUMCache<>(constants.maxCachedBlogFloor2CommentId, false);
         digest2UploadedFiles = new LRUMCache<>(constants.maxCachedUploadedImage, false);
         roles2ResourceIds = new LRUMCache<>(constants.maxRoleIds2ResourceIds, false);
+        sense2Clicked = new LRUMCache<>(constants.maxSense2Clicked, false);
+        blogId2BlogEx = new LRUMCache<>(constants.maxBlogId2BlogEx, false);
 
         loadFullCachedResources();
     }
@@ -254,6 +268,59 @@ public class CacheContext {
     }
 
     /**
+     * 获取参数相关的 BlogSense
+     *
+     * @param params params
+     * @return java.lang.Boolean
+     * @author Jerry.X.He
+     * @date 6/6/2017 8:32 PM
+     * @since 1.0
+     */
+    public Boolean getBlogSense(BlogSenseForm params) {
+        return sense2Clicked.get(generateBlogSenseKey(params));
+    }
+
+    /**
+     * 向缓存中增加 BlogSense
+     *
+     * @param params  params
+     * @param clicked clicked
+     * @return void
+     * @author Jerry.X.He
+     * @date 6/6/2017 8:33 PM
+     * @since 1.0
+     */
+    public void putBlogSense(BlogSenseForm params, boolean clicked) {
+        sense2Clicked.put(generateBlogSenseKey(params), clicked);
+    }
+
+    /**
+     * 获取blogId 对应的 BlogExPO
+     *
+     * @param blogId blogId
+     * @return com.hx.blog_v2.domain.po.BlogExPO
+     * @author Jerry.X.He
+     * @date 6/6/2017 8:38 PM
+     * @since 1.0
+     */
+    public BlogExPO getBlogEx(String blogId) {
+        return blogId2BlogEx.get(blogId);
+    }
+
+    /**
+     * 添加给定的 blogExPO 到缓存中
+     *
+     * @param blogExPO blogExPO
+     * @return com.hx.blog_v2.domain.po.BlogExPO
+     * @author Jerry.X.He
+     * @date 6/6/2017 8:38 PM
+     * @since 1.0
+     */
+    public void putBlogEx(BlogExPO blogExPO) {
+        blogId2BlogEx.put(blogExPO.getBlogId(), blogExPO);
+    }
+
+    /**
      * 获取给定到的博客的下一个层数id
      *
      * @param blogId blogId
@@ -377,7 +444,7 @@ public class CacheContext {
     /**
      * 获取给定的博客, 给定的层数的索引[在blogFloor2NextCommentId中使用]
      *
-     * @param blogId blogId
+     * @param blogId  blogId
      * @param floorId floorId
      * @return java.lang.String
      * @author Jerry.X.He
@@ -386,6 +453,19 @@ public class CacheContext {
      */
     private String blogFloorIdx(String blogId, String floorId) {
         return blogId + "_" + floorId;
+    }
+
+    /**
+     * 构造 (blogId, userName, email, sense) 的key
+     *
+     * @param params params
+     * @return java.lang.String
+     * @author Jerry.X.He
+     * @date 6/6/2017 8:33 PM
+     * @since 1.0
+     */
+    private String generateBlogSenseKey(BlogSenseForm params) {
+        return params.getBlogId() + BLOG_SENSE_KEY_SEP + params.getName() + BLOG_SENSE_KEY_SEP + params.getEmail() + BLOG_SENSE_KEY_SEP + params.getSense();
     }
 
 }

@@ -840,7 +840,7 @@ public final class POVOTransferUtils {
         SessionUser result = new SessionUser();
         result.setId(src.getId());
         result.setTitle(src.getTitle());
-        result.setUserName(src.getUserName());
+        result.setName(src.getUserName());
         result.setHeadImgUrl(src.getHeadImgUrl());
         result.setEmail(src.getEmail());
         return result;
@@ -858,7 +858,7 @@ public final class POVOTransferUtils {
         UserPO result = new UserPO();
         result.setId(src.getId());
         result.setTitle(src.getTitle());
-        result.setUserName(src.getUserName());
+        result.setUserName(src.getName());
         result.setHeadImgUrl(src.getHeadImgUrl());
         result.setEmail(src.getEmail());
         return result;

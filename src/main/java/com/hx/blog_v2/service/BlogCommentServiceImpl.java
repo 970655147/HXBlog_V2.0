@@ -59,7 +59,7 @@ public class BlogCommentServiceImpl extends BaseServiceImpl<BlogCommentPO> imple
         }
 
         SessionUser user = (SessionUser) WebContext.getAttributeFromSession(BlogConstants.SESSION_USER);
-        BlogCommentPO po = new BlogCommentPO(user.getUserName(), user.getEmail(), user.getHeadImgUrl(), params.getToUser(),
+        BlogCommentPO po = new BlogCommentPO(user.getName(), user.getEmail(), user.getHeadImgUrl(), params.getToUser(),
                 user.getTitle(), params.getComment());
         po.setBlogId(params.getBlogId());
         int endOfReply = idxOfEndRe(params.getComment());
@@ -94,6 +94,7 @@ public class BlogCommentServiceImpl extends BaseServiceImpl<BlogCommentPO> imple
         String countSql = " select count(distinct(floor_id)) as totalRecord from blog_comment where blog_id = ? and deleted = 0 ";
 
         Object[] sqlParams = new Object[]{params.getId() };
+        // 1, 2 可以折叠, 可惜 我的 mysql 似乎 是不支持 limit 作为子查询
         List<Integer> floorIds = jdbcTemplate.query(selectFloorSql, new Object[]{params.getId(), page.recordOffset(), page.getPageSize()}, new OneIntMapper("floor_id"));
         Integer totalRecord = jdbcTemplate.queryForObject(countSql, sqlParams, new OneIntMapper("totalRecord"));
         List<CommentVO> comments = Collections.emptyList();

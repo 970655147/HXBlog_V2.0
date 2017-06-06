@@ -13,15 +13,15 @@ public class SessionUser {
      * userId
      */
     private String id;
-    private String userName;
+    private String name;
     private String email;
     private String headImgUrl;
     private String title;
     private String roleIds;
     private boolean isSystemUser;
 
-    public SessionUser(String userName, String email, String headImgUrl, String title, String roleIds, boolean isSystemUser) {
-        this.userName = userName;
+    public SessionUser(String name, String email, String headImgUrl, String title, String roleIds, boolean isSystemUser) {
+        this.name = name;
         this.email = email;
         this.headImgUrl = headImgUrl;
         this.title = title;
@@ -40,12 +40,12 @@ public class SessionUser {
         this.id = id;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getName() {
+        return name;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getEmail() {

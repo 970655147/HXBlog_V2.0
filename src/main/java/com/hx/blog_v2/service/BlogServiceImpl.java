@@ -1,16 +1,14 @@
 package com.hx.blog_v2.service;
 
-import com.hx.blog_v2.dao.interf.BlogCommentDao;
-import com.hx.blog_v2.dao.interf.BlogDao;
-import com.hx.blog_v2.dao.interf.BlogExDao;
-import com.hx.blog_v2.dao.interf.RltBlogTagDao;
+import com.hx.blog_v2.dao.interf.*;
+import com.hx.blog_v2.domain.POVOTransferUtils;
 import com.hx.blog_v2.domain.dto.SessionUser;
 import com.hx.blog_v2.domain.form.BeanIdForm;
 import com.hx.blog_v2.domain.form.BlogSaveForm;
 import com.hx.blog_v2.domain.form.BlogSearchForm;
+import com.hx.blog_v2.domain.form.BlogSenseForm;
 import com.hx.blog_v2.domain.mapper.AdminBlogVOMapper;
 import com.hx.blog_v2.domain.mapper.BlogVOMapper;
-import com.hx.blog_v2.domain.mapper.CommentPOMapper;
 import com.hx.blog_v2.domain.mapper.OneIntMapper;
 import com.hx.blog_v2.domain.po.*;
 import com.hx.blog_v2.domain.vo.AdminBlogVO;
@@ -21,18 +19,19 @@ import com.hx.blog_v2.util.*;
 import com.hx.common.interf.common.Page;
 import com.hx.common.interf.common.Result;
 import com.hx.common.util.ResultUtils;
-import com.hx.json.JSONArray;
-import com.hx.json.JSONObject;
 import com.hx.log.collection.CollectionUtils;
 import com.hx.log.file.FileUtils;
 import com.hx.log.util.Log;
 import com.hx.log.util.Tools;
 import com.hx.mongo.criteria.Criteria;
+import com.hx.mongo.criteria.interf.MultiCriteriaQueryCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * BlogServiceImpl
@@ -53,6 +52,8 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
     @Autowired
     private RltBlogTagDao rltBlogTagDao;
     @Autowired
+    private BlogSenseDao senseDao;
+    @Autowired
     private JdbcTemplate jdbcTemplate;
     @Autowired
     private CacheContext cacheContext;
@@ -63,7 +64,7 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
     public Result save(BlogSaveForm params) {
         SessionUser user = (SessionUser) WebContext.getAttributeFromSession(BlogConstants.SESSION_USER);
         String contentUrl = generateBlogPath(params);
-        BlogPO po = new BlogPO(params.getTitle(), user.getUserName(), params.getCoverUrl(),
+        BlogPO po = new BlogPO(params.getTitle(), user.getName(), params.getCoverUrl(),
                 params.getBlogTypeId(), params.getSummary(), contentUrl);
 
         if (!Tools.isEmpty(params.getId())) {
@@ -94,9 +95,8 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
 
     @Override
     public Result get(BeanIdForm params) {
-        String blogSql = " select e.*, b.*, GROUP_CONCAT(rlt.tag_id) as tagIds from blog as b " +
+        String blogSql = " select b.*, GROUP_CONCAT(rlt.tag_id) as tagIds from blog as b " +
                 " inner join rlt_blog_tag as rlt on b.id = rlt.blog_id " +
-                " inner join blog_ex as e on b.id = e.blog_id " +
                 " where b.deleted = 0 and b.id = ? group by b.id ";
         Object[] sqlParams = new Object[]{params.getId()};
 
@@ -104,6 +104,11 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
         try {
             // 如果 没有找到记录, 或者 找到多条记录, 都会抛出异常, ex.*, b.* 这个顺序, 避免 po.id 被 exPo.id 覆盖
             vo = jdbcTemplate.queryForObject(blogSql, sqlParams, new BlogVOMapper());
+            Result result = encapSenseAndBlogEx(vo);
+            if(!result.isSuccess()) {
+                return result;
+            }
+            vo = (BlogVO) result.getData();
         } catch (Exception e) {
             e.printStackTrace();
             return ResultUtils.failed("给定的博客[" + params.getId() + "]不存在 !");
@@ -116,9 +121,9 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
 
     @Override
     public Result list(BlogSearchForm params, Page<BlogVO> page) {
-        String selectSql = " select e.*, b.*, GROUP_CONCAT(rlt.tag_id) as tagIds from blog as b " +
+        String selectSql = " select b.*, GROUP_CONCAT(rlt.tag_id) as tagIds from blog as b " +
                 " inner join rlt_blog_tag as rlt on b.id = rlt.blog_id " +
-                " inner join blog_ex as e on b.id = e.blog_id where b.deleted = 0 and b.id >= 0 ";
+                " where b.deleted = 0 and b.id >= 0 ";
         String selectSqlSuffix = " group by b.id limit ?, ? ";
         String countSql = " select count(*) as totalRecord from blog as b where b.deleted = 0 and b.id >= 0 ";
 
@@ -358,6 +363,8 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
      */
     private void encapBlogVo(List<BlogVO> voes) {
         for (BlogVO vo : voes) {
+            BlogExPO exPo = (BlogExPO) getBlogEx(vo.getId()).getData();
+            vo = POVOTransferUtils.blogExPO2BlogVO(exPo, vo);
             encapTypeTagInfo(vo);
             encapContent(vo);
         }
@@ -428,6 +435,98 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
                 sqlParamsList.add(SqlUtils.wrapWildcard(params.getKeywords()));
             }
         }
+    }
+
+    /**
+     * 获取当前用户是否点了当前博客的赞
+     *
+     * @param blogId blogId
+     * @return boolean
+     * @author Jerry.X.He
+     * @date 6/6/2017 9:19 PM
+     * @since 1.0
+     */
+    public Result isSense(String blogId) {
+        SessionUser user = (SessionUser) WebContext.getAttributeFromSession(BlogConstants.SESSION_USER);
+        if (user == null) {
+            return ResultUtils.failed(false);
+        }
+
+        BlogSenseForm params = new BlogSenseForm();
+        params.setBlogId(blogId);
+        params.setName(user.getName());
+        params.setEmail(user.getEmail());
+        params.setSense(BlogConstants.UP_PRISE_SENSE);
+        Boolean senseFromCache = cacheContext.getBlogSense(params);
+        if (senseFromCache != null) {
+            return senseFromCache ? ResultUtils.success() : ResultUtils.failed();
+        }
+
+        MultiCriteriaQueryCriteria query = Criteria.and(Criteria.eq("blog_id", params.getBlogId()))
+                .add(Criteria.eq("name", params.getName())).add(Criteria.eq("sense", params.getSense()));
+        if (!Tools.isEmpty(params.getEmail())) {
+            query.add(Criteria.eq("email", params.getEmail()));
+        }
+        try {
+            BlogSensePO po = senseDao.findOne(query, BlogConstants.LOAD_ALL_CONFIG);
+            if (po == null) {
+                return ResultUtils.failed(false);
+            }
+            cacheContext.putBlogSense(params, (po.getClicked() == 1));
+            return (po.getClicked() == 1) ? ResultUtils.success() : ResultUtils.failed();
+        } catch (Exception e) {
+            return ResultUtils.failed();
+        }
+    }
+
+    /**
+     * 获取blog 对应的 BlogEx
+     *
+     * @param blogId blogId
+     * @return com.hx.common.interf.common.Result
+     * @author Jerry.X.He
+     * @date 6/6/2017 9:23 PM
+     * @since 1.0
+     */
+    public Result getBlogEx(String blogId) {
+        BlogExPO po = cacheContext.getBlogEx(blogId);
+        if (po != null) {
+            return ResultUtils.success(po);
+        }
+
+        try {
+            po = blogExDao.findOne(Criteria.and(Criteria.eq("blog_id", blogId)),
+                    BlogConstants.LOAD_ALL_CONFIG);
+            if (po == null) {
+                return ResultUtils.failed("没有对应的博客");
+            }
+            cacheContext.putBlogEx(po);
+            return ResultUtils.success(po);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResultUtils.failed(Tools.errorMsg(e));
+        }
+    }
+
+    /**
+     * 封装 给定的 Blog 的 sense 以及 BlogEx
+     *
+     * @param vo vo
+     * @return com.hx.common.interf.common.Result
+     * @author Jerry.X.He
+     * @date 6/6/2017 10:24 PM
+     * @since 1.0
+     */
+    Result encapSenseAndBlogEx(BlogVO vo) {
+        vo.setGoodSensed(isSense(vo.getId()).isSuccess());
+        Result getBlogExResult = getBlogEx(vo.getId());
+        if(! getBlogExResult.isSuccess()) {
+            return getBlogExResult;
+        }
+
+        BlogExPO exPO = (BlogExPO) getBlogExResult.getData();
+        vo = POVOTransferUtils.blogExPO2BlogVO(exPO, vo);
+        return ResultUtils.success(vo);
     }
 
 }

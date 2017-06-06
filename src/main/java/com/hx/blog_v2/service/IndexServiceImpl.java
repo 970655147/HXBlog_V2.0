@@ -12,6 +12,7 @@ import com.hx.blog_v2.domain.vo.CommentVO;
 import com.hx.blog_v2.domain.vo.FacetByMonthVO;
 import com.hx.blog_v2.domain.vo.ResourceVO;
 import com.hx.blog_v2.service.interf.BaseServiceImpl;
+import com.hx.blog_v2.service.interf.BlogService;
 import com.hx.blog_v2.service.interf.IndexService;
 import com.hx.blog_v2.service.interf.LinkService;
 import com.hx.blog_v2.util.BlogConstants;
@@ -42,6 +43,8 @@ public class IndexServiceImpl extends BaseServiceImpl<Object> implements IndexSe
     @Autowired
     private LinkService linkService;
     @Autowired
+    private BlogServiceImpl blogService;
+    @Autowired
     private CacheContext cacheContext;
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -62,6 +65,7 @@ public class IndexServiceImpl extends BaseServiceImpl<Object> implements IndexSe
         List<BlogVO> hotBlogs = jdbcTemplate.query(hotBlogsSql, new BlogVOMapper());
         List<CommentVO> latestComments = jdbcTemplate.query(latestCommentsSql, new CommentVOMapper());
         BlogVO contextBlog = jdbcTemplate.queryForObject(contextBlogSql, new BlogVOMapper());
+        blogService.encapSenseAndBlogEx(contextBlog);
         List<FacetByMonthVO> facetByMonth = jdbcTemplate.query(facetByMogroupnthSql, new FacetByMonthMapper());
         Integer todayVisited = jdbcTemplate.queryForObject(todayVisitedSql, new OneIntMapper("cnt"));
         encapBlogVo(hotBlogs);
@@ -76,7 +80,8 @@ public class IndexServiceImpl extends BaseServiceImpl<Object> implements IndexSe
         data.put("hotBlogs", hotBlogs);
         data.put("latestComments", latestComments);
         data.put("facetByMonth", facetByMonth);
-        data.put("goodSensed", contextBlog.getGoodCnt());
+        data.put("goodSensed", contextBlog.isGoodSensed());
+        data.put("goodCnt", contextBlog.getGoodCnt());
         data.put("todayVisited", todayVisited);
         // 本周, 本月, 合计
 

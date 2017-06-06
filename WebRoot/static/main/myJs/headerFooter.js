@@ -97,8 +97,21 @@ function headerFooterInit() {
                 $("[name='projLikeCntEle']").text(data.goodSensed)
                 $("[name='todayVisitedEle']").text(data.todayVisited)
 
+                heartInit("[name='projHeartEle']", "[name='projLikeCntEle']", data.goodCnt, data.goodSensed)
                 heartClick("[name='projHeartEle']", "[name='projLikeCntEle']", function (isPrise) {
+                    var senseParams = {
+                        blogId : "-1",
+                        clicked : isPrise,
+                        sense : "good"
+                    }
+                    $.ajax({
+                        url: "/blog/sense/sense",
+                        data: senseParams,
+                        type : "POST",
+                        success: function (resp) {
 
+                        }
+                    })
                 })
                 selectHeader()
             }
@@ -167,22 +180,43 @@ function headerFooterInit() {
 function heartClick(heart, likeCnt, callback) {
     var heartEle = $(heart)
     heartEle.click(function () {
-        var likeCntEle = $(likeCnt);
+        var likeCntEle = $(likeCnt)
         var cntNow = parseInt(likeCntEle.html())
 
         var isPrise = (heartEle.attr("liked") !== "like")
         if (isPrise) {
-            likeCntEle.html(cntNow + 1);
-            heartEle.addClass("heartAnimation").attr("liked", "like");
+            likeCntEle.html(cntNow + 1)
+            heartEle.addClass("heartAnimation").attr("liked", "like")
+            // 我擦嘞, 因为 这个问题, 找了 半个小时了 ..
+            heartEle.css("background-position", "right")
         } else {
-            likeCntEle.html(cntNow - 1);
-            heartEle.removeClass("heartAnimation").attr("liked", "unlike");
-            heartEle.css("background-position", "left");
+            likeCntEle.html(cntNow - 1)
+            heartEle.removeClass("heartAnimation").attr("liked", "unlike")
+            heartEle.css("background-position", "left")
         }
         if (callback) {
             callback(isPrise)
         }
     })
+}
+
+/**
+ * 点赞, 踩的初始化
+ * @param heart
+ * @param likeCnt
+ * @param likeCntSum
+ * @param isPriseNow
+ */
+function heartInit(heart, likeCnt, likeCntSum, isPriseNow) {
+    var heartEle = $(heart)
+    var likeCntEle = $(likeCnt)
+    likeCntEle.html(likeCntSum)
+    if (isPriseNow) {
+        heartEle.addClass("heartAnimation").attr("liked", "like");
+    } else {
+        heartEle.removeClass("heartAnimation").attr("liked", "unlike");
+        heartEle.css("background-position", "left");
+    }
 }
 
 /**

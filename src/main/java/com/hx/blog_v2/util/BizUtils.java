@@ -33,7 +33,7 @@ public final class BizUtils {
             user = new SessionUser(params.getName(), params.getEmail(), params.getHeadImgUrl(), "guest", "guest", false);
         } else {
             if (!user.isSystemUser()) {
-                user.setUserName(params.getName());
+                user.setName(params.getName());
                 user.setEmail(params.getEmail());
             }
             user.setHeadImgUrl(params.getHeadImgUrl());

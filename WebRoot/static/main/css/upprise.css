@@ -5,7 +5,7 @@ body{color: #333333;}
     	font-family: arial;
     }
     #container h3{font-family: "Microsoft YaHei";}
-    
+
     .heart {
 	    background: url(../images/heart_animation.png);
 	    background-position: left;
@@ -17,7 +17,7 @@ body{color: #333333;}
 	    left:-14px;
         background-size:2900%;
     }
-    
+
     .heart:hover, .heart:focus{
     background-position: right;
 	}
@@ -52,7 +52,7 @@ body{color: #333333;}
 	    animation-timing-function: steps(28);
 	    background-position: right;
     }
-    
+
     .feed p{font-family: "Microsoft YaHei",'Georgia', Times, Times New Roman, serif; font-size: 25px;}
     .feed{clear: both; margin-bottom:20px; height: 150px; position: relative;}
     a{color: #7ac9ed;}

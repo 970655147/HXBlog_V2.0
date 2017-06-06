@@ -28,21 +28,24 @@ public class BlogSensePO implements JSONTransferable<BlogSensePO> {
     private String name;
     @JSONField({"email", "email"})
     private String email;
-    @JSONField({"isGood", "is_good"})
-    private String isGood;
+    @JSONField({"sense", "sense"})
+    private String sense;
+    @JSONField({"clicked", "clicked"})
+    private int clicked;
     @JSONField({"createdAt", "created_at"})
     private String createdAt;
 
-    public BlogSensePO(String blogId, String name, String email, String isGood) {
+    public BlogSensePO(String blogId, String name, String email, String sense) {
         this();
         this.blogId = blogId;
         this.name = name;
         this.email = email;
-        this.isGood = isGood;
+        this.sense = sense;
     }
 
     public BlogSensePO() {
         this.createdAt = DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
+        clicked = 0;
     }
 
     public String getId() {
@@ -77,12 +80,20 @@ public class BlogSensePO implements JSONTransferable<BlogSensePO> {
         this.email = email;
     }
 
-    public String getIsGood() {
-        return isGood;
+    public String getSense() {
+        return sense;
     }
 
-    public void setIsGood(String isGood) {
-        this.isGood = isGood;
+    public void setSense(String sense) {
+        this.sense = sense;
+    }
+
+    public int getClicked() {
+        return clicked;
+    }
+
+    public void setClicked(int clicked) {
+        this.clicked = clicked;
     }
 
     public String getCreatedAt() {

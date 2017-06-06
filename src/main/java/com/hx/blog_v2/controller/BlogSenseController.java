@@ -31,6 +31,8 @@ public class BlogSenseController {
         SessionUser user = (SessionUser) WebContext.getAttributeFromSession(BlogConstants.SESSION_USER);
         BizUtils.updateUserIfBe(user, params);
         WebContext.setAttributeForSession(BlogConstants.SESSION_USER, user);
+        params.setName(user.getName());
+        params.setEmail(user.getEmail());
         return senseService.sense(params);
     }
 

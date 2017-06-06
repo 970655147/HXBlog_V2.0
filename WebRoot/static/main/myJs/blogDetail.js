@@ -26,7 +26,7 @@ function contentInit() {
             blog: {},
             originalHeadImgUrl : "",
             userInfo: {
-                userName: "",
+                name: "",
                 email: "",
                 headImgUrl: "",
                 systemUser : false
@@ -49,10 +49,6 @@ function contentInit() {
             that.initHeadImages(that)
             SyntaxHighlighter.all()
             that.initEmoji()
-
-            heartClick("[name='blogHeart']", "[name='blogLikeCount']", function (isPrise) {
-
-            })
         },
         methods: {
             replyFunc: function (event) {
@@ -112,6 +108,26 @@ function contentInit() {
                                     $("[name='email']").attr("readonly", "readonly")
                                 }
                             }
+
+                            /**
+                             * 处理 点赞
+                             */
+                            heartInit("[name='blogHeart']", "[name='blogLikeCount']", that.blog.goodCnt, that.blog.goodSensed)
+                            heartClick("[name='blogHeart']", "[name='blogLikeCount']", function (isPrise) {
+                                var senseParams = copyOf(that.userInfo)
+                                senseParams.blogId = params.id
+                                senseParams.sense = "good"
+                                senseParams.clicked = isPrise
+
+                                $.ajax({
+                                    url: "/blog/sense/sense",
+                                    data: senseParams,
+                                    type : "POST",
+                                    success: function (resp) {
+
+                                    }
+                                })
+                            })
                         } else {
                             layer.alert("拉取博客列表失败 !")
                         }
@@ -157,7 +173,7 @@ function contentInit() {
                     "blogId": that.blog.id,
                     "floorId": that.replyInfo.floorId,
                     "commentId": that.replyInfo.commentId,
-                    "name": that.userInfo.userName,
+                    "name": that.userInfo.name,
                     "email": that.userInfo.email,
                     "headImgUrl": that.userInfo.headImgUrl,
                     "toUser": that.replyInfo.toUser,

@@ -58,6 +58,10 @@ public class BlogVO {
      * 踩的数量
      */
     private int notGoodCnt;
+    /**
+     * 是否点赞了.
+     */
+    private boolean goodSensed;
 
     public BlogVO() {
 
@@ -205,5 +209,13 @@ public class BlogVO {
 
     public void setNotGoodCnt(int notGoodCnt) {
         this.notGoodCnt = notGoodCnt;
+    }
+
+    public boolean isGoodSensed() {
+        return goodSensed;
+    }
+
+    public void setGoodSensed(boolean goodSensed) {
+        this.goodSensed = goodSensed;
     }
 }

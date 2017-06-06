@@ -183,4 +183,18 @@ function collectPagination (pagination, pageInfo, pageNow, getPageUrlFunc) {
     pagination.push({active : false, pageUrl : getPageUrlFunc(pageInfo.totalPage), pageNo : "尾页"})
 }
 
+/**
+ * 深拷贝给定的对象
+ *
+ * @param data
+ */
+function copyOf(data) {
+    if(typeof data !== 'object') {
+        return data
+    }
+
+    return JSON.parse(JSON.stringify(data));
+}
+
+
 

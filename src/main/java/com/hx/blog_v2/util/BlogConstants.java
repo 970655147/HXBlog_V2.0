@@ -200,6 +200,10 @@ public final class BlogConstants {
      * 回复评论的后缀
      */
     public static final String REPLY_COMMENT_SUFFIX = "[/reply]";
+    /**
+     * 点赞的 sense
+     */
+    public static final String UP_PRISE_SENSE = "good";
 
     // ----------------------------------------- configurable -------------------------------------------------
 
@@ -207,7 +211,7 @@ public final class BlogConstants {
     public String dbDriver = "com.mysql.jdbc.Driver";
     @Value("${jdbc.ip}")
     public String dbIp = "192.168.0.190";
-    //    @Value("${jdbc.port}")
+    @Value("${jdbc.port}")
     public int dbPort = 3306;
     @Value("${jdbc.db}")
     public String dbDb = "blog";
@@ -279,23 +283,33 @@ public final class BlogConstants {
     /**
      * 缓存的 blogId -> nextFloorId 的个数
      */
-//    @Value("${cache.blog_2_floorId}")
+    @Value("${cache.blog_2_floorId}")
     public int maxCachedBlog2FloorId = 100;
     /**
      * 缓存的 blogId, floorId -> nextCommentId 的个数
      */
-//    @Value("${cache.blog_floor_2_commentId}")
+    @Value("${cache.blog_floor_2_commentId}")
     public int maxCachedBlogFloor2CommentId = 1000;
     /**
      * 缓存的 blogId, floorId -> nextCommentId 的个数
      */
-//    @Value("${cache.uploaded_image}")
-    public int maxCachedUploadedImage = 1000;
+    @Value("${cache.uploaded_image}")
+    public int maxCachedUploadedImage = 100;
     /**
      * 缓存的 roleIds -> resourceIds 的个数
      */
-//    @Value("${cache.role_ids2resource_ids}")
+    @Value("${cache.role_ids2resource_ids}")
     public int maxRoleIds2ResourceIds = 20;
+    /**
+     * 缓存的 (blogId, userName, email, sense) -> clicked 的个数
+     */
+    @Value("${cache.sense_2_clicked}")
+    public int maxSense2Clicked = 1000;
+    /**
+     * 缓存的 blogId -> blogEx 的个数
+     */
+    @Value("${cache.blog_id_2_blog_ex}")
+    public int maxBlogId2BlogEx = 1000;
 
     /**
      * 存放博客, 图像的地址
@@ -329,23 +343,23 @@ public final class BlogConstants {
     /**
      * 用户密码的salt的位数
      */
-//    @Value("${user.pwd_salt_nums}")
+    @Value("${user.pwd_salt_nums}")
     public int pwdSaltNums = 8;
 
     /**
      * 验证码的长度
      */
-//    @Value("${${check_code.length}}")
+    @Value("${check_code.length}")
     public int checkCodeLength = 4;
     /**
      * 验证码的宽度
      */
-//    @Value("${check_code.img.width}")
+    @Value("${check_code.img.width}")
     public int checkCodeImgWidth = 160;
     /**
      * 验证码的高度
      */
-//    @Value("${check_code.img.height}")
+    @Value("${check_code.img.height}")
     public int checkCodeImgHeight = 80;
     /**
      * 验证码的高度
@@ -365,12 +379,12 @@ public final class BlogConstants {
     /**
      * 验证码备选字符的最少的干扰线的数量
      */
-//    @Value("${check_code.img.min_interference}")
+    @Value("${check_code.img.min_interference}")
     public int checkCodeMinInterference = 30;
     /**
      * 验证码备选字符的最少的干扰线的可控区间
      */
-//    @Value("${check_code.img.interference_off}")
+    @Value("${check_code.img.interference_off}")
     public int checkCodeInterferenceOff = 10;
 
     {
