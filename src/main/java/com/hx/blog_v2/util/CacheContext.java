@@ -2,10 +2,13 @@ package com.hx.blog_v2.util;
 
 import com.hx.blog_v2.dao.interf.*;
 import com.hx.blog_v2.domain.form.BlogSenseForm;
+import com.hx.blog_v2.domain.form.BlogVisitLogForm;
 import com.hx.blog_v2.domain.po.*;
 import com.hx.common.interf.cache.Cache;
+import com.hx.log.cache.CacheListenerAdapter;
 import com.hx.log.cache.mem.LRUMCache;
 import com.hx.log.util.Log;
+import com.hx.log.util.Tools;
 import com.hx.mongo.criteria.Criteria;
 import com.hx.mongo.criteria.SortByCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +48,12 @@ public class CacheContext {
     private ResourceDao resourceDao;
     @Autowired
     private InterfDao interfDao;
+    @Autowired
+    private BlogSenseDao blogSenseDao;
+    @Autowired
+    private BlogExDao blogExDao;
+    @Autowired
+    private BlogVisitLogDao blogVisitLogDao;
     @Autowired
     private JdbcTemplate jdbcTemplate;
     @Autowired
@@ -94,11 +103,15 @@ public class CacheContext {
     /**
      * (blogId, userName, email, sense) -> clicked 的缓存
      */
-    private Cache<String, Boolean> sense2Clicked;
+    private Cache<String, BlogSensePO> blogIdUserInfo2Sense;
     /**
      * blogId -> BlogEx 的缓存
      */
     private Cache<String, BlogExPO> blogId2BlogEx;
+    /**
+     * requestIp[_create_at_day] -> BlogVisitLogPO 的缓存
+     */
+    private Cache<String, BlogVisitLogPO> requestIp2BlogVisitLog;
 
     /**
      * 初始化 CacheContext
@@ -110,25 +123,19 @@ public class CacheContext {
      */
     @PostConstruct
     public void init() {
-        blog2NextFloorId = new LRUMCache<>(constants.maxCachedBlog2FloorId, false);
-        blogFloor2NextCommentId = new LRUMCache<>(constants.maxCachedBlogFloor2CommentId, false);
-        digest2UploadedFiles = new LRUMCache<>(constants.maxCachedUploadedImage, false);
-        roles2ResourceIds = new LRUMCache<>(constants.maxRoleIds2ResourceIds, false);
-        sense2Clicked = new LRUMCache<>(constants.maxSense2Clicked, false);
-        blogId2BlogEx = new LRUMCache<>(constants.maxBlogId2BlogEx, false);
-
+        initICache();
         loadFullCachedResources();
     }
 
     /**
-     * 刷新当前系统的配置
+     * 清理当前 CacheContext
      *
      * @return void
      * @author Jerry.X.He
-     * @date 5/31/2017 7:49 PM
+     * @date 6/9/2017 11:16 PM
      * @since 1.0
      */
-    public void refresh() {
+    public void clear() {
         blogTagsById.clear();
         blogTypesById.clear();
         linksById.clear();
@@ -140,7 +147,22 @@ public class CacheContext {
         blogFloor2NextCommentId.clear();
         digest2UploadedFiles.clear();
         roles2ResourceIds.clear();
+        roles2ResourceIds.clear();
+        blogIdUserInfo2Sense.clear();
+        blogId2BlogEx.clear();
+        requestIp2BlogVisitLog.clear();
+    }
 
+    /**
+     * 刷新当前系统的配置
+     *
+     * @return void
+     * @author Jerry.X.He
+     * @date 5/31/2017 7:49 PM
+     * @since 1.0
+     */
+    public void refresh() {
+        clear();
         loadFullCachedResources();
     }
 
@@ -276,22 +298,22 @@ public class CacheContext {
      * @date 6/6/2017 8:32 PM
      * @since 1.0
      */
-    public Boolean getBlogSense(BlogSenseForm params) {
-        return sense2Clicked.get(generateBlogSenseKey(params));
+    public BlogSensePO getBlogSense(BlogSenseForm params) {
+        return blogIdUserInfo2Sense.get(generateBlogSenseKey(params));
     }
 
     /**
      * 向缓存中增加 BlogSense
      *
-     * @param params  params
-     * @param clicked clicked
+     * @param params params
+     * @param po     po
      * @return void
      * @author Jerry.X.He
      * @date 6/6/2017 8:33 PM
      * @since 1.0
      */
-    public void putBlogSense(BlogSenseForm params, boolean clicked) {
-        sense2Clicked.put(generateBlogSenseKey(params), clicked);
+    public void putBlogSense(BlogSenseForm params, BlogSensePO po) {
+        blogIdUserInfo2Sense.put(generateBlogSenseKey(params), po);
     }
 
     /**
@@ -318,6 +340,33 @@ public class CacheContext {
      */
     public void putBlogEx(BlogExPO blogExPO) {
         blogId2BlogEx.put(blogExPO.getBlogId(), blogExPO);
+    }
+
+    /**
+     * 获取参数相关的 BlogSense
+     *
+     * @param params params
+     * @return java.lang.Boolean
+     * @author Jerry.X.He
+     * @date 6/6/2017 8:32 PM
+     * @since 1.0
+     */
+    public BlogVisitLogPO getBlogVisitLog(BlogVisitLogForm params) {
+        return requestIp2BlogVisitLog.get(generateBlogVisitLogKey(params));
+    }
+
+    /**
+     * 向缓存中增加 BlogSense
+     *
+     * @param params params
+     * @param po     po
+     * @return void
+     * @author Jerry.X.He
+     * @date 6/6/2017 8:33 PM
+     * @since 1.0
+     */
+    public void putBlogVisitLog(BlogVisitLogForm params, BlogVisitLogPO po) {
+        requestIp2BlogVisitLog.put(generateBlogVisitLogKey(params), po);
     }
 
     /**
@@ -400,6 +449,28 @@ public class CacheContext {
     // -------------------- 辅助方法 --------------------------
 
     /**
+     * 初始化 Cache 的资源
+     *
+     * @return void
+     * @author Jerry.X.He
+     * @date 6/9/2017 10:08 PM
+     * @since 1.0
+     */
+    private void initICache() {
+        blog2NextFloorId = new LRUMCache<>(constants.maxCachedBlog2FloorId, false);
+        blogFloor2NextCommentId = new LRUMCache<>(constants.maxCachedBlogFloor2CommentId, false);
+        digest2UploadedFiles = new LRUMCache<>(constants.maxCachedUploadedImage, false);
+        roles2ResourceIds = new LRUMCache<>(constants.maxRoleIds2ResourceIds, false);
+        blogIdUserInfo2Sense = new LRUMCache<>(constants.maxSense2Clicked, false);
+        blogId2BlogEx = new LRUMCache<>(constants.maxBlogId2BlogEx, false);
+        requestIp2BlogVisitLog = new LRUMCache<>(constants.maxRequestIp2BlogVisitLog, false);
+
+        blogIdUserInfo2Sense.addCacheListener(new JSONTransferableCacheListener<>(blogSenseDao));
+        blogId2BlogEx.addCacheListener(new JSONTransferableCacheListener<>(blogExDao));
+        requestIp2BlogVisitLog.addCacheListener(new JSONTransferableCacheListener<>(blogVisitLogDao));
+    }
+
+    /**
      * 加载 全部缓存的数据
      *
      * @return void
@@ -467,5 +538,25 @@ public class CacheContext {
     private String generateBlogSenseKey(BlogSenseForm params) {
         return params.getBlogId() + BLOG_SENSE_KEY_SEP + params.getName() + BLOG_SENSE_KEY_SEP + params.getEmail() + BLOG_SENSE_KEY_SEP + params.getSense();
     }
+
+    /**
+     * 构造 (blogId, userName, email, sense) 的key
+     *
+     * @param params params
+     * @return java.lang.String
+     * @author Jerry.X.He
+     * @date 6/9/2017 9:02 PM
+     * @since 1.0
+     */
+    private String generateBlogVisitLogKey(BlogVisitLogForm params) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(params.getBlogId()).append(BLOG_SENSE_KEY_SEP).append(params.getRequestIp());
+        if (!Tools.isEmpty(params.getCreatedAtDay())) {
+            sb.append(BLOG_SENSE_KEY_SEP).append(params.getCreatedAtDay());
+        }
+
+        return sb.toString();
+    }
+
 
 }

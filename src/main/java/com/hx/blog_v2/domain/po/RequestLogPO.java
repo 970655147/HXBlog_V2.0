@@ -35,10 +35,14 @@ public class RequestLogPO implements JSONTransferable<RequestLogPO> {
     private String name;
     @JSONField({"email", "email"})
     private String email;
+    @JSONField({"isSystemUser", "is_system_user"})
+    private int isSystemUser;
+    @JSONField({"requestIp", "request_ip"})
+    private String requestIp;
     @JSONField({"createdAt", "created_at"})
     private String createdAt;
 
-    public RequestLogPO(String id, String url, String params, String cost, String name, String email) {
+    public RequestLogPO(String id, String url, String params, String cost, String name, String email, int isSystemUser) {
         this();
         this.id = id;
         this.url = url;
@@ -46,6 +50,7 @@ public class RequestLogPO implements JSONTransferable<RequestLogPO> {
         this.cost = cost;
         this.name = name;
         this.email = email;
+        this.isSystemUser = isSystemUser;
     }
 
     public RequestLogPO() {
@@ -98,6 +103,22 @@ public class RequestLogPO implements JSONTransferable<RequestLogPO> {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public int getIsSystemUser() {
+        return isSystemUser;
+    }
+
+    public void setIsSystemUser(int isSystemUser) {
+        this.isSystemUser = isSystemUser;
+    }
+
+    public String getRequestIp() {
+        return requestIp;
+    }
+
+    public void setRequestIp(String requestIp) {
+        this.requestIp = requestIp;
     }
 
     public String getCreatedAt() {

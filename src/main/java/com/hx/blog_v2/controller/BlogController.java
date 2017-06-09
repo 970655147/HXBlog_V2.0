@@ -1,5 +1,6 @@
 package com.hx.blog_v2.controller;
 
+import com.hx.blog_v2.biz_handler.anno.BizHandle;
 import com.hx.blog_v2.domain.form.BeanIdForm;
 import com.hx.blog_v2.domain.form.BlogSearchForm;
 import com.hx.blog_v2.domain.dto.SessionUser;
@@ -36,6 +37,7 @@ public class BlogController {
     }
 
     @RequestMapping("/get")
+    @BizHandle(handler = "blogVisitLogHandler")
     public Result get(BeanIdForm prams) {
 
         Result result = blogService.get(prams);

@@ -77,7 +77,8 @@ public final class BlogConstants {
             BlogCommentPO.class, BlogExPO.class, BlogPO.class, BlogSensePO.class, BlogTagPO.class,
             BlogTypePO.class, ExceptionLogPO.class, ImagePO.class, LinkPO.class, MoodPO.class, RequestLogPO.class,
             UserPO.class, VisitorPO.class, RltBlogTagPO.class, UploadFilePO.class,
-            RolePO.class, RltUserRoleRolePO.class, ResourcePO.class, RltRoleResourcePO.class, InterfPO.class, RltResourceInterfPO.class
+            RolePO.class, RltUserRoleRolePO.class, ResourcePO.class, RltRoleResourcePO.class, InterfPO.class, RltResourceInterfPO.class,
+            BlogVisitLogPO.class
     };
     /**
      * 下划线的注册了各个PO 的 KeyNodeParser
@@ -98,7 +99,7 @@ public final class BlogConstants {
     /**
      * 向数据库中 增加bean 是需要过滤掉 "created_at", "deleted"
      */
-    public static final JSONBeanProcessor UPDATE_BEAN_BEAN_PROCESSOR = regFilterBeanProcessor(Tools.asSet("created_at", "deleted"));
+    public static final JSONBeanProcessor UPDATE_BEAN_BEAN_PROCESSOR = regFilterBeanProcessor(Tools.asSet("created_at", "created_at_day", "deleted") );
     /**
      * 向数据库中 增加bean 是需要过滤掉 "created_at", "deleted", "password"
      */
@@ -204,6 +205,10 @@ public final class BlogConstants {
      * 点赞的 sense
      */
     public static final String UP_PRISE_SENSE = "good";
+    /**
+     * 点赞的 sense
+     */
+    public static final String VIEW_SENSE = "view";
 
     // ----------------------------------------- configurable -------------------------------------------------
 
@@ -264,7 +269,8 @@ public final class BlogConstants {
     public String tableInterf = "interf";
     @Value("${table.rlt_resource_interf}")
     public String tableRltResourceInterf = "rlt_resource_interf";
-
+    @Value("${table.blog_visit_log}")
+    public String tableBlogVisitLog = "blog_visit_log";
     @Value("${table.id}")
     public String tableId = "id";
 
@@ -310,6 +316,11 @@ public final class BlogConstants {
      */
     @Value("${cache.blog_id_2_blog_ex}")
     public int maxBlogId2BlogEx = 1000;
+    /**
+     * 缓存的 blogId -> blogEx 的个数
+     */
+    @Value("${cache.request_ip_2_blog_visit_log}")
+    public int maxRequestIp2BlogVisitLog = 1000;
 
     /**
      * 存放博客, 图像的地址

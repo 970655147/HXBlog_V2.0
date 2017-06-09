@@ -59,7 +59,7 @@ function contentInit() {
                 this.replyInfo.toUser = floorInfo.attr("name")
                 console.log(this.replyInfo)
                 $("[name='comment']").text("[reply]" + floorInfo.attr("name") + "[/reply]\r\n")
-                $("html,body").animate({scrollTop: $("[name='comment']").offset().top}, 1000);
+                $("html,body").animate({scrollTop: $("#topOfResp").offset().top}, 1000);
             },
             initEmoji: function () {
                 $("[name='comment']").emoji({
@@ -117,7 +117,7 @@ function contentInit() {
                                 var senseParams = copyOf(that.userInfo)
                                 senseParams.blogId = params.id
                                 senseParams.sense = "good"
-                                senseParams.clicked = isPrise
+                                senseParams.clicked = isPrise ? 1 : 0
 
                                 $.ajax({
                                     url: "/blog/sense/sense",
@@ -287,7 +287,6 @@ function contentInit() {
                         } else {
                             layer.alert("拉取评论列表失败 !")
                         }
-                        $("html,body").animate({scrollTop: $("#topOfResp").offset().top}, 1000);
                         layer.close(loadCommentIdx)
                     }
                 });

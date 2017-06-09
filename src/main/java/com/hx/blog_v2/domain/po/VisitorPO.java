@@ -29,12 +29,23 @@ public class VisitorPO implements JSONTransferable<VisitorPO> {
     private String name;
     @JSONField({"email", "email"})
     private String email;
+    @JSONField({"isSystemUser", "is_system_user"})
+    private int isSystemUser;
     @JSONField({"requestIp", "request_ip"})
     private String requestIp;
     @JSONField({"headerInfo", "header_info"})
     private String headerInfo;
     @JSONField({"createdAt", "created_at"})
     private String createdAt;
+
+    public VisitorPO(String name, String email, int isSystemUser, String requestIp, String headerInfo) {
+        this();
+        this.name = name;
+        this.email = email;
+        this.isSystemUser = isSystemUser;
+        this.requestIp = requestIp;
+        this.headerInfo = headerInfo;
+    }
 
     public VisitorPO() {
         createdAt = DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
@@ -62,6 +73,14 @@ public class VisitorPO implements JSONTransferable<VisitorPO> {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public int getIsSystemUser() {
+        return isSystemUser;
+    }
+
+    public void setIsSystemUser(int isSystemUser) {
+        this.isSystemUser = isSystemUser;
     }
 
     public String getRequestIp() {

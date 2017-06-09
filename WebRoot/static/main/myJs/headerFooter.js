@@ -101,7 +101,7 @@ function headerFooterInit() {
                 heartClick("[name='projHeartEle']", "[name='projLikeCntEle']", function (isPrise) {
                     var senseParams = {
                         blogId : "-1",
-                        clicked : isPrise,
+                        clicked : isPrise ? 1 : 0,
                         sense : "good"
                     }
                     $.ajax({
@@ -227,8 +227,10 @@ function selectHeader() {
 
     var allA = $("[name='headerNav0'] li a")
     for(idx in allA) {
+        console.log(allA[idx])
         if(url.indexOf(allA[idx].href) >= 0) {
             $(allA[idx]).parent().addClass("active act")
+            break ;
         }
     }
 }

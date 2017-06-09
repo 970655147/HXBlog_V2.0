@@ -11,15 +11,11 @@
     <!-- 优先添加 Constants 的 bean -->
     <bean class="com.hx.blog_v2.util.BlogConstants" />
 
-    <!-- 自定义Controller层AOP -->
-    <bean id="controllerAop" class="com.hx.blog_v2.aop.ControllerAop"/>
-    <aop:aspectj-autoproxy proxy-target-class="true">
-        <aop:include name="controllerAop"/>
-    </aop:aspectj-autoproxy>
-
-    <!-- 注册Controller -->
-    <context:component-scan base-package="com.hx.blog_v2"/>
+    <!-- aspectj -->
+    <aop:aspectj-autoproxy proxy-target-class="true" />
+    <!-- switch on annotation-driven, component-scan -->
     <mvc:annotation-driven/>
+    <context:component-scan base-package="com.hx.blog_v2"/>
 
     <!-- spring mvc interceptor -->
     <mvc:interceptors>

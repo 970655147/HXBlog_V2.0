@@ -457,26 +457,10 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
         params.setName(user.getName());
         params.setEmail(user.getEmail());
         params.setSense(BlogConstants.UP_PRISE_SENSE);
-        Boolean senseFromCache = cacheContext.getBlogSense(params);
-        if (senseFromCache != null) {
-            return senseFromCache ? ResultUtils.success() : ResultUtils.failed();
-        }
 
-        MultiCriteriaQueryCriteria query = Criteria.and(Criteria.eq("blog_id", params.getBlogId()))
-                .add(Criteria.eq("name", params.getName())).add(Criteria.eq("sense", params.getSense()));
-        if (!Tools.isEmpty(params.getEmail())) {
-            query.add(Criteria.eq("email", params.getEmail()));
-        }
-        try {
-            BlogSensePO po = senseDao.findOne(query, BlogConstants.LOAD_ALL_CONFIG);
-            if (po == null) {
-                return ResultUtils.failed(false);
-            }
-            cacheContext.putBlogSense(params, (po.getClicked() == 1));
-            return (po.getClicked() == 1) ? ResultUtils.success() : ResultUtils.failed();
-        } catch (Exception e) {
-            return ResultUtils.failed();
-        }
+        BlogSensePO po = senseDao.get(params);
+        cacheContext.putBlogSense(params, po);
+        return (po.getClicked() == 1) ? ResultUtils.success() : ResultUtils.failed();
     }
 
     /**

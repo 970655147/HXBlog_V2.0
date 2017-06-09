@@ -34,7 +34,7 @@
                     </div>
 
                     <!-- Collect the nav links, forms, and other content for toggling -->
-                    <div class="collapse navbar-collapse nav-wil" >
+                    <div class="collapse navbar-collapse nav-wil" name="headerNav0" >
                         <nav class="link-effect-7" >
                             <ul class="nav navbar-nav">
                                 <li><a href="/static/main/index.html">首页</a></li>
@@ -125,6 +125,7 @@
 
 
     <div id="replyNav">
+        <div id="topOfResp"></div>
         <div class="response">
             <h4>
                 评论
@@ -173,7 +174,6 @@
             </div>
         </div>
 
-        <div id="topOfResp"></div>
         <div class="response">
             <span style="padding : 10px 10px 30px 20px; color : red"
                   v-for="floor in comments">

@@ -9,7 +9,10 @@ import com.hx.log.json.interf.JSONTransferable;
 import com.hx.log.util.Constants;
 import com.hx.log.util.Tools;
 
-import java.util.*;
+import java.util.Date;
+import java.util.Deque;
+import java.util.LinkedList;
+import java.util.Map;
 
 /**
  * 博客顶踩的记录
@@ -136,10 +139,12 @@ public class BlogSensePO implements JSONTransferable<BlogSensePO> {
     public BlogSensePO newInstance(Object... args) {
         return new BlogSensePO();
     }
+
     @Override
     public String id() {
         return id;
     }
+
     @Override
     public void id(String id) {
         this.id = id;

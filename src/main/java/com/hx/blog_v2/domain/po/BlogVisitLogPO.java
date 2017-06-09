@@ -15,40 +15,44 @@ import java.util.LinkedList;
 import java.util.Map;
 
 /**
- * 异常日志的历史记录
+ * BlogVisitLogPO
  *
  * @author Jerry.X.He <970655147@qq.com>
  * @version 1.0
- * @date 5/20/2017 10:18 AM
+ * @date 6/9/2017 8:45 PM
  */
-public class ExceptionLogPO implements JSONTransferable<ExceptionLogPO> {
+public class BlogVisitLogPO implements JSONTransferable<BlogVisitLogPO> {
 
     @JSONField({"id", "id"})
     private String id;
+    @JSONField({"blogId", "blog_id"})
+    private String blogId;
     @JSONField({"name", "name"})
     private String name;
     @JSONField({"email", "email"})
     private String email;
     @JSONField({"isSystemUser", "is_system_user"})
     private int isSystemUser;
-    @JSONField({"requestIP", "request_ip"})
-    private String requestIP;
-    @JSONField({"msg", "msg"})
-    private String msg;
+    @JSONField({"requestIp", "request_ip"})
+    private String requestIp;
+    @JSONField({"createdAtDay", "created_at_day"})
+    private String createdAtDay;
     @JSONField({"createdAt", "created_at"})
     private String createdAt;
 
-    public ExceptionLogPO(String name, String email, int isSystemUser, String requestIP, String msg) {
+    public BlogVisitLogPO(String blogId, String name, String email, int isSystemUser, String requestIp) {
         this();
+        this.blogId = blogId;
         this.name = name;
         this.email = email;
         this.isSystemUser = isSystemUser;
-        this.requestIP = requestIP;
-        this.msg = msg;
+        this.requestIp = requestIp;
     }
 
-    public ExceptionLogPO() {
-        createdAt = DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
+    public BlogVisitLogPO() {
+        Date now = new Date();
+        createdAtDay = DateUtils.formate(now, BlogConstants.FORMAT_YYYY_MM_DD);
+        createdAt = DateUtils.formate(now, BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
     }
 
     public String getId() {
@@ -57,6 +61,14 @@ public class ExceptionLogPO implements JSONTransferable<ExceptionLogPO> {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getBlogId() {
+        return blogId;
+    }
+
+    public void setBlogId(String blogId) {
+        this.blogId = blogId;
     }
 
     public String getName() {
@@ -83,20 +95,20 @@ public class ExceptionLogPO implements JSONTransferable<ExceptionLogPO> {
         this.isSystemUser = isSystemUser;
     }
 
-    public String getRequestIP() {
-        return requestIP;
+    public String getRequestIp() {
+        return requestIp;
     }
 
-    public void setRequestIP(String requestIP) {
-        this.requestIP = requestIP;
+    public void setRequestIp(String requestIp) {
+        this.requestIp = requestIp;
     }
 
-    public String getMsg() {
-        return msg;
+    public String getCreatedAtDay() {
+        return createdAtDay;
     }
 
-    public void setMsg(String msg) {
-        this.msg = msg;
+    public void setCreatedAtDay(String createdAtDay) {
+        this.createdAtDay = createdAtDay;
     }
 
     public String getCreatedAt() {
@@ -107,15 +119,15 @@ public class ExceptionLogPO implements JSONTransferable<ExceptionLogPO> {
         this.createdAt = createdAt;
     }
 
-    public static final ExceptionLogPO PROTO_BEAN = new ExceptionLogPO();
+    public static final BlogVisitLogPO PROTO_BEAN = new BlogVisitLogPO();
 
     @Override
-    public ExceptionLogPO loadFromJSON(Map<String, Object> obj, JSONConfig config) {
+    public BlogVisitLogPO loadFromJSON(Map<String, Object> obj, JSONConfig config) {
         if (Tools.isEmpty(obj)) {
             return this;
         }
 
-        JSONObject.fromObject(obj).toBean(ExceptionLogPO.class, this, config);
+        JSONObject.fromObject(obj).toBean(BlogVisitLogPO.class, this, config);
         return this;
     }
 
@@ -136,8 +148,8 @@ public class ExceptionLogPO implements JSONTransferable<ExceptionLogPO> {
     }
 
     @Override
-    public ExceptionLogPO newInstance(Object... args) {
-        return new ExceptionLogPO();
+    public BlogVisitLogPO newInstance(Object... args) {
+        return new BlogVisitLogPO();
     }
 
     @Override
@@ -149,6 +161,5 @@ public class ExceptionLogPO implements JSONTransferable<ExceptionLogPO> {
     public void id(String id) {
         this.id = id;
     }
-
 
 }

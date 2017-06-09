@@ -22,7 +22,7 @@ public class BlogSenseForm implements UserInfoExtractor {
      * good or not good
      */
     private String sense;
-    private Boolean clicked;
+    private Integer clicked;
 
     public BlogSenseForm() {
     }
@@ -70,11 +70,11 @@ public class BlogSenseForm implements UserInfoExtractor {
         this.sense = sense;
     }
 
-    public Boolean isClicked() {
+    public Integer isClicked() {
         return clicked;
     }
 
-    public void setClicked(Boolean clicked) {
+    public void setClicked(Integer clicked) {
         this.clicked = clicked;
     }
 }

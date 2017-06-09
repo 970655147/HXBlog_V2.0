@@ -8,6 +8,7 @@
         <param-name>contextConfigLocation</param-name>
         <param-value>
             classpath:spring-core.xml
+            classpath:spring-biz-handle.xml
         </param-value>
     </context-param>
     <listener>

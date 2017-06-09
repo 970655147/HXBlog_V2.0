@@ -28,6 +28,10 @@ public class BlogExPO implements JSONTransferable<BlogExPO> {
     private int commentCnt;
     @JSONField({"viewCnt", "view_cnt"})
     private int viewCnt;
+    @JSONField({"dayFlushViewCnt", "day_flush_view_cnt"})
+    private int dayFlushViewCnt;
+    @JSONField({"uniqueViewCnt", "unique_view_cnt"})
+    private int uniqueViewCnt;
     @JSONField({"goodCnt", "good_cnt"})
     private int goodCnt;
     @JSONField({"notGoodCnt", "not_good_cnt"})
@@ -75,6 +79,22 @@ public class BlogExPO implements JSONTransferable<BlogExPO> {
         this.viewCnt = viewCnt;
     }
 
+    public int getDayFlushViewCnt() {
+        return dayFlushViewCnt;
+    }
+
+    public void setDayFlushViewCnt(int dayFlushViewCnt) {
+        this.dayFlushViewCnt = dayFlushViewCnt;
+    }
+
+    public int getUniqueViewCnt() {
+        return uniqueViewCnt;
+    }
+
+    public void setUniqueViewCnt(int uniqueViewCnt) {
+        this.uniqueViewCnt = uniqueViewCnt;
+    }
+
     public int getGoodCnt() {
         return goodCnt;
     }
@@ -97,6 +117,14 @@ public class BlogExPO implements JSONTransferable<BlogExPO> {
 
     public void incViewCnt(int inc) {
         viewCnt += inc;
+    }
+
+    public void incDayFlushViewCnt(int inc) {
+        dayFlushViewCnt += inc;
+    }
+
+    public void incUniqueViewCnt(int inc) {
+        uniqueViewCnt += inc;
     }
 
     public void incGoodCnt(int inc) {
