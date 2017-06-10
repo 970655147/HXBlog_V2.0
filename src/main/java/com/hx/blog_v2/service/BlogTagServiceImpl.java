@@ -5,14 +5,17 @@ import com.hx.blog_v2.domain.POVOTransferUtils;
 import com.hx.blog_v2.domain.form.BlogTagSaveForm;
 import com.hx.blog_v2.domain.mapper.OneIntMapper;
 import com.hx.blog_v2.domain.po.BlogTagPO;
+import com.hx.blog_v2.domain.po.BlogTypePO;
 import com.hx.blog_v2.domain.vo.BlogTagVO;
 import com.hx.blog_v2.service.interf.BaseServiceImpl;
 import com.hx.blog_v2.service.interf.BlogTagService;
+import com.hx.blog_v2.util.BizUtils;
 import com.hx.blog_v2.util.BlogConstants;
 import com.hx.blog_v2.util.CacheContext;
 import com.hx.blog_v2.util.DateUtils;
 import com.hx.common.interf.common.Result;
 import com.hx.common.util.ResultUtils;
+import com.hx.log.util.Log;
 import com.hx.log.util.Tools;
 import com.hx.mongo.criteria.Criteria;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,27 +46,25 @@ public class BlogTagServiceImpl extends BaseServiceImpl<BlogTagPO> implements Bl
 
     @Override
     public Result add(BlogTagSaveForm params) {
-        Map<String, BlogTagPO> blogTypes = cacheContext.allBlogTags();
-        if (contains(blogTypes, params.getName())) {
+        if (contains(cacheContext.allBlogTags(), params.getName())) {
             return ResultUtils.failed("该标签已经存在 !");
         }
 
-        BlogTagPO po = new BlogTagPO(params.getName());
-        try {
-            blogTagDao.save(po, BlogConstants.ADD_BEAN_CONFIG);
-            blogTypes.put(po.getId(), po);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResultUtils.failed(Tools.errorMsg(e));
+        BlogTagPO po = new BlogTagPO(params.getName(), params.getSort());
+        Result result = blogTagDao.add(po);
+        if(!result.isSuccess()) {
+            return result;
         }
+
+        cacheContext.putBlogTag(po);
         return ResultUtils.success(po.getId());
     }
 
     @Override
     public Result list() {
-        Map<String, BlogTagPO> blogTypes = cacheContext.allBlogTags();
-        List<BlogTagVO> all = new ArrayList<>(blogTypes.size());
-        for (Map.Entry<String, BlogTagPO> entry : blogTypes.entrySet()) {
+        Map<String, BlogTagPO> tags = cacheContext.allBlogTags();
+        List<BlogTagVO> all = new ArrayList<>(tags.size());
+        for (Map.Entry<String, BlogTagPO> entry : tags.entrySet()) {
             all.add(POVOTransferUtils.blogTagPO2BlogTagVO(entry.getValue()));
         }
 
@@ -78,17 +79,14 @@ public class BlogTagServiceImpl extends BaseServiceImpl<BlogTagPO> implements Bl
         }
 
         po.setName(params.getName());
+        po.setSort(params.getSort());
         po.setUpdatedAt(DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS));
-        try {
-            long matched = blogTagDao.updateById(po, BlogConstants.UPDATE_BEAN_CONFIG)
-                    .getModifiedCount();
-            if (matched == 0) {
-                return ResultUtils.failed("该标签不存在 !");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResultUtils.failed(Tools.errorMsg(e));
+        Result result = blogTagDao.update(po);
+        if(! result.isSuccess()) {
+            return result;
         }
+
+        cacheContext.putBlogTag(po);
         return ResultUtils.success(params.getId());
     }
 
@@ -105,21 +103,32 @@ public class BlogTagServiceImpl extends BaseServiceImpl<BlogTagPO> implements Bl
         }
 
         cacheContext.allBlogTags().remove(params.getId());
-        String updatedAt = DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
-        try {
-            long deleted = blogTagDao.updateOne(Criteria.eq("id", params.getId()),
-                    Criteria.set("deleted", 1).add("updated_at", updatedAt)
-            ).getModifiedCount();
-            if (deleted == 0) {
-                return ResultUtils.failed("该标签不存在 !");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResultUtils.failed(Tools.errorMsg(e));
+        po.setUpdatedAt(DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS));
+        po.setDeleted(1);
+        Result result = blogTagDao.update(po);
+        if(! result.isSuccess()) {
+            return result;
         }
+
         return ResultUtils.success(params.getId());
     }
 
+    @Override
+    public Result reSort() {
+        Map<String, BlogTagPO> tags = cacheContext.allBlogTags();
+        List<BlogTagPO> sortedTags = BizUtils.resort(tags);
+        int sort = BlogConstants.RE_SORT_START;
+        for(BlogTagPO tag : sortedTags) {
+            boolean isSortChanged = sort != tag.getSort();
+            if(isSortChanged) {
+                tag.setSort(sort);
+                blogTagDao.update(tag);
+            }
+            sort += BlogConstants.RE_SORT_OFFSET;
+        }
+
+        return ResultUtils.success("success");
+    }
 
     // -------------------- 辅助方法 --------------------------
 

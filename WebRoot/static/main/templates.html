@@ -251,7 +251,7 @@
         </div>
 
         <nav class="paging wow fadeInDown" data-wow-duration=".5s" data-wow-delay=".2s"
-             style="text-align: center">
+             style="text-align: center" v-if="pagination.length > 3" >
             <ul class="pagination pagination-mg">
                 <li v-for="page in pagination" :class="page.active">
                     <a href="javascript:void(0)" @click="updateComment(page.pageUrl)">{{page.pageNo}}</a>

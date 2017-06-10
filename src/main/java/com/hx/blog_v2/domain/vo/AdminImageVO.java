@@ -21,6 +21,7 @@ public class AdminImageVO {
     private String id;
     private String title;
     private String url;
+    private int sort;
     private String createdAt;
     private String updatedAt;
     /**
@@ -63,6 +64,14 @@ public class AdminImageVO {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public int getSort() {
+        return sort;
+    }
+
+    public void setSort(int sort) {
+        this.sort = sort;
     }
 
     public String getCreatedAt() {

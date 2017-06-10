@@ -21,7 +21,7 @@ import java.util.Map;
  * @version 1.0
  * @date 5/24/2017 7:40 PM
  */
-public class LinkPO implements JSONTransferable<LinkPO> {
+public class LinkPO implements JSONTransferable<LinkPO>, Comparable<LinkPO> {
 
     @JSONField({"id", "id"})
     private String id;
@@ -173,4 +173,15 @@ public class LinkPO implements JSONTransferable<LinkPO> {
     public void id(String id) {
         this.id = id;
     }
+
+    @Override
+    public int compareTo(LinkPO o) {
+        int deltaSort = this.sort - o.sort;
+        if(deltaSort != 0) {
+            return deltaSort;
+        }
+
+        return this.name.compareTo(o.name);
+    }
+
 }

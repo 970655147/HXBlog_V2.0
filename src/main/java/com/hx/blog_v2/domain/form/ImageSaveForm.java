@@ -13,6 +13,7 @@ public class ImageSaveForm {
     private String title;
     private String url;
     private String type;
+    private int sort;
     private int enable;
 
     public ImageSaveForm() {
@@ -48,6 +49,14 @@ public class ImageSaveForm {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public int getSort() {
+        return sort;
+    }
+
+    public void setSort(int sort) {
+        this.sort = sort;
     }
 
     public int getEnable() {

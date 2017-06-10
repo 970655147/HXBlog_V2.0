@@ -38,7 +38,8 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
                             html += '<tr>';
                             html += '<td>' + item.id + '</td>';
                             html += '<td>' + item.name + '</td>';
-                            html += '<td><button class="layui-btn layui-btn-small layui-btn-normal" onclick="layui.funcs.editData(' + item.id + ',\'' + item.name + '\')"><i class="layui-icon">&#xe642;</i></button></td>';
+                            html += '<td>' + item.sort + '</td>';
+                            html += '<td><button class="layui-btn layui-btn-small layui-btn-normal" onclick="layui.funcs.editData(' + item.id + ',\'' + item.name + '\', ' + item.sort + ')"><i class="layui-icon">&#xe642;</i></button></td>';
                             html += '<td><button class="layui-btn layui-btn-small layui-btn-danger" onclick="layui.funcs.deleteData(' + item.id + ')"><i class="layui-icon">&#xe640;</i></button></td>';
                             html += '</tr>';
                         }
@@ -101,8 +102,10 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
         addData: function () {
             var html = '';
             html += '<form id="addTagForm" class="layui-form layui-form-pane" action="/admin/tag/add" method="post">';
-            html += '<label class="layui-form-label" style="border: none" name="content"  >标签名称:</label>';
+            html += '<label class="layui-form-label" style="border: none" name="content"  >名称:</label>';
             html += '<input  style="width:87%;margin: auto;color: #000!important;" name="name"  class="layui-input" lay-verify="required" >';
+            html += '<label class="layui-form-label" style="border: none" name="content"  >排序:</label>';
+            html += '<input  style="width:87%;margin: auto;color: #000!important;" name="sort"  class="layui-input" lay-verify="required" >';
             html += '<div class="layui-form-item">';
             html += '<div class="layui-input-inline" style="margin:10px auto 0 auto;display: block;float: none;">';
             html += '<button class="layui-btn" id="submit"  lay-submit="" lay-filter="addTagSubmit">添加</button>';
@@ -119,12 +122,14 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
                 content: html
             });
         },
-        editData: function (id, tagName) {
+        editData: function (id, tagName, sort) {
             var html = '';
             html += '<form id="updateTagForm" class="layui-form layui-form-pane" action="/admin/tag/update" method="post">';
-            html += '<label class="layui-form-label" style="border: none" >标签名称:</label>';
-            html += '<textarea  style="width:87%;margin: auto;color: #000!important;" name="name" class="layui-textarea" lay-verify="required" >' + tagName + '</textarea>';
             html += '<input type="hidden" name="id" value="' + id + '"/>';
+            html += '<label class="layui-form-label" style="border: none" >名称:</label>';
+            html += '<textarea  style="width:87%;margin: auto;color: #000!important;" name="name" class="layui-textarea" lay-verify="required" >' + tagName + '</textarea>';
+            html += '<label class="layui-form-label" style="border: none" name="content"  >排序:</label>';
+            html += '<input  style="width:87%;margin: auto;color: #000!important;" name="sort" value="' + sort + '"  class="layui-input" lay-verify="required" >';
             html += '<div class="layui-form-item">';
             html += '<div class="layui-input-inline" style="margin:10px auto 0 auto;display: block;float: none;">';
             html += '<button class="layui-btn" id="submit"  lay-submit="" lay-filter="updateTagSubmit">立即提交</button>';
@@ -164,6 +169,20 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
                 });
             }, function () {
 
+            });
+        },
+        reSort : function() {
+            $.ajax({
+                url: "/admin/tag/reSort",
+                type: "POST",
+                data: { },
+                success: function (resp) {
+                    if (resp.success) {
+                        layer.alert('刷新排序成功 !');
+                    } else {
+                        layer.alert('刷新排序失败[' + resp.data + '], 请联系管理人员!');
+                    }
+                }
             });
         }
     };

@@ -2,18 +2,16 @@ package com.hx.blog_v2.dao;
 
 import com.hx.blog_v2.dao.interf.BaseDaoImpl;
 import com.hx.blog_v2.dao.interf.RoleDao;
-import com.hx.blog_v2.domain.po.RltUserRoleRolePO;
+import com.hx.blog_v2.domain.form.BeanIdForm;
 import com.hx.blog_v2.domain.po.RolePO;
-import com.hx.blog_v2.domain.po.UserPO;
 import com.hx.blog_v2.util.BlogConstants;
+import com.hx.blog_v2.util.CacheContext;
 import com.hx.blog_v2.util.MyMysqlConnectionProvider;
+import com.hx.common.interf.common.Result;
+import com.hx.common.util.ResultUtils;
 import com.hx.mongo.config.MysqlDbConfig;
-import com.hx.mongo.config.interf.DbConfig;
-import com.hx.mongo.connection.interf.ConnectionProvider;
-import com.hx.mongo.dao.MysqlBaseDaoImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-
-import java.sql.Connection;
 
 /**
  * BlogDaoImpl
@@ -24,6 +22,9 @@ import java.sql.Connection;
  */
 @Repository
 public class RoleDaoImpl extends BaseDaoImpl<RolePO> implements RoleDao {
+
+    @Autowired
+    private CacheContext cacheContext;
 
     public RoleDaoImpl() {
         super(RolePO.PROTO_BEAN,
@@ -38,6 +39,16 @@ public class RoleDaoImpl extends BaseDaoImpl<RolePO> implements RoleDao {
 
     public static String id() {
         return BlogConstants.getInstance().tableId;
+    }
+
+    @Override
+    public Result get(BeanIdForm params) {
+        RolePO po = cacheContext.role(params.getId());
+        if (po != null) {
+            return ResultUtils.success(po);
+        }
+
+        return ResultUtils.failed("记录不存在 !");
     }
 
 

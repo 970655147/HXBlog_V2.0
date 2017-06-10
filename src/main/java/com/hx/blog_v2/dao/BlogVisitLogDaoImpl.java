@@ -65,12 +65,4 @@ public class BlogVisitLogDaoImpl extends BaseDaoImpl<BlogVisitLogPO> implements 
         }
     }
 
-    @Override
-    public void add(BlogVisitLogPO po) {
-        try {
-            insertOne(po, BlogConstants.ADD_BEAN_CONFIG);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 }

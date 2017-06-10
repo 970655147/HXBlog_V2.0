@@ -11,7 +11,7 @@ import com.hx.mongo.dao.interf.MysqlIBaseDao;
  * @version 1.0
  * @date 5/20/2017 10:37 AM
  */
-public interface BlogVisitLogDao extends MysqlIBaseDao<BlogVisitLogPO> {
+public interface BlogVisitLogDao extends BaseDao<BlogVisitLogPO> {
 
     /**
      * 根据给定的条件, 获取一个 BlogVisitPO
@@ -23,15 +23,5 @@ public interface BlogVisitLogDao extends MysqlIBaseDao<BlogVisitLogPO> {
      */
     BlogVisitLogPO get(BlogVisitLogForm params);
 
-    /**
-     * 向数据库中加入给定的 BlogVisitLog
-     *
-     * @param po po
-     * @return
-     * @author Jerry.X.He
-     * @date 6/9/2017 9:21 PM
-     * @since 1.0
-     */
-    void add(BlogVisitLogPO po);
 
 }

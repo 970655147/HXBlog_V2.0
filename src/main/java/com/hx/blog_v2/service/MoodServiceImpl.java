@@ -15,10 +15,10 @@ import com.hx.blog_v2.util.BlogConstants;
 import com.hx.blog_v2.util.DateUtils;
 import com.hx.common.interf.common.Page;
 import com.hx.common.interf.common.Result;
-import com.hx.common.result.SimplePage;
 import com.hx.common.util.ResultUtils;
-import com.hx.log.util.Tools;
 import com.hx.mongo.criteria.Criteria;
+import com.hx.mongo.criteria.interf.IQueryCriteria;
+import com.hx.mongo.criteria.interf.IUpdateCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -45,11 +45,9 @@ public class MoodServiceImpl extends BaseServiceImpl<MoodPO> implements MoodServ
     public Result add(MoodSaveForm params) {
         MoodPO po = new MoodPO(params.getTitle(), params.getContent(), params.getEnable());
 
-        try {
-            moodDao.save(po, BlogConstants.ADD_BEAN_CONFIG);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResultUtils.failed(Tools.errorMsg(e));
+        Result result = moodDao.add(po);
+        if (!result.isSuccess()) {
+            return result;
         }
         return ResultUtils.success(po.getId());
     }
@@ -81,15 +79,9 @@ public class MoodServiceImpl extends BaseServiceImpl<MoodPO> implements MoodServ
 
         po.setId(params.getId());
         po.setUpdatedAt(DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS));
-        try {
-            long modified = moodDao.updateById(po, BlogConstants.UPDATE_BEAN_CONFIG)
-                    .getModifiedCount();
-            if (modified == 0) {
-                return ResultUtils.failed("没有找到对应的心情 !");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResultUtils.failed(Tools.errorMsg(e));
+        Result result = moodDao.update(po);
+        if (!result.isSuccess()) {
+            return result;
         }
         return ResultUtils.success(po.getId());
     }
@@ -97,16 +89,11 @@ public class MoodServiceImpl extends BaseServiceImpl<MoodPO> implements MoodServ
     @Override
     public Result remove(BeanIdForm params) {
         String updatedAt = DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
-        try {
-            long deleted = moodDao.updateOne(Criteria.eq("id", params.getId()),
-                    Criteria.set("deleted", "1").add("updated_at", updatedAt)
-            ).getModifiedCount();
-            if (deleted == 0) {
-                return ResultUtils.failed("心情[" + params.getId() + "]不存在 !");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResultUtils.failed(Tools.errorMsg(e));
+        IQueryCriteria query = Criteria.eq("id", params.getId());
+        IUpdateCriteria update = Criteria.set("deleted", "1").add("updated_at", updatedAt);
+        Result result = moodDao.update(query, update);
+        if (!result.isSuccess()) {
+            return result;
         }
         return ResultUtils.success(params.getId());
     }

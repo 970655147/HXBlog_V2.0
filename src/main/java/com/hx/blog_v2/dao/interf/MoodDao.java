@@ -10,7 +10,7 @@ import com.hx.mongo.dao.interf.MysqlIBaseDao;
  * @version 1.0
  * @date 5/20/2017 10:37 AM
  */
-public interface MoodDao extends MysqlIBaseDao<MoodPO> {
+public interface MoodDao extends BaseDao<MoodPO> {
 
 
 }

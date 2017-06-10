@@ -20,18 +20,12 @@ public class BlogTypeVO {
 
     private String id;
     private String name;
+    private int sort;
     private String createdAt;
     private String updatedAt;
 
-    public BlogTypeVO(String name) {
-        this();
-        this.name = name;
-    }
-
     public BlogTypeVO() {
-        Date now = new Date();
-        createdAt = DateUtils.formate(now, BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
-        updatedAt = createdAt;
+
     }
 
     public String getId() {
@@ -48,6 +42,14 @@ public class BlogTypeVO {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public int getSort() {
+        return sort;
+    }
+
+    public void setSort(int sort) {
+        this.sort = sort;
     }
 
     public String getCreatedAt() {

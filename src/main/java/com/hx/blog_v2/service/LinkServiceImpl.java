@@ -17,6 +17,8 @@ import com.hx.common.interf.common.Result;
 import com.hx.common.util.ResultUtils;
 import com.hx.log.util.Tools;
 import com.hx.mongo.criteria.Criteria;
+import com.hx.mongo.criteria.interf.IQueryCriteria;
+import com.hx.mongo.criteria.interf.IUpdateCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -47,13 +49,11 @@ public class LinkServiceImpl extends BaseServiceImpl<LinkPO> implements LinkServ
     public Result add(LinkSaveForm params) {
         LinkPO po = new LinkPO(params.getName(), params.getDesc(), params.getUrl(), params.getSort(), params.getEnable());
 
-        try {
-            linkDao.save(po, BlogConstants.ADD_BEAN_CONFIG);
-            cacheContext.allLinks().put(po.getId(), po);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResultUtils.failed(Tools.errorMsg(e));
+        Result result = linkDao.add(po);
+        if(! result.isSuccess()) {
+            return result;
         }
+        cacheContext.putLink(po);
         return ResultUtils.success(po.getId());
     }
 
@@ -64,9 +64,7 @@ public class LinkServiceImpl extends BaseServiceImpl<LinkPO> implements LinkServ
         List<AdminLinkVO> list = new ArrayList<>(allLinks.size());
         for(Map.Entry<String, LinkPO> entry : allLinks.entrySet()) {
             LinkPO link = entry.getValue();
-            if(link.getEnable() != 0) {
-                list.add(POVOTransferUtils.linkPO2AdminLinkVO(link));
-            }
+            list.add(POVOTransferUtils.linkPO2AdminLinkVO(link));
         }
         return ResultUtils.success(list);
     }
@@ -77,35 +75,30 @@ public class LinkServiceImpl extends BaseServiceImpl<LinkPO> implements LinkServ
 
         po.setId(params.getId());
         po.setUpdatedAt(DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS));
-        try {
-            long modified = linkDao.updateById(po, BlogConstants.UPDATE_BEAN_CONFIG)
-                    .getModifiedCount();
-            if (modified == 0) {
-                return ResultUtils.failed("没有找到对应的心情 !");
-            }
-            cacheContext.allLinks().put(po.getId(), po);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResultUtils.failed(Tools.errorMsg(e));
+        Result result = linkDao.update(po);
+        if(! result.isSuccess()) {
+            return result;
         }
+        cacheContext.putLink(po);
         return ResultUtils.success(po.getId());
     }
 
     @Override
     public Result remove(BeanIdForm params) {
-        String updatedAt = DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
-        try {
-            long deleted = linkDao.updateOne(Criteria.eq("id", params.getId()),
-                    Criteria.set("deleted", "1").add("updated_at", updatedAt)
-            ).getModifiedCount();
-            if (deleted == 0) {
-                return ResultUtils.failed("连接[" + params.getId() + "]不存在 !");
-            }
-            cacheContext.allLinks().remove(params.getId());
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResultUtils.failed(Tools.errorMsg(e));
+        LinkPO po = cacheContext.allLinks().get(params.getId());
+        if(po == null) {
+            return ResultUtils.failed("没有对应的链接 !");
         }
+
+        cacheContext.allLinks().remove(params.getId());
+        String updatedAt = DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
+        IQueryCriteria query = Criteria.eq("id", params.getId());
+        IUpdateCriteria update = Criteria.set("deleted", "1").add("updated_at", updatedAt);
+        Result result = linkDao.update(query, update);
+        if(! result.isSuccess()) {
+            return result;
+        }
+
         return ResultUtils.success(params.getId());
     }
 

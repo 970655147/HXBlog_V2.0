@@ -26,6 +26,8 @@ import com.hx.log.collection.CollectionUtils;
 import com.hx.log.util.Log;
 import com.hx.log.util.Tools;
 import com.hx.mongo.criteria.Criteria;
+import com.hx.mongo.criteria.interf.IQueryCriteria;
+import com.hx.mongo.criteria.interf.IUpdateCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -56,19 +58,16 @@ public class InterfServiceImpl extends BaseServiceImpl<InterfPO> implements Inte
 
     @Override
     public Result add(InterfSaveForm params) {
-        Map<String, InterfPO> interfs = cacheContext.allInterfs();
-        if (contains(interfs, params.getName())) {
+        if (contains(cacheContext.allInterfs(), params.getName())) {
             return ResultUtils.failed("该接口已经存在 !");
         }
 
         InterfPO po = new InterfPO(params.getName(), params.getDesc(), params.getEnable());
-        try {
-            interfDao.save(po, BlogConstants.ADD_BEAN_CONFIG);
-            interfs.put(po.getId(), po);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResultUtils.failed(Tools.errorMsg(e));
+        Result result = interfDao.add(po);
+        if(! result.isSuccess()) {
+            return result;
         }
+        cacheContext.putInterf(po);
         return ResultUtils.success(po.getId());
     }
 
@@ -116,15 +115,9 @@ public class InterfServiceImpl extends BaseServiceImpl<InterfPO> implements Inte
         po.setDesc(params.getDesc());
         po.setEnable(params.getEnable());
         po.setUpdatedAt(DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS));
-        try {
-            long modified = interfDao.updateById(po, BlogConstants.UPDATE_BEAN_CONFIG)
-                    .getModifiedCount();
-            if (modified == 0) {
-                return ResultUtils.failed("没有找到对应的接口 !");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResultUtils.failed(Tools.errorMsg(e));
+        Result result = interfDao.update(po);
+        if(! result.isSuccess()) {
+            return result;
         }
         return ResultUtils.success(po.getId());
     }
@@ -167,16 +160,11 @@ public class InterfServiceImpl extends BaseServiceImpl<InterfPO> implements Inte
 
         cacheContext.allInterfs().remove(params.getId());
         String updatedAt = DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
-        try {
-            long deleted = interfDao.updateOne(Criteria.eq("id", params.getId()),
-                    Criteria.set("deleted", "1").add("updated_at", updatedAt)
-            ).getModifiedCount();
-            if (deleted == 0) {
-                return ResultUtils.failed("接口[" + params.getId() + "]不存在 !");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResultUtils.failed(Tools.errorMsg(e));
+        IQueryCriteria query = Criteria.eq("id", params.getId());
+        IUpdateCriteria update = Criteria.set("deleted", "1").add("updated_at", updatedAt);
+        Result result = interfDao.update(query, update);
+        if(! result.isSuccess()) {
+            return result;
         }
         return ResultUtils.success(params.getId());
     }

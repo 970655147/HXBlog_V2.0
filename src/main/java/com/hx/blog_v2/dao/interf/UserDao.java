@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
  * @version 1.0
  * @date 5/20/2017 10:37 AM
  */
-public interface UserDao extends MysqlIBaseDao<UserPO> {
+public interface UserDao extends BaseDao<UserPO> {
 
 
 }

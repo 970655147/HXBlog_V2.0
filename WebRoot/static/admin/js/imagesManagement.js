@@ -50,6 +50,7 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
                             html += '<td>' + item.id + '</td>';
                             html += '<td>' + item.title + '</td>';
                             html += '<td><img src="' + item.url + '" width="60px" height="60px" </td>';
+                            html += '<td>' + item.sort + '</td>';
                             html += '<td>' + item.createdAt + '</td>';
                             if (item.enable) {
                                 html += '<td><i class="layui-icon" style="font-size: 30px; color: #009688;vertical-align: middle;">&#xe609;</i> </td>';
@@ -136,14 +137,16 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
         addData: function () {
             var html = '';
             html += '<form id="addImageForm" class="layui-form layui-form-pane" action="/admin/image/add" method="post">';
-            html += '<label class="layui-form-label" style="border: none" >图片标题:</label>';
-            html += '<input  style="width:87%;margin: auto;color: #000!important;" lay-verify="required" id="title" name="title"  class="layui-input" >';
+            html += '<label class="layui-form-label" style="border: none" >标题:</label>';
+            html += '<input  style="width:87%;margin: auto;color: #000!important;" lay-verify="required" name="title"  class="layui-input" >';
             html += '<div>';
             html += '<label class="layui-form-label" style="border: none" >上传图片:</label>';
-            html += '<input  style="width:87%;margin: auto;color: #000!important;" lay-verify="required" id="title" name="url"  class="layui-input" onblur="layui.funcs.headImgShow()" >';
+            html += '<input  style="width:87%;margin: auto;color: #000!important;" lay-verify="required" name="url"  class="layui-input" onblur="layui.funcs.headImgShow()" >';
             html += '<input id="uploadImgInput" type="file" name="file" onchange="layui.funcs.fileUpload()" style="margin-left: 50px" />';
             html += '<img id="coverShow" width="60px" height="60px" />'
             html += '</div>';
+            html += '<label class="layui-form-label" style="border: none" >排序:</label>';
+            html += '<input  style="width:87%;margin: auto;color: #000!important;" lay-verify="required" name="sort"  class="layui-input" >';
             html += '<label class="layui-form-label" style="border: none" >是否显示:</label>';
             html += '<input type="radio" name="enable" value="1" title="是" checked />';
             html += '<input type="radio" name="enable" value="0" title="否" />';
@@ -169,13 +172,15 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
             html += '<form id="updateImageForm" class="layui-form layui-form-pane" action="/admin/image/update" method="post" >';
             html += '<label class="layui-form-label" style="border: none" >图片标题:</label>';
             html += '<input type="hidden" id="id" name="id" value="' + item.id + '">';
-            html += '<input  style="width:87%;margin: auto;color: #000!important;" id="title" name="title" lay-verify="required"  class="layui-input" value="' + item.title + '" >';
+            html += '<input  style="width:87%;margin: auto;color: #000!important;" name="title" lay-verify="required"  class="layui-input" value="' + item.title + '" >';
             html += '<div>';
             html += '<label class="layui-form-label" style="border: none" >上传图片:</label>';
-            html += '<input  style="width:87%;margin: auto;color: #000!important;" lay-verify="required" id="title" name="url"  class="layui-input" value="' + item.url + '" onblur="layui.funcs.headImgShow()" >';
+            html += '<input  style="width:87%;margin: auto;color: #000!important;" lay-verify="required" name="url"  class="layui-input" value="' + item.url + '" onblur="layui.funcs.headImgShow()" >';
             html += '<input id="uploadImgInput" type="file" name="file" onchange="layui.funcs.fileUpload()" style="margin-left: 50px" />';
             html += '<img id="coverShow" width="60px" height="60px" />'
             html += '</div>';
+            html += '<label class="layui-form-label" style="border: none" >排序:</label>';
+            html += '<input  style="width:87%;margin: auto;color: #000!important;" lay-verify="required" name="sort" value="' + item.sort + '" class="layui-input" >';
             html += '<label class="layui-form-label" style="border: none" >是否显示:</label>';
             if (item.enable) {
                 html += '<input type="radio" name="enable" value="1" title="是" checked />';
@@ -230,7 +235,6 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
         fileUpload : function() {
             var formData = new FormData()
             formData.append("file", $("#uploadImgInput").get(0).files[0]);
-            console.log(formData)
             $.ajax({
                 url: '/admin/upload/image', //上传接口
                 data : formData,
@@ -250,6 +254,20 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
         },
         headImgShow : function() {
             $("#coverShow").attr("src", $("[name='url']").val());
+        },
+        reSort : function() {
+            $.ajax({
+                url: "/admin/image/reSort",
+                type: "POST",
+                data: params,
+                success: function (resp) {
+                    if (resp.success) {
+                        layer.alert('刷新排序成功 !');
+                    } else {
+                        layer.alert('刷新排序失败[' + resp.data + '], 请联系管理人员!');
+                    }
+                }
+            });
         }
     };
     exports('funcs', funcs);

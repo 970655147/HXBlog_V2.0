@@ -15,13 +15,13 @@ import java.util.LinkedList;
 import java.util.Map;
 
 /**
- * 心情
+ * 角色
  *
  * @author Jerry.X.He <970655147@qq.com>
  * @version 1.0
  * @date 5/22/2017 8:03 PM
  */
-public class RolePO implements JSONTransferable<RolePO> {
+public class RolePO implements JSONTransferable<RolePO>, Comparable<RolePO> {
 
     @JSONField({"id", "id"})
     private String id;
@@ -29,6 +29,8 @@ public class RolePO implements JSONTransferable<RolePO> {
     private String name;
     @JSONField({"desc", "desc"})
     private String desc;
+    @JSONField({"sort", "sort"})
+    private int sort;
     @JSONField({"createdAt", "created_at"})
     private String createdAt;
     @JSONField({"updatedAt", "updated_at"})
@@ -38,10 +40,11 @@ public class RolePO implements JSONTransferable<RolePO> {
     @JSONField({"deleted", "deleted"})
     private int deleted;
 
-    public RolePO(String name, String desc, int enable) {
+    public RolePO(String name, String desc, int sort, int enable) {
         this();
         this.name = name;
         this.desc = desc;
+        this.sort = sort;
         this.enable = enable;
     }
 
@@ -74,6 +77,14 @@ public class RolePO implements JSONTransferable<RolePO> {
 
     public void setDesc(String desc) {
         this.desc = desc;
+    }
+
+    public int getSort() {
+        return sort;
+    }
+
+    public void setSort(int sort) {
+        this.sort = sort;
     }
 
     public String getCreatedAt() {
@@ -151,4 +162,13 @@ public class RolePO implements JSONTransferable<RolePO> {
         this.id = id;
     }
 
+    @Override
+    public int compareTo(RolePO o) {
+        int deltaSort = this.sort - o.sort;
+        if(deltaSort != 0) {
+            return deltaSort;
+        }
+
+        return this.name.compareTo(o.name);
+    }
 }

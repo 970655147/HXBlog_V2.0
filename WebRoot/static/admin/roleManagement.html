@@ -11,6 +11,9 @@
 
 </head>
 <body>
+    <button class="layui-btn" style="margin-left: 30px" onclick="layui.funcs.reSort()">
+        <i class="layui-icon">&#x1002;</i> 刷新排序
+    </button>
     <button class="layui-btn" style="margin-left: 30px" onclick="refresh()">
         <i class="layui-icon">&#x1002;</i> 刷新
     </button>
@@ -27,6 +30,7 @@
                         <col width="30">
                         <col width="80">
                         <col width="250">
+                        <col width="80">
                         <col width="90">
                         <col width="30">
                         <col width="30">
@@ -37,6 +41,7 @@
                         <th>编号</th>
                         <th>名称</th>
                         <th>描述</th>
+                        <th>排序</th>
                         <th>创建时间</th>
                         <th>状态</th>
                         <th>操作</th>

@@ -24,7 +24,6 @@ import com.hx.log.file.FileUtils;
 import com.hx.log.util.Log;
 import com.hx.log.util.Tools;
 import com.hx.mongo.criteria.Criteria;
-import com.hx.mongo.criteria.interf.MultiCriteriaQueryCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -105,7 +104,7 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
             // 如果 没有找到记录, 或者 找到多条记录, 都会抛出异常, ex.*, b.* 这个顺序, 避免 po.id 被 exPo.id 覆盖
             vo = jdbcTemplate.queryForObject(blogSql, sqlParams, new BlogVOMapper());
             Result result = encapSenseAndBlogEx(vo);
-            if(!result.isSuccess()) {
+            if (!result.isSuccess()) {
                 return result;
             }
             vo = (BlogVO) result.getData();
@@ -124,7 +123,7 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
         String selectSql = " select b.*, GROUP_CONCAT(rlt.tag_id) as tagIds from blog as b " +
                 " inner join rlt_blog_tag as rlt on b.id = rlt.blog_id " +
                 " where b.deleted = 0 and b.id >= 0 ";
-        String selectSqlSuffix = " group by b.id limit ?, ? ";
+        String selectSqlSuffix = " group by b.id order by b.created_at desc limit ?, ?";
         String countSql = " select count(*) as totalRecord from blog as b where b.deleted = 0 and b.id >= 0 ";
 
         StringBuilder condSqlSb = new StringBuilder();
@@ -147,7 +146,7 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
     public Result adminList(BlogSearchForm params, Page<AdminBlogVO> page) {
         String selectSql = " select b.*, GROUP_CONCAT(rlt.tag_id) as tagIds from blog as b " +
                 " inner join rlt_blog_tag as rlt on b.id = rlt.blog_id where b.deleted = 0 ";
-        String selectSqlSuffix = " group by b.id limit ?, ? ";
+        String selectSqlSuffix = " group by b.id order by b.created_at desc limit ?, ? ";
         String countSql = " select count(*) as totalRecord from blog as b where b.deleted = 0 ";
         List<Object> selectParamsList = new ArrayList<>(3);
         StringBuilder condSqlSb = new StringBuilder();
@@ -319,28 +318,32 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
         po.setId(params.getId());
         po.setUpdatedAt(DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS));
 
+        Result updateBlogResult = blogDao.update(po);
+        if (!updateBlogResult.isSuccess()) {
+            return updateBlogResult;
+        }
+
+        String[] tagIds = params.getBlogTagIds().split(",");
+        List<RltBlogTagPO> blogTags = null;
+        if (!Tools.isEmpty(tagIds)) {
+            Tools.trimAllSpaces(tagIds);
+            blogTags = new ArrayList<>(tagIds.length);
+            for (String tagId : tagIds) {
+                blogTags.add(new RltBlogTagPO(po.getId(), tagId));
+            }
+        }
+        Result removeOldTagResult = rltBlogTagDao.remove(Criteria.eq("blog_id", po.getId()), true);
+        if (!removeOldTagResult.isSuccess()) {
+            return removeOldTagResult;
+        }
+        if (!CollectionUtils.isEmpty(blogTags)) {
+            Result addNewTagResult = rltBlogTagDao.add(blogTags);
+            if (!addNewTagResult.isSuccess()) {
+                return addNewTagResult;
+            }
+        }
+
         try {
-            // 对于createAt的处理 先放在这里, 等之后 HXMongo 的review[abort JSONTransferable] 之后吧,
-            long matched = blogDao.updateById(po, BlogConstants.UPDATE_BEAN_CONFIG)
-                    .getModifiedCount();
-            if (matched == 0) {
-                return ResultUtils.failed("没有找到对应的博客 !");
-            }
-
-            String[] tagIds = params.getBlogTagIds().split(",");
-            List<RltBlogTagPO> blogTags = null;
-            if (!Tools.isEmpty(tagIds)) {
-                Tools.trimAllSpaces(tagIds);
-                blogTags = new ArrayList<>(tagIds.length);
-                for (String tagId : tagIds) {
-                    blogTags.add(new RltBlogTagPO(po.getId(), tagId));
-                }
-            }
-            rltBlogTagDao.deleteMany(Criteria.eq("blog_id", po.getId()));
-            if (!CollectionUtils.isEmpty(blogTags)) {
-                rltBlogTagDao.insertMany(blogTags, BlogConstants.ADD_BEAN_CONFIG);
-            }
-
             String blogFile = Tools.getFilePath(constants.blogRootDir, po.getContentUrl());
             FileUtils.createIfNotExists(blogFile, true);
             Tools.save(params.getContent(), blogFile);
@@ -363,7 +366,7 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
      */
     private void encapBlogVo(List<BlogVO> voes) {
         for (BlogVO vo : voes) {
-            BlogExPO exPo = (BlogExPO) getBlogEx(vo.getId()).getData();
+            BlogExPO exPo = (BlogExPO) blogExDao.get(new BeanIdForm(vo.getId())).getData();
             vo = POVOTransferUtils.blogExPO2BlogVO(exPo, vo);
             encapTypeTagInfo(vo);
             encapContent(vo);
@@ -454,42 +457,16 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
 
         BlogSenseForm params = new BlogSenseForm();
         params.setBlogId(blogId);
-        params.setName(user.getName());
-        params.setEmail(user.getEmail());
         params.setSense(BlogConstants.UP_PRISE_SENSE);
+        params.setUserInfo(user);
 
-        BlogSensePO po = senseDao.get(params);
+        Result getSenseResult = senseDao.get(params);
+        if (!getSenseResult.isSuccess()) {
+            return getSenseResult;
+        }
+        BlogSensePO po = (BlogSensePO) getSenseResult.getData();
         cacheContext.putBlogSense(params, po);
         return (po.getClicked() == 1) ? ResultUtils.success() : ResultUtils.failed();
-    }
-
-    /**
-     * 获取blog 对应的 BlogEx
-     *
-     * @param blogId blogId
-     * @return com.hx.common.interf.common.Result
-     * @author Jerry.X.He
-     * @date 6/6/2017 9:23 PM
-     * @since 1.0
-     */
-    public Result getBlogEx(String blogId) {
-        BlogExPO po = cacheContext.getBlogEx(blogId);
-        if (po != null) {
-            return ResultUtils.success(po);
-        }
-
-        try {
-            po = blogExDao.findOne(Criteria.and(Criteria.eq("blog_id", blogId)),
-                    BlogConstants.LOAD_ALL_CONFIG);
-            if (po == null) {
-                return ResultUtils.failed("没有对应的博客");
-            }
-            cacheContext.putBlogEx(po);
-            return ResultUtils.success(po);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResultUtils.failed(Tools.errorMsg(e));
-        }
     }
 
     /**
@@ -503,12 +480,7 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
      */
     Result encapSenseAndBlogEx(BlogVO vo) {
         vo.setGoodSensed(isSense(vo.getId()).isSuccess());
-        Result getBlogExResult = getBlogEx(vo.getId());
-        if(! getBlogExResult.isSuccess()) {
-            return getBlogExResult;
-        }
-
-        BlogExPO exPO = (BlogExPO) getBlogExResult.getData();
+        BlogExPO exPO = (BlogExPO) blogExDao.get(new BeanIdForm(vo.getId())).getData();
         vo = POVOTransferUtils.blogExPO2BlogVO(exPO, vo);
         return ResultUtils.success(vo);
     }

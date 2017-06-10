@@ -13,7 +13,10 @@ import com.hx.common.interf.common.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 记录博客访问日志的 handler
@@ -37,26 +40,41 @@ public class BlogVisitLogHandler extends BizHandlerAdapter {
     public void afterHandle(BizContext context) {
         Result result = (Result) context.result();
         if (result.isSuccess()) {
-            String blogId = ((BeanIdForm) context.args()[0]).getId();
-            BlogVisitLogForm params = new BlogVisitLogForm(blogId, BizUtils.getIp());
-            BlogExPO blogEx = blogExDao.get(new BeanIdForm(params.getBlogId()));
+            List<String> blogIdCandidate = new ArrayList<>();
+            if((context.args().length > 0) && (context.args()[0] instanceof BeanIdForm)) {
+                blogIdCandidate.add(((BeanIdForm) context.args()[0]).getId() );
+            }
+            Collections.addAll(blogIdCandidate, context.bizHandle().others());
 
-            blogEx.incViewCnt(1);
-            params.setCreatedAtDay(null);
-            BlogVisitLogPO po = visitLogDao.get(params);
-            if (po == null) {
-                blogEx.incUniqueViewCnt(1);
-                blogEx.incDayFlushViewCnt(1);
-            } else {
+            for(String blogId : blogIdCandidate) {
+                BlogVisitLogForm params = new BlogVisitLogForm(blogId, BizUtils.getIp());
+                BlogExPO blogEx = (BlogExPO) blogExDao.get(new BeanIdForm(blogId)).getData();
+
+                blogEx.incViewCnt(1);
                 params.setCreatedAtDay(DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD));
-                po = visitLogDao.get(params);
+                BlogVisitLogPO po = visitLogDao.get(params);
+                // 今天 没访问过?
                 if (po == null) {
                     blogEx.incDayFlushViewCnt(1);
-                }
-            }
+                    po = encapBlogVisitLog(params);
 
-            po = addBlogVisitLog(params);
-            cacheContext.putBlogEx(blogEx);
+                    BlogVisitLogForm ipVisitLogParam = new BlogVisitLogForm(params.getBlogId(), params.getRequestIp());
+                    ipVisitLogParam.setCreatedAtDay(null);
+                    BlogVisitLogPO ipVisitLogPo = visitLogDao.get(ipVisitLogParam);
+                    if (ipVisitLogPo == null) {
+                        blogEx.incUniqueViewCnt(1);
+                    }
+
+                    visitLogDao.add(po);
+                    cacheContext.putBlogVisitLog(params, po);
+                    if (ipVisitLogPo == null) {
+                        cacheContext.putBlogVisitLog(ipVisitLogParam, po);
+                    }
+                }
+
+                visitLogDao.add(po);
+                cacheContext.putBlogEx(blogEx);
+            }
         }
     }
 
@@ -72,7 +90,7 @@ public class BlogVisitLogHandler extends BizHandlerAdapter {
      * @date 6/9/2017 9:34 PM
      * @since 1.0
      */
-    private BlogVisitLogPO addBlogVisitLog(BlogVisitLogForm params) {
+    private BlogVisitLogPO encapBlogVisitLog(BlogVisitLogForm params) {
         SessionUser user = (SessionUser) WebContext.getAttributeFromSession(BlogConstants.SESSION_USER);
         String userName = "unknown", email = "unknown";
         int isSystemUser = 0;
@@ -83,7 +101,6 @@ public class BlogVisitLogHandler extends BizHandlerAdapter {
         }
 
         BlogVisitLogPO po = new BlogVisitLogPO(params.getBlogId(), userName, email, isSystemUser, params.getRequestIp());
-        visitLogDao.add(po);
         return po;
     }
 

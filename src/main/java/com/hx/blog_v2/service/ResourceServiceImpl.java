@@ -3,7 +3,6 @@ package com.hx.blog_v2.service;
 import com.hx.blog_v2.dao.interf.ResourceDao;
 import com.hx.blog_v2.dao.interf.RltRoleResourceDao;
 import com.hx.blog_v2.domain.POVOTransferUtils;
-import com.hx.blog_v2.domain.comparator.ResourceSortComparator;
 import com.hx.blog_v2.domain.form.BeanIdForm;
 import com.hx.blog_v2.domain.form.ResourceSaveForm;
 import com.hx.blog_v2.domain.form.RoleResourceUpdateForm;
@@ -29,6 +28,8 @@ import com.hx.log.collection.CollectionUtils;
 import com.hx.log.util.Log;
 import com.hx.log.util.Tools;
 import com.hx.mongo.criteria.Criteria;
+import com.hx.mongo.criteria.interf.IQueryCriteria;
+import com.hx.mongo.criteria.interf.IUpdateCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -67,13 +68,12 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourcePO> implements 
 
         ResourcePO po = new ResourcePO(params.getName(), params.getIconClass(), params.getUrl(),
                 params.getParentId(), params.getSort(), parentPo.getLevel() + 1, params.getEnable());
-        try {
-            resourceDao.save(po, BlogConstants.ADD_BEAN_CONFIG);
-            resourcesById.put(po.getId(), po);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResultUtils.failed(Tools.errorMsg(e));
+        Result result = resourceDao.add(po);
+        if(! result.isSuccess()) {
+            return result;
         }
+
+        cacheContext.putResource(po);
         return ResultUtils.success(po.getId());
     }
 
@@ -152,15 +152,9 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourcePO> implements 
         po.setSort(params.getSort());
         po.setEnable(params.getEnable());
         po.setUpdatedAt(DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS));
-        try {
-            long modified = resourceDao.updateById(po, BlogConstants.UPDATE_BEAN_CONFIG)
-                    .getModifiedCount();
-            if (modified == 0) {
-                return ResultUtils.failed("没有找到对应的资源 !");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResultUtils.failed(Tools.errorMsg(e));
+        Result result = resourceDao.update(po);
+        if(! result.isSuccess()) {
+            return result;
         }
         return ResultUtils.success(po.getId());
     }
@@ -190,6 +184,29 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourcePO> implements 
     }
 
     @Override
+    public Result remove(BeanIdForm params) {
+        ResourcePO po = cacheContext.allResources().get(params.getId());
+        if (po == null) {
+            return ResultUtils.failed("该资源不存在 !");
+        }
+        String countSql = " select count(*) as totalRecord from `role` where deleted = 0 and id in ( select role_id from rlt_role_resource where resource_id = ? ) ";
+        Integer totalRecord = jdbcTemplate.queryForObject(countSql, new Object[]{params.getId()}, new OneIntMapper("totalRecord"));
+        if (totalRecord > 0) {
+            return ResultUtils.failed("该资源下面还有 " + totalRecord + "个角色, 请先迁移这部分角色 !");
+        }
+
+        cacheContext.allResources().remove(params.getId());
+        String updatedAt = DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
+        IQueryCriteria query = Criteria.eq("id", params.getId());
+        IUpdateCriteria update = Criteria.set("deleted", "1").add("updated_at", updatedAt);
+        Result result = resourceDao.update(query, update);
+        if(! result.isSuccess()) {
+            return result;
+        }
+        return ResultUtils.success(params.getId());
+    }
+
+    @Override
     public Result reSort() {
         Map<String, ResourcePO> resourcesById = cacheContext.allResources();
         List<ResourcePO> allResources = new ArrayList<>(resourcesById.size());
@@ -197,16 +214,16 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourcePO> implements 
         for (Map.Entry<String, ResourcePO> entry : resourcesById.entrySet()) {
             allResources.add(entry.getValue());
         }
-        Collections.sort(allResources, new ResourceSortComparator());
+        Collections.sort(allResources);
 
         Map<String, Integer> parent2Sort = new HashMap<>();
-        for(ResourcePO po : allResources) {
+        for (ResourcePO po : allResources) {
             Integer sortNow = parent2Sort.get(po.getParentId());
-            if(sortNow == null) {
-                sortNow = 0;
+            if (sortNow == null) {
+                sortNow = BlogConstants.RE_SORT_START;
             }
 
-            Integer newSort = sortNow + 10;
+            Integer newSort = sortNow + BlogConstants.RE_SORT_OFFSET;
             parent2Sort.put(po.getParentId(), newSort);
             if (po.getLevel() != newSort.intValue()) {
                 po.setLevel(newSort);
@@ -219,34 +236,6 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourcePO> implements 
         }
 
         return ResultUtils.success("success");
-    }
-
-    @Override
-    public Result remove(BeanIdForm params) {
-        ResourcePO po = cacheContext.allResources().get(params.getId());
-        if (po == null) {
-            return ResultUtils.failed("该资源不存在 !");
-        }
-        String countSql = " select count(*) as totalRecord from `role` where deleted = 0 and id in ( select role_id from rlt_role_resource where resource_id = ? ) ";
-        Integer totalRecord = jdbcTemplate.queryForObject(countSql, new Object[]{params.getId() }, new OneIntMapper("totalRecord"));
-        if(totalRecord > 0) {
-            return ResultUtils.failed("该资源下面还有 " + totalRecord + "个角色, 请先迁移这部分角色 !");
-        }
-
-        cacheContext.allResources().remove(params.getId());
-        String updatedAt = DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
-        try {
-            long deleted = resourceDao.updateOne(Criteria.eq("id", params.getId()),
-                    Criteria.set("deleted", "1").add("updated_at", updatedAt)
-            ).getModifiedCount();
-            if (deleted == 0) {
-                return ResultUtils.failed("资源[" + params.getId() + "]不存在 !");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResultUtils.failed(Tools.errorMsg(e));
-        }
-        return ResultUtils.success(params.getId());
     }
 
     // -------------------- 辅助方法 --------------------------

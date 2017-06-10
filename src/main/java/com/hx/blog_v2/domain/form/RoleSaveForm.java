@@ -12,6 +12,7 @@ public class RoleSaveForm {
     private String id;
     private String name;
     private String desc;
+    private int sort;
     private int enable;
 
     public RoleSaveForm() {
@@ -31,6 +32,14 @@ public class RoleSaveForm {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public int getSort() {
+        return sort;
+    }
+
+    public void setSort(int sort) {
+        this.sort = sort;
     }
 
     public String getDesc() {

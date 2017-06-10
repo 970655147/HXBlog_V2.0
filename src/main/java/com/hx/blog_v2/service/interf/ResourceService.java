@@ -76,16 +76,6 @@ public interface ResourceService extends BaseService<ResourcePO> {
     Result roleResourceUpdate(RoleResourceUpdateForm params);
 
     /**
-     * 刷新当前资源层级的排序 [目前约定为 同级 sort 相差10, 从10开始]
-     *
-     * @return result
-     * @author Jerry.X.He
-     * @date 5/30/2017 7:39 PM
-     * @since 1.0
-     */
-    Result reSort();
-
-    /**
      * 移除给定的照片
      *
      * @return result
@@ -94,5 +84,15 @@ public interface ResourceService extends BaseService<ResourcePO> {
      * @since 1.0
      */
     Result remove(BeanIdForm params);
+
+    /**
+     * 刷新当前资源层级的排序 [目前约定为 同级 sort 相差10, 从10开始]
+     *
+     * @return result
+     * @author Jerry.X.He
+     * @date 5/30/2017 7:39 PM
+     * @since 1.0
+     */
+    Result reSort();
 
 }

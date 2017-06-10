@@ -8,10 +8,10 @@ import com.hx.blog_v2.domain.po.BlogExPO;
 import com.hx.blog_v2.domain.po.BlogSensePO;
 import com.hx.blog_v2.service.interf.BaseServiceImpl;
 import com.hx.blog_v2.service.interf.BlogSenseService;
+import com.hx.blog_v2.util.BizUtils;
 import com.hx.blog_v2.util.CacheContext;
 import com.hx.common.interf.common.Result;
 import com.hx.common.util.ResultUtils;
-import com.hx.log.util.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,22 +35,31 @@ public class BlogSenseServiceImpl extends BaseServiceImpl<BlogSensePO> implement
 
     @Override
     public Result sense(BlogSenseForm params) {
-        BlogSensePO po = senseDao.get(params);
-        if (po == null) {
-            po = new BlogSensePO(params.getBlogId(), params.getName(), params.getEmail(), params.getSense());
-        }
-
-        if (params.isClicked().equals(po.getClicked())) {
-            Log.err("有小伙子在注入了 ??");
+        Result getSenseResult = senseDao.get(params);
+        BlogSensePO po = null;
+        boolean exists = (getSenseResult.isSuccess());
+        if (exists) {
+            po = (BlogSensePO) getSenseResult.getData();
         } else {
-            Result updateExResult = updateBlogEx(params);
-            if (!updateExResult.isSuccess()) {
-                return updateExResult;
-            }
-
-            senseDao.add(po);
-            cacheContext.putBlogSense(params, po);
+            po = new BlogSensePO(params.getBlogId(), params.getName(), params.getEmail(), BizUtils.getIp(), params.getSense());
         }
+        if (params.getClicked().equals(po.getClicked())) {
+            return ResultUtils.failed("wtf");
+        }
+
+        Result updateExResult = updateBlogEx(params);
+        if (!updateExResult.isSuccess()) {
+            return updateExResult;
+        }
+        po.setClicked(params.getClicked());
+
+        if (!exists) {
+            Result saveResult = senseDao.add(po);
+            if (!saveResult.isSuccess()) {
+                return saveResult;
+            }
+        }
+        cacheContext.putBlogSense(params, po);
         return ResultUtils.success("success");
     }
 
@@ -65,12 +74,13 @@ public class BlogSenseServiceImpl extends BaseServiceImpl<BlogSensePO> implement
      * @since 1.0
      */
     private Result updateBlogEx(BlogSenseForm params) {
-        BlogExPO po = blogExDao.get(new BeanIdForm(params.getBlogId()));
-        if (po == null) {
-            return ResultUtils.failed("没有对应的博客");
+        Result getResult = blogExDao.get(new BeanIdForm(params.getBlogId()));
+        if (!getResult.isSuccess()) {
+            return getResult;
         }
 
-        po.incGoodCnt(params.isClicked());
+        BlogExPO po = (BlogExPO) getResult.getData();
+        po.incGoodCnt((params.getClicked() == 1) ? 1 : -1);
         cacheContext.putBlogEx(po);
         return ResultUtils.success("success");
     }

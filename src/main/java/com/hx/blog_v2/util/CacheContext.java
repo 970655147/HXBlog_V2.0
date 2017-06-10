@@ -5,7 +5,6 @@ import com.hx.blog_v2.domain.form.BlogSenseForm;
 import com.hx.blog_v2.domain.form.BlogVisitLogForm;
 import com.hx.blog_v2.domain.po.*;
 import com.hx.common.interf.cache.Cache;
-import com.hx.log.cache.CacheListenerAdapter;
 import com.hx.log.cache.mem.LRUMCache;
 import com.hx.log.util.Log;
 import com.hx.log.util.Tools;
@@ -19,6 +18,7 @@ import javax.annotation.PostConstruct;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
@@ -182,6 +182,10 @@ public class CacheContext {
         return blogTypesById.get(id);
     }
 
+    public void putBlogType(BlogTypePO po) {
+        blogTypesById.put(po.getId(), po);
+    }
+
     /**
      * 获取所有的 BlogType
      *
@@ -196,6 +200,10 @@ public class CacheContext {
 
     public BlogTagPO blogTag(String id) {
         return blogTagsById.get(id);
+    }
+
+    public void putBlogTag(BlogTagPO po) {
+        blogTagsById.put(po.getId(), po);
     }
 
     /**
@@ -214,6 +222,10 @@ public class CacheContext {
         return linksById.get(id);
     }
 
+    public void putLink(LinkPO po) {
+        linksById.put(po.getId(), po);
+    }
+
     /**
      * 获取所有的角色
      *
@@ -228,6 +240,10 @@ public class CacheContext {
 
     public RolePO role(String id) {
         return rolesById.get(id);
+    }
+
+    public void putRole(RolePO po) {
+        rolesById.put(po.getId(), po);
     }
 
     /**
@@ -246,6 +262,10 @@ public class CacheContext {
         return resourcesById.get(id);
     }
 
+    public void putResource(ResourcePO po) {
+        resourcesById.put(po.getId(), po);
+    }
+
     /**
      * 获取所有的接口列表
      *
@@ -260,6 +280,10 @@ public class CacheContext {
 
     public InterfPO interf(String id) {
         return interfsById.get(id);
+    }
+
+    public void putInterf(InterfPO po) {
+        interfsById.put(po.getId(), po);
     }
 
     /**
@@ -480,11 +504,13 @@ public class CacheContext {
      */
     private void loadFullCachedResources() {
         try {
-            List<BlogTagPO> tagList = blogTagDao.findMany(Criteria.eq("deleted", "0"), BlogConstants.LOAD_ALL_CONFIG);
+            List<BlogTagPO> tagList = blogTagDao.findMany(Criteria.eq("deleted", "0"), Criteria.limitNothing(),
+                    Criteria.sortBy("sort", SortByCriteria.ASC), BlogConstants.LOAD_ALL_CONFIG);
             for (BlogTagPO po : tagList) {
                 blogTagsById.put(po.getId(), po);
             }
-            List<BlogTypePO> typeList = blogTypeDao.findMany(Criteria.eq("deleted", "0"), BlogConstants.LOAD_ALL_CONFIG);
+            List<BlogTypePO> typeList = blogTypeDao.findMany(Criteria.eq("deleted", "0"), Criteria.limitNothing(),
+                    Criteria.sortBy("sort", SortByCriteria.ASC), BlogConstants.LOAD_ALL_CONFIG);
             for (BlogTypePO po : typeList) {
                 blogTypesById.put(po.getId(), po);
             }
@@ -493,7 +519,8 @@ public class CacheContext {
             for (LinkPO po : linkList) {
                 linksById.put(po.getId(), po);
             }
-            List<RolePO> roleList = roleDao.findMany(Criteria.eq("deleted", "0"), BlogConstants.LOAD_ALL_CONFIG);
+            List<RolePO> roleList = roleDao.findMany(Criteria.eq("deleted", "0"), Criteria.limitNothing(),
+                    Criteria.sortBy("sort", SortByCriteria.ASC), BlogConstants.LOAD_ALL_CONFIG);
             for (RolePO po : roleList) {
                 rolesById.put(po.getId(), po);
             }
@@ -536,7 +563,7 @@ public class CacheContext {
      * @since 1.0
      */
     private String generateBlogSenseKey(BlogSenseForm params) {
-        return params.getBlogId() + BLOG_SENSE_KEY_SEP + params.getName() + BLOG_SENSE_KEY_SEP + params.getEmail() + BLOG_SENSE_KEY_SEP + params.getSense();
+        return params.getBlogId() + BLOG_SENSE_KEY_SEP + params.getName() + BLOG_SENSE_KEY_SEP + params.getRequestIp() + BLOG_SENSE_KEY_SEP + params.getSense();
     }
 
     /**

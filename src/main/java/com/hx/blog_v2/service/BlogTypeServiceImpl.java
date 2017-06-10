@@ -8,13 +8,13 @@ import com.hx.blog_v2.domain.po.BlogTypePO;
 import com.hx.blog_v2.domain.vo.BlogTypeVO;
 import com.hx.blog_v2.service.interf.BaseServiceImpl;
 import com.hx.blog_v2.service.interf.BlogTypeService;
+import com.hx.blog_v2.util.BizUtils;
 import com.hx.blog_v2.util.BlogConstants;
 import com.hx.blog_v2.util.CacheContext;
 import com.hx.blog_v2.util.DateUtils;
 import com.hx.common.interf.common.Result;
 import com.hx.common.util.ResultUtils;
 import com.hx.log.util.Tools;
-import com.hx.mongo.criteria.Criteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -43,19 +43,17 @@ public class BlogTypeServiceImpl extends BaseServiceImpl<BlogTypePO> implements 
 
     @Override
     public Result add(BlogTypeSaveForm params) {
-        Map<String, BlogTypePO> blogTypes = cacheContext.allBlogTypes();
-        if (contains(blogTypes, params.getName())) {
+        if (contains(cacheContext.allBlogTypes(), params.getName())) {
             return ResultUtils.failed("该类型已经存在 !");
         }
 
-        BlogTypePO po = new BlogTypePO(params.getName());
-        try {
-            blogTypeDao.save(po, BlogConstants.ADD_BEAN_CONFIG);
-            blogTypes.put(po.getId(), po);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResultUtils.failed(Tools.errorMsg(e));
+        BlogTypePO po = new BlogTypePO(params.getName(), params.getSort());
+        Result result = blogTypeDao.add(po);
+        if (!result.isSuccess()) {
+            return result;
         }
+
+        cacheContext.putBlogType(po);
         return ResultUtils.success(po.getId());
     }
 
@@ -78,17 +76,14 @@ public class BlogTypeServiceImpl extends BaseServiceImpl<BlogTypePO> implements 
         }
 
         po.setName(params.getName());
+        po.setSort(params.getSort());
         po.setUpdatedAt(DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS));
-        try {
-            long modified = blogTypeDao.updateById(po, BlogConstants.UPDATE_BEAN_CONFIG)
-                    .getModifiedCount();
-            if (modified == 0) {
-                return ResultUtils.failed("该类型不存在 !");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResultUtils.failed(Tools.errorMsg(e));
+        Result result = blogTypeDao.update(po);
+        if (!result.isSuccess()) {
+            return result;
         }
+
+        cacheContext.putBlogType(po);
         return ResultUtils.success(params.getId());
     }
 
@@ -99,27 +94,38 @@ public class BlogTypeServiceImpl extends BaseServiceImpl<BlogTypePO> implements 
             return ResultUtils.failed("该类型不存在 !");
         }
         String countSql = " select count(*) as totalRecord from blog where deleted = 0 and blog_type_id = ? ";
-        Integer totalRecord = jdbcTemplate.queryForObject(countSql, new Object[]{params.getId() }, new OneIntMapper("totalRecord"));
-        if(totalRecord > 0) {
+        Integer totalRecord = jdbcTemplate.queryForObject(countSql, new Object[]{params.getId()}, new OneIntMapper("totalRecord"));
+        if (totalRecord > 0) {
             return ResultUtils.failed("该类型下面还有 " + totalRecord + "篇博客, 请先迁移这部分博客 !");
         }
 
         cacheContext.allBlogTypes().remove(params.getId());
-        String updatedAt = DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
-        try {
-            long modified = blogTypeDao.updateOne(Criteria.eq("id", params.getId()),
-                    Criteria.set("deleted", 1).add("updated_at", updatedAt)
-            ).getModifiedCount();
-            if (modified == 0) {
-                return ResultUtils.failed("该类型不存在 !");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResultUtils.failed(Tools.errorMsg(e));
+        po.setUpdatedAt(DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS));
+        po.setDeleted(1);
+        Result result = blogTypeDao.update(po);
+        if (!result.isSuccess()) {
+            return result;
         }
+
         return ResultUtils.success(params.getId());
     }
 
+    @Override
+    public Result reSort() {
+        Map<String, BlogTypePO> types = cacheContext.allBlogTypes();
+        List<BlogTypePO> sortedTypes = BizUtils.resort(types);
+        int sort = BlogConstants.RE_SORT_START;
+        for (BlogTypePO tag : sortedTypes) {
+            boolean isSortChanged = sort != tag.getSort();
+            if (isSortChanged) {
+                tag.setSort(sort);
+                blogTypeDao.update(tag);
+            }
+            sort += BlogConstants.RE_SORT_OFFSET;
+        }
+
+        return ResultUtils.success("success");
+    }
 
     // -------------------- 辅助方法 --------------------------
 

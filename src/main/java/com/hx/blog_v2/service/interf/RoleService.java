@@ -77,4 +77,14 @@ public interface RoleService extends BaseService<RolePO> {
      */
     Result remove(BeanIdForm params);
 
+    /**
+     * 对于资源进行重排
+     *
+     * @return result
+     * @author Jerry.X.He
+     * @date 5/20/2017 6:21 PM
+     * @since 1.0
+     */
+    Result reSort();
+
 }

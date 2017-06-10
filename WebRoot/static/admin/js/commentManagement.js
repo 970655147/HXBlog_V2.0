@@ -53,7 +53,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
                             html += '<td>' + item.toUser + '</td>';
                             html += '<td>' + item.comment + '</td>';
                             html += '<td>' + item.createdAt + '</td>';
-                            html += '<td><i class="layui-icon layui-btn-small" style="cursor:pointer;font-size: 30px; color: #FA4B2A;vertical-align: middle;" onclick="layui.funcs.addReply(' + item.id + ', ' + item.blogId + ', ' + item.floorId + ',\'' + item.name + '\',\'' + encodeURI(item.comment) + '\')" >&#x1005;</i> </td>';
+                            html += '<td><i class="layui-icon layui-btn-small" style="cursor:pointer;font-size: 30px; color: #FA4B2A;vertical-align: middle;" onclick="layui.funcs.addReply(' + item.id + ', ' + item.blogId + ', ' + item.floorId + ', ' + item.commentId + ',\'' + item.name + '\',\'' + encodeURI(item.comment) + '\')" >&#x1005;</i> </td>';
                             html += '<td><button class="layui-btn layui-btn-small" onclick=\'layui.funcs.showData("' + item.blogName + '", ' + item.blogId + ', ' + item.floorId + ')\'><i class="layui-icon">&#xe63a;</i></button></td>';
                             html += '<td><button class="layui-btn layui-btn-small layui-btn-normal" onclick="layui.funcs.editData(' + item.id + ',\'' + item.toUser + '\',\'' + encodeURI(item.comment) + '\')"><i class="layui-icon">&#xe642;</i></button></td>';
                             html += '<td><button class="layui-btn layui-btn-small layui-btn-danger" onclick="layui.funcs.deleteData(' + item.id + ')"><i class="layui-icon">&#xe640;</i></button></td>';
@@ -149,7 +149,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
                         for (var idx in comments) {
                             var reply = comments[idx]
                             html += '<blockquote class="layui-elem-quote" style="margin-left: ' + marginLeft + 'px" >';
-                            html += '<span style="cursor:pointer" alt="reply" onclick="layui.funcs.addReply(' + reply.id + ', ' + reply.blogId + ', ' + reply.floorId + ',\'' + reply.name + '\',\'' + encodeURI(reply.comment) + '\')" >[' + reply.name + '] @ [' + reply.toUser + '] : ' + reply.comment + '</span>';
+                            html += '<span style="cursor:pointer" alt="reply" onclick="layui.funcs.addReply(' + reply.id + ', ' + reply.blogId + ', ' + reply.floorId + ', ' + reply.commentId + ',\'' + reply.name + '\',\'' + encodeURI(reply.comment) + '\')" >[' + reply.name + '] @ [' + reply.toUser + '] : ' + reply.comment + '</span>';
                             html += '</blockquote>';
                             marginLeft += incr
                         }
@@ -170,12 +170,13 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
                 }
             })
         },
-        addReply: function (id, blogId, floorId, toUser, comment) {
+        addReply: function (id, blogId, floorId, commentId, toUser, comment) {
             var html = '';
             html += '<form id="addReplyForm" class="layui-form layui-form-pane" action="/admin/comment/reply" method="post">';
             html += '<input type="hidden" name="id" value="' + id + '"/>';
             html += '<input type="hidden" name="blogId" value="' + blogId + '"/>';
             html += '<input type="hidden" name="floorId" value="' + floorId + '"/>';
+            html += '<input type="hidden" name="commentId" value="' + commentId + '"/>';
             html += '<input type="hidden" name="toUser" value="' + toUser + '"/>';
             html += '<label class="layui-form-label" style="border: none" >评论内容:</label>';
             html += '<div  style="width:87%;margin: auto;color: #000!important;"  readonly="true" class="layui-textarea layui-disabled" >' + decodeURI(comment) + '</div>';

@@ -1,6 +1,7 @@
 package com.hx.blog_v2.domain.form;
 
 import com.hx.blog_v2.domain.form.interf.UserInfoExtractor;
+import com.hx.blog_v2.util.BizUtils;
 
 /**
  * CommentSaveForm
@@ -21,8 +22,13 @@ public class CommentSaveForm implements UserInfoExtractor {
     private String name;
     private String email;
     private String headImgUrl;
+    private String requestIp;
     private String toUser;
     private String comment;
+
+    public CommentSaveForm() {
+        requestIp = BizUtils.getIp();
+    }
 
     public String getId() {
         return id;
@@ -97,5 +103,14 @@ public class CommentSaveForm implements UserInfoExtractor {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    @Override
+    public String getRequestIp() {
+        return requestIp;
+    }
+
+    public void setRequestIp(String requestIp) {
+        this.requestIp = requestIp;
     }
 }

@@ -68,4 +68,14 @@ public interface ImageService extends BaseService<ImagePO> {
      */
     Result remove(BeanIdForm params);
 
+    /**
+     * 重排给定的资源
+     *
+     * @return result
+     * @author Jerry.X.He
+     * @date 5/20/2017 6:21 PM
+     * @since 1.0
+     */
+    Result reSort(ImageSearchForm params);
+
 }

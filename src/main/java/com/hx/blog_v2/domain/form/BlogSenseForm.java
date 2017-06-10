@@ -18,6 +18,7 @@ public class BlogSenseForm implements UserInfoExtractor {
     private String name;
     private String headImgUrl;
     private String email;
+    private String requestIp;
     /**
      * good or not good
      */
@@ -62,6 +63,14 @@ public class BlogSenseForm implements UserInfoExtractor {
         this.headImgUrl = headImgUrl;
     }
 
+    public String getRequestIp() {
+        return requestIp;
+    }
+
+    public void setRequestIp(String requestIp) {
+        this.requestIp = requestIp;
+    }
+
     public String getSense() {
         return sense;
     }
@@ -70,11 +79,19 @@ public class BlogSenseForm implements UserInfoExtractor {
         this.sense = sense;
     }
 
-    public Integer isClicked() {
+    public Integer getClicked() {
         return clicked;
     }
 
     public void setClicked(Integer clicked) {
         this.clicked = clicked;
     }
+
+    public void setUserInfo(UserInfoExtractor extractor) {
+        this.name =  extractor.getName();
+        this.headImgUrl = extractor.getHeadImgUrl();
+        this.email = extractor.getEmail();
+        this.requestIp = extractor.getRequestIp();
+    }
+
 }

@@ -56,13 +56,13 @@ public class UploadFileServiceImpl extends BaseServiceImpl<UploadFilePO> impleme
     @Override
     public Result add(UploadedImageSaveForm params) {
         MultipartFile file = params.getFile();
-        String digest = null;
-        try {
-            digest = generateDigest(file);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return ResultUtils.failed(Tools.errorMsg(e));
+        Result digestResult = generateDigest(file);
+        ;
+        if (!digestResult.isSuccess()) {
+            return digestResult;
         }
+
+        String digest = (String) digestResult.getData();
         UploadFilePO po = getUploadedImageFromExists(file, digest);
         if (po != null) {
             JSONObject data = new JSONObject()
@@ -76,19 +76,22 @@ public class UploadFileServiceImpl extends BaseServiceImpl<UploadFilePO> impleme
         try {
             FileUtils.createIfNotExists(filePath, true);
             file.transferTo(new File(filePath));
-
-            po = new UploadFilePO(file.getOriginalFilename(), file.getContentType(), relativePath, digest, String.valueOf(file.getSize()));
-            uploadFileDao.save(po, BlogConstants.ADD_BEAN_CONFIG);
-            cacheContext.putUploadedFile(digest, po);
-
-            JSONObject data = new JSONObject()
-                    .element("originFileName", po.getOriginalFileName()).element("length", po.getSize())
-                    .element("contentType", po.getContentType()).element("url", getImageVisitUrl(relativePath));
-            return ResultUtils.success(data);
         } catch (Exception e) {
             e.printStackTrace();
             return ResultUtils.failed("failed !");
         }
+
+        po = new UploadFilePO(file.getOriginalFilename(), file.getContentType(), relativePath, digest, String.valueOf(file.getSize()));
+        Result addResult = uploadFileDao.add(po);
+        if (!addResult.isSuccess()) {
+            return addResult;
+        }
+
+        cacheContext.putUploadedFile(digest, po);
+        JSONObject data = new JSONObject()
+                .element("originFileName", po.getOriginalFileName()).element("length", po.getSize())
+                .element("contentType", po.getContentType()).element("url", getImageVisitUrl(relativePath));
+        return ResultUtils.success(data);
     }
 
     @Override
@@ -99,13 +102,13 @@ public class UploadFileServiceImpl extends BaseServiceImpl<UploadFilePO> impleme
         } catch (IOException e) {
             // ignore
         }
-        if ( configManager == null || !configManager.valid() ) {
+        if (configManager == null || !configManager.valid()) {
             return new JSONObject().element(Constants.STATE, "配置文件读取错误 !");
         }
 
         String actionType = WebContext.getParameterFromRequest("action");
-        int actionCode = ActionMap.getType(actionType );
-        switch ( actionCode ) {
+        int actionCode = ActionMap.getType(actionType);
+        switch (actionCode) {
             case ActionMap.CONFIG: {
                 return configManager.getAllConfig();
             }
@@ -113,18 +116,18 @@ public class UploadFileServiceImpl extends BaseServiceImpl<UploadFilePO> impleme
             case ActionMap.UPLOAD_SCRAWL:
 //			case ActionMap.UPLOAD_VIDEO:
 //			case ActionMap.UPLOAD_FILE:
-            case ActionMap.UPLOAD_IMAGE_MULTI_DPI : {
+            case ActionMap.UPLOAD_IMAGE_MULTI_DPI: {
                 HttpServletRequest req = WebContext.getRequest();
-                if(! (req instanceof MultipartHttpServletRequest)) {
+                if (!(req instanceof MultipartHttpServletRequest)) {
                     return new JSONObject().element(Constants.STATE, "没有需要上传的数据 !");
                 }
 
                 MultipartHttpServletRequest multipartReq = (MultipartHttpServletRequest) req;
                 Map<String, MultipartFile> multipartFileMap = multipartReq.getFileMap();
-                if(multipartFileMap.isEmpty()) {
+                if (multipartFileMap.isEmpty()) {
                     return new JSONObject().element(Constants.STATE, "没有需要上传的数据 !");
                 }
-                if(multipartFileMap.size() > 1) {
+                if (multipartFileMap.size() > 1) {
                     Log.err("上传文件大于1个, 多余的文件 会被忽略 !");
                 }
 
@@ -180,9 +183,13 @@ public class UploadFileServiceImpl extends BaseServiceImpl<UploadFilePO> impleme
      * @date 5/29/2017 4:32 PM
      * @since 1.0
      */
-    private String generateDigest(MultipartFile file) throws IOException {
-        byte[] bytes = file.getBytes();
-        return Codec.byte2Hex(Codec.md5(bytes));
+    private Result generateDigest(MultipartFile file) {
+        try {
+            byte[] bytes = file.getBytes();
+            return ResultUtils.success(Codec.byte2Hex(Codec.md5(bytes)));
+        } catch (IOException e) {
+            return ResultUtils.failed(Tools.errorMsg(e));
+        }
     }
 
     /**

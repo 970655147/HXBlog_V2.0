@@ -76,6 +76,7 @@ function collectAttrValues(arr, attr, sep, gotEmpty) {
 function getParamsFromUrl(url) {
     var params = {}
     var idxOfQ = url.indexOf("?")
+    // ;JSESSIONID, #_anchorId, not deal
     if (idxOfQ >= 0) {
         var str = url.substr(idxOfQ + 1)
         var splits = str.split("&")
@@ -196,5 +197,18 @@ function copyOf(data) {
     return JSON.parse(JSON.stringify(data));
 }
 
+/**
+ * 如果给定的字符串 长于len, 则将长的部分 使用 placeholder 替换
+ * @param str
+ * @param len
+ * @param placeholder
+ */
+function trimIfExceed(str, len, placeholder) {
+    if(str.length <= len) {
+        return str
+    }
+
+    return str.substr(0, len - placeholder.length) + placeholder
+}
 
 

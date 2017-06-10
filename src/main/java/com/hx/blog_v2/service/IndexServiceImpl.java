@@ -1,9 +1,12 @@
 package com.hx.blog_v2.service;
 
+import com.hx.blog_v2.dao.interf.BlogExDao;
 import com.hx.blog_v2.domain.POVOTransferUtils;
 import com.hx.blog_v2.domain.extractor.ResourceTreeInfoExtractor;
 import com.hx.blog_v2.domain.dto.SessionUser;
+import com.hx.blog_v2.domain.form.BeanIdForm;
 import com.hx.blog_v2.domain.mapper.*;
+import com.hx.blog_v2.domain.po.BlogExPO;
 import com.hx.blog_v2.domain.po.BlogTagPO;
 import com.hx.blog_v2.domain.po.BlogTypePO;
 import com.hx.blog_v2.domain.po.ResourcePO;
@@ -45,6 +48,8 @@ public class IndexServiceImpl extends BaseServiceImpl<Object> implements IndexSe
     @Autowired
     private BlogServiceImpl blogService;
     @Autowired
+    private BlogExDao blogExDao;
+    @Autowired
     private CacheContext cacheContext;
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -53,10 +58,10 @@ public class IndexServiceImpl extends BaseServiceImpl<Object> implements IndexSe
 
     @Override
     public Result index() {
-        String hotBlogsSql = " select e.*, b.* from blog as b inner join blog_ex as e on b.id = e.blog_id " +
+        String hotBlogsSql = " select b.* from blog as b inner join blog_ex as e on b.id = e.blog_id " +
                 " where b.deleted = 0 and b.id >= 0 order by e.comment_cnt desc limit 0, 5 ";
         String latestCommentsSql = " select * from blog_comment order by created_at desc limit 0, 5 ";
-        String contextBlogSql = " select e.*, b.* from blog as b inner join blog_ex as e on b.id = e.blog_id " +
+        String contextBlogSql = " select b.* from blog as b inner join blog_ex as e on b.id = e.blog_id " +
                 " where b.id = " + BlogConstants.CONTEXT_BLOG_ID;
         String facetByMogroupnthSql = " select b.created_at_month as month, count(*) as cnt from blog as b " +
                 "where b.deleted = 0 and b.id >= 0 group by b.created_at_month ";
@@ -65,10 +70,10 @@ public class IndexServiceImpl extends BaseServiceImpl<Object> implements IndexSe
         List<BlogVO> hotBlogs = jdbcTemplate.query(hotBlogsSql, new BlogVOMapper());
         List<CommentVO> latestComments = jdbcTemplate.query(latestCommentsSql, new CommentVOMapper());
         BlogVO contextBlog = jdbcTemplate.queryForObject(contextBlogSql, new BlogVOMapper());
-        blogService.encapSenseAndBlogEx(contextBlog);
         List<FacetByMonthVO> facetByMonth = jdbcTemplate.query(facetByMogroupnthSql, new FacetByMonthMapper());
         Integer todayVisited = jdbcTemplate.queryForObject(todayVisitedSql, new OneIntMapper("cnt"));
         encapBlogVo(hotBlogs);
+        encapBlogVo(Collections.singletonList(contextBlog));
 
         JSONObject data = new JSONObject();
         data.put("title", "生活有度, 人生添寿");
@@ -90,10 +95,9 @@ public class IndexServiceImpl extends BaseServiceImpl<Object> implements IndexSe
 
     @Override
     public Result latest() {
-        String recommendBlogsSql = " select e.*, b.* from blog as b inner join blog_ex as e on b.id = e.blog_id " +
+        String recommendBlogsSql = " select b.* from blog as b inner join blog_ex as e on b.id = e.blog_id " +
                 " where b.deleted = 0 and b.id >= 0 order by e.comment_cnt desc limit 0, 1 ";
-        String latestBlogsSql = " select e.*, b.* from blog as b inner join blog_ex as e on b.id = e.blog_id " +
-                " where b.deleted = 0 and b.id >= 0 order by b.created_at desc limit 0, 5 ";
+        String latestBlogsSql = " select b.* from blog as b where b.deleted = 0 and b.id >= 0 order by b.created_at desc limit 0, 5 ";
 
         BlogVO recommendBlog = null;
         try {
@@ -185,6 +189,7 @@ public class IndexServiceImpl extends BaseServiceImpl<Object> implements IndexSe
      */
     private void encapBlogVo(List<BlogVO> voes) {
         for (BlogVO vo : voes) {
+            blogService.encapSenseAndBlogEx(vo);
             encapTypeTagInfo(vo);
             encapContent(vo);
         }

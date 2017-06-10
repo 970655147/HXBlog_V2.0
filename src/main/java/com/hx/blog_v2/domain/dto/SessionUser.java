@@ -1,5 +1,8 @@
 package com.hx.blog_v2.domain.dto;
 
+import com.hx.blog_v2.domain.form.interf.UserInfoExtractor;
+import com.hx.blog_v2.util.BizUtils;
+
 /**
  * 存放在session中的用户信息[登录的, 非登录的]
  *
@@ -7,7 +10,7 @@ package com.hx.blog_v2.domain.dto;
  * @version 1.0
  * @date 5/25/2017 8:10 PM
  */
-public class SessionUser {
+public class SessionUser implements UserInfoExtractor {
 
     /**
      * userId
@@ -16,11 +19,13 @@ public class SessionUser {
     private String name;
     private String email;
     private String headImgUrl;
+    private String requestIp;
     private String title;
     private String roleIds;
     private boolean isSystemUser;
 
     public SessionUser(String name, String email, String headImgUrl, String title, String roleIds, boolean isSystemUser) {
+        this();
         this.name = name;
         this.email = email;
         this.headImgUrl = headImgUrl;
@@ -30,6 +35,7 @@ public class SessionUser {
     }
 
     public SessionUser() {
+        this.requestIp = BizUtils.getIp();
     }
 
     public String getId() {
@@ -86,5 +92,14 @@ public class SessionUser {
 
     public void setSystemUser(boolean systemUser) {
         isSystemUser = systemUser;
+    }
+
+    @Override
+    public String getRequestIp() {
+        return requestIp;
+    }
+
+    public void setRequestIp(String requestIp) {
+        this.requestIp = requestIp;
     }
 }

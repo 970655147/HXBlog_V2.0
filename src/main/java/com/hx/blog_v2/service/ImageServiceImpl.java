@@ -6,6 +6,7 @@ import com.hx.blog_v2.domain.form.ImageSaveForm;
 import com.hx.blog_v2.domain.form.ImageSearchForm;
 import com.hx.blog_v2.domain.form.MoodSaveForm;
 import com.hx.blog_v2.domain.mapper.*;
+import com.hx.blog_v2.domain.po.BlogTypePO;
 import com.hx.blog_v2.domain.po.ImagePO;
 import com.hx.blog_v2.domain.po.MoodPO;
 import com.hx.blog_v2.domain.vo.AdminImageVO;
@@ -14,6 +15,7 @@ import com.hx.blog_v2.domain.vo.ImageVO;
 import com.hx.blog_v2.domain.vo.MoodVO;
 import com.hx.blog_v2.service.interf.BaseServiceImpl;
 import com.hx.blog_v2.service.interf.ImageService;
+import com.hx.blog_v2.util.BizUtils;
 import com.hx.blog_v2.util.BlogConstants;
 import com.hx.blog_v2.util.DateUtils;
 import com.hx.common.interf.common.Page;
@@ -22,12 +24,16 @@ import com.hx.common.result.SimplePage;
 import com.hx.common.util.ResultUtils;
 import com.hx.log.util.Tools;
 import com.hx.mongo.criteria.Criteria;
+import com.hx.mongo.criteria.SortByCriteria;
+import com.hx.mongo.criteria.interf.IQueryCriteria;
+import com.hx.mongo.criteria.interf.IUpdateCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * BlogServiceImpl
@@ -48,20 +54,18 @@ public class ImageServiceImpl extends BaseServiceImpl<ImagePO> implements ImageS
 
     @Override
     public Result add(ImageSaveForm params) {
-        ImagePO po = new ImagePO(params.getTitle(), params.getUrl(), params.getType(), params.getEnable());
+        ImagePO po = new ImagePO(params.getTitle(), params.getUrl(), params.getType(), params.getSort(), params.getEnable());
 
-        try {
-            imageDao.save(po, BlogConstants.ADD_BEAN_CONFIG);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResultUtils.failed(Tools.errorMsg(e));
+        Result result = imageDao.add(po);
+        if(! result.isSuccess()) {
+            return result;
         }
         return ResultUtils.success(po.getId());
     }
 
     @Override
     public Result imageList(ImageSearchForm params) {
-        String sql = " select * from images where deleted = 0 and enable = 1 and type = '" + params.getType() + "' order by created_at ";
+        String sql = " select * from images where deleted = 0 and enable = 1 and type = '" + params.getType() + "' order by sort ";
 
         List<ImageVO> list = jdbcTemplate.query(sql, new ImageVOMapper());
         return ResultUtils.success(list);
@@ -69,7 +73,7 @@ public class ImageServiceImpl extends BaseServiceImpl<ImagePO> implements ImageS
 
     @Override
     public Result adminList(ImageSearchForm params, Page<AdminImageVO> page) {
-        String selectSql = " select * from images where deleted = 0 and type = '" + params.getType() + "' order by created_at desc limit ?, ? ";
+        String selectSql = " select * from images where deleted = 0 and type = '" + params.getType() + "' order by sort limit ?, ? ";
         String countSql = " select count(*) as totalRecord from images where deleted = 0 and type = ' " + params.getType() + " ' ";
         Object[] sqlParams = new Object[]{page.recordOffset(), page.getPageSize()};
 
@@ -82,19 +86,13 @@ public class ImageServiceImpl extends BaseServiceImpl<ImagePO> implements ImageS
 
     @Override
     public Result update(ImageSaveForm params) {
-        ImagePO po = new ImagePO(params.getTitle(), params.getUrl(), params.getType(), params.getEnable());
+        ImagePO po = new ImagePO(params.getTitle(), params.getUrl(), params.getType(), params.getSort(), params.getEnable());
         po.setId(params.getId());
         po.setUpdatedAt(DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS));
 
-        try {
-            long modified = imageDao.updateById(po, BlogConstants.UPDATE_BEAN_CONFIG)
-                    .getModifiedCount();
-            if (modified == 0) {
-                return ResultUtils.failed("没有找到对应的图片 !");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResultUtils.failed(Tools.errorMsg(e));
+        Result result = imageDao.update(po);
+        if(! result.isSuccess()) {
+            return result;
         }
         return ResultUtils.success(po.getId());
     }
@@ -102,18 +100,37 @@ public class ImageServiceImpl extends BaseServiceImpl<ImagePO> implements ImageS
     @Override
     public Result remove(BeanIdForm params) {
         String updatedAt = DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
-        try {
-            long deleted = imageDao.updateOne(Criteria.eq("id", params.getId()),
-                    Criteria.set("deleted", "1").add("updated_at", updatedAt)
-            ).getModifiedCount();
-            if (deleted == 0) {
-                return ResultUtils.failed("图片[" + params.getId() + "]不存在 !");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResultUtils.failed(Tools.errorMsg(e));
+        IQueryCriteria query = Criteria.eq("id", params.getId());
+        IUpdateCriteria update = Criteria.set("deleted", "1").add("updated_at", updatedAt);
+
+        Result result = imageDao.update(query, update);
+        if(! result.isSuccess()) {
+            return result;
         }
         return ResultUtils.success(params.getId());
+    }
+
+    @Override
+    public Result reSort(ImageSearchForm params) {
+        IQueryCriteria query = Criteria.eq("type", params.getType());
+        SortByCriteria sortBy = Criteria.sortBy("sort", SortByCriteria.ASC);
+        Result getAllResult = imageDao.list(query, sortBy, Criteria.limitNothing());
+        if(! getAllResult.isSuccess()) {
+            return getAllResult;
+        }
+
+        List<ImagePO> sortedImages = (List<ImagePO>) getAllResult.getData();
+        int sort = BlogConstants.RE_SORT_START;
+        for (ImagePO image : sortedImages) {
+            boolean isSortChanged = sort != image.getSort();
+            if (isSortChanged) {
+                image.setSort(sort);
+                imageDao.update(image);
+            }
+            sort += BlogConstants.RE_SORT_OFFSET;
+        }
+
+        return ResultUtils.success("success");
     }
 
     // -------------------- 辅助方法 --------------------------

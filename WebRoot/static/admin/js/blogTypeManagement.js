@@ -30,7 +30,8 @@ layui.define(['layer', 'form'], function (exports) {
                             html += '<tr>';
                             html += '<td>' + item.id + '</td>';
                             html += '<td>' + item.name + '</td>';
-                            html += '<td><button class="layui-btn layui-btn-small layui-btn-normal" onclick="layui.funcs.editData(' + item.id + ',\'' + item.name + '\')"><i class="layui-icon">&#xe642;</i></button></td>';
+                            html += '<td>' + item.sort + '</td>';
+                            html += '<td><button class="layui-btn layui-btn-small layui-btn-normal" onclick="layui.funcs.editData(' + item.id + ',\'' + item.name + '\', ' + item.sort + ')"><i class="layui-icon">&#xe642;</i></button></td>';
                             html += '<td><button class="layui-btn layui-btn-small layui-btn-danger" onclick="layui.funcs.deleteData(' + item.id + ')"><i class="layui-icon">&#xe640;</i></button></td>';
                             html += '</tr>';
                         }
@@ -94,8 +95,10 @@ layui.define(['layer', 'form'], function (exports) {
         addData: function () {
             var html = '';
             html += '<form id="addTypeForm" class="layui-form layui-form-pane" >';
-            html += '<label class="layui-form-label" style="border: none" name="content" >类别名称:</label>';
-            html += '<input id="add_name"  style="width:87%;margin: auto;color: #000!important;" name="name" lay-verify="required" class="layui-input" >';
+            html += '<label class="layui-form-label" style="border: none" name="content" >名称:</label>';
+            html += '<input style="width:87%;margin: auto;color: #000!important;" name="name" lay-verify="required" class="layui-input" >';
+            html += '<label class="layui-form-label" style="border: none" name="content" >排序:</label>';
+            html += '<input style="width:87%;margin: auto;color: #000!important;" name="sort" lay-verify="required" class="layui-input" >';
             html += '<div class="layui-form-item">';
             html += '<div class="layui-input-inline" style="margin:10px auto 0 auto;display: block;float: none;">';
             html += '<button class="layui-btn" id="submit"  lay-submit="" lay-filter="addTypeSubmit">添加</button>';
@@ -112,12 +115,14 @@ layui.define(['layer', 'form'], function (exports) {
                 content: html
             });
         },
-        editData: function (id, typeName) {
+        editData: function (id, typeName, sort) {
             var html = '';
             html += '<form id="updateTypeForm" class="layui-form layui-form-pane" >';
-            html += '<label class="layui-form-label" style="border: none" >类别名称:</label>';
-            html += '<textarea  id="edit_name" style="width:87%;margin: auto;color: #000!important;" name="name" class="layui-textarea" lay-verify="required" >' + typeName + '</textarea>';
-            html += '<input id="edit_id" type="hidden" name="id" value="' + id + '"/>';
+            html += '<input type="hidden" name="id" value="' + id + '"/>';
+            html += '<label class="layui-form-label" style="border: none" >名称:</label>';
+            html += '<textarea style="width:87%;margin: auto;color: #000!important;" name="name" class="layui-textarea" lay-verify="required" >' + typeName + '</textarea>';
+            html += '<label class="layui-form-label" style="border: none" name="content" >排序:</label>';
+            html += '<input style="width:87%;margin: auto;color: #000!important;" name="sort" value="' + sort + '" lay-verify="required" class="layui-input" >';
             html += '<div class="layui-form-item">';
             html += '<div class="layui-input-inline" style="margin:10px auto 0 auto;display: block;float: none;">';
             html += '<button class="layui-btn" id="editSubmit" lay-submit="" lay-filter="updateTypeSubmit">立即提交</button>';
@@ -159,6 +164,20 @@ layui.define(['layer', 'form'], function (exports) {
                 });
             }, function () {
 
+            });
+        },
+        reSort : function() {
+            $.ajax({
+                url: "/admin/type/reSort",
+                type: "POST",
+                data: { },
+                success: function (resp) {
+                    if (resp.success) {
+                        layer.alert('刷新排序成功 !');
+                    } else {
+                        layer.alert('刷新排序失败[' + resp.data + '], 请联系管理人员!');
+                    }
+                }
             });
         }
 

@@ -1,16 +1,18 @@
 package com.hx.blog_v2.service;
 
 import com.hx.blog_v2.dao.interf.BlogCommentDao;
+import com.hx.blog_v2.dao.interf.BlogDao;
+import com.hx.blog_v2.domain.POVOTransferUtils;
 import com.hx.blog_v2.domain.dto.SessionUser;
 import com.hx.blog_v2.domain.form.AdminCommentSearchForm;
 import com.hx.blog_v2.domain.form.BeanIdForm;
 import com.hx.blog_v2.domain.form.CommentSaveForm;
 import com.hx.blog_v2.domain.form.FloorCommentListSearchForm;
 import com.hx.blog_v2.domain.mapper.AdminCommentVOMapper;
-import com.hx.blog_v2.domain.mapper.BlogVOMapper;
 import com.hx.blog_v2.domain.mapper.CommentVOMapper;
 import com.hx.blog_v2.domain.mapper.OneIntMapper;
 import com.hx.blog_v2.domain.po.BlogCommentPO;
+import com.hx.blog_v2.domain.po.BlogPO;
 import com.hx.blog_v2.domain.vo.AdminCommentVO;
 import com.hx.blog_v2.domain.vo.BlogVO;
 import com.hx.blog_v2.domain.vo.CommentVO;
@@ -22,6 +24,8 @@ import com.hx.common.interf.common.Result;
 import com.hx.common.util.ResultUtils;
 import com.hx.log.util.Tools;
 import com.hx.mongo.criteria.Criteria;
+import com.hx.mongo.criteria.interf.IQueryCriteria;
+import com.hx.mongo.criteria.interf.IUpdateCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -39,6 +43,8 @@ import java.util.*;
 public class BlogCommentServiceImpl extends BaseServiceImpl<BlogCommentPO> implements BlogCommentService {
 
     @Autowired
+    private BlogDao blogDao;
+    @Autowired
     private BlogCommentDao commentDao;
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -47,21 +53,17 @@ public class BlogCommentServiceImpl extends BaseServiceImpl<BlogCommentPO> imple
 
     @Override
     public Result add(CommentSaveForm params) {
-        BlogVO blog = null;
-        try {
-            String selectAuthorSql = " select * from blog where deleted = 0 and id = ? ";
-            blog = jdbcTemplate.queryForObject(selectAuthorSql, new Object[]{params.getBlogId()}, new BlogVOMapper());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        if (blog == null) {
-            return ResultUtils.failed("没有对应的博客 !");
+        Result getBlogResult = blogDao.get(new BeanIdForm(params.getBlogId()));
+        if (!getBlogResult.isSuccess()) {
+            return getBlogResult;
         }
 
+        BlogVO blog = POVOTransferUtils.blogPO2BlogVO((BlogPO) getBlogResult.getData());
         SessionUser user = (SessionUser) WebContext.getAttributeFromSession(BlogConstants.SESSION_USER);
         BlogCommentPO po = new BlogCommentPO(user.getName(), user.getEmail(), user.getHeadImgUrl(), params.getToUser(),
                 user.getTitle(), params.getComment());
         po.setBlogId(params.getBlogId());
+
         int endOfReply = idxOfEndRe(params.getComment());
         if ((!Tools.isEmpty(params.getFloorId())) && (endOfReply >= 0)) {
             BlogCommentPO replyTo = get0(params.getBlogId(), params.getFloorId(), params.getCommentId());
@@ -78,11 +80,9 @@ public class BlogCommentServiceImpl extends BaseServiceImpl<BlogCommentPO> imple
         }
         po.setCommentId(cacheContext.nextCommentId(po.getBlogId(), po.getFloorId()));
 
-        try {
-            commentDao.save(po, BlogConstants.ADD_BEAN_CONFIG);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResultUtils.failed(Tools.errorMsg(e));
+        Result saveResult = commentDao.add(po);
+        if (!saveResult.isSuccess()) {
+            return saveResult;
         }
         return ResultUtils.success(po.getId());
     }
@@ -93,12 +93,12 @@ public class BlogCommentServiceImpl extends BaseServiceImpl<BlogCommentPO> imple
         String selectFloorSql = " select distinct(floor_id) as floor_id from blog_comment where blog_id = ? and deleted = 0 order by floor_id asc limit ?, ? ";
         String countSql = " select count(distinct(floor_id)) as totalRecord from blog_comment where blog_id = ? and deleted = 0 ";
 
-        Object[] sqlParams = new Object[]{params.getId() };
+        Object[] sqlParams = new Object[]{params.getId()};
         // 1, 2 可以折叠, 可惜 我的 mysql 似乎 是不支持 limit 作为子查询
         List<Integer> floorIds = jdbcTemplate.query(selectFloorSql, new Object[]{params.getId(), page.recordOffset(), page.getPageSize()}, new OneIntMapper("floor_id"));
         Integer totalRecord = jdbcTemplate.queryForObject(countSql, sqlParams, new OneIntMapper("totalRecord"));
         List<CommentVO> comments = Collections.emptyList();
-        if (! Tools.isEmpty(floorIds)) {
+        if (!Tools.isEmpty(floorIds)) {
             comments = jdbcTemplate.query(String.format(selectSql, SqlUtils.wrapInSnippet(floorIds)), sqlParams, new CommentVOMapper());
         }
         List<List<CommentVO>> result = generateCommentTree(comments);
@@ -158,34 +158,26 @@ public class BlogCommentServiceImpl extends BaseServiceImpl<BlogCommentPO> imple
     @Override
     public Result update(CommentSaveForm params) {
         String updatedAt = DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
-        try {
-            long modified = commentDao.updateOne(Criteria.eq("id", params.getId()),
-                    Criteria.set("to_user", params.getToUser()).add("content", params.getComment())
-                            .add("updated_at", updatedAt)
-            ).getModifiedCount();
-            if (modified == 0) {
-                return ResultUtils.failed("评论[" + params.getId() + "]不存在 !");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResultUtils.failed(Tools.errorMsg(e));
+        IQueryCriteria query = Criteria.eq("id", params.getId());
+        IUpdateCriteria update = Criteria.set("to_user", params.getToUser()).add("comment", params.getComment())
+                .add("updated_at", updatedAt);
+
+        Result result = commentDao.update(query, update);
+        if (!result.isSuccess()) {
+            return result;
         }
-        return ResultUtils.success(1);
+        return ResultUtils.success(params.getBlogId());
     }
 
     @Override
     public Result remove(BeanIdForm params) {
         String updatedAt = DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
-        try {
-            long deleted = commentDao.updateOne(Criteria.eq("id", params.getId()),
-                    Criteria.set("deleted", "1").add("updated_at", updatedAt)
-            ).getModifiedCount();
-            if (deleted == 0) {
-                return ResultUtils.failed("评论[" + params.getId() + "]不存在 !");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResultUtils.failed(Tools.errorMsg(e));
+        IQueryCriteria query = Criteria.eq("id", params.getId());
+        IUpdateCriteria update = Criteria.set("deleted", "1").add("updated_at", updatedAt);
+
+        Result result = commentDao.update(query, update);
+        if (!result.isSuccess()) {
+            return result;
         }
         return ResultUtils.success(params.getId());
     }

@@ -54,8 +54,9 @@ public final class POVOTransferUtils {
     // -------------------- BlogTypePO <-> BlogTypeVO --------------------------
     public static BlogTypeVO blogTypePO2BlogTypeVO(BlogTypePO src) {
         BlogTypeVO result = new BlogTypeVO();
-        result.setName(src.getName());
         result.setId(src.getId());
+        result.setName(src.getName());
+        result.setSort(src.getSort());
         result.setUpdatedAt(src.getUpdatedAt());
         result.setCreatedAt(src.getCreatedAt());
         return result;
@@ -71,8 +72,9 @@ public final class POVOTransferUtils {
 
     public static BlogTypePO blogTypeVO2BlogTypePO(BlogTypeVO src) {
         BlogTypePO result = new BlogTypePO();
-        result.setName(src.getName());
         result.setId(src.getId());
+        result.setName(src.getName());
+        result.setSort(src.getSort());
         result.setUpdatedAt(src.getUpdatedAt());
         result.setCreatedAt(src.getCreatedAt());
         return result;
@@ -89,8 +91,9 @@ public final class POVOTransferUtils {
     // -------------------- BlogTagPO <-> BlogTagVO --------------------------
     public static BlogTagVO blogTagPO2BlogTagVO(BlogTagPO src) {
         BlogTagVO result = new BlogTagVO();
-        result.setName(src.getName());
         result.setId(src.getId());
+        result.setName(src.getName());
+        result.setSort(src.getSort());
         result.setUpdatedAt(src.getUpdatedAt());
         result.setCreatedAt(src.getCreatedAt());
         return result;
@@ -106,8 +109,9 @@ public final class POVOTransferUtils {
 
     public static BlogTagPO blogTagVO2BlogTagPO(BlogTagVO src) {
         BlogTagPO result = new BlogTagPO();
-        result.setName(src.getName());
         result.setId(src.getId());
+        result.setName(src.getName());
+        result.setSort(src.getSort());
         result.setUpdatedAt(src.getUpdatedAt());
         result.setCreatedAt(src.getCreatedAt());
         return result;
@@ -496,8 +500,8 @@ public final class POVOTransferUtils {
     public static ImageVO imagePO2ImageVO(ImagePO src) {
         ImageVO result = new ImageVO();
         result.setId(src.getId());
-        result.setUrl(src.getUrl());
         result.setTitle(src.getTitle());
+        result.setUrl(src.getUrl());
         result.setCreatedAt(src.getCreatedAt());
         return result;
     }
@@ -533,6 +537,7 @@ public final class POVOTransferUtils {
         result.setId(src.getId());
         result.setUpdatedAt(src.getUpdatedAt());
         result.setTitle(src.getTitle());
+        result.setSort(src.getSort());
         result.setCreatedAt(src.getCreatedAt());
         result.setEnable(src.getEnable());
         result.setUrl(src.getUrl());
@@ -552,6 +557,7 @@ public final class POVOTransferUtils {
         result.setId(src.getId());
         result.setUpdatedAt(src.getUpdatedAt());
         result.setTitle(src.getTitle());
+        result.setSort(src.getSort());
         result.setCreatedAt(src.getCreatedAt());
         result.setEnable(src.getEnable());
         result.setUrl(src.getUrl());
@@ -614,8 +620,9 @@ public final class POVOTransferUtils {
     // -------------------- RolePO <-> AdminRoleVO --------------------------
     public static AdminRoleVO rolePO2AdminRoleVO(RolePO src) {
         AdminRoleVO result = new AdminRoleVO();
-        result.setName(src.getName());
         result.setId(src.getId());
+        result.setName(src.getName());
+        result.setSort(src.getSort());
         result.setCreatedAt(src.getCreatedAt());
         result.setEnable(src.getEnable());
         result.setUpdatedAt(src.getUpdatedAt());
@@ -633,8 +640,9 @@ public final class POVOTransferUtils {
 
     public static RolePO adminRoleVO2RolePO(AdminRoleVO src) {
         RolePO result = new RolePO();
-        result.setName(src.getName());
         result.setId(src.getId());
+        result.setName(src.getName());
+        result.setSort(src.getSort());
         result.setCreatedAt(src.getCreatedAt());
         result.setEnable(src.getEnable());
         result.setUpdatedAt(src.getUpdatedAt());

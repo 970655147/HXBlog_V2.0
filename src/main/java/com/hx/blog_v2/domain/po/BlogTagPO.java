@@ -21,12 +21,14 @@ import java.util.Map;
  * @version 1.0
  * @date 5/20/2017 10:03 AM
  */
-public class BlogTagPO implements JSONTransferable<BlogTagPO> {
+public class BlogTagPO implements JSONTransferable<BlogTagPO>, Comparable<BlogTagPO> {
 
     @JSONField({"id", "id"})
     private String id;
     @JSONField({"name", "name"})
     private String name;
+    @JSONField({"sort", "sort"})
+    private int sort;
     @JSONField({"createdAt", "created_at"})
     private String createdAt;
     @JSONField({"updatedAt", "updated_at"})
@@ -34,9 +36,10 @@ public class BlogTagPO implements JSONTransferable<BlogTagPO> {
     @JSONField({"deleted", "deleted"})
     private int deleted;
 
-    public BlogTagPO(String name) {
+    public BlogTagPO(String name, int sort) {
         this();
         this.name = name;
+        this.sort = sort;
     }
 
     public BlogTagPO() {
@@ -59,6 +62,14 @@ public class BlogTagPO implements JSONTransferable<BlogTagPO> {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public int getSort() {
+        return sort;
+    }
+
+    public void setSort(int sort) {
+        this.sort = sort;
     }
 
     public String getCreatedAt() {
@@ -128,5 +139,13 @@ public class BlogTagPO implements JSONTransferable<BlogTagPO> {
         this.id = id;
     }
 
+    @Override
+    public int compareTo(BlogTagPO o) {
+        int deltaSort = this.sort - o.sort;
+        if (deltaSort != 0) {
+            return deltaSort;
+        }
 
+        return this.name.compareTo(o.name);
+    }
 }

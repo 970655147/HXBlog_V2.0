@@ -15,6 +15,7 @@ import com.hx.blog_v2.domain.vo.AdminRoleVO;
 import com.hx.blog_v2.domain.vo.UserRoleVO;
 import com.hx.blog_v2.service.interf.BaseServiceImpl;
 import com.hx.blog_v2.service.interf.RoleService;
+import com.hx.blog_v2.util.BizUtils;
 import com.hx.blog_v2.util.BlogConstants;
 import com.hx.blog_v2.util.CacheContext;
 import com.hx.blog_v2.util.DateUtils;
@@ -56,19 +57,17 @@ public class RoleServiceImpl extends BaseServiceImpl<RolePO> implements RoleServ
 
     @Override
     public Result add(RoleSaveForm params) {
-        Map<String, RolePO> roles = cacheContext.allRoles();
-        if (contains(roles, params.getName())) {
+        if (contains(cacheContext.allRoles(), params.getName())) {
             return ResultUtils.failed("角色[" + params.getName() + "]已经存在 !");
         }
 
-        RolePO po = new RolePO(params.getName(), params.getDesc(), params.getEnable());
-        try {
-            roleDao.save(po, BlogConstants.ADD_BEAN_CONFIG);
-            roles.put(po.getId(), po);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResultUtils.failed(Tools.errorMsg(e));
+        RolePO po = new RolePO(params.getName(), params.getDesc(), params.getSort(), params.getEnable());
+        Result result = roleDao.add(po);
+        if (!result.isSuccess()) {
+            return result;
         }
+
+        cacheContext.putRole(po);
         return ResultUtils.success(po.getId());
     }
 
@@ -79,9 +78,7 @@ public class RoleServiceImpl extends BaseServiceImpl<RolePO> implements RoleServ
         List<AdminRoleVO> list = new ArrayList<>(rolesById.size());
         for (Map.Entry<String, RolePO> entry : rolesById.entrySet()) {
             RolePO role = entry.getValue();
-            if (role.getEnable() != 0) {
-                list.add(POVOTransferUtils.rolePO2AdminRoleVO(role));
-            }
+            list.add(POVOTransferUtils.rolePO2AdminRoleVO(role));
         }
         return ResultUtils.success(list);
     }
@@ -98,7 +95,7 @@ public class RoleServiceImpl extends BaseServiceImpl<RolePO> implements RoleServ
         Map<String, RolePO> roleById = cacheContext.allRoles();
         for (RltUserRoleRolePO userRole : rltUserRoles) {
             int idx = idxOfUser(userRoles, userRole.getUserId());
-            if(idx >= 0) {
+            if (idx >= 0) {
                 UserRoleVO userRoleVO = userRoles.get(idx);
                 userRoleVO.getRoleIds().add(userRole.getRoleId());
                 userRoleVO.getRoleNames().add(roleById.get(userRole.getRoleId()).getName());
@@ -120,18 +117,15 @@ public class RoleServiceImpl extends BaseServiceImpl<RolePO> implements RoleServ
 
         po.setName(params.getName());
         po.setDesc(params.getDesc());
+        po.setSort(params.getSort());
         po.setEnable(params.getEnable());
         po.setUpdatedAt(DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS));
-        try {
-            long modified = roleDao.updateById(po, BlogConstants.UPDATE_BEAN_CONFIG)
-                    .getModifiedCount();
-            if (modified == 0) {
-                return ResultUtils.failed("没有找到对应的角色 !");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResultUtils.failed(Tools.errorMsg(e));
+        Result result = roleDao.update(po);
+        if (!result.isSuccess()) {
+            return result;
         }
+
+        cacheContext.putRole(po);
         return ResultUtils.success(po.getId());
     }
 
@@ -147,14 +141,15 @@ public class RoleServiceImpl extends BaseServiceImpl<RolePO> implements RoleServ
             }
         }
 
-        try {
-            rltUserRoleDao.deleteMany(Criteria.eq("user_id", params.getUserId()));
-            if(! CollectionUtils.isEmpty(userRoles)) {
-                rltUserRoleDao.insertMany(userRoles, BlogConstants.ADD_BEAN_CONFIG);
+        Result removeOldRltRresult = rltUserRoleDao.remove(Criteria.eq("user_id", params.getUserId()), true);
+        if(! removeOldRltRresult.isSuccess()) {
+            return removeOldRltRresult;
+        }
+        if (!CollectionUtils.isEmpty(userRoles)) {
+            Result addNewRoleResult = rltUserRoleDao.add(userRoles);
+            if(! addNewRoleResult.isSuccess()) {
+                return addNewRoleResult;
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResultUtils.failed(Tools.errorMsg(e));
         }
         return ResultUtils.success(params.getUserId());
     }
@@ -166,25 +161,37 @@ public class RoleServiceImpl extends BaseServiceImpl<RolePO> implements RoleServ
             return ResultUtils.failed("该角色不存在 !");
         }
         String countSql = " select count(*) as totalRecord from `user` where deleted = 0 and id in ( select user_id from rlt_user_role where role_id = ? ) ";
-        Integer totalRecord = jdbcTemplate.queryForObject(countSql, new Object[]{params.getId() }, new OneIntMapper("totalRecord"));
-        if(totalRecord > 0) {
+        Integer totalRecord = jdbcTemplate.queryForObject(countSql, new Object[]{params.getId()}, new OneIntMapper("totalRecord"));
+        if (totalRecord > 0) {
             return ResultUtils.failed("该角色下面还有 " + totalRecord + "个用户, 请先迁移这部分用户 !");
         }
 
         cacheContext.allRoles().remove(params.getId());
-        String updatedAt = DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
-        try {
-            long deleted = roleDao.updateOne(Criteria.eq("id", params.getId()),
-                    Criteria.set("deleted", "1").add("updated_at", updatedAt)
-            ).getModifiedCount();
-            if (deleted == 0) {
-                return ResultUtils.failed("角色[" + params.getId() + "]不存在 !");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResultUtils.failed(Tools.errorMsg(e));
+        po.setUpdatedAt(DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS));
+        po.setDeleted(1);
+        Result result = roleDao.update(po);
+        if (!result.isSuccess()) {
+            return result;
         }
+
         return ResultUtils.success(params.getId());
+    }
+
+    @Override
+    public Result reSort() {
+        Map<String, RolePO> roles = cacheContext.allRoles();
+        List<RolePO> sortedRoles = BizUtils.resort(roles);
+        int sort = BlogConstants.RE_SORT_START;
+        for (RolePO role : sortedRoles) {
+            boolean isSortChanged = sort != role.getSort();
+            if (isSortChanged) {
+                role.setSort(sort);
+                roleDao.update(role);
+            }
+            sort += BlogConstants.RE_SORT_OFFSET;
+        }
+
+        return ResultUtils.success("success");
     }
 
     // -------------------- 辅助方法 --------------------------

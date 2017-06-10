@@ -1,6 +1,8 @@
 package com.hx.blog_v2.dao.interf;
 
+import com.hx.blog_v2.domain.form.BeanIdForm;
 import com.hx.blog_v2.domain.po.RolePO;
+import com.hx.common.interf.common.Result;
 import com.hx.mongo.dao.interf.MysqlIBaseDao;
 
 /**
@@ -10,7 +12,7 @@ import com.hx.mongo.dao.interf.MysqlIBaseDao;
  * @version 1.0
  * @date 5/20/2017 10:37 AM
  */
-public interface RoleDao extends MysqlIBaseDao<RolePO> {
+public interface RoleDao extends BaseDao<RolePO> {
 
 
 }

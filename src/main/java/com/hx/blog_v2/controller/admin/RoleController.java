@@ -66,4 +66,12 @@ public class RoleController {
         return roleService.remove(params);
     }
 
+
+    @RequestMapping(value = "/reSort", method = RequestMethod.POST)
+    public Result reSort() {
+
+        return roleService.reSort();
+    }
+
+
 }

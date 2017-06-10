@@ -1,5 +1,6 @@
 package com.hx.blog_v2.domain.po;
 
+import com.hx.blog_v2.util.BizUtils;
 import com.hx.blog_v2.util.BlogConstants;
 import com.hx.blog_v2.util.DateUtils;
 import com.hx.json.JSONObject;
@@ -31,6 +32,8 @@ public class BlogSensePO implements JSONTransferable<BlogSensePO> {
     private String name;
     @JSONField({"email", "email"})
     private String email;
+    @JSONField({"requestIp", "request_ip"})
+    private String requestIp;
     @JSONField({"sense", "sense"})
     private String sense;
     @JSONField({"clicked", "clicked"})
@@ -38,17 +41,18 @@ public class BlogSensePO implements JSONTransferable<BlogSensePO> {
     @JSONField({"createdAt", "created_at"})
     private String createdAt;
 
-    public BlogSensePO(String blogId, String name, String email, String sense) {
+    public BlogSensePO(String blogId, String name, String email, String requestIp, String sense) {
         this();
         this.blogId = blogId;
         this.name = name;
         this.email = email;
+        this.requestIp = requestIp;
         this.sense = sense;
     }
 
     public BlogSensePO() {
         this.createdAt = DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
-        clicked = 0;
+        this.clicked = 0;
     }
 
     public String getId() {
@@ -81,6 +85,14 @@ public class BlogSensePO implements JSONTransferable<BlogSensePO> {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getRequestIp() {
+        return requestIp;
+    }
+
+    public void setRequestIp(String requestIp) {
+        this.requestIp = requestIp;
     }
 
     public String getSense() {

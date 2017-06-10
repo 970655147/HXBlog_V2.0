@@ -53,5 +53,15 @@ public interface BlogTagService extends BaseService<BlogTagPO> {
      */
     Result remove(BlogTagSaveForm params);
 
+    /**
+     * 对当前所有的tag 进行重排
+     *
+     * @return result
+     * @author Jerry.X.He
+     * @date 5/20/2017 6:21 PM
+     * @since 1.0
+     */
+    Result reSort();
+
 
 }

@@ -40,6 +40,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
                             html += '<td>' + item.id + '</td>';
                             html += '<td>' + item.name + '</td>';
                             html += '<td>' + item.desc + '</td>';
+                            html += '<td>' + item.sort + '</td>';
                             html += '<td>' + item.createdAt + '</td>';
                             if (item.enable) {
                                 html += '<td><i class="layui-icon" style="font-size: 30px; color: #009688;vertical-align: middle;">&#xe609;</i> </td>';
@@ -108,10 +109,12 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
         addData: function () {
             var html = '';
             html += '<form id="addRoleForm" class="layui-form layui-form-pane" action="/admin/role/add" method="post">';
-            html += '<label class="layui-form-label" style="border: none" >角色名称:</label>';
+            html += '<label class="layui-form-label" style="border: none" >名称:</label>';
             html += '<input  style="width:87%;margin: auto;color: #000!important;" lay-verify="required" name="name"  class="layui-input" >';
-            html += '<label class="layui-form-label" style="border: none" >角色描述:</label>';
+            html += '<label class="layui-form-label" style="border: none" >描述:</label>';
             html += '<textarea  style="width:87%;margin: auto;color: #000!important;" lay-verify="required" name="desc" class="layui-textarea " ></textarea>';
+            html += '<label class="layui-form-label" style="border: none" >排序:</label>';
+            html += '<input  style="width:87%;margin: auto;color: #000!important;" lay-verify="required" name="sort"  class="layui-input" >';
             html += '<label class="layui-form-label" style="border: none" >是否显示:</label>';
             html += '<input type="radio" name="enable" value="1" title="是" checked />';
             html += '<input type="radio" name="enable" value="0" title="否" />';
@@ -135,11 +138,13 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
         editData: function (item) {
             var html = '';
             html += '<form id="updateRoleForm" class="layui-form layui-form-pane" action="/admin/role/update" method="post" >';
-            html += '<label class="layui-form-label" style="border: none" >角色名称:</label>';
+            html += '<label class="layui-form-label" style="border: none" >名称:</label>';
             html += '<input type="hidden" id="id" name="id" value="' + item.id + '">';
             html += '<input  style="width:87%;margin: auto;color: #000!important;" name="name" lay-verify="required"  class="layui-input" value="' + item.name + '" >';
-            html += '<label class="layui-form-label" style="border: none" >角色描述:</label>';
+            html += '<label class="layui-form-label" style="border: none" >描述:</label>';
             html += '<textarea  style="width:87%;margin: auto;color: #000!important;" name="desc" class="layui-textarea " lay-verify="required" >' + item.desc + '</textarea>';
+            html += '<label class="layui-form-label" style="border: none" >排序:</label>';
+            html += '<input  style="width:87%;margin: auto;color: #000!important;" lay-verify="required" name="sort" value="' + item.sort + '" class="layui-input" >';
             html += '<label class="layui-form-label" style="border: none" >是否显示:</label>';
             if (item.enable) {
                 html += '<input type="radio" name="enable" value="1" title="是" checked />';
@@ -188,6 +193,20 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
                 });
             }, function () {
 
+            });
+        },
+        reSort : function() {
+            $.ajax({
+                url: "/admin/role/reSort",
+                type: "POST",
+                data: { },
+                success: function (resp) {
+                    if (resp.success) {
+                        layer.alert('刷新排序成功 !');
+                    } else {
+                        layer.alert('刷新排序失败[' + resp.data + '], 请联系管理人员!');
+                    }
+                }
             });
         }
     };

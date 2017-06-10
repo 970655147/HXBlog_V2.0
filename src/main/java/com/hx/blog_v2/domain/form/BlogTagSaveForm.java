@@ -11,6 +11,7 @@ public class BlogTagSaveForm {
 
     private String id;
     private String name;
+    private int sort;
 
     public BlogTagSaveForm() {
     }
@@ -29,5 +30,13 @@ public class BlogTagSaveForm {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public int getSort() {
+        return sort;
+    }
+
+    public void setSort(int sort) {
+        this.sort = sort;
     }
 }

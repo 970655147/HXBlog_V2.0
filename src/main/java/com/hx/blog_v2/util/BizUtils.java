@@ -3,9 +3,12 @@ package com.hx.blog_v2.util;
 import com.hx.blog_v2.domain.dto.SessionUser;
 import com.hx.blog_v2.domain.form.interf.UserInfoExtractor;
 import com.hx.log.util.Tools;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 处理业务的相关通用的方法
@@ -33,7 +36,8 @@ public final class BizUtils {
      */
     public static SessionUser updateUserIfBe(SessionUser user, UserInfoExtractor params) {
         if (user == null) {
-            user = new SessionUser(params.getName(), params.getEmail(), params.getHeadImgUrl(), "guest", "guest", false);
+            user = new SessionUser(params.getName(), params.getEmail(), params.getHeadImgUrl(),
+                    "guest", "guest", false);
         } else {
             if (!user.isSystemUser()) {
                 user.setName(params.getName());
@@ -85,6 +89,24 @@ public final class BizUtils {
         }
 
         return ip;
+    }
+
+    /**
+     * 获取所有的 value, 并排序
+     *
+     * @param map map
+     * @return java.util.List<T>
+     * @author Jerry.X.He
+     * @date 6/10/2017 4:33 PM
+     * @since 1.0
+     */
+    public static <T extends Comparable<T>> List<T> resort(Map<String, T> map) {
+        List<T> all = new ArrayList<>(map.size());
+        for (Map.Entry<String, T> entry : map.entrySet()) {
+            all.add(entry.getValue());
+        }
+        Collections.sort(all);
+        return all;
     }
 
 

@@ -50,4 +50,10 @@ public class ImageController {
         return imageService.remove(params);
     }
 
+    @RequestMapping(value = "/reSort", method = RequestMethod.POST)
+    public Result reSort(ImageSearchForm params) {
+
+        return imageService.reSort(params);
+    }
+
 }

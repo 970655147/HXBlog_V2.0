@@ -10,6 +10,6 @@ import com.hx.mongo.dao.interf.MysqlIBaseDao;
  * @version 1.0
  * @date 5/20/2017 11:20 AM
  */
-public interface RltResourceInterfDao extends MysqlIBaseDao<RltResourceInterfPO> {
+public interface RltResourceInterfDao extends BaseDao<RltResourceInterfPO> {
 
 }

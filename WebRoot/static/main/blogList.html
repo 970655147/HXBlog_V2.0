@@ -35,6 +35,7 @@
     <script type="text/javascript" src="./js/jquery.svg3dtagcloud.min.js"></script>
     <script type="text/javascript" src="./js/jquery.emoji.js"></script>
     <script type="text/javascript" src="../js/vue.js"></script>
+    <script type="text/javascript" src="./layer/layer.js"></script>
     <script type="text/javascript" src="./myJs/commonImport.js"></script>
     <script type="text/javascript" src="./myJs/headerFooter.js"></script>
     <script type="text/javascript" src="../myJs/stringBuilder.js"></script>
@@ -118,7 +119,7 @@
                 </div>
 
                 <nav class="paging wow fadeInDown" data-wow-duration=".5s" data-wow-delay=".2s"
-                     style="text-align: center">
+                     style="text-align: center" v-if="pagination.length > 3" >
                     <ul class="pagination pagination-mg" >
                         <li v-for="page in pagination" :class="page.active">
                             <a :href="page.pageUrl">{{page.pageNo}}</a>

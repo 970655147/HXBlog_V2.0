@@ -99,7 +99,7 @@ public final class BlogConstants {
     /**
      * 向数据库中 增加bean 是需要过滤掉 "created_at", "deleted"
      */
-    public static final JSONBeanProcessor UPDATE_BEAN_BEAN_PROCESSOR = regFilterBeanProcessor(Tools.asSet("created_at", "created_at_day", "deleted") );
+    public static final JSONBeanProcessor UPDATE_BEAN_BEAN_PROCESSOR = regFilterBeanProcessor(Tools.asSet("created_at", "created_at_day") );
     /**
      * 向数据库中 增加bean 是需要过滤掉 "created_at", "deleted", "password"
      */
@@ -209,6 +209,15 @@ public final class BlogConstants {
      * 点赞的 sense
      */
     public static final String VIEW_SENSE = "view";
+
+    /**
+     * 资源重排 sort 的起始值
+     */
+    public static final int RE_SORT_START = 0;
+    /**
+     * 资源重排 sort 的重排偏移
+     */
+    public static final int RE_SORT_OFFSET = 10;
 
     // ----------------------------------------- configurable -------------------------------------------------
 

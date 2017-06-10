@@ -22,7 +22,7 @@ import java.util.Map;
  * @version 1.0
  * @date 5/22/2017 8:03 PM
  */
-public class ResourcePO implements JSONTransferable<ResourcePO>, TreeIdExtractor<ResourcePO, String> {
+public class ResourcePO implements JSONTransferable<ResourcePO>, TreeIdExtractor<ResourcePO, String>, Comparable<ResourcePO> {
 
     @JSONField({"id", "id"})
     private String id;
@@ -200,5 +200,15 @@ public class ResourcePO implements JSONTransferable<ResourcePO>, TreeIdExtractor
     @Override
     public String parentId() {
         return parentId;
+    }
+
+    @Override
+    public int compareTo(ResourcePO o) {
+        int deltaSort = this.sort - o.sort;
+        if(deltaSort != 0) {
+            return deltaSort;
+        }
+
+        return this.name.compareTo(o.name);
     }
 }

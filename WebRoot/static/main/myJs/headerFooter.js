@@ -69,10 +69,10 @@ function headerFooterInit() {
                         "<div class='blog-grids wow fadeInDown' data-wow-duration='.8s' data-wow-delay='.2s'> " +
                         "<div class='blog-grid-left'> " +
                         "<a href='/static/main/blogDetail.html?id=" + blog.id + "'> " +
-                        "<img src='" + blog.coverUrl + "' class='img-responsive' alt='" + blog.author + "' width='40px' height='40px'>" +
+                        "<img src='" + blog.coverUrl + "' class='img-responsive' width='40px' height='40px'>" +
                         "</a>" +
                         "</div>" +
-                        "<div class='blog-grid-right'><h5><a href='/static/main/blogDetail.html?id=" + blog.id + "'> " + blog.title + " </a></h5></div>" +
+                        "<div class='blog-grid-right' name='hotBlogTitle' data-blog-title='" + blog.title + "' ><h5><a href='/static/main/blogDetail.html?id=" + blog.id + "'> " + trimIfExceed(blog.title, 20, "...") + " </a></h5></div>" +
                         "<div class='clearfix'></div>" +
                         "</div>")
                 }
@@ -113,7 +113,14 @@ function headerFooterInit() {
                         }
                     })
                 })
+
                 selectHeader()
+                $("[name='hotBlogTitle']").hover(function(){
+                    layer.tips($(this).attr("data-blog-title"), this,
+                        {tips: [3], time: 1000});
+                }, function() {
+
+                })
             }
         }
     });
@@ -227,7 +234,6 @@ function selectHeader() {
 
     var allA = $("[name='headerNav0'] li a")
     for(idx in allA) {
-        console.log(allA[idx])
         if(url.indexOf(allA[idx].href) >= 0) {
             $(allA[idx]).parent().addClass("active act")
             break ;

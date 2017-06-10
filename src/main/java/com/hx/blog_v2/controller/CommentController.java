@@ -35,7 +35,7 @@ public class CommentController {
     public Result add(CommentSaveForm params) {
 
         SessionUser user = (SessionUser) WebContext.getAttributeFromSession(BlogConstants.SESSION_USER);
-        BizUtils.updateUserIfBe(user, params);
+        user = BizUtils.updateUserIfBe(user, params);
         WebContext.setAttributeForSession(BlogConstants.SESSION_USER, user);
 
         return commentService.add(params);

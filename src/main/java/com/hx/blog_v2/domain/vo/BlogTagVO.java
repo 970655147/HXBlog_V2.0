@@ -16,17 +16,12 @@ public class BlogTagVO {
 
     private String id;
     private String name;
+    private int sort;
     private String createdAt;
     private String updatedAt;
 
-    public BlogTagVO(String name) {
-        this();
-        this.name = name;
-    }
-
     public BlogTagVO() {
-        createdAt = DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
-        updatedAt = createdAt;
+
     }
 
     public String getId() {
@@ -43,6 +38,14 @@ public class BlogTagVO {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public int getSort() {
+        return sort;
+    }
+
+    public void setSort(int sort) {
+        this.sort = sort;
     }
 
     public String getCreatedAt() {

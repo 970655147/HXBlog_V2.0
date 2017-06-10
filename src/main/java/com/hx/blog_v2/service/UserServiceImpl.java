@@ -58,16 +58,14 @@ public class UserServiceImpl implements UserService {
 
         UserPO po = new UserPO(params.getUserName(), params.getPassword(), params.getTitle(), params.getNickName(),
                 params.getEmail(), params.getHeadImgUrl(), params.getMotto());
-
         String pwdSalt = newSalt();
         String pwd = encodePwd(params.getPassword(), pwdSalt);
         po.setPwdSalt(pwdSalt);
         po.setPassword(pwd);
-        try {
-            userDao.save(po, BlogConstants.ADD_BEAN_CONFIG);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResultUtils.failed(Tools.errorMsg(e));
+
+        Result result = userDao.add(po);
+        if(! result.isSuccess()) {
+            return result;
         }
         return ResultUtils.success(po.getId());
     }
@@ -92,15 +90,9 @@ public class UserServiceImpl implements UserService {
         po.setId(params.getId());
         po.setUpdatedAt(DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS));
 
-        try {
-            long modified = userDao.updateById(po, BlogConstants.USER_UPDATE_BEAN_CONFIG)
-                    .getModifiedCount();
-            if (modified == 0) {
-                return ResultUtils.failed("没有找到对应的用户 !");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResultUtils.failed(Tools.errorMsg(e));
+        Result result = userDao.update(po);
+        if(! result.isSuccess()) {
+            return result;
         }
         return ResultUtils.success(po.getId());
     }
@@ -108,27 +100,24 @@ public class UserServiceImpl implements UserService {
     @Override
     public Result updatePwd(UpdatePwdForm params) {
         SessionUser user = (SessionUser) WebContext.getAttributeFromSession(BlogConstants.SESSION_USER);
-        try {
-            UserPO po = userDao.findById(user.getId(), BlogConstants.LOAD_ALL_CONFIG);
-            if (po == null) {
-                return ResultUtils.failed("用户[" + user.getId() + "]不存在 !");
-            }
-            if (!po.getPassword().equalsIgnoreCase(encodePwd(params.getOldPwd(), po.getPwdSalt()))) {
-                return ResultUtils.failed("用户密码不正确 !");
-            }
+        Result getUserResult = userDao.get(new BeanIdForm(user.getId()));
+        if(! getUserResult.isSuccess()) {
+            return getUserResult;
+        }
+        UserPO po = (UserPO) getUserResult.getData();
+        if (!po.getPassword().equalsIgnoreCase(encodePwd(params.getOldPwd(), po.getPwdSalt()))) {
+            return ResultUtils.failed("用户密码不正确 !");
+        }
 
-            String updatedAt = DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
-            String newSalt = newSalt();
-            String newPwd = encodePwd(params.getNewPwd(), newSalt);
-            long deleted = userDao.updateOne(Criteria.eq("id", user.getId()),
-                    Criteria.set("updated_at", updatedAt).add("pwd_salt", newSalt).add("password", newPwd)
-            ).getModifiedCount();
-            if (deleted == 0) {
-                return ResultUtils.failed("用户[" + user.getId() + "]不存在 !");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResultUtils.failed(Tools.errorMsg(e));
+        String updatedAt = DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
+        String newSalt = newSalt();
+        String newPwd = encodePwd(params.getNewPwd(), newSalt);
+        IQueryCriteria query = Criteria.eq("id", user.getId());
+        IUpdateCriteria update = Criteria.set("updated_at", updatedAt).add("pwd_salt", newSalt)
+                .add("password", newPwd);
+        Result result = userDao.update(query, update);
+        if(! result.isSuccess()) {
+            return result;
         }
         return ResultUtils.success(user.getId());
     }
@@ -136,16 +125,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public Result remove(BeanIdForm params) {
         String updatedAt = DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
-        try {
-            long deleted = userDao.updateOne(Criteria.eq("id", params.getId()),
-                    Criteria.set("deleted", "1").add("updated_at", updatedAt)
-            ).getModifiedCount();
-            if (deleted == 0) {
-                return ResultUtils.failed("用户[" + params.getId() + "]不存在 !");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResultUtils.failed(Tools.errorMsg(e));
+        IQueryCriteria query = Criteria.eq("id", params.getId());
+        IUpdateCriteria update = Criteria.set("deleted", "1").add("updated_at", updatedAt);
+        Result result = userDao.update(query, update);
+        if(! result.isSuccess()) {
+            return result;
         }
         return ResultUtils.success(params.getId());
     }

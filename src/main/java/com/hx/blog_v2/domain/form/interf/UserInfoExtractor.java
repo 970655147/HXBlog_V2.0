@@ -36,4 +36,13 @@ public interface UserInfoExtractor {
      */
     String getHeadImgUrl();
 
+    /**
+     * 获取ip信息
+     *
+     * @author Jerry.X.He
+     * @date 6/5/2017 8:48 PM
+     * @since 1.0
+     */
+    String getRequestIp();
+
 }

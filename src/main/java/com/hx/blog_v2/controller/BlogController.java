@@ -46,14 +46,5 @@ public class BlogController {
         return result;
     }
 
-    @RequestMapping("/advices")
-    public Result advices() {
-
-        BeanIdForm prams = new BeanIdForm(BlogConstants.ADVICE_BLOG_ID);
-        Result result = blogService.get(prams);
-        SessionUser user = (SessionUser) WebContext.getAttributeFromSession(BlogConstants.SESSION_USER);
-        result.setExtra(user);
-        return result;
-    }
 
 }
