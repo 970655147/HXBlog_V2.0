@@ -1,9 +1,15 @@
 package com.hx.blog_v2.aop;
 
-import com.hx.log.util.Log;
+import com.hx.blog_v2.service.interf.ExceptionLogService;
+import com.hx.blog_v2.service.interf.RequestLogService;
+import com.hx.common.interf.common.Result;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.*;
+import org.aspectj.lang.annotation.AfterThrowing;
+import org.aspectj.lang.annotation.Around;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Pointcut;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -17,23 +23,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class ControllerAop {
 
+    @Autowired
+    private RequestLogService requestLogService;
+    @Autowired
+    private ExceptionLogService exceptionLogService;
+
     @Pointcut("within(com.hx.blog_v2.controller.*)")
     public void controllerPoint() {
 
-    }
-
-    /**
-     * 前置信息处理
-     *
-     * @param point point
-     * @return void
-     * @author Jerry.X.He
-     * @date 5/19/2017 9:33 PM
-     * @since 1.0
-     */
-    @Before("controllerPoint()")
-    public void doBefore(JoinPoint point) {
-//        Log.info("controller - before");
     }
 
     /**
@@ -51,21 +48,14 @@ public class ControllerAop {
         Object result = point.proceed();
         long cost = System.currentTimeMillis() - begin;
 
+        requestLogService.saveRequestLog(point, cost);
+        if (result instanceof Result) {
+            Result rResult = (Result) result;
+            if (!rResult.isSuccess()) {
+                exceptionLogService.saveExceptionLog(point, rResult, null);
+            }
+        }
         return result;
-    }
-
-    /**
-     * 后置信息处理
-     *
-     * @param point point
-     * @return void
-     * @author Jerry.X.He
-     * @date 5/19/2017 9:33 PM
-     * @since 1.0
-     */
-    @After("controllerPoint()")
-    public void doAfter(JoinPoint point) {
-//        Log.info("controller - after");
     }
 
     /**
@@ -80,7 +70,8 @@ public class ControllerAop {
      */
     @AfterThrowing(pointcut = "controllerPoint()", throwing = "e")
     public void doAfterThrowing(JoinPoint point, Throwable e) {
-//        Log.err("controller process failure !");
+        exceptionLogService.saveExceptionLog(point, null, e);
     }
+
 
 }

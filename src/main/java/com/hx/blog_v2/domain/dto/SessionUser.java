@@ -17,6 +17,12 @@ import java.util.Date;
 public class SessionUser implements UserInfoExtractor {
 
     /**
+     * 一个缺省的用户信息
+     */
+    public static SessionUser DUMMY = new SessionUser("unknown", "unknown",
+            "unknown", "guest", "", false);
+
+    /**
      * userId
      */
     private String id;

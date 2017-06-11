@@ -1,5 +1,6 @@
 package com.hx.blog_v2.domain.po;
 
+import com.hx.blog_v2.domain.form.interf.UserInfoExtractor;
 import com.hx.blog_v2.util.BlogConstants;
 import com.hx.blog_v2.util.DateUtils;
 import com.hx.json.JSONObject;
@@ -27,10 +28,12 @@ public class RequestLogPO implements JSONTransferable<RequestLogPO> {
     private String id;
     @JSONField({"url", "url"})
     private String url;
+    @JSONField({"handler", "handler"})
+    private String handler;
     @JSONField({"params", "params"})
     private String params;
     @JSONField({"cost", "cost"})
-    private String cost;
+    private long cost;
     @JSONField({"name", "name"})
     private String name;
     @JSONField({"email", "email"})
@@ -42,14 +45,12 @@ public class RequestLogPO implements JSONTransferable<RequestLogPO> {
     @JSONField({"createdAt", "created_at"})
     private String createdAt;
 
-    public RequestLogPO(String id, String url, String params, String cost, String name, String email, int isSystemUser) {
+    public RequestLogPO(String url, String handler, String params, long cost, int isSystemUser) {
         this();
-        this.id = id;
         this.url = url;
+        this.handler = handler;
         this.params = params;
         this.cost = cost;
-        this.name = name;
-        this.email = email;
         this.isSystemUser = isSystemUser;
     }
 
@@ -73,6 +74,14 @@ public class RequestLogPO implements JSONTransferable<RequestLogPO> {
         this.url = url;
     }
 
+    public String getHandler() {
+        return handler;
+    }
+
+    public void setHandler(String handler) {
+        this.handler = handler;
+    }
+
     public String getParams() {
         return params;
     }
@@ -81,11 +90,11 @@ public class RequestLogPO implements JSONTransferable<RequestLogPO> {
         this.params = params;
     }
 
-    public String getCost() {
+    public long getCost() {
         return cost;
     }
 
-    public void setCost(String cost) {
+    public void setCost(long cost) {
         this.cost = cost;
     }
 
@@ -170,6 +179,12 @@ public class RequestLogPO implements JSONTransferable<RequestLogPO> {
     @Override
     public void id(String id) {
         this.id = id;
+    }
+
+    public void setUserInfo(UserInfoExtractor extractor) {
+        this.name = extractor.getName();
+        this.email = extractor.getEmail();
+        this.requestIp = extractor.getRequestIp();
     }
 
 }

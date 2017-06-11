@@ -1,5 +1,6 @@
 package com.hx.blog_v2.domain.po;
 
+import com.hx.blog_v2.domain.form.interf.UserInfoExtractor;
 import com.hx.blog_v2.util.BlogConstants;
 import com.hx.blog_v2.util.DateUtils;
 import com.hx.json.JSONObject;
@@ -25,25 +26,34 @@ public class ExceptionLogPO implements JSONTransferable<ExceptionLogPO> {
 
     @JSONField({"id", "id"})
     private String id;
+    @JSONField({"url", "url"})
+    private String url;
+    @JSONField({"handler", "handler"})
+    private String handler;
+    @JSONField({"params", "params"})
+    private String params;
+    @JSONField({"headers", "headers"})
+    private String headers;
     @JSONField({"name", "name"})
     private String name;
     @JSONField({"email", "email"})
     private String email;
     @JSONField({"isSystemUser", "is_system_user"})
     private int isSystemUser;
-    @JSONField({"requestIP", "request_ip"})
-    private String requestIP;
+    @JSONField({"requestIp", "request_ip"})
+    private String requestIp;
     @JSONField({"msg", "msg"})
     private String msg;
     @JSONField({"createdAt", "created_at"})
     private String createdAt;
 
-    public ExceptionLogPO(String name, String email, int isSystemUser, String requestIP, String msg) {
+    public ExceptionLogPO(String url, String handler, String params, String headers, int isSystemUser, String msg) {
         this();
-        this.name = name;
-        this.email = email;
+        this.url = url;
+        this.handler = handler;
+        this.params = params;
+        this.headers = headers;
         this.isSystemUser = isSystemUser;
-        this.requestIP = requestIP;
         this.msg = msg;
     }
 
@@ -57,6 +67,38 @@ public class ExceptionLogPO implements JSONTransferable<ExceptionLogPO> {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String getHandler() {
+        return handler;
+    }
+
+    public void setHandler(String handler) {
+        this.handler = handler;
+    }
+
+    public String getParams() {
+        return params;
+    }
+
+    public void setParams(String params) {
+        this.params = params;
+    }
+
+    public String getHeaders() {
+        return headers;
+    }
+
+    public void setHeaders(String headers) {
+        this.headers = headers;
     }
 
     public String getName() {
@@ -83,12 +125,12 @@ public class ExceptionLogPO implements JSONTransferable<ExceptionLogPO> {
         this.isSystemUser = isSystemUser;
     }
 
-    public String getRequestIP() {
-        return requestIP;
+    public String getRequestIp() {
+        return requestIp;
     }
 
-    public void setRequestIP(String requestIP) {
-        this.requestIP = requestIP;
+    public void setRequestIp(String requestIp) {
+        this.requestIp = requestIp;
     }
 
     public String getMsg() {
@@ -150,5 +192,10 @@ public class ExceptionLogPO implements JSONTransferable<ExceptionLogPO> {
         this.id = id;
     }
 
+    public void setUserInfo(UserInfoExtractor extractor) {
+        this.name = extractor.getName();
+        this.email = extractor.getEmail();
+        this.requestIp = extractor.getRequestIp();
+    }
 
 }

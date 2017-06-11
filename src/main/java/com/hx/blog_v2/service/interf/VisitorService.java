@@ -12,4 +12,5 @@ import com.hx.blog_v2.domain.po.VisitorPO;
 public interface VisitorService extends BaseService<VisitorPO> {
 
 
+
 }

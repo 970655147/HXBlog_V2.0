@@ -1,5 +1,6 @@
 package com.hx.blog_v2.domain.po;
 
+import com.hx.blog_v2.domain.form.interf.UserInfoExtractor;
 import com.hx.blog_v2.util.BlogConstants;
 import com.hx.blog_v2.util.DateUtils;
 import com.hx.json.JSONObject;
@@ -33,17 +34,20 @@ public class VisitorPO implements JSONTransferable<VisitorPO> {
     private int isSystemUser;
     @JSONField({"requestIp", "request_ip"})
     private String requestIp;
+    @JSONField({"ipFromSohu", "ip_from_sohu"})
+    private String ipFromSohu;
+    @JSONField({"ipAddr", "ip_addr"})
+    private String ipAddr;
     @JSONField({"headerInfo", "header_info"})
     private String headerInfo;
     @JSONField({"createdAt", "created_at"})
     private String createdAt;
 
-    public VisitorPO(String name, String email, int isSystemUser, String requestIp, String headerInfo) {
+    public VisitorPO(String ipFromSohu, String ipAddr, int isSystemUser, String headerInfo) {
         this();
-        this.name = name;
-        this.email = email;
+        this.ipFromSohu = ipFromSohu;
+        this.ipAddr = ipAddr;
         this.isSystemUser = isSystemUser;
-        this.requestIp = requestIp;
         this.headerInfo = headerInfo;
     }
 
@@ -89,6 +93,22 @@ public class VisitorPO implements JSONTransferable<VisitorPO> {
 
     public void setRequestIp(String requestIp) {
         this.requestIp = requestIp;
+    }
+
+    public String getIpFromSohu() {
+        return ipFromSohu;
+    }
+
+    public void setIpFromSohu(String ipFromSohu) {
+        this.ipFromSohu = ipFromSohu;
+    }
+
+    public String getIpAddr() {
+        return ipAddr;
+    }
+
+    public void setIpAddr(String ipAddr) {
+        this.ipAddr = ipAddr;
     }
 
     public String getHeaderInfo() {
@@ -149,4 +169,11 @@ public class VisitorPO implements JSONTransferable<VisitorPO> {
     public void id(String id) {
         this.id = id;
     }
+
+    public void setUserInfo(UserInfoExtractor extractor) {
+        this.name = extractor.getName();
+        this.email = extractor.getEmail();
+        this.requestIp = extractor.getRequestIp();
+    }
+
 }

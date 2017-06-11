@@ -2,11 +2,9 @@ package com.hx.blog_v2.service;
 
 import com.hx.blog_v2.dao.interf.BlogExDao;
 import com.hx.blog_v2.domain.POVOTransferUtils;
-import com.hx.blog_v2.domain.extractor.ResourceTreeInfoExtractor;
 import com.hx.blog_v2.domain.dto.SessionUser;
-import com.hx.blog_v2.domain.form.BeanIdForm;
+import com.hx.blog_v2.domain.extractor.ResourceTreeInfoExtractor;
 import com.hx.blog_v2.domain.mapper.*;
-import com.hx.blog_v2.domain.po.BlogExPO;
 import com.hx.blog_v2.domain.po.BlogTagPO;
 import com.hx.blog_v2.domain.po.BlogTypePO;
 import com.hx.blog_v2.domain.po.ResourcePO;
@@ -15,7 +13,6 @@ import com.hx.blog_v2.domain.vo.CommentVO;
 import com.hx.blog_v2.domain.vo.FacetByMonthVO;
 import com.hx.blog_v2.domain.vo.ResourceVO;
 import com.hx.blog_v2.service.interf.BaseServiceImpl;
-import com.hx.blog_v2.service.interf.BlogService;
 import com.hx.blog_v2.service.interf.IndexService;
 import com.hx.blog_v2.service.interf.LinkService;
 import com.hx.blog_v2.util.BlogConstants;
@@ -106,7 +103,7 @@ public class IndexServiceImpl extends BaseServiceImpl<Object> implements IndexSe
             e.printStackTrace();
         }
         List<BlogVO> latestBlogs = jdbcTemplate.query(latestBlogsSql, new BlogVOMapper());
-        if(recommendBlog != null) {
+        if (recommendBlog != null) {
             encapBlogVo(Collections.singletonList(recommendBlog));
         }
         encapBlogVo(latestBlogs);
@@ -123,11 +120,11 @@ public class IndexServiceImpl extends BaseServiceImpl<Object> implements IndexSe
         SessionUser user = (SessionUser) WebContext.getAttributeFromSession(BlogConstants.SESSION_USER);
         String roleIds = user.getRoleIds();
         List<String> resourceIds = cacheContext.resourceIdsByRoleIds(roleIds);
-        if(resourceIds == null) {
+        if (resourceIds == null) {
             String resourceIdSql = " select resource_id from rlt_role_resource as rr inner join resource as r on rr.resource_id = r.id " +
                     " where role_id in ( %s ) order by r.sort ";
             String inSnippet = user.getRoleIds();
-            inSnippet = inSnippet.substring(1, inSnippet.length()-1);
+            inSnippet = inSnippet.substring(1, inSnippet.length() - 1);
             resourceIds = jdbcTemplate.query(String.format(resourceIdSql, inSnippet), new OneStringMapper("resource_id"));
             cacheContext.putResourceIdsByRoleIds(roleIds, resourceIds);
         }
@@ -136,7 +133,7 @@ public class IndexServiceImpl extends BaseServiceImpl<Object> implements IndexSe
         Set<String> needToGet = collectAllParentIds(resourceIds, resourcesById);
         List<ResourceVO> resources = new ArrayList<>(resourcesById.size());
         for (Map.Entry<String, ResourcePO> entry : resourcesById.entrySet()) {
-            if(needToGet.contains(entry.getKey())) {
+            if (needToGet.contains(entry.getKey())) {
                 resources.add(POVOTransferUtils.resourcePO2ResourceVO(entry.getValue()));
             }
         }
@@ -152,10 +149,9 @@ public class IndexServiceImpl extends BaseServiceImpl<Object> implements IndexSe
         SessionUser user = (SessionUser) WebContext.getAttributeFromSession(BlogConstants.SESSION_USER);
         JSONObject data = new JSONObject()
                 .element("loginInfo", new JSONObject().element("loginIp", user.getRequestIp())
-                .element("loginDate", user.getLoginDate()).element("loginAddr", user.getIpAddr()))
+                        .element("loginDate", user.getLoginDate()).element("loginAddr", user.getIpAddr()))
                 .element("todayStats", cacheContext.todaysStatistics())
-                .element("sumStats", cacheContext.sumStatistics())
-                ;
+                .element("sumStats", cacheContext.sumStatistics());
 
         return ResultUtils.success(data);
     }
@@ -192,10 +188,19 @@ public class IndexServiceImpl extends BaseServiceImpl<Object> implements IndexSe
         for (BlogVO vo : voes) {
             blogService.encapSenseAndBlogEx(vo);
             encapTypeTagInfo(vo);
-            encapContent(vo);
+//            encapContent(vo);
         }
     }
 
+    /**
+     * 封装给定的 BlogVO 的 type, tag 的信息
+     *
+     * @param vo vo
+     * @return void
+     * @author Jerry.X.He
+     * @date 6/11/2017 8:56 PM
+     * @since 1.0
+     */
     private void encapTypeTagInfo(BlogVO vo) {
         BlogTypePO type = cacheContext.blogType(vo.getBlogTypeId());
         if (type != null) {
@@ -234,7 +239,7 @@ public class IndexServiceImpl extends BaseServiceImpl<Object> implements IndexSe
     /**
      * 根据给定的叶节点的资源, 收集其所有的上层节点
      *
-     * @param resourceIds resourceIds
+     * @param resourceIds   resourceIds
      * @param resourcesById resourcesById
      * @return java.util.Set<java.lang.String>
      * @author Jerry.X.He
@@ -247,15 +252,15 @@ public class IndexServiceImpl extends BaseServiceImpl<Object> implements IndexSe
         List<String> parentIds = new ArrayList<>(resourcesById.size());
         for (Map.Entry<String, ResourcePO> entry : resourcesById.entrySet()) {
             ResourcePO po = entry.getValue();
-            if(BlogConstants.RESOURCE_ROOT_PARENT_ID.equals(po.getParentId() )) {
-                continue ;
+            if (BlogConstants.RESOURCE_ROOT_PARENT_ID.equals(po.getParentId())) {
+                continue;
             }
 
-            if(resourceIds.contains(po.getId())) {
+            if (resourceIds.contains(po.getId())) {
                 parentIds.add(po.getParentId());
             }
         }
-        if(! parentIds.isEmpty()) {
+        if (!parentIds.isEmpty()) {
             needToGet.addAll(collectAllParentIds(parentIds, resourcesById));
         }
 

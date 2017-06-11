@@ -6,6 +6,7 @@ import com.hx.blog_v2.domain.dto.SessionUser;
 import com.hx.blog_v2.domain.dto.StatisticsInfo;
 import com.hx.blog_v2.domain.form.interf.UserInfoExtractor;
 import com.hx.blog_v2.domain.mapper.ToMapMapper;
+import com.hx.json.JSONArray;
 import com.hx.json.JSONObject;
 import com.hx.log.json.JSONUtils;
 import com.hx.log.util.Tools;
@@ -153,6 +154,53 @@ public final class BizUtils {
     }
 
     /**
+     * 获取给定的请求的请求头信息
+     *
+     * @param req req
+     * @return java.lang.String
+     * @author Jerry.X.He
+     * @date 6/11/2017 8:19 PM
+     * @since 1.0
+     */
+    public static JSONObject getHeaderInfo(HttpServletRequest req) {
+        Enumeration<String> names = req.getHeaderNames();
+        JSONObject headers = new JSONObject();
+        while (names.hasMoreElements()) {
+            String key = names.nextElement();
+            headers.put(key, req.getHeader(key));
+        }
+
+        return headers;
+    }
+
+    /**
+     * 获取异常的详细信息
+     *
+     * @param e e
+     * @return com.hx.json.JSONArray
+     * @author Jerry.X.He
+     * @date 6/11/2017 8:25 PM
+     * @since 1.0
+     */
+    public static JSONArray getExceptionInfo(Throwable e) {
+        if(e == null) {
+            return JSONArray.NULL_JSON_ARRAY;
+        }
+
+        JSONArray result = new JSONArray();
+        result.add(e.getMessage());
+        result.add(e.getLocalizedMessage());
+
+        StackTraceElement[] stackTraces = e.getStackTrace();
+        int min = (stackTraces.length - BlogConstants.EXCEPTION_LOG_MAX_STACKTRACE) > 0 ?
+                stackTraces.length - BlogConstants.EXCEPTION_LOG_MAX_STACKTRACE : 0;
+        for(int i=stackTraces.length-1; i>=min; i--) {
+            result.add(stackTraces[i].toString());
+        }
+        return result;
+    }
+
+    /**
      * 收集 最近 dayOff 天的统计信息
      *
      * @param dayOff dayOff
@@ -163,7 +211,7 @@ public final class BizUtils {
      */
     public static List<StatisticsInfo> collectRecentlyStatisticsInfo(JdbcTemplate jdbcTemplate, int dayOff) {
         Date now = new Date();
-        Date oldestDay = DateUtils.addDay(now, -dayOff+1);
+        Date oldestDay = DateUtils.addDay(now, -dayOff + 1);
         String begin = DateUtils.formate(DateUtils.beginOfDay(oldestDay), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
         String end = DateUtils.formate(now, BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
 
@@ -212,7 +260,7 @@ public final class BizUtils {
         String statsBlogCntSql = " select count(*) as blogCnt from blog where deleted = 0 and date_format(created_at, '%y-%m-%d') <= ? ";
         String statsCommentCntSql = " select count(*) as commentCnt from blog_comment where deleted = 0 and date_format(created_at, '%y-%m-%d') <= ? ";
 
-        Object[] params = new Object[]{yesterday };
+        Object[] params = new Object[]{yesterday};
         RowMapper<Map<String, Object>> rowMapper = new ToMapMapper();
         Map<String, Object> viewCntMap = jdbcTemplate.queryForMap(statsViewCntSql, params);
         Map<String, Object> senseCntMap = jdbcTemplate.queryForMap(statsSenseCntSql, params);

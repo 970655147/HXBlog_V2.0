@@ -109,13 +109,13 @@ public class CommentSaveForm implements UserInfoExtractor {
 
     @Override
     public String getRequestIp() {
-        if (requestIp.equals(ipFromSohu)) {
-            return requestIp;
-        }
-
-        if(BizUtils.isLocalIp(requestIp)) {
-            return ipFromSohu;
-        }
+//        if (requestIp.equals(ipFromSohu)) {
+//            return requestIp;
+//        }
+//
+//        if(BizUtils.isLocalIp(requestIp)) {
+//            return ipFromSohu;
+//        }
         return requestIp;
     }
 
@@ -138,4 +138,5 @@ public class CommentSaveForm implements UserInfoExtractor {
     public void setIpAddr(String ipAddr) {
         this.ipAddr = ipAddr;
     }
+
 }

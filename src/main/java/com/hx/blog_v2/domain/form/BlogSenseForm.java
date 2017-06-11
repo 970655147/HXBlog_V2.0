@@ -67,13 +67,13 @@ public class BlogSenseForm implements UserInfoExtractor {
     }
 
     public String getRequestIp() {
-        if (requestIp.equals(ipFromSohu)) {
-            return requestIp;
-        }
-
-        if(BizUtils.isLocalIp(requestIp)) {
-            return ipFromSohu;
-        }
+//        if (requestIp.equals(ipFromSohu)) {
+//            return requestIp;
+//        }
+//
+//        if(BizUtils.isLocalIp(requestIp)) {
+//            return ipFromSohu;
+//        }
         return requestIp;
     }
 

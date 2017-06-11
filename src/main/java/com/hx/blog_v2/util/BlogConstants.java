@@ -434,6 +434,13 @@ public final class BlogConstants {
      */
     @Value("${max_real_time_cache_statistics_times}")
     public static int MAX_REAL_TIME_CACHE_STASTICS_TIMES = 12;
+    /**
+     * 异常日志保留的异常 StackTrace 的行数
+     */
+    @Value("${exception_log.max_stacktrace}")
+    public static int EXCEPTION_LOG_MAX_STACKTRACE = 20;
+    @Value("${request_log.uri_to_ignore}")
+    public static String REQUEST_LOG_URI_TO_IGNORE = "/index/index;/image/headImgList;/index/latest;";
 
     // -------------------- 辅助方法 --------------------------
 
