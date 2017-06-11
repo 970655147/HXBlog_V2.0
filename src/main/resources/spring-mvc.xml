@@ -40,6 +40,15 @@
     </bean>
     <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver" />
 
+    <bean id="exceptionResolver" class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+        <property name="defaultErrorView" value="/static/e/500" />
+        <property name="exceptionMappings">
+            <props>
+                <prop key="java.io.Exception">/static/e/500</prop>
+            </props>
+        </property>
+    </bean>
+
     <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
         <property name="messageConverters">
             <list>
