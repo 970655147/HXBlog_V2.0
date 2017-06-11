@@ -7,7 +7,7 @@
  */
 
 function isEmpty(obj) {
-    return obj === null || obj === undefined || '' === obj.trim();
+    return obj === null || obj === undefined || '' === obj.toString().trim();
 }
 
 /**

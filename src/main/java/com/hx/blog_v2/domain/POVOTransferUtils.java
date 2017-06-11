@@ -32,8 +32,8 @@ public final class POVOTransferUtils {
      */
     public static void main(String[] args) {
 
-        Class src = UserPO.class;
-        Class dst = SessionUser.class;
+        Class src = MessagePO.class;
+        Class dst = MessageVO.class;
 
         String transfer = BeanTransferUtils.transferTo(src, dst);
         String transferList = BeanTransferUtils.transferListTo(src, dst);
@@ -779,7 +779,7 @@ public final class POVOTransferUtils {
 
     public static Collection<ResourceInterfVO> resourcePO2ResourceInterfVOList(Collection<ResourcePO> src) {
         List<ResourceInterfVO> result = new ArrayList<>(src.size());
-        for(ResourcePO ele : src) {
+        for (ResourcePO ele : src) {
             result.add(resourcePO2ResourceInterfVO(ele));
         }
         return result;
@@ -798,7 +798,7 @@ public final class POVOTransferUtils {
 
     public static Collection<ResourcePO> resourceInterfVO2ResourcePOList(Collection<ResourceInterfVO> src) {
         List<ResourcePO> result = new ArrayList<>(src.size());
-        for(ResourceInterfVO ele : src) {
+        for (ResourceInterfVO ele : src) {
             result.add(resourceInterfVO2ResourcePO(ele));
         }
         return result;
@@ -856,7 +856,7 @@ public final class POVOTransferUtils {
 
     public static Collection<SessionUser> userPO2SessionUserList(Collection<UserPO> src) {
         List<SessionUser> result = new ArrayList<>(src.size());
-        for(UserPO ele : src) {
+        for (UserPO ele : src) {
             result.add(userPO2SessionUser(ele));
         }
         return result;
@@ -874,11 +874,57 @@ public final class POVOTransferUtils {
 
     public static Collection<UserPO> sessionUser2UserPOList(Collection<SessionUser> src) {
         List<UserPO> result = new ArrayList<>(src.size());
-        for(SessionUser ele : src) {
+        for (SessionUser ele : src) {
             result.add(sessionUser2UserPO(ele));
         }
         return result;
     }
+
+    // -------------------- MessagePO <-> MessageVO --------------------------
+    public static MessageVO messagePO2MessageVO(MessagePO src) {
+        MessageVO result = new MessageVO();
+        result.setId(src.getId());
+        result.setType(src.getType());
+        result.setContent(src.getContent());
+        result.setCreatedAt(src.getCreatedAt());
+        result.setUpdatedAt(src.getUpdatedAt());
+        result.setReceiverId(src.getReceiverId());
+        result.setConsumed(src.getConsumed());
+        result.setSenderId(src.getSenderId());
+        result.setSubject(src.getSubject());
+        return result;
+    }
+
+    public static Collection<MessageVO> messagePO2MessageVOList(Collection<MessagePO> src) {
+        List<MessageVO> result = new ArrayList<>(src.size());
+        for(MessagePO ele : src) {
+            result.add(messagePO2MessageVO(ele));
+        }
+        return result;
+    }
+
+    public static MessagePO messageVO2MessagePO(MessageVO src) {
+        MessagePO result = new MessagePO();
+        result.setId(src.getId());
+        result.setType(src.getType());
+        result.setContent(src.getContent());
+        result.setCreatedAt(src.getCreatedAt());
+        result.setUpdatedAt(src.getUpdatedAt());
+        result.setReceiverId(src.getReceiverId());
+        result.setConsumed(src.getConsumed());
+        result.setSenderId(src.getSenderId());
+        result.setSubject(src.getSubject());
+        return result;
+    }
+
+    public static Collection<MessagePO> messageVO2MessagePOList(Collection<MessageVO> src) {
+        List<MessagePO> result = new ArrayList<>(src.size());
+        for(MessageVO ele : src) {
+            result.add(messageVO2MessagePO(ele));
+        }
+        return result;
+    }
+
 
     // -------------------- 待续 --------------------------
 

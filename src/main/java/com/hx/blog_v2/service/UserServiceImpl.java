@@ -8,9 +8,11 @@ import com.hx.blog_v2.domain.form.LoginForm;
 import com.hx.blog_v2.domain.form.UpdatePwdForm;
 import com.hx.blog_v2.domain.form.UserSaveForm;
 import com.hx.blog_v2.domain.mapper.AdminUserVOMapper;
+import com.hx.blog_v2.domain.mapper.Id2NameRoleMapper;
 import com.hx.blog_v2.domain.mapper.OneIntMapper;
 import com.hx.blog_v2.domain.po.UserPO;
 import com.hx.blog_v2.domain.vo.AdminUserVO;
+import com.hx.blog_v2.domain.vo.Id2NameVO;
 import com.hx.blog_v2.service.interf.UserService;
 import com.hx.blog_v2.util.BlogConstants;
 import com.hx.blog_v2.util.DateUtils;
@@ -64,7 +66,7 @@ public class UserServiceImpl implements UserService {
         po.setPassword(pwd);
 
         Result result = userDao.add(po);
-        if(! result.isSuccess()) {
+        if (!result.isSuccess()) {
             return result;
         }
         return ResultUtils.success(po.getId());
@@ -91,7 +93,7 @@ public class UserServiceImpl implements UserService {
         po.setUpdatedAt(DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS));
 
         Result result = userDao.update(po);
-        if(! result.isSuccess()) {
+        if (!result.isSuccess()) {
             return result;
         }
         return ResultUtils.success(po.getId());
@@ -101,7 +103,7 @@ public class UserServiceImpl implements UserService {
     public Result updatePwd(UpdatePwdForm params) {
         SessionUser user = (SessionUser) WebContext.getAttributeFromSession(BlogConstants.SESSION_USER);
         Result getUserResult = userDao.get(new BeanIdForm(user.getId()));
-        if(! getUserResult.isSuccess()) {
+        if (!getUserResult.isSuccess()) {
             return getUserResult;
         }
         UserPO po = (UserPO) getUserResult.getData();
@@ -116,7 +118,7 @@ public class UserServiceImpl implements UserService {
         IUpdateCriteria update = Criteria.set("updated_at", updatedAt).add("pwd_salt", newSalt)
                 .add("password", newPwd);
         Result result = userDao.update(query, update);
-        if(! result.isSuccess()) {
+        if (!result.isSuccess()) {
             return result;
         }
         return ResultUtils.success(user.getId());
@@ -128,7 +130,7 @@ public class UserServiceImpl implements UserService {
         IQueryCriteria query = Criteria.eq("id", params.getId());
         IUpdateCriteria update = Criteria.set("deleted", "1").add("updated_at", updatedAt);
         Result result = userDao.update(query, update);
-        if(! result.isSuccess()) {
+        if (!result.isSuccess()) {
             return result;
         }
         return ResultUtils.success(params.getId());
@@ -168,11 +170,12 @@ public class UserServiceImpl implements UserService {
         String roleIdsStr = collectRoleIds(roleIds);
         sessionUser.setRoleIds(roleIdsStr);
         sessionUser.setSystemUser(true);
-        if(! Tools.isEmpty(params.getIp()) ) {
+        if (!Tools.isEmpty(params.getIp())) {
             sessionUser.setRequestIp(params.getIp());
             sessionUser.setIpAddr(params.getIpAddr());
         }
         WebContext.setAttributeForSession(BlogConstants.SESSION_USER, sessionUser);
+        WebContext.setAttributeForSession(BlogConstants.SESSION_USER_ID, user.getId());
 
         try {
             userDao.updateOne(Criteria.eq("id", user.getId()), update);
@@ -188,6 +191,13 @@ public class UserServiceImpl implements UserService {
         WebContext.removeAttributeFromSession(BlogConstants.SESSION_CHECK_CODE);
 
         return ResultUtils.success("success");
+    }
+
+    @Override
+    public Result allId2Name() {
+        String sql = " select id, user_name from user where deleted = 0 order by created_at ";
+        List<Id2NameVO> list = jdbcTemplate.query(sql, new Id2NameRoleMapper("id", "user_name"));
+        return ResultUtils.success(list);
     }
 
     // -------------------- 辅助方法 --------------------------

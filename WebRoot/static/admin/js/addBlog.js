@@ -59,8 +59,8 @@ layui.define(['form', 'upload', 'layer'], function (exports) {
     var addTypeLayer, addTypeConfirm, addBlogLayer;
 
     form.on('submit(submitBlog)', function (data) {
-        $("#content").attr("value", ue.getContent())
-        $("#blogTagIds").attr("value", collectAttrValues($("#tagSelected .layui-form-checked"), "value", ", ", false))
+        $("[name='content']").attr("value", ue.getContent())
+        $("[name='blogTagIds']").attr("value", collectAttrValues($("#tagSelected .layui-form-checked"), "value", ", ", false))
 
         $.ajax({
             url: "/admin/blog/save",

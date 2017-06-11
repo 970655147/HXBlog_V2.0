@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>写博客页面</title>
 
-    <link href="./css/writeBlog.css" rel="stylesheet"/>
+    <link href="css/addBlog.css" rel="stylesheet"/>
     <!-- common imports -->
     <script type="text/javascript" src="../js/jquery-1.11.1.min.js" ></script>
     <script type="text/javascript" src="./js/commonImport.js"></script>
@@ -21,7 +21,7 @@
     <div class="layui-form-item">
         <label class="layui-form-label">博客标题</label>
         <div class="layui-input-inline">
-            <input type="text" name="title" lay-verify="required" autocomplete="off" placeholder="请输入标题" class="layui-input" th:value="${blog}==null?'':${blog.title}"/>
+            <input type="text" name="title" lay-verify="required" autocomplete="off" placeholder="请输入标题" class="layui-input" />
         </div>
     </div>
 
@@ -79,20 +79,18 @@
         <label class="layui-form-label">博文摘要</label>
         <div class="layui-input-block">
             <textarea placeholder="请输入内容" name="summary" class="layui-textarea" lay-verify="required"
-                      style='width:99%;' rows="4">
-            </textarea>
+                      style='width:99%;' rows="4"></textarea>
         </div>
     </div>
 
     <div class="layui-form-item layui-form-text">
         <label class="layui-form-label">编辑博文</label>
-        <input type="hidden" name="blogTagIds" id="blogTagIds">
-        <input type="hidden" name="content" id="content">
-        <input type="hidden" name="id" id="id">
+        <input type="hidden" name="blogTagIds">
+        <input type="hidden" name="content" >
+        <input type="hidden" name="id" >
 
-        <div class="layui-input-block">
-            <script id="editor" type="text/plain" style='width:99%;height:300px;'></script></div>
-        </div>
+        <div class="layui-input-block"><script id="editor" type="text/plain" style='width:99%;height:300px;'></script></div>
+    </div>
     <div class="layui-form-item">
         <div class="layui-input-block">
             <input id="uploadEditorHtml" type="file" name="file" class="layui-upload-file" lay-type="file" lay-title="插入html" />
@@ -112,7 +110,7 @@
 <script type="text/javascript" >
     layui.config({
         base: './js/'
-    }).use('writeBlog');
+    }).use('addBlog');
 </script>
 
 </body>

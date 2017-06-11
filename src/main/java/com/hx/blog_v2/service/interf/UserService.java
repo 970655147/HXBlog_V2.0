@@ -90,4 +90,14 @@ public interface UserService extends BaseService<UserPO> {
      */
     Result logout();
 
+    /**
+     * 获取所有的用户的 id -> name
+     *
+     * @return
+     * @author Jerry.X.He
+     * @date 6/11/2017 2:56 PM
+     * @since 1.0
+     */
+    Result allId2Name();
+
 }

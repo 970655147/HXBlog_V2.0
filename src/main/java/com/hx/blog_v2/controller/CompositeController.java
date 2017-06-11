@@ -1,10 +1,7 @@
 package com.hx.blog_v2.controller;
 
 import com.hx.blog_v2.domain.form.ImageSearchForm;
-import com.hx.blog_v2.service.interf.BlogTagService;
-import com.hx.blog_v2.service.interf.BlogTypeService;
-import com.hx.blog_v2.service.interf.ImageService;
-import com.hx.blog_v2.service.interf.MoodService;
+import com.hx.blog_v2.service.interf.*;
 import com.hx.blog_v2.util.BlogConstants;
 import com.hx.common.interf.common.Result;
 import com.hx.common.util.ResultUtils;
@@ -33,6 +30,10 @@ public class CompositeController {
     private MoodService moodService;
     @Autowired
     private ImageService imageService;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private RoleService roleService;
     @Autowired
     private BlogConstants constants;
 
@@ -67,6 +68,22 @@ public class CompositeController {
 
         JSONObject data = new JSONObject()
                 .element("moods", moodsResult.getData()).element("images", imagesResult.getData());
+        return ResultUtils.success(data);
+    }
+
+    @RequestMapping(value = "/userAndRoles", method = RequestMethod.GET)
+    public Result userAndRoles() {
+        Result userResult = userService.allId2Name();
+        if(! userResult.isSuccess()) {
+            return userResult;
+        }
+        Result roleResult = roleService.adminList();
+        if(! roleResult.isSuccess()) {
+            return roleResult;
+        }
+
+        JSONObject data = new JSONObject()
+                .element("users", userResult.getData()).element("roles", roleResult.getData());
         return ResultUtils.success(data);
     }
 

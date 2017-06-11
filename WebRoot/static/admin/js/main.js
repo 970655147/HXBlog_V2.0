@@ -294,14 +294,14 @@ function initMenu() {
                         var menu = topLevel[idx]
                         var subMenus = menu.childs
                         html += '<li class="layui-nav-item ">'
-                        html += '<a href="javascript:;">'
-                        html += '<i class="' + menu.iconClass + '"></i>' + menu.name + ''
+                        html += '<a href="javascript:void(0);">'
+                        html += '<i class="' + menu.iconClass + '"></i>&nbsp;&nbsp;' + menu.name + ''
                         html += '<span class="layui-nav-more"></span>'
                         html += '</a>'
                         html += '<dl class="layui-nav-child">'
                         for (idxOfSub in subMenus) {
                             var subMenu = subMenus[idxOfSub]
-                            html += '<dd><a href="javascript:;" class="' + subMenu.iconClass + '" data-url="' + subMenu.url + '" data-id="' + subMenu.id + '">' + subMenu.name + '</a></dd>'
+                            html += '<dd><a href="javascript:void(0);" class="' + subMenu.iconClass + '" data-url="' + subMenu.url + '" data-id="' + subMenu.id + '">&nbsp;&nbsp;' + subMenu.name + '</a></dd>'
                         }
                         html += '</dl>'
                         html += '</li>'

@@ -11,19 +11,13 @@ import com.hx.log.util.Log;
 import com.hx.log.util.Tools;
 import com.hx.mongo.config.MysqlDbConfig;
 import com.hx.mongo.config.interf.DbConfig;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.beans.factory.config.BeanPostProcessor;
-import org.springframework.core.env.PropertyResolver;
 
 import javax.annotation.PostConstruct;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-
-import static com.hx.log.util.Log.info;
 
 /**
  * BlogConstants
@@ -78,7 +72,7 @@ public final class BlogConstants {
             BlogTypePO.class, ExceptionLogPO.class, ImagePO.class, LinkPO.class, MoodPO.class, RequestLogPO.class,
             UserPO.class, VisitorPO.class, RltBlogTagPO.class, UploadFilePO.class,
             RolePO.class, RltUserRoleRolePO.class, ResourcePO.class, RltRoleResourcePO.class, InterfPO.class, RltResourceInterfPO.class,
-            BlogVisitLogPO.class
+            BlogVisitLogPO.class, MessagePO.class
     };
     /**
      * 下划线的注册了各个PO 的 KeyNodeParser
@@ -99,7 +93,7 @@ public final class BlogConstants {
     /**
      * 向数据库中 增加bean 是需要过滤掉 "created_at", "deleted"
      */
-    public static final JSONBeanProcessor UPDATE_BEAN_BEAN_PROCESSOR = regFilterBeanProcessor(Tools.asSet("created_at", "created_at_day") );
+    public static final JSONBeanProcessor UPDATE_BEAN_BEAN_PROCESSOR = regFilterBeanProcessor(Tools.asSet("created_at", "created_at_day"));
     /**
      * 向数据库中 增加bean 是需要过滤掉 "created_at", "deleted", "password"
      */
@@ -161,6 +155,10 @@ public final class BlogConstants {
      * 用户认证信息的key
      */
     public static final String SESSION_USER = "session:user";
+    /**
+     * 用户认证信息的key
+     */
+    public static final String SESSION_USER_ID = "session:user_id";
     /**
      * 用户验证码的key
      */
@@ -281,6 +279,8 @@ public final class BlogConstants {
     public String tableRltResourceInterf = "rlt_resource_interf";
     @Value("${table.blog_visit_log}")
     public String tableBlogVisitLog = "blog_visit_log";
+    @Value("${table.message}")
+    public String tableMessage = "message";
     @Value("${table.id}")
     public String tableId = "id";
 

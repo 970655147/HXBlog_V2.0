@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>发送消息页面</title>
+
+    <link href="css/addBlog.css" rel="stylesheet"/>
+    <!-- common imports -->
+    <script type="text/javascript" src="../js/jquery-1.11.1.min.js" ></script>
+    <script type="text/javascript" src="./js/commonImport.js"></script>
+    <script type="text/javascript" src="./plugin/layui/layui.js"></script>
+
+
+</head>
+<body>
+<fieldset class="layui-elem-field layui-field-title" style="margin-top: 10px;">
+    <legend>编写消息</legend>
+</fieldset>
+
+<form id="addMessageForm" class="layui-form" action="/admin/message/add" method="post" >
+    <div class="layui-form-item">
+        <label class="layui-form-label">选择用户</label>
+        <div class="layui-input-block" id="userSelected" >
+
+        </div>
+        <!-- ueditor 的样式配置中 最高的 z-index 为 3000 -->
+        <div class="layui-input-inline" style="z-index: 3002">
+            <select id="userIds" lay-filter="userIds" >
+                <option value="" ></option>
+            </select>
+        </div>
+        <div class="layui-input-inline">
+            <button class="layui-btn" type="button" onclick="location.reload()">
+                <i class="layui-icon">&#xe608;</i> 刷新
+            </button>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">选择角色</label>
+        <div class="layui-input-block" id="roleSelected" >
+
+        </div>
+        <!-- ueditor 的样式配置中 最高的 z-index 为 3000 -->
+        <div class="layui-input-inline" style="z-index: 3001">
+            <select id="roleIds" lay-filter="roleIds" >
+                <option value="" ></option>
+            </select>
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">消息主题</label>
+        <div class="layui-input-block">
+            <textarea placeholder="请输入内容" name="subject" class="layui-textarea" lay-verify="required"
+                      style='width:99%;' rows="4"></textarea>
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">编辑消息</label>
+        <input type="hidden" name="userIds" >
+        <input type="hidden" name="roleIds" >
+        <input type="hidden" name="content" >
+
+        <div class="layui-input-block"><script id="editor" type="text/plain" style='width:99%;height:300px;'></script></div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <input id="uploadEditorHtml" type="file" name="file" class="layui-upload-file" lay-type="file" lay-title="插入html" />
+            <button class="layui-btn" id="submit" lay-submit="" lay-filter="submitBlog" style="float:right; margin-right:40px" >立即提交</button>
+        </div>
+    </div>
+</form>
+
+<!-- layui.js -->
+<script src="./plugin/ueditor/ueditor.config.js" type="text/javascript"> </script> <script src="./plugin/ueditor/ueditor.all.js" type="text/javascript"> </script>
+<script src="./plugin/ueditor/lang/zh-cn/zh-cn.js" type="text/javascript"></script>
+<script src="../myJs/stringBuilder.js" ></script>
+<script src="../myJs/utils.js" ></script>
+
+<!-- layui规范化用法 -->
+<script type="text/javascript" >
+    layui.config({
+        base: './js/'
+    }).use('addMessage');
+</script>
+
+</body>
+</html>

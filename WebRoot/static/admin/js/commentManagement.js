@@ -113,10 +113,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
             data : $("#updateReplyForm").serialize(),
             success : function (resp) {
                 if(resp.success) {
-                    layer.alert('更新评论成功!', {
-                        closeBtn: 0,
-                        icon: 1
-                    }, function () {
+                    layer.alert('更新评论成功!', {closeBtn: 0, icon: 1 }, function () {
                         location.reload()
                     });
                 } else {
@@ -153,14 +150,13 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
                             html += '</blockquote>';
                             marginLeft += incr
                         }
-                        html += '</blockquote>';
                         html += '<hr>';
                         html += '</div>';
                         html += '</fieldset>';
                         layer.open({
                             type: 1,
                             skin: 'layui-layer-rim', //加上边框
-                            area: '620px', //宽高
+                            area: ['800px', '600px'], //宽高
                             title: '查看回复',
                             content: html
                         });
@@ -193,7 +189,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
             addReplyDialog = layer.open({
                 type: 1,
                 skin: 'layui-layer-rim', //加上边框
-                area: '420px', //宽高
+                area: ['800px', '600px'], //宽高
                 title: '回复评论',
                 content: html
             });
@@ -217,7 +213,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
             layer.open({
                 type: 1,
                 skin: 'layui-layer-rim', //加上边框
-                area: '420px', //宽高
+                area: ['800px', '600px'], //宽高
                 title: '修改评论',
                 content: html
             });
