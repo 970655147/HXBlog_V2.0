@@ -1,6 +1,7 @@
 package com.hx.blog_v2.util;
 
 import com.hx.blog_v2.dao.interf.*;
+import com.hx.blog_v2.domain.dto.StatisticsInfo;
 import com.hx.blog_v2.domain.form.BlogSenseForm;
 import com.hx.blog_v2.domain.form.BlogVisitLogForm;
 import com.hx.blog_v2.domain.po.*;
@@ -15,11 +16,12 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
+
+import static com.hx.log.util.Log.info;
 
 /**
  * 缓存了一部分的数据
@@ -114,6 +116,36 @@ public class CacheContext {
     private Cache<String, BlogVisitLogPO> requestIp2BlogVisitLog;
 
     /**
+     * 今天的统计数据
+     */
+    private StatisticsInfo todaysStatistics = new StatisticsInfo();
+    /**
+     * 缓存的 7 天的 数据
+     */
+    private Queue<StatisticsInfo> allStatistics = new LinkedList<>();
+    /**
+     * 今天之前的合计的统计数据
+     */
+    private StatisticsInfo sumStatistics = new StatisticsInfo();
+
+    /**
+     * 目前的5s的统计数据
+     */
+    private StatisticsInfo now5SecStatistics = new StatisticsInfo();
+    /**
+     * 缓存的 7 个5s的实时 数据
+     */
+    private Queue<StatisticsInfo> all5SecStatistics = new LinkedList<>();
+    /**
+     * 上一次访问 all5SecStatistics 的时间戳
+     */
+    private long fSecLastVisitDate;
+    /**
+     *  切换 all5SecStatistics 的任务是否启动
+     */
+    private ScheduledFuture fSecTaskFuture;
+
+    /**
      * 初始化 CacheContext
      *
      * @return void
@@ -125,6 +157,8 @@ public class CacheContext {
     public void init() {
         initICache();
         loadFullCachedResources();
+        initStastics();
+        initSchedule();
     }
 
     /**
@@ -151,6 +185,12 @@ public class CacheContext {
         blogIdUserInfo2Sense.clear();
         blogId2BlogEx.clear();
         requestIp2BlogVisitLog.clear();
+
+        todaysStatistics = new StatisticsInfo();
+        allStatistics.clear();
+        sumStatistics = new StatisticsInfo();
+        now5SecStatistics = new StatisticsInfo();
+        all5SecStatistics.clear();
     }
 
     /**
@@ -164,6 +204,7 @@ public class CacheContext {
     public void refresh() {
         clear();
         loadFullCachedResources();
+        initStastics();
     }
 
     /**
@@ -394,6 +435,98 @@ public class CacheContext {
     }
 
     /**
+     * 获取今天的统计数据的结果
+     *
+     * @return com.hx.blog_v2.domain.dto.StatisticsInfo
+     * @author Jerry.X.He
+     * @date 6/10/2017 9:03 PM
+     * @since 1.0
+     */
+    public StatisticsInfo todaysStatistics() {
+        return todaysStatistics;
+    }
+
+    public StatisticsInfo sumStatistics() {
+        return sumStatistics;
+    }
+
+    /**
+     * 获取最近7天的的统计数据的结果
+     *
+     * @return com.hx.blog_v2.domain.dto.StatisticsInfo
+     * @author Jerry.X.He
+     * @date 6/10/2017 9:03 PM
+     * @since 1.0
+     */
+    public Queue<StatisticsInfo> allStatistics() {
+        return allStatistics;
+    }
+
+    /**
+     * 一天末尾到第二天的数据的切换
+     *
+     * @return void
+     * @author Jerry.X.He
+     * @date 6/10/2017 9:06 PM
+     * @since 1.0
+     */
+    public void switchStatistics() {
+        if (allStatistics.size() > BlogConstants.MAX_CACHE_STASTICS_DAYS) {
+            allStatistics.poll();
+        }
+        allStatistics.add(todaysStatistics);
+        todaysStatistics = new StatisticsInfo();
+    }
+
+    /**
+     * 获取今天的统计数据的结果
+     *
+     * @return com.hx.blog_v2.domain.dto.StatisticsInfo
+     * @author Jerry.X.He
+     * @date 6/10/2017 9:03 PM
+     * @since 1.0
+     */
+    public StatisticsInfo now5SecStatistics() {
+        return now5SecStatistics;
+    }
+
+    /**
+     * 获取最近7天的的统计数据的结果
+     *
+     * @return com.hx.blog_v2.domain.dto.StatisticsInfo
+     * @author Jerry.X.He
+     * @date 6/10/2017 9:03 PM
+     * @since 1.0
+     */
+    public Queue<StatisticsInfo> all5SecStatistics() {
+        fSecLastVisitDate = System.currentTimeMillis();
+        /**
+         * 控制资源的采取, 如果长时间没有访问, "关闭" 该线程
+         */
+        if(all5SecStatistics.isEmpty() && (fSecTaskFuture == null)) {
+            fSecTaskFuture = Tools.scheduleAtFixedRate(new Switch5SecStatisInfoRunnable(), 0,
+                    BlogConstants.REAL_TIME_CHART_TIME_INTERVAL, TimeUnit.SECONDS);
+        }
+        return all5SecStatistics;
+    }
+
+    /**
+     * 一天末尾到第二天的数据的切换
+     *
+     * @return void
+     * @author Jerry.X.He
+     * @date 6/10/2017 9:06 PM
+     * @since 1.0
+     */
+    public void switch5SecStatistics() {
+        if (all5SecStatistics.size() > BlogConstants.MAX_REAL_TIME_CACHE_STASTICS_TIMES) {
+            all5SecStatistics.poll();
+        }
+        all5SecStatistics.add(now5SecStatistics);
+        now5SecStatistics = new StatisticsInfo();
+    }
+
+    /**
      * 获取给定到的博客的下一个层数id
      *
      * @param blogId blogId
@@ -540,6 +673,38 @@ public class CacheContext {
     }
 
     /**
+     * 从数据库拉取统计信息
+     *
+     * @return void
+     * @author Jerry.X.He
+     * @date 6/10/2017 9:08 PM
+     * @since 1.0
+     */
+    private void initStastics() {
+        List<StatisticsInfo> allDayStatisInfo = BizUtils.collectRecentlyStatisticsInfo(jdbcTemplate, BlogConstants.MAX_CACHE_STASTICS_DAYS);
+        allStatistics.addAll(allDayStatisInfo);
+        if (!Tools.isEmpty(allDayStatisInfo)) {
+            todaysStatistics = allDayStatisInfo.get(allDayStatisInfo.size() - 1);
+        }
+        sumStatistics = BizUtils.collectSumStatisticsInfo(jdbcTemplate);
+    }
+
+    /**
+     * 初始化调度任务
+     * 1. 每天 切换 daysStasticsInfo
+     *
+     * @return void
+     * @author Jerry.X.He
+     * @date 6/11/2017 12:00 AM
+     * @since 1.0
+     */
+    private void initSchedule() {
+        long msOffToNextDawn = DateUtils.beginOfDay(DateUtils.addDay(new Date(), 1)).getTime() - System.currentTimeMillis();
+        Tools.scheduleAtFixedRate(new SwitchStatisInfoRunnable(), msOffToNextDawn, 1, TimeUnit.DAYS);
+
+    }
+
+    /**
      * 获取给定的博客, 给定的层数的索引[在blogFloor2NextCommentId中使用]
      *
      * @param blogId  blogId
@@ -583,6 +748,41 @@ public class CacheContext {
         }
 
         return sb.toString();
+    }
+
+    /**
+     * 切换 统计信息的 任务
+     *
+     * @author Jerry.X.He <970655147@qq.com>
+     * @version 1.0
+     * @date 6/11/2017 12:02 AM
+     */
+    private class SwitchStatisInfoRunnable implements Runnable {
+        @Override
+        public void run() {
+            CacheContext.this.switchStatistics();
+        }
+    }
+
+    /**
+     * 切换 实时统计信息的 任务
+     *
+     * @author Jerry.X.He <970655147@qq.com>
+     * @version 1.0
+     * @date 6/11/2017 12:02 AM
+     */
+    private class Switch5SecStatisInfoRunnable implements Runnable {
+        @Override
+        public void run() {
+            if((System.currentTimeMillis() - fSecLastVisitDate) > ((BlogConstants.REAL_TIME_CHART_TIME_INTERVAL + 1) << 10) ) {
+                all5SecStatistics.clear();
+                fSecTaskFuture.cancel(false);
+                fSecTaskFuture = null;
+                return ;
+            }
+
+            CacheContext.this.switch5SecStatistics();
+        }
     }
 
 

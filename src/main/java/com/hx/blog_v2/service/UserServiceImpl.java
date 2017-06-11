@@ -168,6 +168,10 @@ public class UserServiceImpl implements UserService {
         String roleIdsStr = collectRoleIds(roleIds);
         sessionUser.setRoleIds(roleIdsStr);
         sessionUser.setSystemUser(true);
+        if(! Tools.isEmpty(params.getIp()) ) {
+            sessionUser.setRequestIp(params.getIp());
+            sessionUser.setIpAddr(params.getIpAddr());
+        }
         WebContext.setAttributeForSession(BlogConstants.SESSION_USER, sessionUser);
 
         try {

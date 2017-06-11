@@ -1,5 +1,6 @@
 package com.hx.blog_v2.controller;
 
+import com.hx.blog_v2.biz_handler.anno.BizHandle;
 import com.hx.blog_v2.domain.dto.SessionUser;
 import com.hx.blog_v2.domain.form.BlogSenseForm;
 import com.hx.blog_v2.service.interf.BlogSenseService;
@@ -26,6 +27,7 @@ public class BlogSenseController {
     private BlogSenseService senseService;
 
     @RequestMapping("/sense")
+    @BizHandle(handler = "blogSenseHandler")
     public Result sense(BlogSenseForm params) {
 
         SessionUser user = (SessionUser) WebContext.getAttributeFromSession(BlogConstants.SESSION_USER);

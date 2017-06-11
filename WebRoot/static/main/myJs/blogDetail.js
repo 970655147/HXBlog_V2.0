@@ -24,23 +24,23 @@ function contentInit() {
         el: '#bodyContent',
         data: {
             blog: {},
-            originalHeadImgUrl : "",
+            originalHeadImgUrl: "",
             userInfo: {
                 name: "",
                 email: "",
                 headImgUrl: "",
-                systemUser : false
+                systemUser: false
             },
             comments: [],
             headImages: [],
             replyInfo: {
-                blogId : "",
+                blogId: "",
                 floorId: "",
                 commentId: "",
                 toUser: ""
             },
-            pageInfo : {},
-            pagination : []
+            pageInfo: {},
+            pagination: []
         },
         mounted: function () {
             var that = this
@@ -103,7 +103,7 @@ function contentInit() {
                             if (userInfo !== null) {
                                 that.userInfo = userInfo
                                 that.originalHeadImgUrl = userInfo.headImgUrl
-                                if(userInfo.systemUser) {
+                                if (userInfo.systemUser) {
                                     $("[name='name']").attr("readonly", "readonly")
                                     $("[name='email']").attr("readonly", "readonly")
                                 }
@@ -118,11 +118,13 @@ function contentInit() {
                                 senseParams.blogId = params.id
                                 senseParams.sense = "good"
                                 senseParams.clicked = isPrise ? 1 : 0
+                                senseParams.ipFromSohu = returnCitySN["cip"]
+                                senseParams.ipAddr = returnCitySN["cname"]
 
                                 $.ajax({
                                     url: "/blog/sense/sense",
                                     data: senseParams,
-                                    type : "POST",
+                                    type: "POST",
                                     success: function (resp) {
 
                                     }
@@ -170,23 +172,25 @@ function contentInit() {
                 var that = this
                 var replyForm = $("#replyForm")
                 var params = {
-                    "blogId": that.blog.id,
-                    "floorId": that.replyInfo.floorId,
-                    "commentId": that.replyInfo.commentId,
-                    "name": that.userInfo.name,
-                    "email": that.userInfo.email,
-                    "headImgUrl": that.userInfo.headImgUrl,
-                    "toUser": that.replyInfo.toUser,
-                    "comment": replyForm.find("[name='comment']").html()
+                    blogId: that.blog.id,
+                    floorId: that.replyInfo.floorId,
+                    commentId: that.replyInfo.commentId,
+                    name: that.userInfo.name,
+                    email: that.userInfo.email,
+                    headImgUrl: that.userInfo.headImgUrl,
+                    toUser: that.replyInfo.toUser,
+                    comment: replyForm.find("[name='comment']").html(),
+                    ip: returnCitySN["cip"],
+                    ipAddr: returnCitySN["cname"]
                 }
                 console.log(params)
-                if(isEmpty(params.name) ) {
+                if (isEmpty(params.name)) {
                     layer.tips('请输入用户名', "[name='name']");
-                    return ;
+                    return;
                 }
-                if(isEmpty(params.comment)) {
+                if (isEmpty(params.comment)) {
                     layer.tips('请输入评论内容', "[name='comment']");
-                    return ;
+                    return;
                 }
 
                 $.ajax({
@@ -210,8 +214,8 @@ function contentInit() {
 
                             var endReplyFlag = "[/reply]"
                             if (isEmpty(params.floorId) || (addedComment.comment.indexOf(endReplyFlag) < 0)) {
-                                if(that.comments.length < pageSize) {
-                                    addedComment.floorId = parseInt(that.comments[that.comments.length-1].floorComment.floorId) + 1
+                                if (that.comments.length < pageSize) {
+                                    addedComment.floorId = parseInt(that.comments[that.comments.length - 1].floorComment.floorId) + 1
                                     that.comments.push({
                                         floorComment: addedComment,
                                         replies: []
@@ -254,12 +258,12 @@ function contentInit() {
                 }
                 return null;
             },
-            getUrlWithPage : function(pageNow) {
+            getUrlWithPage: function (pageNow) {
                 var baseUrl = "/comment/list"
                 params.pageNow = pageNow
                 return encapGetUrl(baseUrl, params)
             },
-            updateComment : function(url) {
+            updateComment: function (url) {
                 var that = this
                 var params = getParamsFromUrl(url)
 

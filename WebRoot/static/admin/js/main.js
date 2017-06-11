@@ -5,7 +5,7 @@ var $;
 initMenu()
 initStatistics()
 
-$("#refreshConfig").click(function() {
+$("[name='refreshConfig']").click(function() {
     refreshConfig();
 })
 $("#logout").click(function() {
@@ -327,20 +327,25 @@ function initStatistics() {
         type: "GET",
         success: function (resp) {
             if (resp.success) {
-                var stats = resp.data
-                $("#lastLoginIp").text(stats.lastLoginIp)
-                $("#lastLoginAddr").text(stats.lastLoginAddr)
-                $("#lastLoginDate").text(stats.lastLoginDate)
-                $("#loginIp").text(stats.loginIp)
-                $("#loginAddr").text(stats.loginAddr)
-                $("#loginDate").text(stats.loginDate)
+                var loginInfo = resp.data.loginInfo
+                $("[name='loginIp']").text(loginInfo.loginIp)
+                $("[name='loginAddr']").text(loginInfo.loginAddr)
+                $("[name='loginDate']").text(loginInfo.loginDate)
 
-                $("#todayVisited").text(stats.todayVisited)
-                $("#todayGoodSensed").text(stats.todayGoodSensed)
-                $("#totalVisited").text(stats.totalVisited)
-                $("#totalGoodSensed").text(stats.totalGoodSensed)
-                $("#totalCommentCnt").text(stats.totalCommentCnt)
-                $("#totalBlogCnt").text(stats.totalBlogCnt)
+                var todayStats = resp.data.todayStats
+                $("[name='todayInfo'] [name='dayFlushViewCnt']").text(todayStats.dayFlushViewCnt)
+                $("[name='todayInfo'] [name='viewCnt']").text(todayStats.viewCnt)
+                $("[name='todayInfo'] [name='goodCnt']").text(todayStats.goodCnt)
+                $("[name='todayInfo'] [name='notGoodCnt']").text(todayStats.notGoodCnt)
+                $("[name='todayInfo'] [name='blogCnt']").text(todayStats.blogCnt)
+                $("[name='todayInfo'] [name='commentCnt']").text(todayStats.commentCnt)
+                var sumStats = resp.data.sumStats
+                $("[name='sumInfo'] [name='dayFlushViewCnt']").text(sumStats.dayFlushViewCnt + todayStats.dayFlushViewCnt)
+                $("[name='sumInfo'] [name='viewCnt']").text(sumStats.viewCnt + todayStats.viewCnt)
+                $("[name='sumInfo'] [name='goodCnt']").text(sumStats.goodCnt + todayStats.goodCnt)
+                $("[name='sumInfo'] [name='notGoodCnt']").text(sumStats.notGoodCnt + todayStats.notGoodCnt)
+                $("[name='sumInfo'] [name='blogCnt']").text(sumStats.blogCnt + todayStats.blogCnt)
+                $("[name='sumInfo'] [name='commentCnt']").text(sumStats.commentCnt + todayStats.commentCnt)
             } else {
                 layer.alert("拉取菜单列表失败[" + resp.msg + "] !", {icon: 5});
             }
@@ -355,7 +360,6 @@ function refreshConfig() {
     $.ajax({
         url: "/admin/system/refreshConfig",
         data: { },
-        type: "POST",
         success: function (resp) {
             if (resp.success) {
                 layer.alert("刷新缓存配置成功 !")

@@ -60,6 +60,22 @@ public abstract class BaseDaoImpl<T extends JSONTransferable<T>> extends MysqlBa
     }
 
     @Override
+    public Result get(IQueryCriteria query) {
+        T result = null;
+        try {
+            result = findOne(query, BlogConstants.LOAD_ALL_CONFIG);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResultUtils.failed(Tools.errorMsg(e));
+        }
+
+        if (result != null) {
+            return ResultUtils.success(result);
+        }
+        return ResultUtils.failed("记录不存在 !");
+    }
+
+    @Override
     public Result list(IQueryCriteria query) {
         List<T> result = null;
         try {

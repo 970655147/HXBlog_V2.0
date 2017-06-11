@@ -149,12 +149,13 @@ public class IndexServiceImpl extends BaseServiceImpl<Object> implements IndexSe
 
     @Override
     public Result adminStatistics() {
+        SessionUser user = (SessionUser) WebContext.getAttributeFromSession(BlogConstants.SESSION_USER);
         JSONObject data = new JSONObject()
-                .element("lastLoginIp", "127.0.0.1").element("lastLoginDate", "2017-05-30").element("lastLoginAddr", "四川成都")
-                .element("loginIp", "127.0.0.1").element("loginDate", "2017-05-31").element("lastLoginAddr", "四川贵阳")
-                .element("todayVisited", "120").element("todayGoodSensed", "110")
-                .element("totalVisited", "2220").element("totalGoodSensed", "3330")
-                .element("totalCommentCnt", "120").element("totalBlogCnt", "1330");
+                .element("loginInfo", new JSONObject().element("loginIp", user.getRequestIp())
+                .element("loginDate", user.getLoginDate()).element("loginAddr", user.getIpAddr()))
+                .element("todayStats", cacheContext.todaysStatistics())
+                .element("sumStats", cacheContext.sumStatistics())
+                ;
 
         return ResultUtils.success(data);
     }

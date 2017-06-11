@@ -29,7 +29,7 @@
         </div>
         <ul class="ht-nav">
             <li class="ht-nav-item">
-                <a href="javascript:;" id="refreshConfig"><i class="fa fa-refresh fa-fw" style="padding-right:5px;"></i>刷新缓存</a>
+                <a href="javascript:;" name="refreshConfig"><i class="fa fa-refresh fa-fw" style="padding-right:5px;"></i>刷新缓存</a>
             </li>
             <li class="ht-nav-item">
                 <a target="_blank" href="/static/main/index.html"><i class="fa fa-leaf" style="padding-right:5px;"></i>前台入口</a>
@@ -68,52 +68,79 @@
             <div class="layui-tab-content">
                 <div class="layui-tab-item layui-show">
                     <p style="padding: 10px 15px; margin-bottom: 20px; margin-top: 10px; border:1px solid #ddd;display:inline-block;">
-                        上次登陆
-                        <span style="padding-left:1em;" id="lastLoginIp" >IP：192.168.0.119</span>
-                        <span style="padding-left:1em;" id="lastLoginAddr">地点：四川成都</span>
-                        <span style="padding-left:1em;" id="lastLoginDate">时间：2017-05-19 14：12</span>
-                    </p>
-                    <p style="padding: 10px 15px; margin-bottom: 20px; margin-top: 10px; border:1px solid #ddd;display:inline-block;">
                         本次登陆
-                        <span style="padding-left:1em;" id="loginIp" >IP：192.168.0.119</span>
-                        <span style="padding-left:1em;" id="loginAddr">地点：四川成都</span>
-                        <span style="padding-left:1em;" id="loginDate">时间：2017-05-30 14：12</span>
+                        IP :<span style="padding-left:1em;" name="loginIp" > / </span> &nbsp;&nbsp;
+                        地点 :<span style="padding-left:1em;" name="loginAddr"> / </span> &nbsp;&nbsp;
+                        时间 :<span style="padding-left:1em;" name="loginDate"> / </span> &nbsp;&nbsp;
                     </p>
                     <fieldset class="layui-elem-field layui-field-title">
-                        <legend>统计信息</legend>
-                        <div class="layui-field-box">
+                        <legend>今日统计信息</legend>
+                        <div class="layui-field-box" name="todayInfo" >
                             <div style="display: inline-block; width: 100%;">
                                 <div class="ht-box layui-bg-blue">
-                                    <p id="todayVisited" >123</p>
-                                    <p>今日访问</p>
+                                    <p name="dayFlushViewCnt">0</p>
+                                    <p>访问数量[uv]</p>
+                                </div>
+                                <div class="ht-box layui-bg-blue">
+                                    <p name="viewCnt">0</p>
+                                    <p>访问数量[pv]</p>
                                 </div>
                                 <div class="ht-box layui-bg-red">
-                                    <p id="todayGoodSensed">32</p>
-                                    <p>今日点赞</p>
+                                    <p name="goodCnt">0</p>
+                                    <p>点赞数量</p>
                                 </div>
                                 <div class="ht-box layui-bg-green">
-                                    <p id="totalVisited">55</p>
-                                    <p>访问总数</p>
+                                    <p name="notGoodCnt">0</p>
+                                    <p>取消点赞</p>
                                 </div>
                                 <div class="ht-box layui-bg-orange">
-                                    <p id="totalGoodSensed">123</p>
-                                    <p>点赞总数</p>
-                                </div>
-                                <div class="ht-box layui-bg-cyan">
-                                    <p id="totalCommentCnt">321</p>
-                                    <p>评论总数</p>
+                                    <p name="blogCnt">0</p>
+                                    <p>博客数量</p>
                                 </div>
                                 <div class="ht-box layui-bg-black">
-                                    <p id="totalBlogCnt">231</p>
-                                    <p>文章总数</p>
+                                    <p name="commentCnt">0</p>
+                                    <p>评论数量</p>
                                 </div>
                             </div>
                         </div>
                     </fieldset>
+                    <fieldset class="layui-elem-field layui-field-title">
+                        <legend>合计统计信息</legend>
+                        <div class="layui-field-box" name="sumInfo" >
+                            <div style="display: inline-block; width: 100%;">
+                                <div class="ht-box layui-bg-blue">
+                                    <p name="dayFlushViewCnt">0</p>
+                                    <p>访问数量[uv]</p>
+                                </div>
+                                <div class="ht-box layui-bg-blue">
+                                    <p name="viewCnt">0</p>
+                                    <p>访问数量[pv]</p>
+                                </div>
+                                <div class="ht-box layui-bg-red">
+                                    <p name="goodCnt">0</p>
+                                    <p>点赞数量</p>
+                                </div>
+                                <div class="ht-box layui-bg-green">
+                                    <p name="notGoodCnt">0</p>
+                                    <p>取消点赞</p>
+                                </div>
+                                <div class="ht-box layui-bg-orange">
+                                    <p name="blogCnt">0</p>
+                                    <p>博客数量</p>
+                                </div>
+                                <div class="ht-box layui-bg-black">
+                                    <p name="commentCnt">0</p>
+                                    <p>评论数量</p>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+
                 </div>
             </div>
         </div>
     </div>
+
     <!--底部信息-->
     <div class="layui-footer">
         <p style="line-height:44px;text-align:center;">HXBlog_V2.0 后台管理系统</p>

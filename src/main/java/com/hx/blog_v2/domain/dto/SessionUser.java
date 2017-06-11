@@ -2,6 +2,10 @@ package com.hx.blog_v2.domain.dto;
 
 import com.hx.blog_v2.domain.form.interf.UserInfoExtractor;
 import com.hx.blog_v2.util.BizUtils;
+import com.hx.blog_v2.util.BlogConstants;
+import com.hx.blog_v2.util.DateUtils;
+
+import java.util.Date;
 
 /**
  * 存放在session中的用户信息[登录的, 非登录的]
@@ -20,8 +24,10 @@ public class SessionUser implements UserInfoExtractor {
     private String email;
     private String headImgUrl;
     private String requestIp;
+    private String ipAddr;
     private String title;
     private String roleIds;
+    private String loginDate;
     private boolean isSystemUser;
 
     public SessionUser(String name, String email, String headImgUrl, String title, String roleIds, boolean isSystemUser) {
@@ -36,6 +42,8 @@ public class SessionUser implements UserInfoExtractor {
 
     public SessionUser() {
         this.requestIp = BizUtils.getIp();
+        this.ipAddr = BizUtils.getIpAddr(this.requestIp);
+        this.loginDate = DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
     }
 
     public String getId() {
@@ -101,5 +109,21 @@ public class SessionUser implements UserInfoExtractor {
 
     public void setRequestIp(String requestIp) {
         this.requestIp = requestIp;
+    }
+
+    public String getIpAddr() {
+        return ipAddr;
+    }
+
+    public void setIpAddr(String ipAddr) {
+        this.ipAddr = ipAddr;
+    }
+
+    public String getLoginDate() {
+        return loginDate;
+    }
+
+    public void setLoginDate(String loginDate) {
+        this.loginDate = loginDate;
     }
 }

@@ -31,6 +31,8 @@ public interface BaseDao<T extends JSONTransferable<T>> extends MysqlIBaseDao<T>
      */
     Result get(BeanIdForm params);
 
+    Result get(IQueryCriteria query);
+
     /**
      * 根据给定的条件, 获取多个
      *

@@ -1,5 +1,6 @@
 package com.hx.blog_v2.controller;
 
+import com.hx.blog_v2.biz_handler.anno.BizHandle;
 import com.hx.blog_v2.domain.dto.SessionUser;
 import com.hx.blog_v2.domain.form.BeanIdForm;
 import com.hx.blog_v2.domain.form.CommentSaveForm;
@@ -8,7 +9,6 @@ import com.hx.blog_v2.service.interf.BlogCommentService;
 import com.hx.blog_v2.util.BizUtils;
 import com.hx.blog_v2.util.BlogConstants;
 import com.hx.blog_v2.util.WebContext;
-import com.hx.common.interf.common.Page;
 import com.hx.common.interf.common.Result;
 import com.hx.common.result.SimplePage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +32,7 @@ public class CommentController {
     private BlogCommentService commentService;
 
     @RequestMapping("/add")
+    @BizHandle(handler = "commentAddHandler")
     public Result add(CommentSaveForm params) {
 
         SessionUser user = (SessionUser) WebContext.getAttributeFromSession(BlogConstants.SESSION_USER);

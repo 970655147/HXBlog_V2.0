@@ -1,5 +1,6 @@
 package com.hx.blog_v2.controller.admin;
 
+import com.hx.blog_v2.biz_handler.anno.BizHandle;
 import com.hx.blog_v2.domain.form.AdminCommentSearchForm;
 import com.hx.blog_v2.domain.form.BeanIdForm;
 import com.hx.blog_v2.domain.form.CommentSaveForm;
@@ -30,6 +31,7 @@ public class CommentController {
     private BlogCommentService commentService;
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
+    @BizHandle(handler = "commentAddHandler")
     public Result add(CommentSaveForm params) {
 
         return commentService.add(params);
@@ -55,6 +57,7 @@ public class CommentController {
     }
 
     @RequestMapping(value = "/remove", method = RequestMethod.POST)
+    @BizHandle(handler = "commentRemoveHandler")
     public Result remove(BeanIdForm params) {
 
         return commentService.remove(params);

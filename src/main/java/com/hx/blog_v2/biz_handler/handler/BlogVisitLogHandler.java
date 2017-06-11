@@ -51,11 +51,15 @@ public class BlogVisitLogHandler extends BizHandlerAdapter {
                 BlogExPO blogEx = (BlogExPO) blogExDao.get(new BeanIdForm(blogId)).getData();
 
                 blogEx.incViewCnt(1);
+                cacheContext.todaysStatistics().incViewCnt(1);
+                cacheContext.now5SecStatistics().incViewCnt(1);
                 params.setCreatedAtDay(DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD));
                 BlogVisitLogPO po = visitLogDao.get(params);
                 // 今天 没访问过?
                 if (po == null) {
                     blogEx.incDayFlushViewCnt(1);
+                    cacheContext.todaysStatistics().incDayFlushViewCnt(1);
+                    cacheContext.now5SecStatistics().incDayFlushViewCnt(1);
                     po = encapBlogVisitLog(params);
 
                     BlogVisitLogForm ipVisitLogParam = new BlogVisitLogForm(params.getBlogId(), params.getRequestIp());
@@ -65,13 +69,13 @@ public class BlogVisitLogHandler extends BizHandlerAdapter {
                         blogEx.incUniqueViewCnt(1);
                     }
 
-                    visitLogDao.add(po);
                     cacheContext.putBlogVisitLog(params, po);
                     if (ipVisitLogPo == null) {
                         cacheContext.putBlogVisitLog(ipVisitLogParam, po);
                     }
                 }
 
+                po = encapBlogVisitLog(params);
                 visitLogDao.add(po);
                 cacheContext.putBlogEx(blogEx);
             }

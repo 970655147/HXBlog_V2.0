@@ -102,8 +102,11 @@ function headerFooterInit() {
                     var senseParams = {
                         blogId : "-1",
                         clicked : isPrise ? 1 : 0,
-                        sense : "good"
+                        sense : "good",
+                        ipFromSohu : returnCitySN["cip"],
+                        ipAddr : returnCitySN["cname"]
                     }
+
                     $.ajax({
                         url: "/blog/sense/sense",
                         data: senseParams,

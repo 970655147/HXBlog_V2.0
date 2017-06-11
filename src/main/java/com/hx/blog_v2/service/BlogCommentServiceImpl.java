@@ -2,6 +2,7 @@ package com.hx.blog_v2.service;
 
 import com.hx.blog_v2.dao.interf.BlogCommentDao;
 import com.hx.blog_v2.dao.interf.BlogDao;
+import com.hx.blog_v2.dao.interf.BlogExDao;
 import com.hx.blog_v2.domain.POVOTransferUtils;
 import com.hx.blog_v2.domain.dto.SessionUser;
 import com.hx.blog_v2.domain.form.AdminCommentSearchForm;
@@ -12,6 +13,7 @@ import com.hx.blog_v2.domain.mapper.AdminCommentVOMapper;
 import com.hx.blog_v2.domain.mapper.CommentVOMapper;
 import com.hx.blog_v2.domain.mapper.OneIntMapper;
 import com.hx.blog_v2.domain.po.BlogCommentPO;
+import com.hx.blog_v2.domain.po.BlogExPO;
 import com.hx.blog_v2.domain.po.BlogPO;
 import com.hx.blog_v2.domain.vo.AdminCommentVO;
 import com.hx.blog_v2.domain.vo.BlogVO;
@@ -45,6 +47,8 @@ public class BlogCommentServiceImpl extends BaseServiceImpl<BlogCommentPO> imple
     @Autowired
     private BlogDao blogDao;
     @Autowired
+    private BlogExDao blogExDao;
+    @Autowired
     private BlogCommentDao commentDao;
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -65,7 +69,8 @@ public class BlogCommentServiceImpl extends BaseServiceImpl<BlogCommentPO> imple
         po.setBlogId(params.getBlogId());
 
         int endOfReply = idxOfEndRe(params.getComment());
-        if ((!Tools.isEmpty(params.getFloorId())) && (endOfReply >= 0)) {
+        boolean isReply = ((!Tools.isEmpty(params.getFloorId())) && (endOfReply >= 0));
+        if (isReply) {
             BlogCommentPO replyTo = get0(params.getBlogId(), params.getFloorId(), params.getCommentId());
             if ((replyTo == null) || (!params.getToUser().equalsIgnoreCase(replyTo.getName()))) {
                 return ResultUtils.failed("没有对应的回复 !");
@@ -83,6 +88,16 @@ public class BlogCommentServiceImpl extends BaseServiceImpl<BlogCommentPO> imple
         Result saveResult = commentDao.add(po);
         if (!saveResult.isSuccess()) {
             return saveResult;
+        }
+
+        if(! isReply) {
+            Result getExResult = blogExDao.get(new BeanIdForm(blog.getId()));
+            if (!getExResult.isSuccess()) {
+                return getExResult;
+            }
+            BlogExPO exPo = ((BlogExPO) getExResult.getData());
+            exPo.incCommentCnt(1);
+            cacheContext.putBlogEx(exPo);
         }
         return ResultUtils.success(po.getId());
     }

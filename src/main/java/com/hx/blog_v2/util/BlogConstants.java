@@ -219,6 +219,7 @@ public final class BlogConstants {
      */
     public static final int RE_SORT_OFFSET = 10;
 
+
     // ----------------------------------------- configurable -------------------------------------------------
 
     @Value("${jdbc.driver_clazz}")
@@ -412,6 +413,27 @@ public final class BlogConstants {
             checkCodeCandidates.add(checkCodeCandidatesStr.charAt(i));
         }
     }
+
+    /**
+     * 查询 ip 的url的 logPattern
+     */
+    @Value("${ip_addr_req_log_pattern}")
+    public static String IP_ADDR_REQ_LOG_PATTERN = "map('http://ip.taobao.com/service/getIpInfo.php?ip=' + $this)";
+    /**
+     * 缓存的统计结果的数量
+     */
+    @Value("${max_cache_statistics_days}")
+    public static int MAX_CACHE_STASTICS_DAYS = 7;
+    /**
+     * 实时统计的时间间隔
+     */
+    @Value("${realtime_chart_time_interval}")
+    public static int REAL_TIME_CHART_TIME_INTERVAL = 5;
+    /**
+     * 缓存的统计结果的数量
+     */
+    @Value("${max_real_time_cache_statistics_times}")
+    public static int MAX_REAL_TIME_CACHE_STASTICS_TIMES = 12;
 
     // -------------------- 辅助方法 --------------------------
 

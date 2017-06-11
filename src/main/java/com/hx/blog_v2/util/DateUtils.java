@@ -4,10 +4,7 @@ import com.hx.log.util.Tools;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 日期相关的工具类
@@ -73,6 +70,41 @@ public final class DateUtils {
         }
 
         return dateFormat;
+    }
+
+    /**
+     * 获取 date + dayOff 对应的日期
+     *
+     * @param date   date
+     * @param dayOff dayOff
+     * @return java.util.Date
+     * @author Jerry.X.He
+     * @date 6/10/2017 11:36 PM
+     * @since 1.0
+     */
+    public static Date addDay(Date date, int dayOff) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.add(Calendar.DAY_OF_MONTH, dayOff);
+        return cal.getTime();
+    }
+
+    /**
+     * 获取给定的日期的 早上0点0分0秒
+     *
+     * @param date date
+     * @return java.util.Date
+     * @author Jerry.X.He
+     * @date 6/10/2017 11:58 PM
+     * @since 1.0
+     */
+    public static Date beginOfDay(Date date) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 1);
+        return cal.getTime();
     }
 
 }

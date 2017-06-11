@@ -1,5 +1,6 @@
 package com.hx.blog_v2.controller.admin;
 
+import com.hx.blog_v2.biz_handler.anno.BizHandle;
 import com.hx.blog_v2.domain.form.BeanIdForm;
 import com.hx.blog_v2.domain.form.BlogSaveForm;
 import com.hx.blog_v2.domain.form.BlogSearchForm;
@@ -27,6 +28,7 @@ public class BlogController {
     private BlogService blogService;
 
     @RequestMapping(value = "/save", method = RequestMethod.POST)
+    @BizHandle(handler = "blogSaveHandler")
     public Result save(BlogSaveForm params) {
 
         return blogService.save(params);
@@ -46,6 +48,7 @@ public class BlogController {
     }
 
     @RequestMapping(value = "/remove", method = RequestMethod.POST)
+    @BizHandle(handler = "blogRemoveHandler")
     public Result remove(BeanIdForm params) {
 
         return blogService.remove(params);
