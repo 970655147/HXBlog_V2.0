@@ -69,7 +69,7 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourcePO> implements 
         ResourcePO po = new ResourcePO(params.getName(), params.getIconClass(), params.getUrl(),
                 params.getParentId(), params.getSort(), parentPo.getLevel() + 1, params.getEnable());
         Result result = resourceDao.add(po);
-        if(! result.isSuccess()) {
+        if (!result.isSuccess()) {
             return result;
         }
 
@@ -88,6 +88,34 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourcePO> implements 
             }
         }
         return ResultUtils.success(leaves);
+    }
+
+    @Override
+    public Result treeList(boolean spread) {
+        Map<String, ResourcePO> resourcesById = cacheContext.allResources();
+        List<ResourceVO> resources = new ArrayList<>(resourcesById.size());
+        for (Map.Entry<String, ResourcePO> entry : resourcesById.entrySet()) {
+            if (entry.getValue().getEnable() == 1) {
+                resources.add(POVOTransferUtils.resourcePO2ResourceVO(entry.getValue()));
+            }
+        }
+
+        final boolean spreadTmp = spread;
+        JSONObject root = TreeUtils.generateTree(resources, new TreeInfoExtractor<ResourceVO>() {
+            @Override
+            public void extract(ResourceVO bean, JSONObject obj) {
+                obj.element("id", bean.getId());
+                obj.element("name", bean.getName());
+                obj.element("iconClass", bean.getIconClass());
+                obj.element("url", bean.getUrl());
+                obj.element("sort", bean.getSort());
+                obj.element("parentId", bean.getParentId());
+                obj.element("enable", bean.getEnable());
+                obj.element("spread", spreadTmp);
+            }
+        }, "children", BlogConstants.RESOURCE_ROOT_PARENT_ID);
+        TreeUtils.childArrayify(root, "children");
+        return ResultUtils.success(root);
     }
 
     @Override
@@ -153,7 +181,7 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourcePO> implements 
         po.setEnable(params.getEnable());
         po.setUpdatedAt(DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS));
         Result result = resourceDao.update(po);
-        if(! result.isSuccess()) {
+        if (!result.isSuccess()) {
             return result;
         }
         return ResultUtils.success(po.getId());
@@ -200,7 +228,7 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourcePO> implements 
         IQueryCriteria query = Criteria.eq("id", params.getId());
         IUpdateCriteria update = Criteria.set("deleted", "1").add("updated_at", updatedAt);
         Result result = resourceDao.update(query, update);
-        if(! result.isSuccess()) {
+        if (!result.isSuccess()) {
             return result;
         }
         return ResultUtils.success(params.getId());
@@ -226,7 +254,7 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourcePO> implements 
             Integer newSort = sortNow + BlogConstants.RE_SORT_OFFSET;
             parent2Sort.put(po.getParentId(), newSort);
             if (po.getLevel() != newSort.intValue()) {
-                po.setLevel(newSort);
+                po.setSort(newSort);
                 try {
                     resourceDao.updateOne(Criteria.eq("id", po.getId()), Criteria.set("sort", newSort));
                 } catch (Exception e) {

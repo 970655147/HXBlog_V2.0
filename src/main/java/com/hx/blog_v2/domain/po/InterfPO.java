@@ -21,7 +21,7 @@ import java.util.Map;
  * @version 1.0
  * @date 5/22/2017 8:03 PM
  */
-public class InterfPO implements JSONTransferable<InterfPO> {
+public class InterfPO implements JSONTransferable<InterfPO>, Comparable<InterfPO> {
 
     @JSONField({"id", "id"})
     private String id;
@@ -29,6 +29,8 @@ public class InterfPO implements JSONTransferable<InterfPO> {
     private String name;
     @JSONField({"desc", "desc"})
     private String desc;
+    @JSONField({"sort", "sort"})
+    private int sort;
     @JSONField({"createdAt", "created_at"})
     private String createdAt;
     @JSONField({"updatedAt", "updated_at"})
@@ -38,10 +40,11 @@ public class InterfPO implements JSONTransferable<InterfPO> {
     @JSONField({"deleted", "deleted"})
     private int deleted;
 
-    public InterfPO(String name, String desc, int enable) {
+    public InterfPO(String name, String desc, int sort, int enable) {
         this();
         this.name = name;
         this.desc = desc;
+        this.sort = sort;
         this.enable = enable;
     }
 
@@ -74,6 +77,14 @@ public class InterfPO implements JSONTransferable<InterfPO> {
 
     public void setDesc(String desc) {
         this.desc = desc;
+    }
+
+    public int getSort() {
+        return sort;
+    }
+
+    public void setSort(int sort) {
+        this.sort = sort;
     }
 
     public String getCreatedAt() {
@@ -149,6 +160,16 @@ public class InterfPO implements JSONTransferable<InterfPO> {
     @Override
     public void id(String id) {
         this.id = id;
+    }
+
+    @Override
+    public int compareTo(InterfPO o) {
+        int deltaSort = this.sort - o.sort;
+        if (deltaSort != 0) {
+            return deltaSort;
+        }
+
+        return this.name.compareTo(o.name);
     }
 
 }

@@ -19,7 +19,7 @@ layui.define(['layer', 'form'], function (exports) {
         setTimeout(function () {
             layer.close(index);
             $.ajax({
-                url: "/type/list",
+                url: "/admin/type/list",
                 type: "GET",
                 data: {},
                 success: function (resp) {
@@ -94,7 +94,7 @@ layui.define(['layer', 'form'], function (exports) {
     var funcs = {
         addData: function () {
             var html = '';
-            html += '<form id="addTypeForm" class="layui-form layui-form-pane" >';
+            html += '<form id="addTypeForm" action="/admin/type/add" class="layui-form layui-form-pane" >';
             html += '<label class="layui-form-label" style="border: none" name="content" >名称:</label>';
             html += '<input style="width:87%;margin: auto;color: #000!important;" name="name" lay-verify="required" class="layui-input" >';
             html += '<label class="layui-form-label" style="border: none" name="content" >排序:</label>';
@@ -117,7 +117,7 @@ layui.define(['layer', 'form'], function (exports) {
         },
         editData: function (id, typeName, sort) {
             var html = '';
-            html += '<form id="updateTypeForm" class="layui-form layui-form-pane" >';
+            html += '<form id="updateTypeForm" action="/admin/type/update" class="layui-form layui-form-pane" >';
             html += '<input type="hidden" name="id" value="' + id + '"/>';
             html += '<label class="layui-form-label" style="border: none" >名称:</label>';
             html += '<textarea style="width:87%;margin: auto;color: #000!important;" name="name" class="layui-textarea" lay-verify="required" >' + typeName + '</textarea>';

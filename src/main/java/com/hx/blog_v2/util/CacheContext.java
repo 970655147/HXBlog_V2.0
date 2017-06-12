@@ -21,8 +21,6 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
-import static com.hx.log.util.Log.info;
-
 /**
  * 缓存了一部分的数据
  *
@@ -103,6 +101,10 @@ public class CacheContext {
      */
     private Cache<String, List<String>> roles2ResourceIds;
     /**
+     * resourceIds -> interfs 的缓存
+     */
+    private Cache<String, List<String>> resource2Interfs;
+    /**
      * (blogId, userName, email, sense) -> clicked 的缓存
      */
     private Cache<String, BlogSensePO> blogIdUserInfo2Sense;
@@ -181,7 +183,7 @@ public class CacheContext {
         blogFloor2NextCommentId.clear();
         digest2UploadedFiles.clear();
         roles2ResourceIds.clear();
-        roles2ResourceIds.clear();
+        resource2Interfs.clear();
         blogIdUserInfo2Sense.clear();
         blogId2BlogEx.clear();
         requestIp2BlogVisitLog.clear();
@@ -603,6 +605,23 @@ public class CacheContext {
         roles2ResourceIds.put(roleIds, resourceIds);
     }
 
+    /**
+     * 根据给定的rresource集合, 获取所有的可以访问的 接口
+     *
+     * @param resourceIds resourceIds
+     * @return java.util.List<java.lang.String>
+     * @author Jerry.X.He
+     * @date 6/3/2017 3:02 PM
+     * @since 1.0
+     */
+    public List<String> interfsByResourceIds(String resourceIds) {
+        return resource2Interfs.get(resourceIds);
+    }
+
+    public void putInterfsByResourceIds(String resourceIds, List<String> interfs) {
+        resource2Interfs.put(resourceIds, interfs);
+    }
+
     // -------------------- 辅助方法 --------------------------
 
     /**
@@ -618,6 +637,7 @@ public class CacheContext {
         blogFloor2NextCommentId = new LRUMCache<>(constants.maxCachedBlogFloor2CommentId, false);
         digest2UploadedFiles = new LRUMCache<>(constants.maxCachedUploadedImage, false);
         roles2ResourceIds = new LRUMCache<>(constants.maxRoleIds2ResourceIds, false);
+        resource2Interfs = new LRUMCache<>(constants.maxRoleIds2ResourceIds, false);
         blogIdUserInfo2Sense = new LRUMCache<>(constants.maxSense2Clicked, false);
         blogId2BlogEx = new LRUMCache<>(constants.maxBlogId2BlogEx, false);
         requestIp2BlogVisitLog = new LRUMCache<>(constants.maxRequestIp2BlogVisitLog, false);
@@ -659,16 +679,18 @@ public class CacheContext {
             }
             List<ResourcePO> resourceList = resourceDao.findMany(Criteria.eq("deleted", "0"), Criteria.limitNothing(),
                     Criteria.sortBy("sort", SortByCriteria.ASC), BlogConstants.LOAD_ALL_CONFIG);
+            resourceList = reSortResourceList(resourceList);
             for (ResourcePO po : resourceList) {
                 resourcesById.put(po.getId(), po);
             }
-            List<InterfPO> interfList = interfDao.findMany(Criteria.eq("deleted", "0"), BlogConstants.LOAD_ALL_CONFIG);
+            List<InterfPO> interfList = interfDao.findMany(Criteria.eq("deleted", "0"), Criteria.limitNothing(),
+                    Criteria.sortBy("sort", SortByCriteria.ASC), BlogConstants.LOAD_ALL_CONFIG);
             for (InterfPO po : interfList) {
                 interfsById.put(po.getId(), po);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Log.err("error while load cached's data[tag, type, link, role] !");
+            Log.err("error while load cached's data[tag, type, link, role, interf] !");
         }
     }
 
@@ -748,6 +770,27 @@ public class CacheContext {
         }
 
         return sb.toString();
+    }
+
+    /**
+     * 对于 resource 进行资源重排, 一级资源|二级资源|..
+     *
+     * @param resoures resoures
+     * @return java.util.List<com.hx.blog_v2.domain.po.ResourcePO>
+     * @author Jerry.X.He
+     * @date 6/12/2017 10:54 PM
+     * @since 1.0
+     */
+    private List<ResourcePO> reSortResourceList(List<ResourcePO> resoures) {
+        List<ResourcePO> result = new ArrayList<>(resoures.size());
+        for(int i=0; i<=BlogConstants.RESOURCE_LEAVE_LEVEL; i++) {
+            for(ResourcePO po : resoures) {
+                if (po.getLevel() == i) {
+                    result.add(po);
+                }
+            }
+        }
+        return result;
     }
 
     /**

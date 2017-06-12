@@ -1,10 +1,13 @@
 package com.hx.blog_v2.interceptor;
 
 import com.hx.blog_v2.domain.dto.SessionUser;
+import com.hx.blog_v2.service.interf.ExceptionLogService;
+import com.hx.blog_v2.util.BizUtils;
 import com.hx.blog_v2.util.BlogConstants;
 import com.hx.blog_v2.util.WebContext;
 import com.hx.common.interf.common.Result;
 import com.hx.common.util.ResultUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
@@ -20,6 +23,9 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class LoginInterceptor extends HandlerInterceptorAdapter {
 
+    @Autowired
+    private ExceptionLogService exceptionLogService;
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
                              Object handler) throws Exception {
@@ -27,6 +33,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
         if((user == null) || (! user.isSystemUser()) ) {
             Result result = ResultUtils.failed("请先登录 !");
             WebContext.responseJson(result);
+            exceptionLogService.saveExceptionLog(null, result, null);
             return false;
         }
 

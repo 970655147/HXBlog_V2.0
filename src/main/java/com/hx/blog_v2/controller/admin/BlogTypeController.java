@@ -31,6 +31,12 @@ public class BlogTypeController {
         return result;
     }
 
+    @RequestMapping(value = "/list", method = RequestMethod.GET)
+    public Result list() {
+
+        return blogTypeService.list();
+    }
+
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     public Result update(BlogTypeSaveForm params) {
 
@@ -42,7 +48,6 @@ public class BlogTypeController {
 
         return blogTypeService.remove(params);
     }
-
 
     @RequestMapping(value = "/reSort", method = RequestMethod.POST)
     public Result reSort() {

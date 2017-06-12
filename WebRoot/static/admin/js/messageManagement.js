@@ -33,7 +33,7 @@ layui.define(['element', 'laypage', 'layer', 'form', 'pagesize'], function (expo
         params += "&pageSize=" + pageSize
 
         $.ajax({
-            url: "/admin/message/list",
+            url: "/admin/message/adminList",
             type: "GET",
             data: params,
             success: function (resp) {

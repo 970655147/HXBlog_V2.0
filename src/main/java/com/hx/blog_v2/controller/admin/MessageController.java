@@ -38,6 +38,12 @@ public class MessageController {
         return messageService.list(params, page);
     }
 
+    @RequestMapping(value = "/adminList", method = RequestMethod.GET)
+    public Result adminList(MessageSearchForm params, SimplePage<MessageVO> page) {
+
+        return messageService.adminList(params, page);
+    }
+
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     public Result update(MessageSaveForm params) {
 

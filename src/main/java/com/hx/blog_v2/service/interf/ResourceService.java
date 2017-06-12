@@ -36,7 +36,17 @@ public interface ResourceService extends BaseService<ResourcePO> {
     Result adminList();
 
     /**
-     * 搜索符合的条件的资源列表
+     * 拉取所有可见的资源列表
+     *
+     * @return result
+     * @author Jerry.X.He
+     * @date 5/20/2017 6:21 PM
+     * @since 1.0
+     */
+    Result treeList(boolean spread);
+
+    /**
+     * 拉取所有的资源列表
      *
      * @return result
      * @author Jerry.X.He

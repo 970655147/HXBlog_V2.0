@@ -42,11 +42,13 @@ public class ExceptionLogServiceImpl extends BaseServiceImpl<ExceptionLogPO> imp
         if ((params != null) && (result != null)) {
             params.put("resultFromHandler", JSONObject.fromObject(result));
         }
+        String handler = (point != null) ? String.valueOf(point.getSignature()) : "notBeHandledYet";
         String paramStr = String.valueOf(params);
         String headerStr = String.valueOf(BizUtils.getHeaderInfo(req));
         String exceptionStr = String.valueOf(BizUtils.getExceptionInfo(e));
-        ExceptionLogPO po = new ExceptionLogPO(req.getRequestURI(), String.valueOf(point.getSignature()),
-                paramStr, headerStr, user.isSystemUser() ? 1 : 0, exceptionStr);
+        int isSystemUser = user.isSystemUser() ? 1 : 0;
+        ExceptionLogPO po = new ExceptionLogPO(req.getRequestURI(), handler,
+                paramStr, headerStr, isSystemUser, exceptionStr);
         po.setUserInfo(user);
         if (!withUserInfoInServer) {
             po.setRequestIp(BizUtils.getIp());

@@ -28,8 +28,21 @@
             <mvc:mapping path="/admin/**"/>
             <mvc:exclude-mapping path="/static/**"/>
             <mvc:exclude-mapping path="/admin/user/login"/>
-            <mvc:exclude-mapping path="/admin/user/logout"/>
             <bean class="com.hx.blog_v2.interceptor.LoginInterceptor"/>
+        </mvc:interceptor>
+        <mvc:interceptor>
+            <mvc:mapping path="/admin/**"/>
+            <mvc:exclude-mapping path="/static/**"/>
+            <mvc:exclude-mapping path="/admin/user/login"/>
+            <mvc:exclude-mapping path="/blog/**"/>
+            <mvc:exclude-mapping path="/tag/*"/>
+            <mvc:exclude-mapping path="/type/*"/>
+            <mvc:exclude-mapping path="/comment/*"/>
+            <mvc:exclude-mapping path="/composite/*"/>
+            <mvc:exclude-mapping path="/image/*"/>
+            <mvc:exclude-mapping path="/index/*"/>
+            <mvc:exclude-mapping path="/mood/*"/>
+            <bean class="com.hx.blog_v2.interceptor.AuthInterceptor"/>
         </mvc:interceptor>
     </mvc:interceptors>
 

@@ -1,9 +1,11 @@
 package com.hx.blog_v2.service;
 
 import com.hx.blog_v2.dao.interf.BlogExDao;
+import com.hx.blog_v2.dao.interf.RltRoleResourceDao;
 import com.hx.blog_v2.domain.POVOTransferUtils;
 import com.hx.blog_v2.domain.dto.SessionUser;
 import com.hx.blog_v2.domain.extractor.ResourceTreeInfoExtractor;
+import com.hx.blog_v2.domain.form.BeanIdsForm;
 import com.hx.blog_v2.domain.mapper.*;
 import com.hx.blog_v2.domain.po.BlogTagPO;
 import com.hx.blog_v2.domain.po.BlogTypePO;
@@ -46,6 +48,8 @@ public class IndexServiceImpl extends BaseServiceImpl<Object> implements IndexSe
     private BlogServiceImpl blogService;
     @Autowired
     private BlogExDao blogExDao;
+    @Autowired
+    private RltRoleResourceDao rltRoleResourceDao;
     @Autowired
     private CacheContext cacheContext;
     @Autowired
@@ -118,28 +122,24 @@ public class IndexServiceImpl extends BaseServiceImpl<Object> implements IndexSe
     @Override
     public Result adminMenus() {
         SessionUser user = (SessionUser) WebContext.getAttributeFromSession(BlogConstants.SESSION_USER);
-        String roleIds = user.getRoleIds();
-        List<String> resourceIds = cacheContext.resourceIdsByRoleIds(roleIds);
-        if (resourceIds == null) {
-            String resourceIdSql = " select resource_id from rlt_role_resource as rr inner join resource as r on rr.resource_id = r.id " +
-                    " where role_id in ( %s ) order by r.sort ";
-            String inSnippet = user.getRoleIds();
-            inSnippet = inSnippet.substring(1, inSnippet.length() - 1);
-            resourceIds = jdbcTemplate.query(String.format(resourceIdSql, inSnippet), new OneStringMapper("resource_id"));
-            cacheContext.putResourceIdsByRoleIds(roleIds, resourceIds);
+        Result getResourceIdsResult = rltRoleResourceDao.getResourceIdsByRoleIds(new BeanIdsForm(user.getRoleIds()));
+        if(! getResourceIdsResult.isSuccess()) {
+            return getResourceIdsResult;
         }
 
+        List<String> resourceIds = (List<String>) getResourceIdsResult.getData();
         Map<String, ResourcePO> resourcesById = cacheContext.allResources();
         Set<String> needToGet = collectAllParentIds(resourceIds, resourcesById);
         List<ResourceVO> resources = new ArrayList<>(resourcesById.size());
         for (Map.Entry<String, ResourcePO> entry : resourcesById.entrySet()) {
-            if (needToGet.contains(entry.getKey())) {
+            if (needToGet.contains(entry.getKey()) && (entry.getValue().getEnable() == 1)) {
                 resources.add(POVOTransferUtils.resourcePO2ResourceVO(entry.getValue()));
             }
         }
 
         final String childStr = "childs";
-        JSONObject root = TreeUtils.generateTree(resources, new ResourceTreeInfoExtractor(), childStr, BlogConstants.RESOURCE_ROOT_PARENT_ID);
+        JSONObject root = TreeUtils.generateTree(resources, new ResourceTreeInfoExtractor(), childStr,
+                BlogConstants.RESOURCE_ROOT_PARENT_ID);
         TreeUtils.childArrayify(root, childStr);
         return ResultUtils.success(root);
     }

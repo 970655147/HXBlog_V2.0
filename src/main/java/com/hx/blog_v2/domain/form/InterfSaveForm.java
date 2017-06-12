@@ -12,6 +12,7 @@ public class InterfSaveForm {
     private String id;
     private String name;
     private String desc;
+    private int sort;
     private int enable;
 
     public InterfSaveForm() {
@@ -39,6 +40,14 @@ public class InterfSaveForm {
 
     public void setDesc(String desc) {
         this.desc = desc;
+    }
+
+    public int getSort() {
+        return sort;
+    }
+
+    public void setSort(int sort) {
+        this.sort = sort;
     }
 
     public int getEnable() {

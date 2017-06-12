@@ -308,10 +308,11 @@ function initMenu() {
                     }
                     $("#leftNav").append(html)
                 } else {
-                    layer.alert("服务器返回数据异常 !", {icon: 5});
+                    alert("请先登录 !")
                 }
             } else {
-                layer.alert("拉取菜单列表失败[" + resp.msg + "] !", {icon: 5});
+                alert("请先登录 !")
+                location.href = "/static/admin/index.html"
             }
         }
     });
@@ -347,7 +348,7 @@ function initStatistics() {
                 $("[name='sumInfo'] [name='blogCnt']").text(sumStats.blogCnt + todayStats.blogCnt)
                 $("[name='sumInfo'] [name='commentCnt']").text(sumStats.commentCnt + todayStats.commentCnt)
             } else {
-                layer.alert("拉取菜单列表失败[" + resp.msg + "] !", {icon: 5});
+                // layer.alert("拉取菜单列表失败[" + resp.msg + "] !", {icon: 5});
             }
         }
     });

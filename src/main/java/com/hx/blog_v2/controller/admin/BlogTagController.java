@@ -30,6 +30,12 @@ public class BlogTagController {
         return blogTagService.add(params);
     }
 
+    @RequestMapping(value = "/list", method = RequestMethod.GET)
+    public Result list() {
+
+        return blogTagService.list();
+    }
+
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     public Result update(BlogTagSaveForm params) {
 

@@ -26,7 +26,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
         setTimeout(function () {
             layer.close(index);
             $.ajax({
-                url: "/tag/list",
+                url: "/admin/tag/list",
                 type: "GET",
                 data: {},
                 success: function (resp) {

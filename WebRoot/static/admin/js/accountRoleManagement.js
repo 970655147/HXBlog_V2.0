@@ -51,7 +51,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
                             html += '<td><img src="' + item.headImgUrl + '" width="60px" height="60px" /></td>';
                             html += '<td>' + roleNames + '</td>';
                             html += '<td>' + item.createdAt + '</td>';
-                            html += '<td><button class="layui-btn layui-btn-small layui-btn-normal" onclick="layui.funcs.editData(' + item.id + ',' + item.userName + ',\'' + roleIds + '\',\'' + roleNames + '\')" ><i class="layui-icon">&#xe642;</i></button></td>';
+                            html += '<td><button class="layui-btn layui-btn-small layui-btn-normal" onclick="layui.funcs.editData(' + item.id + ',\'' + item.userName + '\',\'' + roleIds + '\',\'' + roleNames + '\')" ><i class="layui-icon">&#xe642;</i></button></td>';
                             html += '</tr>';
                         }
                         $('#dataContent').html(html);

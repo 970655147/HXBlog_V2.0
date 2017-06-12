@@ -813,6 +813,7 @@ public final class POVOTransferUtils {
         result.setUpdatedAt(src.getUpdatedAt());
         result.setCreatedAt(src.getCreatedAt());
         result.setDesc(src.getDesc());
+        result.setSort(src.getSort());
         return result;
     }
 
@@ -832,6 +833,7 @@ public final class POVOTransferUtils {
         result.setUpdatedAt(src.getUpdatedAt());
         result.setCreatedAt(src.getCreatedAt());
         result.setDesc(src.getDesc());
+        result.setSort(src.getSort());
         return result;
     }
 

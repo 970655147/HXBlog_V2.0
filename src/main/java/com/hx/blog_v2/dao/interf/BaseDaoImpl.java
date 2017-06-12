@@ -152,9 +152,9 @@ public abstract class BaseDaoImpl<T extends JSONTransferable<T>> extends MysqlBa
         try {
             long modified = 0;
             if (withMulti) {
-                modified = updateOne(query, update).getModifiedCount();
-            } else {
                 modified = updateMany(query, update).getModifiedCount();
+            } else {
+                modified = updateOne(query, update).getModifiedCount();
             }
 
             if (modified == 0) {
@@ -178,9 +178,9 @@ public abstract class BaseDaoImpl<T extends JSONTransferable<T>> extends MysqlBa
         try {
             long modified = 0;
             if (withMulti) {
-                modified = deleteOne(query).getDeletedCount();
-            } else {
                 modified = deleteMany(query).getDeletedCount();
+            } else {
+                modified = deleteOne(query).getDeletedCount();
             }
 
             if (modified == 0) {

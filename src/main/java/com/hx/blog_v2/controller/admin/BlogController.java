@@ -27,7 +27,7 @@ public class BlogController {
     @Autowired
     private BlogService blogService;
 
-    @RequestMapping(value = "/save", method = RequestMethod.POST)
+    @RequestMapping(value = "/add", method = RequestMethod.POST)
     @BizHandle(handler = "blogSaveHandler")
     public Result save(BlogSaveForm params) {
 
@@ -45,6 +45,12 @@ public class BlogController {
     public Result list(BlogSearchForm params, SimplePage<AdminBlogVO> page) {
 
         return blogService.adminList(params, page);
+    }
+
+    @RequestMapping(value = "/update", method = RequestMethod.POST)
+    public Result update(BlogSaveForm params) {
+
+        return blogService.save(params);
     }
 
     @RequestMapping(value = "/remove", method = RequestMethod.POST)

@@ -16,6 +16,7 @@ import com.hx.blog_v2.domain.vo.ResourceInterfVO;
 import com.hx.blog_v2.domain.vo.UserRoleVO;
 import com.hx.blog_v2.service.interf.BaseServiceImpl;
 import com.hx.blog_v2.service.interf.InterfService;
+import com.hx.blog_v2.util.BizUtils;
 import com.hx.blog_v2.util.BlogConstants;
 import com.hx.blog_v2.util.CacheContext;
 import com.hx.blog_v2.util.DateUtils;
@@ -62,9 +63,9 @@ public class InterfServiceImpl extends BaseServiceImpl<InterfPO> implements Inte
             return ResultUtils.failed("该接口已经存在 !");
         }
 
-        InterfPO po = new InterfPO(params.getName(), params.getDesc(), params.getEnable());
+        InterfPO po = new InterfPO(params.getName(), params.getDesc(), params.getSort(), params.getEnable());
         Result result = interfDao.add(po);
-        if(! result.isSuccess()) {
+        if (!result.isSuccess()) {
             return result;
         }
         cacheContext.putInterf(po);
@@ -113,10 +114,11 @@ public class InterfServiceImpl extends BaseServiceImpl<InterfPO> implements Inte
 
         po.setName(params.getName());
         po.setDesc(params.getDesc());
+        po.setSort(params.getSort());
         po.setEnable(params.getEnable());
         po.setUpdatedAt(DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS));
         Result result = interfDao.update(po);
-        if(! result.isSuccess()) {
+        if (!result.isSuccess()) {
             return result;
         }
         return ResultUtils.success(po.getId());
@@ -153,8 +155,8 @@ public class InterfServiceImpl extends BaseServiceImpl<InterfPO> implements Inte
             return ResultUtils.failed("该接口不存在 !");
         }
         String countSql = " select count(*) as totalRecord from `resource` where deleted = 0 and id in ( select resource_id from rlt_resource_interf where interf_id = ? ) ";
-        Integer totalRecord = jdbcTemplate.queryForObject(countSql, new Object[]{params.getId() }, new OneIntMapper("totalRecord"));
-        if(totalRecord > 0) {
+        Integer totalRecord = jdbcTemplate.queryForObject(countSql, new Object[]{params.getId()}, new OneIntMapper("totalRecord"));
+        if (totalRecord > 0) {
             return ResultUtils.failed("该接口下面还有 " + totalRecord + "个资源, 请先迁移这部分资源 !");
         }
 
@@ -163,11 +165,30 @@ public class InterfServiceImpl extends BaseServiceImpl<InterfPO> implements Inte
         IQueryCriteria query = Criteria.eq("id", params.getId());
         IUpdateCriteria update = Criteria.set("deleted", "1").add("updated_at", updatedAt);
         Result result = interfDao.update(query, update);
-        if(! result.isSuccess()) {
+        if (!result.isSuccess()) {
             return result;
         }
         return ResultUtils.success(params.getId());
     }
+
+
+    @Override
+    public Result reSort() {
+        Map<String, InterfPO> types = cacheContext.allInterfs();
+        List<InterfPO> sortedInterfs = BizUtils.resort(types);
+        int sort = BlogConstants.RE_SORT_START;
+        for (InterfPO interf : sortedInterfs) {
+            boolean isSortChanged = sort != interf.getSort();
+            if (isSortChanged) {
+                interf.setSort(sort);
+                interfDao.update(interf);
+            }
+            sort += BlogConstants.RE_SORT_OFFSET;
+        }
+
+        return ResultUtils.success("success");
+    }
+
 
     // -------------------- 辅助方法 --------------------------
 
@@ -225,7 +246,7 @@ public class InterfServiceImpl extends BaseServiceImpl<InterfPO> implements Inte
         List<ResourcePO> list = new ArrayList<>(resourcesById.size());
         for (Map.Entry<String, ResourcePO> entry : resourcesById.entrySet()) {
             ResourcePO role = entry.getValue();
-            if ((role.getEnable() != 0) && (BlogConstants.RESOURCE_LEAVE_LEVEL == role.getLevel())) {
+            if (BlogConstants.RESOURCE_LEAVE_LEVEL == role.getLevel()) {
                 list.add(role);
             }
         }

@@ -28,7 +28,7 @@ layui.define(['element', 'laypage', 'layer', 'form', 'tree'], function (exports)
             var prams = getParamsFromUrl(location.href)
 
             $.ajax({
-                url: "/admin/resource/treeList",
+                url: "/admin/resource/adminTreeList",
                 type: "GET",
                 async : false,
                 data: prams,

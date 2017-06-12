@@ -17,9 +17,9 @@ layui.define(['form', 'upload', 'layer'], function (exports) {
     var layer = layui.layer;
     var form = layui.form();
 
-    var addTypeLayer, addTypeConfirm, addBlogLayer;
+    var addBlogLayer
 
-    form.on('submit(submitBlog)', function (data) {
+    form.on('submit(addMessageBtn)', function (data) {
         $("[name='content']").attr("value", ue.getContent())
         $("[name='userIds']").attr("value", collectAttrValues($("#userSelected .layui-form-checked"), "value", ", ", false))
         $("[name='roleIds']").attr("value", collectAttrValues($("#roleSelected .layui-form-checked"), "value", ", ", false))
@@ -30,7 +30,7 @@ layui.define(['form', 'upload', 'layer'], function (exports) {
             })
             return false
         }
-        if((isEmpty($("[name='content']")).attr("value")) ) {
+        if((isEmpty($("[name='content']").attr("value"))) ) {
             layer.tips("请输入内容 !", "#editor", {
                 tips: [1, '#3595CC'],
                 time: 4000
@@ -56,7 +56,7 @@ layui.define(['form', 'upload', 'layer'], function (exports) {
             }
         });
 
-        return false;
+        return false
     });
 
     layui.upload({

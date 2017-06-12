@@ -12,6 +12,7 @@ public class AdminInterfVO {
     private String id;
     private String name;
     private String desc;
+    private int sort;
     private String createdAt;
     private String updatedAt;
     private int enable;
@@ -42,6 +43,14 @@ public class AdminInterfVO {
 
     public void setDesc(String desc) {
         this.desc = desc;
+    }
+
+    public int getSort() {
+        return sort;
+    }
+
+    public void setSort(int sort) {
+        this.sort = sort;
     }
 
     public String getCreatedAt() {

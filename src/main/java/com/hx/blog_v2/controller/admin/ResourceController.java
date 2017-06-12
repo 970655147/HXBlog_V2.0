@@ -37,12 +37,18 @@ public class ResourceController {
         return resourceService.adminList();
     }
 
-
     @RequestMapping(value = "/treeList", method = RequestMethod.GET)
     public Result treeList(@RequestParam(defaultValue = "false") boolean spread) {
 
+        return resourceService.treeList(spread);
+    }
+
+    @RequestMapping(value = "/adminTreeList", method = RequestMethod.GET)
+    public Result adminTreeList(@RequestParam(defaultValue = "false") boolean spread) {
+
         return resourceService.adminTreeList(spread);
     }
+
 
     @RequestMapping(value = "/roleResource/list", method = RequestMethod.GET)
     public Result roleResourceList() {

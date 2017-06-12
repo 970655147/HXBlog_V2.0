@@ -119,6 +119,7 @@ public class MessageServiceImpl extends BaseServiceImpl<MessagePO> implements Me
 
         List<MessageVO> list = jdbcTemplate.query(selectSql + condSql + selectSqlSuffix, selectParams.toArray(), new MessageVOMapper());
         Integer totalRecord = jdbcTemplate.queryForObject(countSql + condSql, countParams, new OneIntMapper("totalRecord"));
+        encapNames(list);
         page.setList(list);
         page.setTotalRecord(totalRecord);
         return ResultUtils.success(page);

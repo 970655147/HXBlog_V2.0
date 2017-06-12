@@ -60,4 +60,10 @@ public class InterfController {
         return interfService.remove(params);
     }
 
+    @RequestMapping(value = "/reSort", method = RequestMethod.POST)
+    public Result reSort() {
+
+        return interfService.reSort();
+    }
+
 }

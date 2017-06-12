@@ -61,9 +61,10 @@ layui.define(['form', 'upload', 'layer'], function (exports) {
     form.on('submit(submitBlog)', function (data) {
         $("[name='content']").attr("value", ue.getContent())
         $("[name='blogTagIds']").attr("value", collectAttrValues($("#tagSelected .layui-form-checked"), "value", ", ", false))
+        var saveUrl = (isEmpty(currentBlogId)) ? "/admin/blog/add" : "/admin/blog/update"
 
         $.ajax({
-            url: "/admin/blog/save",
+            url: saveUrl,
             type: "POST",
             data: $("#addBlogForm").serialize(),
             success: function (resp) {
