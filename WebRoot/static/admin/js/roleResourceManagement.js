@@ -73,7 +73,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
                         closeBtn: 0,
                         icon: 1
                     }, function () {
-                        location.reload()
+                        refresh()
                     });
                 } else {
                     layer.alert("更新角色资源信息失败[" + resp.msg + "] !", {icon: 5});

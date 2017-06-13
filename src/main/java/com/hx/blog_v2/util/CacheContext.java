@@ -49,6 +49,8 @@ public class CacheContext {
     @Autowired
     private InterfDao interfDao;
     @Autowired
+    private BlogCreateTypeDao blogCreateTypeDao;
+    @Autowired
     private BlogSenseDao blogSenseDao;
     @Autowired
     private BlogExDao blogExDao;
@@ -76,13 +78,17 @@ public class CacheContext {
      */
     private Map<String, RolePO> rolesById = new LinkedHashMap<>();
     /**
-     * 所有的角色
+     * 所有的资源
      */
     private Map<String, ResourcePO> resourcesById = new LinkedHashMap<>();
     /**
      * 所有的接口
      */
     private Map<String, InterfPO> interfsById = new LinkedHashMap<>();
+    /**
+     * 所有的博客创建类型
+     */
+    private Map<String, BlogCreateTypePO> createTypesById = new LinkedHashMap<>();
 
     /**
      * blogId -> 给定的博客的下一个层数索引
@@ -143,7 +149,7 @@ public class CacheContext {
      */
     private long fSecLastVisitDate;
     /**
-     *  切换 all5SecStatistics 的任务是否启动
+     * 切换 all5SecStatistics 的任务是否启动
      */
     private ScheduledFuture fSecTaskFuture;
 
@@ -178,6 +184,7 @@ public class CacheContext {
         rolesById.clear();
         resourcesById.clear();
         interfsById.clear();
+        createTypesById.clear();
 
         blog2NextFloorId.clear();
         blogFloor2NextCommentId.clear();
@@ -327,6 +334,26 @@ public class CacheContext {
 
     public void putInterf(InterfPO po) {
         interfsById.put(po.getId(), po);
+    }
+
+    /**
+     * 获取所有的博客创建类型列表
+     *
+     * @return java.util.List<com.hx.blog_v2.domain.po.LinkPO>
+     * @author Jerry.X.He
+     * @date 6/1/2017 7:53 PM
+     * @since 1.0
+     */
+    public Map<String, BlogCreateTypePO> allBlogCreateTypes() {
+        return createTypesById;
+    }
+
+    public BlogCreateTypePO blogCreateType(String id) {
+        return createTypesById.get(id);
+    }
+
+    public void putBlogCreateType(BlogCreateTypePO po) {
+        createTypesById.put(po.getId(), po);
     }
 
     /**
@@ -505,7 +532,7 @@ public class CacheContext {
         /**
          * 控制资源的采取, 如果长时间没有访问, "关闭" 该线程
          */
-        if(all5SecStatistics.isEmpty() && (fSecTaskFuture == null)) {
+        if (all5SecStatistics.isEmpty() && (fSecTaskFuture == null)) {
             fSecTaskFuture = Tools.scheduleAtFixedRate(new Switch5SecStatisInfoRunnable(), 0,
                     BlogConstants.REAL_TIME_CHART_TIME_INTERVAL, TimeUnit.SECONDS);
         }
@@ -688,6 +715,11 @@ public class CacheContext {
             for (InterfPO po : interfList) {
                 interfsById.put(po.getId(), po);
             }
+            List<BlogCreateTypePO> blogCreateTypeList = blogCreateTypeDao.findMany(Criteria.eq("deleted", "0"), Criteria.limitNothing(),
+                    Criteria.sortBy("sort", SortByCriteria.ASC), BlogConstants.LOAD_ALL_CONFIG);
+            for (BlogCreateTypePO po : blogCreateTypeList) {
+                createTypesById.put(po.getId(), po);
+            }
         } catch (Exception e) {
             e.printStackTrace();
             Log.err("error while load cached's data[tag, type, link, role, interf] !");
@@ -783,8 +815,8 @@ public class CacheContext {
      */
     private List<ResourcePO> reSortResourceList(List<ResourcePO> resoures) {
         List<ResourcePO> result = new ArrayList<>(resoures.size());
-        for(int i=0; i<=BlogConstants.RESOURCE_LEAVE_LEVEL; i++) {
-            for(ResourcePO po : resoures) {
+        for (int i = 0; i <= BlogConstants.RESOURCE_LEAVE_LEVEL; i++) {
+            for (ResourcePO po : resoures) {
                 if (po.getLevel() == i) {
                     result.add(po);
                 }
@@ -817,11 +849,11 @@ public class CacheContext {
     private class Switch5SecStatisInfoRunnable implements Runnable {
         @Override
         public void run() {
-            if((System.currentTimeMillis() - fSecLastVisitDate) > ((BlogConstants.REAL_TIME_CHART_TIME_INTERVAL + 1) << 10) ) {
+            if ((System.currentTimeMillis() - fSecLastVisitDate) > ((BlogConstants.REAL_TIME_CHART_TIME_INTERVAL + 1) << 10)) {
                 all5SecStatistics.clear();
                 fSecTaskFuture.cancel(false);
                 fSecTaskFuture = null;
-                return ;
+                return;
             }
 
             CacheContext.this.switch5SecStatistics();

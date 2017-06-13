@@ -98,7 +98,7 @@ layui.define(['element', 'laypage', 'layer', 'form', 'pagesize'], function (expo
                                 closeBtn: 0,
                                 icon: 1
                             }, function () {
-                                location.reload()
+                                refresh()
                             });
                         } else {
                             layer.alert("删除博客失败[" + resp.msg + "] !", {icon: 5});

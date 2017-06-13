@@ -57,7 +57,7 @@ layui.define(['layer', 'form'], function (exports) {
                         closeBtn: 0,
                         icon: 1
                     }, function () {
-                        location.reload()
+                        refresh()
                     });
                 } else {
                     layer.alert("添加类型失败[" + resp.data + "] !", {icon: 5});
@@ -79,7 +79,7 @@ layui.define(['layer', 'form'], function (exports) {
                         closeBtn: 0,
                         icon: 1
                     }, function () {
-                        location.reload()
+                        refresh()
                     });
                 } else {
                     layer.alert("更新类型失败[" + resp.data + "] !", {icon: 5});
@@ -155,7 +155,7 @@ layui.define(['layer', 'form'], function (exports) {
                                 closeBtn: 0,
                                 icon: 1
                             }, function () {
-                                location.reload()
+                                refresh()
                             });
                         } else {
                             layer.alert("删除类型失败[" + resp.data + "] !", {icon: 5});

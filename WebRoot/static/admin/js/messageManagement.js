@@ -110,7 +110,7 @@ layui.define(['element', 'laypage', 'layer', 'form', 'pagesize'], function (expo
             success : function (resp) {
                 if(resp.success) {
                     layer.alert('更新消息成功!', {closeBtn: 0, icon: 1 }, function () {
-                        location.reload()
+                        refresh()
                     });
                 } else {
                     layer.alert("更新消息失败[" + resp.data + "] !", {icon: 5});
@@ -206,7 +206,7 @@ layui.define(['element', 'laypage', 'layer', 'form', 'pagesize'], function (expo
                     success: function (resp) {
                         if (resp.success) {
                             layer.alert('删除成功!', {closeBtn: 0, icon: 1}, function () {
-                                location.reload()
+                                refresh()
                             });
                         } else {
                             layer.alert("删除消息失败[" + resp.data + "] !", {icon: 5});

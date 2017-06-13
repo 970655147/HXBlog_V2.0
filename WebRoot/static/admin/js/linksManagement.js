@@ -88,7 +88,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
                         closeBtn: 0,
                         icon: 1
                     }, function () {
-                        location.reload()
+                        refresh()
                     });
                 } else {
                     layer.alert("添加友情链接失败[" + resp.msg + "] !", {icon: 5});
@@ -109,7 +109,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
                         closeBtn: 0,
                         icon: 1
                     }, function () {
-                        location.reload()
+                        refresh()
                     });
                 } else {
                     layer.alert("更新友情链接失败[" + resp.msg + "] !", {icon: 5});
@@ -203,7 +203,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
                                 closeBtn: 0,
                                 icon: 1
                             }, function () {
-                                location.reload()
+                                refresh()
                             });
                         } else {
                             layer.alert("删除友情链接失败[" + resp.msg + "] !", {icon: 5});

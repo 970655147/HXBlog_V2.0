@@ -114,7 +114,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
             success : function (resp) {
                 if(resp.success) {
                     layer.alert('更新评论成功!', {closeBtn: 0, icon: 1 }, function () {
-                        location.reload()
+                        refresh()
                     });
                 } else {
                     layer.alert("更新评论失败[" + resp.data + "] !", {icon: 5});
@@ -232,7 +232,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
                                 closeBtn: 0,
                                 icon: 1
                             }, function () {
-                                location.reload()
+                                refresh()
                             });
                         } else {
                             layer.alert("删除评论失败[" + resp.data + "] !", {icon: 5});

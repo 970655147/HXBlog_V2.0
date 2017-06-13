@@ -168,9 +168,13 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourcePO> implements 
 
     @Override
     public Result update(ResourceSaveForm params) {
-        ResourcePO po = cacheContext.allResources().get(params.getId());
+        ResourcePO po = cacheContext.resource(params.getId());
         if (po == null) {
             return ResultUtils.failed("该资源不存在 !");
+        }
+        ResourcePO parentPo = cacheContext.resource(po.getParentId());
+        if (parentPo == null) {
+            return ResultUtils.failed("该资源父节点不存在 !");
         }
 
         po.setName(params.getName());
@@ -179,6 +183,7 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourcePO> implements 
         po.setParentId(params.getParentId());
         po.setSort(params.getSort());
         po.setEnable(params.getEnable());
+        po.setLevel(parentPo.getLevel() + 1);
         po.setUpdatedAt(DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS));
         Result result = resourceDao.update(po);
         if (!result.isSuccess()) {
@@ -213,7 +218,7 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourcePO> implements 
 
     @Override
     public Result remove(BeanIdForm params) {
-        ResourcePO po = cacheContext.allResources().get(params.getId());
+        ResourcePO po = cacheContext.resource(params.getId());
         if (po == null) {
             return ResultUtils.failed("该资源不存在 !");
         }

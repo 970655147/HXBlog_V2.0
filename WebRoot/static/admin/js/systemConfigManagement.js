@@ -6,8 +6,6 @@
  * @date 5/24/2017 9:56 PM
  */
 
-var moodNum = 3
-
 layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (exports) {
     var $ = layui.jquery;
     var layer = layui.layer;
@@ -21,7 +19,7 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
      * @type {Object}
      */
     var params = getParamsFromUrl(location.href)
-    var imageType = isEmpty(params.type) ? "dummy" : params.type
+    var configType = isEmpty(params.type) ? "dummy" : params.type
 
     initilData(1);
     //页数据初始化
@@ -33,12 +31,12 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
         setTimeout(function () {
             layer.close(index);
             $.ajax({
-                url: "/admin/image/list",
+                url: "/admin/config/list",
                 type: "GET",
                 data: {
-                    "type" : imageType,
+                    "type": configType,
                     "pageNow": pageNow,
-                    "pageSize" : pageSize
+                    "pageSize": pageSize
                 },
                 success: function (resp) {
                     if (resp.success) {
@@ -48,8 +46,9 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
                             var item = images[i];
                             html += '<tr>';
                             html += '<td>' + item.id + '</td>';
-                            html += '<td>' + item.title + '</td>';
-                            html += '<td><img src="' + item.url + '" width="60px" height="60px" /> </td>';
+                            html += '<td>' + item.name + '</td>';
+                            html += '<td>' + item.value + '</td>';
+                            html += '<td>' + item.desc + '</td>';
                             html += '<td>' + item.sort + '</td>';
                             html += '<td>' + item.createdAt + '</td>';
                             if (item.enable) {
@@ -78,53 +77,53 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
                             }
                         });
                     } else {
-                        layer.alert("拉取图片墙列表失败[" + resp.msg + "] !", {icon: 5});
+                        layer.alert("拉取系统配置墙列表失败[" + resp.msg + "] !", {icon: 5});
                     }
                 }
             });
         }, 500);
     }
 
-    form.on('submit(addImageSubmit)', function (data) {
-        var params = $("#addImageForm").serialize()
-        params += ("&type=" + imageType)
+    form.on('submit(addConfigSubmit)', function (data) {
+        var params = $("#addConfigForm").serialize()
+        params += ("&type=" + configType)
         $.ajax({
-            url: "/admin/image/add",
+            url: "/admin/config/add",
             type: "POST",
             data: params,
             success: function (resp) {
                 if (resp.success) {
-                    layer.alert('添加图片成功!', {
+                    layer.alert('添加系统配置成功!', {
                         closeBtn: 0,
                         icon: 1
                     }, function () {
                         refresh()
                     });
                 } else {
-                    layer.alert("添加图片失败[" + resp.msg + "] !", {icon: 5});
+                    layer.alert("添加系统配置失败[" + resp.msg + "] !", {icon: 5});
                 }
             }
         });
         return false
     })
 
-    form.on('submit(updateImageSubmit)', function (data) {
-        var params = $("#updateImageForm").serialize()
-        params += ("&type=" + imageType)
+    form.on('submit(updateConfigSubmit)', function (data) {
+        var params = $("#updateConfigForm").serialize()
+        params += ("&type=" + configType)
         $.ajax({
-            url: "/admin/image/update",
+            url: "/admin/config/update",
             type: "POST",
             data: params,
             success: function (resp) {
                 if (resp.success) {
-                    var addTopId = layer.alert('更新图片成功 !', {
+                    var addTopId = layer.alert('更新系统配置成功 !', {
                         closeBtn: 0,
                         icon: 1
                     }, function () {
                         refresh()
                     });
                 } else {
-                    layer.alert("更新图片失败[" + resp.msg + "] !", {icon: 5});
+                    layer.alert("更新系统配置失败[" + resp.msg + "] !", {icon: 5});
                 }
             }
         });
@@ -135,15 +134,13 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
     var funcs = {
         addData: function () {
             var html = '';
-            html += '<form id="addImageForm" class="layui-form layui-form-pane" action="/admin/image/add" method="post">';
-            html += '<label class="layui-form-label" style="border: none" >标题:</label>';
-            html += '<input  style="width:87%;margin: auto;color: #000!important;" lay-verify="required" name="title"  class="layui-input" >';
-            html += '<div>';
-            html += '<label class="layui-form-label" style="border: none" >上传图片:</label>';
-            html += '<input  style="width:87%;margin: auto;color: #000!important;" lay-verify="required" name="url"  class="layui-input" onblur="layui.funcs.headImgShow()" >';
-            html += '<input id="uploadImgInput" type="file" name="file" onchange="layui.funcs.fileUpload()" style="margin-left: 50px" />';
-            html += '<img id="coverShow" width="60px" height="60px" />'
-            html += '</div>';
+            html += '<form id="addConfigForm" class="layui-form layui-form-pane" action="/admin/config/add" method="post">';
+            html += '<label class="layui-form-label" style="border: none" >name:</label>';
+            html += '<input  style="width:87%;margin: auto;color: #000!important;" lay-verify="required" name="name"  class="layui-input" >';
+            html += '<label class="layui-form-label" style="border: none" >value:</label>';
+            html += '<input  style="width:87%;margin: auto;color: #000!important;" lay-verify="required" name="value"  class="layui-input" >';
+            html += '<label class="layui-form-label" style="border: none" >描述信息:</label>';
+            html += '<input  style="width:87%;margin: auto;color: #000!important;" lay-verify="required" name="desc"  class="layui-input" >';
             html += '<label class="layui-form-label" style="border: none" >排序:</label>';
             html += '<input  style="width:87%;margin: auto;color: #000!important;" lay-verify="required" name="sort"  class="layui-input" >';
             html += '<label class="layui-form-label" style="border: none" >是否显示:</label>';
@@ -151,7 +148,7 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
             html += '<input type="radio" name="enable" value="0" title="否" />';
             html += '<div class="layui-form-item">';
             html += '<div class="layui-input-inline" style="margin:10px auto 0 auto;display: block;float: none;">';
-            html += '<button class="layui-btn" id="submit"  lay-submit="" lay-filter="addImageSubmit" >添加</button>';
+            html += '<button class="layui-btn" id="submit"  lay-submit="" lay-filter="addConfigSubmit" >添加</button>';
             html += '<button type="reset" class="layui-btn layui-btn-primary">重置</button>';
             html += '</div>';
             html += '</div>';
@@ -168,16 +165,14 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
         },
         editData: function (item) {
             var html = '';
-            html += '<form id="updateImageForm" class="layui-form layui-form-pane" action="/admin/image/update" method="post" >';
+            html += '<form id="updateConfigForm" class="layui-form layui-form-pane" action="/admin/config/update" method="post" >';
             html += '<input type="hidden" id="id" name="id" value="' + item.id + '">';
-            html += '<label class="layui-form-label" style="border: none" >图片标题:</label>';
-            html += '<input  style="width:87%;margin: auto;color: #000!important;" name="title" lay-verify="required"  class="layui-input" value="' + item.title + '" >';
-            html += '<div>';
-            html += '<label class="layui-form-label" style="border: none" >上传图片:</label>';
-            html += '<input  style="width:87%;margin: auto;color: #000!important;" lay-verify="required" name="url"  class="layui-input" value="' + item.url + '" onblur="layui.funcs.headImgShow()" >';
-            html += '<input id="uploadImgInput" type="file" name="file" onchange="layui.funcs.fileUpload()" style="margin-left: 50px" />';
-            html += '<img id="coverShow" width="60px" height="60px" />'
-            html += '</div>';
+            html += '<label class="layui-form-label" style="border: none" >name:</label>';
+            html += '<input  style="width:87%;margin: auto;color: #000!important;" lay-verify="required" name="name" value="' + item.name + '" class="layui-input" >';
+            html += '<label class="layui-form-label" style="border: none" >value:</label>';
+            html += '<input  style="width:87%;margin: auto;color: #000!important;" lay-verify="required" name="value" value="' + item.value + '" class="layui-input" >';
+            html += '<label class="layui-form-label" style="border: none" >描述信息:</label>';
+            html += '<input  style="width:87%;margin: auto;color: #000!important;" lay-verify="required" name="desc" value="' + item.desc + '" class="layui-input" >';
             html += '<label class="layui-form-label" style="border: none" >排序:</label>';
             html += '<input  style="width:87%;margin: auto;color: #000!important;" lay-verify="required" name="sort" value="' + item.sort + '" class="layui-input" >';
             html += '<label class="layui-form-label" style="border: none" >是否显示:</label>';
@@ -190,7 +185,7 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
             }
             html += '<div class="layui-form-item">';
             html += '<div class="layui-input-inline" style="margin:10px auto 0 auto;display: block;float: none;">';
-            html += '<button class="layui-btn" id="submit"  lay-submit="" lay-filter="updateImageSubmit" >立即修改</button>';
+            html += '<button class="layui-btn" id="submit"  lay-submit="" lay-filter="updateConfigSubmit" >立即修改</button>';
             html += '<button type="reset" class="layui-btn layui-btn-primary">重置</button>';
             html += '</div>';
             html += '</div>';
@@ -200,30 +195,30 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
                 type: 1,
                 skin: 'layui-layer-rim', //加上边框
                 area: '620px', //宽高
-                title: '修改图片',
+                title: '修改系统配置',
                 content: html
             });
             form.render('radio');  //radio，编辑和添加的时候
             layui.funcs.headImgShow()
         },
         deleteData: function (id) {
-            layer.confirm('确定删除这个图片吗？', {
+            layer.confirm('确定删除这个系统配置吗？', {
                 btn: ['确定', '取消'] //按钮
             }, function () {
                 $.ajax({
-                    url: '/admin/image/remove',
+                    url: '/admin/config/remove',
                     data: {"id": id},
                     type: 'POST',
                     success: function (resp) {
                         if (resp.success) {
-                            layer.alert('删除图片成功 !', {
+                            layer.alert('删除系统配置成功 !', {
                                 closeBtn: 0,
                                 icon: 1
                             }, function () {
                                 refresh()
                             });
                         } else {
-                            layer.alert("删除图片失败[" + resp.msg + "] !", {icon: 5});
+                            layer.alert("删除系统配置失败[" + resp.msg + "] !", {icon: 5});
                         }
                     }
                 });
@@ -231,15 +226,15 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
 
             });
         },
-        fileUpload : function() {
+        fileUpload: function () {
             var formData = new FormData()
             formData.append("file", $("#uploadImgInput").get(0).files[0]);
             $.ajax({
                 url: '/admin/upload/image', //上传接口
-                data : formData,
-                type : "POST",
-                processData : false,
-                contentType : false,
+                data: formData,
+                type: "POST",
+                processData: false,
+                contentType: false,
                 success: function (resp) { //上传成功后的回调
                     if (resp.success) {
                         var visitUrl = resp.data.url
@@ -251,12 +246,12 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
                 }
             });
         },
-        headImgShow : function() {
+        headImgShow: function () {
             $("#coverShow").attr("src", $("[name='url']").val());
         },
-        reSort : function() {
+        reSort: function () {
             $.ajax({
-                url: "/admin/image/reSort",
+                url: "/admin/config/reSort",
                 type: "POST",
                 data: params,
                 success: function (resp) {

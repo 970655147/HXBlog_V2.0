@@ -72,7 +72,7 @@ public final class BlogConstants {
             BlogTypePO.class, ExceptionLogPO.class, ImagePO.class, LinkPO.class, MoodPO.class, RequestLogPO.class,
             UserPO.class, VisitorPO.class, RltBlogTagPO.class, UploadFilePO.class,
             RolePO.class, RltUserRoleRolePO.class, ResourcePO.class, RltRoleResourcePO.class, InterfPO.class, RltResourceInterfPO.class,
-            BlogVisitLogPO.class, MessagePO.class
+            BlogVisitLogPO.class, MessagePO.class, BlogCreateTypePO.class, SystemConfigPO.class
     };
     /**
      * 下划线的注册了各个PO 的 KeyNodeParser
@@ -281,6 +281,10 @@ public final class BlogConstants {
     public String tableBlogVisitLog = "blog_visit_log";
     @Value("${table.message}")
     public String tableMessage = "message";
+    @Value("${table.blog_create_type}")
+    public String tableBlogCreateType = "blog_create_type";
+    @Value("${table.system_config}")
+    public String tableSystemConfig = "system_config";
     @Value("${table.id}")
     public String tableId = "id";
 

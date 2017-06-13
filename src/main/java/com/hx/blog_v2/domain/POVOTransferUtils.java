@@ -32,8 +32,8 @@ public final class POVOTransferUtils {
      */
     public static void main(String[] args) {
 
-        Class src = MessagePO.class;
-        Class dst = MessageVO.class;
+        Class src = SystemConfigPO.class;
+        Class dst = SystemConfigVO.class;
 
         String transfer = BeanTransferUtils.transferTo(src, dst);
         String transferList = BeanTransferUtils.transferListTo(src, dst);
@@ -899,7 +899,7 @@ public final class POVOTransferUtils {
 
     public static Collection<MessageVO> messagePO2MessageVOList(Collection<MessagePO> src) {
         List<MessageVO> result = new ArrayList<>(src.size());
-        for(MessagePO ele : src) {
+        for (MessagePO ele : src) {
             result.add(messagePO2MessageVO(ele));
         }
         return result;
@@ -921,12 +921,91 @@ public final class POVOTransferUtils {
 
     public static Collection<MessagePO> messageVO2MessagePOList(Collection<MessageVO> src) {
         List<MessagePO> result = new ArrayList<>(src.size());
-        for(MessageVO ele : src) {
+        for (MessageVO ele : src) {
             result.add(messageVO2MessagePO(ele));
         }
         return result;
     }
 
+    // -------------------- BlogCreateTypePO <-> BlogCreateTypeVO --------------------------
+    public static BlogCreateTypeVO blogCreateTypePO2BlogCreateTypeVO(BlogCreateTypePO src) {
+        BlogCreateTypeVO result = new BlogCreateTypeVO();
+        result.setName(src.getName());
+        result.setId(src.getId());
+        result.setSort(src.getSort());
+        result.setCreatedAt(src.getCreatedAt());
+        result.setDesc(src.getDesc());
+        result.setImgUrl(src.getImgUrl());
+        return result;
+    }
+
+    public static Collection<BlogCreateTypeVO> blogCreateTypePO2BlogCreateTypeVOList(Collection<BlogCreateTypePO> src) {
+        List<BlogCreateTypeVO> result = new ArrayList<>(src.size());
+        for (BlogCreateTypePO ele : src) {
+            result.add(blogCreateTypePO2BlogCreateTypeVO(ele));
+        }
+        return result;
+    }
+
+    public static BlogCreateTypePO blogCreateTypeVO2BlogCreateTypePO(BlogCreateTypeVO src) {
+        BlogCreateTypePO result = new BlogCreateTypePO();
+        result.setName(src.getName());
+        result.setId(src.getId());
+        result.setSort(src.getSort());
+        result.setCreatedAt(src.getCreatedAt());
+        result.setDesc(src.getDesc());
+        result.setImgUrl(src.getImgUrl());
+        return result;
+    }
+
+    public static Collection<BlogCreateTypePO> blogCreateTypeVO2BlogCreateTypePOList(Collection<BlogCreateTypeVO> src) {
+        List<BlogCreateTypePO> result = new ArrayList<>(src.size());
+        for (BlogCreateTypeVO ele : src) {
+            result.add(blogCreateTypeVO2BlogCreateTypePO(ele));
+        }
+        return result;
+    }
+
+    // -------------------- SystemConfigPO <-> SystemConfigVO --------------------------
+    public static SystemConfigVO systemConfigPO2SystemConfigVO(SystemConfigPO src) {
+        SystemConfigVO result = new SystemConfigVO();
+        result.setValue(src.getValue());
+        result.setId(src.getId());
+        result.setName(src.getName());
+        result.setCreatedAt(src.getCreatedAt());
+        result.setSort(src.getSort());
+        result.setEnable(src.getEnable());
+        result.setDesc(src.getDesc());
+        return result;
+    }
+
+    public static Collection<SystemConfigVO> systemConfigPO2SystemConfigVOList(Collection<SystemConfigPO> src) {
+        List<SystemConfigVO> result = new ArrayList<>(src.size());
+        for(SystemConfigPO ele : src) {
+            result.add(systemConfigPO2SystemConfigVO(ele));
+        }
+        return result;
+    }
+
+    public static SystemConfigPO systemConfigVO2SystemConfigPO(SystemConfigVO src) {
+        SystemConfigPO result = new SystemConfigPO();
+        result.setValue(src.getValue());
+        result.setId(src.getId());
+        result.setName(src.getName());
+        result.setCreatedAt(src.getCreatedAt());
+        result.setSort(src.getSort());
+        result.setEnable(src.getEnable());
+        result.setDesc(src.getDesc());
+        return result;
+    }
+
+    public static Collection<SystemConfigPO> systemConfigVO2SystemConfigPOList(Collection<SystemConfigVO> src) {
+        List<SystemConfigPO> result = new ArrayList<>(src.size());
+        for(SystemConfigVO ele : src) {
+            result.add(systemConfigVO2SystemConfigPO(ele));
+        }
+        return result;
+    }
 
     // -------------------- 待续 --------------------------
 

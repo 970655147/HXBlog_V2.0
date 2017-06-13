@@ -66,7 +66,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
                         closeBtn: 0,
                         icon: 1
                     }, function () {
-                        location.reload()
+                        refresh()
                     });
                 } else {
                     layer.alert("添加标签失败[" + resp.data + "] !", {icon: 5});
@@ -87,7 +87,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
                         closeBtn: 0,
                         icon: 1
                     }, function () {
-                        location.reload()
+                        refresh()
                     });
                 } else {
                     layer.alert("更新标签失败[" + resp.data + "] !", {icon: 5});
@@ -160,7 +160,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
                                 closeBtn: 0,
                                 icon: 1
                             }, function () {
-                                location.reload()
+                                refresh()
                             });
                         } else {
                             layer.alert("删除标签失败[" + resp.data + "] !", {icon: 5});

@@ -85,7 +85,7 @@ public class LinkServiceImpl extends BaseServiceImpl<LinkPO> implements LinkServ
 
     @Override
     public Result remove(BeanIdForm params) {
-        LinkPO po = cacheContext.allLinks().get(params.getId());
+        LinkPO po = cacheContext.link(params.getId());
         if(po == null) {
             return ResultUtils.failed("没有对应的链接 !");
         }

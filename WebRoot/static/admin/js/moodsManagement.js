@@ -88,7 +88,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
                         closeBtn: 0,
                         icon: 1
                     }, function () {
-                        location.reload()
+                        refresh()
                     });
                 } else {
                     layer.alert("添加心情失败[" + resp.msg + "] !", {icon: 5});
@@ -109,7 +109,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
                         closeBtn: 0,
                         icon: 1
                     }, function () {
-                        location.reload()
+                        refresh()
                     });
                 } else {
                     layer.alert("更新心情失败[" + resp.msg + "] !", {icon: 5});
@@ -195,7 +195,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
                                 closeBtn: 0,
                                 icon: 1
                             }, function () {
-                                location.reload()
+                                refresh()
                             });
                         } else {
                             layer.alert("删除心情失败[" + resp.msg + "] !", {icon: 5});

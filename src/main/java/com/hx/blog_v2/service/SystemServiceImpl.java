@@ -40,12 +40,12 @@ import java.util.*;
 @Service
 public class SystemServiceImpl extends BaseServiceImpl<Object> implements SystemService {
 
-    @Autowired
-    private CacheContext cacheContext;
+            @Autowired
+            private CacheContext cacheContext;
 
-    @Override
-    public Result refreshConfig() {
-        cacheContext.refresh();
+            @Override
+            public Result refreshConfig() {
+                cacheContext.refresh();
         return ResultUtils.success("success");
     }
 
