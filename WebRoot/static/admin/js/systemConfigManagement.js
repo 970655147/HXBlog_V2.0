@@ -256,8 +256,9 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
                 data: params,
                 success: function (resp) {
                     if (resp.success) {
-                        layer.alert('刷新排序成功 !');
-                        refresh()
+                        layer.alert('刷新排序成功 !', function() {
+                            refresh()
+                        });
                     } else {
                         layer.alert('刷新排序失败[' + resp.data + '], 请联系管理人员!');
                     }

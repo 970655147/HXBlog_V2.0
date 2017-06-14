@@ -54,6 +54,8 @@ public class BlogCommentServiceImpl extends BaseServiceImpl<BlogCommentPO> imple
     private JdbcTemplate jdbcTemplate;
     @Autowired
     private CacheContext cacheContext;
+    @Autowired
+    private ConstantsContext constantsContext;
 
     @Override
     public Result add(CommentSaveForm params) {
@@ -90,7 +92,7 @@ public class BlogCommentServiceImpl extends BaseServiceImpl<BlogCommentPO> imple
             return saveResult;
         }
 
-        if(! isReply) {
+        if (!isReply) {
             Result getExResult = blogExDao.get(new BeanIdForm(blog.getId()));
             if (!getExResult.isSuccess()) {
                 return getExResult;
@@ -209,11 +211,11 @@ public class BlogCommentServiceImpl extends BaseServiceImpl<BlogCommentPO> imple
      * @since 1.0
      */
     private int idxOfEndRe(String comment) {
-        if (!comment.startsWith(BlogConstants.REPLY_COMMENT_PREFIX)) {
+        if (!comment.startsWith(constantsContext.replyCommentPrefix)) {
             return -1;
         }
 
-        return comment.indexOf(BlogConstants.REPLY_COMMENT_SUFFIX) + BlogConstants.REPLY_COMMENT_SUFFIX.length();
+        return comment.indexOf(constantsContext.replyCommentSuffix) + constantsContext.replyCommentSuffix.length();
     }
 
     /**

@@ -2,7 +2,7 @@ package com.hx.blog_v2.controller;
 
 import com.hx.blog_v2.domain.form.ImageSearchForm;
 import com.hx.blog_v2.service.interf.*;
-import com.hx.blog_v2.util.BlogConstants;
+import com.hx.blog_v2.util.ConstantsContext;
 import com.hx.common.interf.common.Result;
 import com.hx.common.util.ResultUtils;
 import com.hx.json.JSONObject;
@@ -35,17 +35,17 @@ public class CompositeController {
     @Autowired
     private RoleService roleService;
     @Autowired
-    private BlogConstants constants;
+    private ConstantsContext constantsContext;
 
 
     @RequestMapping(value = "/typeAndTags", method = RequestMethod.GET)
     public Result typeAndTags() {
         Result typeResult = blogTypeService.list();
-        if(! typeResult.isSuccess()) {
+        if (!typeResult.isSuccess()) {
             return typeResult;
         }
         Result tagResult = blogTagService.list();
-        if(! tagResult.isSuccess()) {
+        if (!tagResult.isSuccess()) {
             return tagResult;
         }
 
@@ -57,12 +57,12 @@ public class CompositeController {
     @RequestMapping(value = "/moodAndImages", method = RequestMethod.GET)
     public Result moodAndImages() {
         Result moodsResult = moodService.list();
-        if(! moodsResult.isSuccess()) {
+        if (!moodsResult.isSuccess()) {
             return moodsResult;
         }
-        ImageSearchForm imgShowSearch = new ImageSearchForm(constants.imgTypeImgShow);
+        ImageSearchForm imgShowSearch = new ImageSearchForm(constantsContext.imgTypeImgShow);
         Result imagesResult = imageService.imageList(imgShowSearch);
-        if(! imagesResult.isSuccess()) {
+        if (!imagesResult.isSuccess()) {
             return imagesResult;
         }
 
@@ -74,11 +74,11 @@ public class CompositeController {
     @RequestMapping(value = "/userAndRoles", method = RequestMethod.GET)
     public Result userAndRoles() {
         Result userResult = userService.allId2Name();
-        if(! userResult.isSuccess()) {
+        if (!userResult.isSuccess()) {
             return userResult;
         }
         Result roleResult = roleService.adminList();
-        if(! roleResult.isSuccess()) {
+        if (!roleResult.isSuccess()) {
             return roleResult;
         }
 

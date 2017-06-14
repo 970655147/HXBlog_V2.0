@@ -15,10 +15,7 @@ import com.hx.blog_v2.domain.vo.AdminRoleVO;
 import com.hx.blog_v2.domain.vo.UserRoleVO;
 import com.hx.blog_v2.service.interf.BaseServiceImpl;
 import com.hx.blog_v2.service.interf.RoleService;
-import com.hx.blog_v2.util.BizUtils;
-import com.hx.blog_v2.util.BlogConstants;
-import com.hx.blog_v2.util.CacheContext;
-import com.hx.blog_v2.util.DateUtils;
+import com.hx.blog_v2.util.*;
 import com.hx.common.interf.common.Page;
 import com.hx.common.interf.common.Result;
 import com.hx.common.util.ResultUtils;
@@ -54,6 +51,8 @@ public class RoleServiceImpl extends BaseServiceImpl<RolePO> implements RoleServ
     private JdbcTemplate jdbcTemplate;
     @Autowired
     private CacheContext cacheContext;
+    @Autowired
+    private ConstantsContext constantsContext;
 
     @Override
     public Result add(RoleSaveForm params) {
@@ -142,12 +141,12 @@ public class RoleServiceImpl extends BaseServiceImpl<RolePO> implements RoleServ
         }
 
         Result removeOldRltRresult = rltUserRoleDao.remove(Criteria.eq("user_id", params.getUserId()), true);
-        if(! removeOldRltRresult.isSuccess()) {
+        if (!removeOldRltRresult.isSuccess()) {
             return removeOldRltRresult;
         }
         if (!CollectionUtils.isEmpty(userRoles)) {
             Result addNewRoleResult = rltUserRoleDao.add(userRoles);
-            if(! addNewRoleResult.isSuccess()) {
+            if (!addNewRoleResult.isSuccess()) {
                 return addNewRoleResult;
             }
         }
@@ -181,14 +180,14 @@ public class RoleServiceImpl extends BaseServiceImpl<RolePO> implements RoleServ
     public Result reSort() {
         Map<String, RolePO> roles = cacheContext.allRoles();
         List<RolePO> sortedRoles = BizUtils.resort(roles);
-        int sort = BlogConstants.RE_SORT_START;
+        int sort = constantsContext.reSortStart;
         for (RolePO role : sortedRoles) {
             boolean isSortChanged = sort != role.getSort();
             if (isSortChanged) {
                 role.setSort(sort);
                 roleDao.update(role);
             }
-            sort += BlogConstants.RE_SORT_OFFSET;
+            sort += constantsContext.reSortOffset;
         }
 
         return ResultUtils.success("success");

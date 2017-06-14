@@ -8,15 +8,11 @@ import com.hx.blog_v2.domain.po.BlogCreateTypePO;
 import com.hx.blog_v2.domain.vo.BlogCreateTypeVO;
 import com.hx.blog_v2.service.interf.BaseServiceImpl;
 import com.hx.blog_v2.service.interf.BlogCreateTypeService;
-import com.hx.blog_v2.util.BizUtils;
-import com.hx.blog_v2.util.BlogConstants;
-import com.hx.blog_v2.util.CacheContext;
-import com.hx.blog_v2.util.DateUtils;
+import com.hx.blog_v2.util.*;
 import com.hx.common.interf.common.Result;
 import com.hx.common.util.ResultUtils;
 import com.hx.log.util.Tools;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -37,9 +33,9 @@ public class BlogCreateTypeServiceImpl extends BaseServiceImpl<BlogCreateTypePO>
     @Autowired
     private BlogCreateTypeDao blogCreateTypeDao;
     @Autowired
-    private JdbcTemplate jdbcTemplate;
-    @Autowired
     private CacheContext cacheContext;
+    @Autowired
+    private ConstantsContext constantsContext;
 
     @Override
     public Result add(BlogCreateTypeSaveForm params) {
@@ -113,14 +109,14 @@ public class BlogCreateTypeServiceImpl extends BaseServiceImpl<BlogCreateTypePO>
     public Result reSort() {
         Map<String, BlogCreateTypePO> types = cacheContext.allBlogCreateTypes();
         List<BlogCreateTypePO> sortedTypes = BizUtils.resort(types);
-        int sort = BlogConstants.RE_SORT_START;
+        int sort = constantsContext.reSortStart;
         for (BlogCreateTypePO po : sortedTypes) {
             boolean isSortChanged = sort != po.getSort();
             if (isSortChanged) {
                 po.setSort(sort);
                 blogCreateTypeDao.update(po);
             }
-            sort += BlogConstants.RE_SORT_OFFSET;
+            sort += constantsContext.reSortOffset;
         }
 
         return ResultUtils.success("success");

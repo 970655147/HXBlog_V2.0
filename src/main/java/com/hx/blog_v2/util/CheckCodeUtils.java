@@ -2,6 +2,7 @@ package com.hx.blog_v2.util;
 
 import com.hx.blog_v2.domain.dto.CheckCode;
 import com.hx.log.util.Tools;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -14,17 +15,32 @@ import java.util.List;
  * @version 1.0
  * @date 5/6/2017 4:07 PM
  */
+@org.springframework.stereotype.Component
 public final class CheckCodeUtils {
 
-    /**
-     * 常量配置
-     */
-    private static BlogConstants constants = BlogConstants.getInstance();
+    @Autowired
+    private ConstantsContext constantsContext;
 
-    // disable constructor
-    private CheckCodeUtils() {
-        Tools.assert0("can't instantiate !");
-    }
+    /**
+     * 默认的宽度
+     */
+    public static int DEFAULT_WIDTH = 80;
+    /**
+     * 默认的高度
+     */
+    public static int DEFAULT_HEIGHT = 30;
+    /**
+     * 默认的颜色
+     */
+    public static Color DEFAULT_COLOR = Color.BLACK;
+    /**
+     * 默认的字体
+     */
+    public static Font DEFAULT_FONT = new Font(null, Font.BOLD, 20);
+    /**
+     * 默认的验证码的字符数量
+     */
+    public static int DEFAULT_CHECK_CODE_LENGTH = 4;
 
     /**
      * 获取简单的验证码
@@ -34,16 +50,15 @@ public final class CheckCodeUtils {
      * @date 5/7/2017 2:26 PM
      * @since 1.0
      */
-    public static CheckCode getCheckCode() {
-        BufferedImage checkCodeImg = new BufferedImage(80, 30, BufferedImage.TYPE_INT_RGB);
+    public CheckCode getCheckCode() {
+        BufferedImage checkCodeImg = new BufferedImage(DEFAULT_WIDTH, DEFAULT_HEIGHT, BufferedImage.TYPE_INT_RGB);
         Graphics g = checkCodeImg.getGraphics();
         g.setColor(Color.WHITE);
-        g.fillRect(0, 0, 80, 30);
-        g.setColor(Color.BLACK);
-        g.setFont(new Font(null, Font.BOLD, 20));
+        g.fillRect(0, 0, DEFAULT_WIDTH, DEFAULT_HEIGHT);
+        g.setColor(DEFAULT_COLOR);
+        g.setFont(DEFAULT_FONT);
 
-//        String checkCodeStr = makeCheckCode(BlogConstants.checkCodeLength);
-        String checkCodeStr = makeCheckCode(4);
+        String checkCodeStr = makeCheckCode(DEFAULT_CHECK_CODE_LENGTH);
         g.drawString(checkCodeStr, 0, 20);
 
         CheckCode checkCode = new CheckCode(checkCodeStr, checkCodeImg);
@@ -59,11 +74,11 @@ public final class CheckCodeUtils {
      * @date 5/7/2017 2:26 PM
      * @since 1.0
      */
-    public static String makeCheckCode(int length) {
+    public String makeCheckCode(int length) {
         StringBuffer sb = new StringBuffer();
-        int candidateNum = constants.checkCodeCandidatesStr.length();
+        int candidateNum = constantsContext.checkCodeCandidatesStr.length();
         for (int i = 0; i < length; i++) {
-            sb.append(constants.checkCodeCandidates.get(Tools.ran.nextInt(candidateNum)));
+            sb.append(constantsContext.checkCodeCandidates.get(Tools.ran.nextInt(candidateNum)));
         }
 
         return sb.toString();
@@ -78,8 +93,8 @@ public final class CheckCodeUtils {
      * @date 5/7/2017 2:26 PM
      * @since 1.0
      */
-    public static CheckCode getCheckCode(int width, int height, Color bgColor, Font font, int validateCodeLength,
-                                         List<Character> checkCodes, int minInterference, int interferenceOff) {
+    public CheckCode getCheckCode(int width, int height, Color bgColor, Font font, int validateCodeLength,
+                                  List<Character> checkCodes, int minInterference, int interferenceOff) {
         int checkCodeY = height - (height >> 2);
         int checkCodeXOff = width / (validateCodeLength + 2);
 
@@ -115,7 +130,7 @@ public final class CheckCodeUtils {
      * @date 5/7/2017 2:26 PM
      * @since 1.0
      */
-    public static int random(int range) {
+    public int random(int range) {
         return Tools.ran.nextInt(range);
     }
 
@@ -127,7 +142,7 @@ public final class CheckCodeUtils {
      * @date 5/7/2017 2:26 PM
      * @since 1.0
      */
-    public static Color randomColor() {
+    public Color randomColor() {
         return new Color(random(255) + 1, random(255) + 1, random(255) + 1);
     }
 

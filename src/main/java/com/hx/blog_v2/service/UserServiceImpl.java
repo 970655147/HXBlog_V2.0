@@ -15,6 +15,7 @@ import com.hx.blog_v2.domain.vo.AdminUserVO;
 import com.hx.blog_v2.domain.vo.Id2NameVO;
 import com.hx.blog_v2.service.interf.UserService;
 import com.hx.blog_v2.util.BlogConstants;
+import com.hx.blog_v2.util.ConstantsContext;
 import com.hx.blog_v2.util.DateUtils;
 import com.hx.blog_v2.util.WebContext;
 import com.hx.common.interf.common.Page;
@@ -48,7 +49,7 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private JdbcTemplate jdbcTemplate;
     @Autowired
-    private BlogConstants constants;
+    private ConstantsContext constantsContext;
 
     @Override
     public Result add(UserSaveForm params) {
@@ -227,8 +228,8 @@ public class UserServiceImpl implements UserService {
      * @since 1.0
      */
     private String newSalt() {
-        StringBuilder sb = new StringBuilder(constants.pwdSaltNums);
-        for (int i = 0; i < constants.pwdSaltNums; i++) {
+        StringBuilder sb = new StringBuilder(constantsContext.pwdSaltNums);
+        for (int i = 0; i < constantsContext.pwdSaltNums; i++) {
             sb.append(Tools.ran.nextInt(10));
         }
         return sb.toString();

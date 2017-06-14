@@ -49,8 +49,6 @@ public class MessageServiceImpl extends BaseServiceImpl<MessagePO> implements Me
     private UserDao userDao;
     @Autowired
     private JdbcTemplate jdbcTemplate;
-    @Autowired
-    private BlogConstants constants;
 
     @Override
     public Result add(MessageSaveForm params) {
@@ -234,8 +232,8 @@ public class MessageServiceImpl extends BaseServiceImpl<MessagePO> implements Me
      * @since 1.0
      */
     private void encapNames(List<MessageVO> msgs) {
-        if(Tools.isEmpty(msgs)) {
-            return ;
+        if (Tools.isEmpty(msgs)) {
+            return;
         }
         Set<String> userIds = new HashSet<>(Tools.estimateMapSize(msgs.size() << 1));
         for (MessageVO msg : msgs) {

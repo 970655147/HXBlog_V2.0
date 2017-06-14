@@ -8,10 +8,7 @@ import com.hx.blog_v2.domain.form.UploadedImageSaveForm;
 import com.hx.blog_v2.domain.po.UploadFilePO;
 import com.hx.blog_v2.service.interf.BaseServiceImpl;
 import com.hx.blog_v2.service.interf.UploadFileService;
-import com.hx.blog_v2.util.BlogConstants;
-import com.hx.blog_v2.util.CacheContext;
-import com.hx.blog_v2.util.DateUtils;
-import com.hx.blog_v2.util.WebContext;
+import com.hx.blog_v2.util.*;
 import com.hx.common.interf.common.Result;
 import com.hx.common.util.ResultUtils;
 import com.hx.json.JSONObject;
@@ -21,7 +18,6 @@ import com.hx.log.util.Log;
 import com.hx.log.util.Tools;
 import com.hx.mongo.criteria.Criteria;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -45,11 +41,9 @@ public class UploadFileServiceImpl extends BaseServiceImpl<UploadFilePO> impleme
     @Autowired
     private UploadFileDao uploadFileDao;
     @Autowired
-    private JdbcTemplate jdbcTemplate;
-    @Autowired
     private CacheContext cacheContext;
     @Autowired
-    private BlogConstants blogConstants;
+    private ConstantsContext constantsContext;
     @Autowired
     private BlogConstants constants;
 
@@ -202,7 +196,7 @@ public class UploadFileServiceImpl extends BaseServiceImpl<UploadFilePO> impleme
      * @since 1.0
      */
     private String getImageVisitUrl(String relativePath) {
-        return blogConstants.imageUrlPrefix + relativePath;
+        return constantsContext.imageUrlPrefix + relativePath;
     }
 
     /**

@@ -6,7 +6,6 @@ import com.hx.json.config.interf.JSONConfig;
 import com.hx.json.config.interf.JSONKeyNodeParser;
 import com.hx.json.config.interf.JSONValueNodeParser;
 import com.hx.json.config.simple.*;
-import com.hx.log.util.Constants;
 import com.hx.log.util.Log;
 import com.hx.log.util.Tools;
 import com.hx.mongo.config.MysqlDbConfig;
@@ -14,9 +13,6 @@ import com.hx.mongo.config.interf.DbConfig;
 import org.springframework.beans.factory.annotation.Value;
 
 import javax.annotation.PostConstruct;
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -165,58 +161,135 @@ public final class BlogConstants {
     public static final String SESSION_CHECK_CODE = "session:check_code";
 
     /**
+     * 相关常量的 key
+     */
+    /**
      * 作为记录当前项目的一些信息的 "id"
      */
-    public static final String CONTEXT_BLOG_ID = "-1";
+    public static final String CONTEXT_BLOG_ID = "blog.context.id";
     /**
      * 作为意见收集信息的"帖子的id"
      */
-    public static final String ADVICE_BLOG_ID = "-2";
+    public static final String ADVICE_BLOG_ID = "blog.advice.id";
     /**
      * 作为自我介绍的"帖子的id"
      */
-    public static final String SELF_PROFILE_BLOG_ID = "-3";
-
-    /**
-     * 回复博主, 层主的时候的 parentCommentId
-     */
-    public static final String REPLY_2_FLOOR_OWNER = "-1";
-
+    public static final String SELF_PROFILE_BLOG_ID = "blog.self_profile.id";
     /**
      * 资源列表的数据 的 根节点的 parentId
      */
-    public static final String RESOURCE_ROOT_PARENT_ID = "-1";
+    public static final String RESOURCE_ROOT_PARENT_ID = "resource.root.parent_id";
     /**
      * 叶子资源的层级
      */
-    public static final int RESOURCE_LEAVE_LEVEL = 2;
-
+    public static final String RESOURCE_LEAVE_LEVEL = "resource.leave.level";
     /**
      * 回复评论的前缀
      */
-    public static final String REPLY_COMMENT_PREFIX = "[reply]";
+    public static final String REPLY_COMMENT_PREFIX = "comment.reply.prefix";
     /**
      * 回复评论的后缀
      */
-    public static final String REPLY_COMMENT_SUFFIX = "[/reply]";
+    public static final String REPLY_COMMENT_SUFFIX = "comment.reply.suffix";
     /**
      * 点赞的 sense
      */
-    public static final String UP_PRISE_SENSE = "good";
+    public static final String UP_PRISE_SENSE = "sense.up_prise";
     /**
      * 点赞的 sense
      */
-    public static final String VIEW_SENSE = "view";
-
+    public static final String VIEW_SENSE = "sense.view";
     /**
      * 资源重排 sort 的起始值
      */
-    public static final int RE_SORT_START = 0;
+    public static final String RE_SORT_START = "resort.start";
     /**
      * 资源重排 sort 的重排偏移
      */
-    public static final int RE_SORT_OFFSET = 10;
+    public static final String RE_SORT_OFFSET = "resort.offset";
+    /**
+     * 默认的字符集
+     */
+    public static final String DEFAULT_CHARSET = "charset.default";
 
+    /**
+     * 缓存的 blogId -> nextFloorId 的个数
+     */
+    public static final String MAX_CACHED_BLOG_2_FLOOR_ID = "cache.max.blog_2_floor_id";
+    /**
+     * 缓存的 blogId, floorId -> nextCommentId 的个数
+     */
+    public static final String MAX_CACHED_BLOG_FLOOR_2_COMMENT_ID = "cache.max.blog_floor_2_comment_id";
+    /**
+     * 缓存的 blogId, floorId -> nextCommentId 的个数
+     */
+    public static final String MAX_CACHED_UPLOADED_IMAGE = "cache.max.upload_image";
+    /**
+     * 缓存的 roleIds -> resourceIds 的个数
+     */
+    public static final String MAX_ROLE_IDS_2_RESOURCE_IDS = "cache.max.role_ids_2_resource_ids";
+    /**
+     * 缓存的 (blogId, userName, email, sense) -> clicked 的个数
+     */
+    public static final String MAX_SENSE_2_CLICKED = "cache.max.sense_2_clicked";
+    /**
+     * 缓存的 blogId -> blogEx 的个数
+     */
+    public static final String MAX_BLOG_ID_2_BLOG_EX = "cache.max.blog_id_2_blog_ex";
+    /**
+     * 缓存的 ip -> blogVisitLog 的个数
+     */
+    public static final String MAX_REQUEST_IP_2_BLOG_VISIT_LOG = "cache.max.request_ip_2_blog_visit_log";
+
+    /**
+     * 上传到服务器的图片的 url 前缀
+     */
+    public static final String IMAGE_URL_PREFIX = "image.url.prefix";
+    /**
+     * 用户密码的salt的位数
+     */
+    public static final String PWD_SALT_NUMS = "user.pwd.salt_nums";
+    /**
+     * 验证码的长度
+     */
+    public static final String CHECK_CODE_LENGTH = "check_code.length";
+    /**
+     * 验证码的宽度
+     */
+    public static final String CHECK_CODE_IMG_WIDTH = "check_code.width";
+    /**
+     * 验证码的高度
+     */
+    public static final String CHECK_CODE_IMG_HEIGHT = "check_code.height";
+    /**
+     * 验证码备选字符的集合
+     */
+    public static final String CHECK_CODE_CANDIDATES_STR = "check_code.candidates_str";
+    /**
+     * 验证码备选字符的最少的干扰线的数量
+     */
+    public static final String CHECK_CODE_MIN_INTERFERENCE = "check_code.min.interference";
+    /**
+     * 验证码备选字符的最少的干扰线的可控区间
+     */
+    public static final String CHECK_CODE_INTERFERENCE_OFF = "check_code.max.interference";
+
+    /**
+     * 缓存的统计结果的数量
+     */
+    public static final String MAX_CACHE_STATISTICS_DAYS = "cache.max.statistics.days";
+    /**
+     * 实时统计的时间间隔
+     */
+    public static final String REAL_TIME_CHART_TIME_INTERVAL = "chart.real_time.time_interval";
+    /**
+     * 缓存的统计结果的数量
+     */
+    public static final String MAX_REAL_TIME_CACHE_STASTICS_TIMES = "cache.max.real_time.statistics_times";
+    /**
+     * 不需要记录在 requestLog 中的 url
+     */
+    public static final String REQUEST_LOG_URI_TO_IGNORE = "request_log.url.to_ignore";
 
     // ----------------------------------------- configurable -------------------------------------------------
 
@@ -293,49 +366,6 @@ public final class BlogConstants {
      */
     public static DbConfig MYSQL_DB_CONFIG = null;
 
-
-    /**
-     * 默认的字符集
-     */
-    @Value("${charset}")
-    public String defaultCharset = Constants.DEFAULT_CHARSET;
-
-    /**
-     * 缓存的 blogId -> nextFloorId 的个数
-     */
-    @Value("${cache.blog_2_floorId}")
-    public int maxCachedBlog2FloorId = 100;
-    /**
-     * 缓存的 blogId, floorId -> nextCommentId 的个数
-     */
-    @Value("${cache.blog_floor_2_commentId}")
-    public int maxCachedBlogFloor2CommentId = 1000;
-    /**
-     * 缓存的 blogId, floorId -> nextCommentId 的个数
-     */
-    @Value("${cache.uploaded_image}")
-    public int maxCachedUploadedImage = 100;
-    /**
-     * 缓存的 roleIds -> resourceIds 的个数
-     */
-    @Value("${cache.role_ids2resource_ids}")
-    public int maxRoleIds2ResourceIds = 20;
-    /**
-     * 缓存的 (blogId, userName, email, sense) -> clicked 的个数
-     */
-    @Value("${cache.sense_2_clicked}")
-    public int maxSense2Clicked = 1000;
-    /**
-     * 缓存的 blogId -> blogEx 的个数
-     */
-    @Value("${cache.blog_id_2_blog_ex}")
-    public int maxBlogId2BlogEx = 1000;
-    /**
-     * 缓存的 blogId -> blogEx 的个数
-     */
-    @Value("${cache.request_ip_2_blog_visit_log}")
-    public int maxRequestIp2BlogVisitLog = 1000;
-
     /**
      * 存放博客, 图像的地址
      */
@@ -343,108 +373,21 @@ public final class BlogConstants {
     public String blogRootDir = "D:\\HXBlog_V2.0\\post";
     @Value("${files.dir}")
     public String fileRootDir = "D:\\HXBlog_V2.0\\files";
-
     /**
-     * 图片类型 - 图片墙
+     * 回复博主, 层主的时候的 parentCommentId
      */
-    @Value("${img.type.img_show}")
-    public String imgTypeImgShow = "imgShow";
-    /**
-     * 图片类型 - 头像
-     */
-    @Value("${img.type.head_img}")
-    public String imgTypeHeadImg = "headImg";
-    /**
-     * 系统所支持的图片类型枚举
-     */
-    public final Set<String> supportedImageTypes = Tools.asSet(imgTypeImgShow, imgTypeHeadImg);
-
-    /**
-     * 上传到服务器的图片的 url 前缀
-     */
-    @Value("${image.url.prefix}")
-    public String imageUrlPrefix = "http://localhost/files/";
-
-    /**
-     * 用户密码的salt的位数
-     */
-    @Value("${user.pwd_salt_nums}")
-    public int pwdSaltNums = 8;
-
-    /**
-     * 验证码的长度
-     */
-    @Value("${check_code.length}")
-    public int checkCodeLength = 4;
-    /**
-     * 验证码的宽度
-     */
-    @Value("${check_code.img.width}")
-    public int checkCodeImgWidth = 160;
-    /**
-     * 验证码的高度
-     */
-    @Value("${check_code.img.height}")
-    public int checkCodeImgHeight = 80;
-    /**
-     * 验证码的高度
-     */
-    public Color checkCodeImgBgColor = Color.WHITE;
-    /**
-     * 验证码的高度
-     */
-    public Font checkCodeImgFont = new Font("微软雅黑", Font.ITALIC, 40);
-
-    /**
-     * 验证码备选字符的集合
-     */
-    @Value("${check_code.img.candidates}")
-    public String checkCodeCandidatesStr = "123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTVUWXYZ";
-    public List<Character> checkCodeCandidates = new ArrayList<>(checkCodeCandidatesStr.length());
-    /**
-     * 验证码备选字符的最少的干扰线的数量
-     */
-    @Value("${check_code.img.min_interference}")
-    public int checkCodeMinInterference = 30;
-    /**
-     * 验证码备选字符的最少的干扰线的可控区间
-     */
-    @Value("${check_code.img.interference_off}")
-    public int checkCodeInterferenceOff = 10;
-
-    {
-        for (int i = 0, len = checkCodeCandidatesStr.length(); i < len; i++) {
-            checkCodeCandidates.add(checkCodeCandidatesStr.charAt(i));
-        }
-    }
-
-    /**
-     * 查询 ip 的url的 logPattern
-     */
-    @Value("${ip_addr_req_log_pattern}")
-    public static String IP_ADDR_REQ_LOG_PATTERN = "map('http://ip.taobao.com/service/getIpInfo.php?ip=' + $this)";
-    /**
-     * 缓存的统计结果的数量
-     */
-    @Value("${max_cache_statistics_days}")
-    public static int MAX_CACHE_STASTICS_DAYS = 7;
-    /**
-     * 实时统计的时间间隔
-     */
-    @Value("${realtime_chart_time_interval}")
-    public static int REAL_TIME_CHART_TIME_INTERVAL = 5;
-    /**
-     * 缓存的统计结果的数量
-     */
-    @Value("${max_real_time_cache_statistics_times}")
-    public static int MAX_REAL_TIME_CACHE_STASTICS_TIMES = 12;
+    @Value("${reply_2_floor_owner}")
+    public String reply2FloorOwner = "-1";
     /**
      * 异常日志保留的异常 StackTrace 的行数
      */
     @Value("${exception_log.max_stacktrace}")
-    public static int EXCEPTION_LOG_MAX_STACKTRACE = 20;
-    @Value("${request_log.uri_to_ignore}")
-    public static String REQUEST_LOG_URI_TO_IGNORE = "/index/index;/image/headImgList;/index/latest;";
+    public int exceptionLogMaxStackTrace = 20;
+    /**
+     * 查询 ip 的url的 logPattern
+     */
+    @Value("${ip_addr.req.log_pattern}")
+    public String ipAddrReqLogPattern = "map('http://ip.taobao.com//service/getIpInfo.php?ip=' + $this)";
 
     // -------------------- 辅助方法 --------------------------
 

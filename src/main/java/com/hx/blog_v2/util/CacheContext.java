@@ -6,6 +6,9 @@ import com.hx.blog_v2.domain.form.BlogSenseForm;
 import com.hx.blog_v2.domain.form.BlogVisitLogForm;
 import com.hx.blog_v2.domain.po.*;
 import com.hx.common.interf.cache.Cache;
+import com.hx.json.JSONObject;
+import com.hx.log.alogrithm.tree.TreeUtils;
+import com.hx.log.alogrithm.tree.interf.TreeInfoExtractor;
 import com.hx.log.cache.mem.LRUMCache;
 import com.hx.log.util.Log;
 import com.hx.log.util.Tools;
@@ -59,7 +62,7 @@ public class CacheContext {
     @Autowired
     private JdbcTemplate jdbcTemplate;
     @Autowired
-    private BlogConstants constants;
+    private ConstantsContext constantsContext;
 
     /**
      * id -> blogTag
@@ -500,7 +503,7 @@ public class CacheContext {
      * @since 1.0
      */
     public void switchStatistics() {
-        if (allStatistics.size() > BlogConstants.MAX_CACHE_STASTICS_DAYS) {
+        if (allStatistics.size() > constantsContext.maxCacheStatisticsDays) {
             allStatistics.poll();
         }
         allStatistics.add(todaysStatistics);
@@ -534,7 +537,7 @@ public class CacheContext {
          */
         if (all5SecStatistics.isEmpty() && (fSecTaskFuture == null)) {
             fSecTaskFuture = Tools.scheduleAtFixedRate(new Switch5SecStatisInfoRunnable(), 0,
-                    BlogConstants.REAL_TIME_CHART_TIME_INTERVAL, TimeUnit.SECONDS);
+                    constantsContext.realTimeChartTimeInterval, TimeUnit.SECONDS);
         }
         return all5SecStatistics;
     }
@@ -548,7 +551,7 @@ public class CacheContext {
      * @since 1.0
      */
     public void switch5SecStatistics() {
-        if (all5SecStatistics.size() > BlogConstants.MAX_REAL_TIME_CACHE_STASTICS_TIMES) {
+        if (all5SecStatistics.size() > constantsContext.maxRealTimeCacheStasticsTimes) {
             all5SecStatistics.poll();
         }
         all5SecStatistics.add(now5SecStatistics);
@@ -660,14 +663,14 @@ public class CacheContext {
      * @since 1.0
      */
     private void initICache() {
-        blog2NextFloorId = new LRUMCache<>(constants.maxCachedBlog2FloorId, false);
-        blogFloor2NextCommentId = new LRUMCache<>(constants.maxCachedBlogFloor2CommentId, false);
-        digest2UploadedFiles = new LRUMCache<>(constants.maxCachedUploadedImage, false);
-        roles2ResourceIds = new LRUMCache<>(constants.maxRoleIds2ResourceIds, false);
-        resource2Interfs = new LRUMCache<>(constants.maxRoleIds2ResourceIds, false);
-        blogIdUserInfo2Sense = new LRUMCache<>(constants.maxSense2Clicked, false);
-        blogId2BlogEx = new LRUMCache<>(constants.maxBlogId2BlogEx, false);
-        requestIp2BlogVisitLog = new LRUMCache<>(constants.maxRequestIp2BlogVisitLog, false);
+        blog2NextFloorId = new LRUMCache<>(constantsContext.maxCachedBlog2FloorId, false);
+        blogFloor2NextCommentId = new LRUMCache<>(constantsContext.maxCachedBlogFloor2CommentId, false);
+        digest2UploadedFiles = new LRUMCache<>(constantsContext.maxCachedUploadedImage, false);
+        roles2ResourceIds = new LRUMCache<>(constantsContext.maxRoleIds2ResourceIds, false);
+        resource2Interfs = new LRUMCache<>(constantsContext.maxRoleIds2ResourceIds, false);
+        blogIdUserInfo2Sense = new LRUMCache<>(constantsContext.maxSense2Clicked, false);
+        blogId2BlogEx = new LRUMCache<>(constantsContext.maxBlogId2BlogEx, false);
+        requestIp2BlogVisitLog = new LRUMCache<>(constantsContext.maxRequestIp2BlogVisitLog, false);
 
         blogIdUserInfo2Sense.addCacheListener(new JSONTransferableCacheListener<>(blogSenseDao));
         blogId2BlogEx.addCacheListener(new JSONTransferableCacheListener<>(blogExDao));
@@ -735,7 +738,7 @@ public class CacheContext {
      * @since 1.0
      */
     private void initStastics() {
-        List<StatisticsInfo> allDayStatisInfo = BizUtils.collectRecentlyStatisticsInfo(jdbcTemplate, BlogConstants.MAX_CACHE_STASTICS_DAYS);
+        List<StatisticsInfo> allDayStatisInfo = BizUtils.collectRecentlyStatisticsInfo(jdbcTemplate, constantsContext.maxCacheStatisticsDays);
         allStatistics.addAll(allDayStatisInfo);
         if (!Tools.isEmpty(allDayStatisInfo)) {
             todaysStatistics = allDayStatisInfo.get(allDayStatisInfo.size() - 1);
@@ -805,6 +808,11 @@ public class CacheContext {
     }
 
     /**
+     * 辅助key
+     */
+    private static final String RE_SORT_RES_TREE_THIS_STR = "__this";
+
+    /**
      * 对于 resource 进行资源重排, 一级资源|二级资源|..
      *
      * @param resoures resoures
@@ -814,15 +822,41 @@ public class CacheContext {
      * @since 1.0
      */
     private List<ResourcePO> reSortResourceList(List<ResourcePO> resoures) {
-        List<ResourcePO> result = new ArrayList<>(resoures.size());
-        for (int i = 0; i <= BlogConstants.RESOURCE_LEAVE_LEVEL; i++) {
-            for (ResourcePO po : resoures) {
-                if (po.getLevel() == i) {
-                    result.add(po);
-                }
-            }
+        if (Tools.isEmpty(resoures)) {
+            return Collections.emptyList();
         }
+
+        final String childStr = "childs";
+        JSONObject root = TreeUtils.generateTree(resoures, new TreeInfoExtractor<ResourcePO>() {
+            @Override
+            public void extract(ResourcePO bean, JSONObject obj) {
+                obj.put(RE_SORT_RES_TREE_THIS_STR, bean);
+            }
+        }, childStr, constantsContext.resourceRootParentId);
+
+        List<ResourcePO> result = new ArrayList<>(resoures.size());
+        collectResultByLevel(root, childStr, result);
         return result;
+    }
+
+    /**
+     * 从高级到低级依次收集 PO 到结果集合中
+     *
+     * @param node     node
+     * @param childStr childStr
+     * @param result   result
+     * @return void
+     * @author Jerry.X.He
+     * @date 6/14/2017 7:47 PM
+     * @since 1.0
+     */
+    private void collectResultByLevel(JSONObject node, String childStr, List<ResourcePO> result) {
+        ResourcePO po = (ResourcePO) node.get(RE_SORT_RES_TREE_THIS_STR);
+        result.add(po);
+        JSONObject childs = node.getJSONObject(childStr);
+        for (Map.Entry<String, Object> entry : childs.entrySet()) {
+            collectResultByLevel((JSONObject) entry.getValue(), childStr, result);
+        }
     }
 
     /**
@@ -849,7 +883,7 @@ public class CacheContext {
     private class Switch5SecStatisInfoRunnable implements Runnable {
         @Override
         public void run() {
-            if ((System.currentTimeMillis() - fSecLastVisitDate) > ((BlogConstants.REAL_TIME_CHART_TIME_INTERVAL + 1) << 10)) {
+            if ((System.currentTimeMillis() - fSecLastVisitDate) > ((constantsContext.realTimeChartTimeInterval + 1) << 10)) {
                 all5SecStatistics.clear();
                 fSecTaskFuture.cancel(false);
                 fSecTaskFuture = null;

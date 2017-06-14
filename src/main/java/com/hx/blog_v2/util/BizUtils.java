@@ -116,7 +116,8 @@ public final class BizUtils {
         }
 
         try {
-            String urlStr = AttrHandlerUtils.handlerParse(BlogConstants.IP_ADDR_REQ_LOG_PATTERN, AttrHandlerConstants.HANDLER).handle(ip);
+            String urlStr = AttrHandlerUtils.handlerParse(BlogConstants.getInstance().ipAddrReqLogPattern,
+                    AttrHandlerConstants.HANDLER).handle(ip);
             URL url = new URL(urlStr);
             String resp = Tools.getContent(url.openConnection().getInputStream());
             JSONObject ipInfo = JSONObject.fromObject(resp);
@@ -183,7 +184,7 @@ public final class BizUtils {
      * @since 1.0
      */
     public static JSONArray getExceptionInfo(Throwable e) {
-        if(e == null) {
+        if (e == null) {
             return JSONArray.NULL_JSON_ARRAY;
         }
 
@@ -192,9 +193,9 @@ public final class BizUtils {
         result.add(e.getLocalizedMessage());
 
         StackTraceElement[] stackTraces = e.getStackTrace();
-        int min = (stackTraces.length - BlogConstants.EXCEPTION_LOG_MAX_STACKTRACE) > 0 ?
-                stackTraces.length - BlogConstants.EXCEPTION_LOG_MAX_STACKTRACE : 0;
-        for(int i=stackTraces.length-1; i>=min; i--) {
+        int exceptionLogMaxStackTrace = BlogConstants.getInstance().exceptionLogMaxStackTrace;
+        int min = (stackTraces.length - exceptionLogMaxStackTrace) > 0 ? stackTraces.length - exceptionLogMaxStackTrace : 0;
+        for (int i = stackTraces.length - 1; i >= min; i--) {
             result.add(stackTraces[i].toString());
         }
         return result;

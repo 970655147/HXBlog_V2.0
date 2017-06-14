@@ -11,7 +11,7 @@ import com.hx.blog_v2.domain.vo.SystemConfigVO;
 import com.hx.blog_v2.service.interf.BaseServiceImpl;
 import com.hx.blog_v2.service.interf.SystemConfigService;
 import com.hx.blog_v2.util.BlogConstants;
-import com.hx.blog_v2.util.CacheContext;
+import com.hx.blog_v2.util.ConstantsContext;
 import com.hx.blog_v2.util.DateUtils;
 import com.hx.common.interf.common.Page;
 import com.hx.common.interf.common.Result;
@@ -42,13 +42,14 @@ public class SystemConfigServiceImpl extends BaseServiceImpl<SystemConfigPO> imp
     @Autowired
     private JdbcTemplate jdbcTemplate;
     @Autowired
-    private CacheContext cacheContext;
+    private ConstantsContext constantsContext;
 
     @Override
     public Result add(SystemConfigSaveForm params) {
         SystemConfigPO po = new SystemConfigPO(params.getName(), params.getValue(), params.getDesc(),
                 params.getType(), params.getSort(), params.getEnable());
 
+        // TODO: 6/14/2017 key 的唯一性校验
         Result result = systemConfigDao.add(po);
         if (!result.isSuccess()) {
             return result;
@@ -59,7 +60,7 @@ public class SystemConfigServiceImpl extends BaseServiceImpl<SystemConfigPO> imp
     @Override
     public Result adminList(SystemConfigSearchForm params, Page<SystemConfigVO> page) {
         String selectSql = " select * from system_config where deleted = 0 and type = '" + params.getType() + "' order by sort limit ?, ? ";
-        String countSql = " select count(*) as totalRecord from system_config where deleted = 0 and type = ' " + params.getType() + " ' ";
+        String countSql = " select count(*) as totalRecord from system_config where deleted = 0 and type = '" + params.getType() + "' ";
         Object[] sqlParams = new Object[]{page.recordOffset(), page.getPageSize()};
 
         List<SystemConfigVO> list = jdbcTemplate.query(selectSql, sqlParams, new SystemConfigVOMapper());
@@ -76,6 +77,7 @@ public class SystemConfigServiceImpl extends BaseServiceImpl<SystemConfigPO> imp
         po.setId(params.getId());
         po.setUpdatedAt(DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS));
 
+        // TODO: 6/14/2017 key 的唯一性校验
         Result result = systemConfigDao.update(po);
         if (!result.isSuccess()) {
             return result;
@@ -98,7 +100,8 @@ public class SystemConfigServiceImpl extends BaseServiceImpl<SystemConfigPO> imp
 
     @Override
     public Result reSort(SystemConfigSearchForm params) {
-        IQueryCriteria query = Criteria.eq("type", params.getType());
+        IQueryCriteria query = Criteria.and(Criteria.eq("type", params.getType()))
+                .add(Criteria.eq("deleted", "0"));
         SortByCriteria sortBy = Criteria.sortBy("sort", SortByCriteria.ASC);
         Result getAllResult = systemConfigDao.list(query, sortBy, Criteria.limitNothing());
         if (!getAllResult.isSuccess()) {
@@ -106,14 +109,14 @@ public class SystemConfigServiceImpl extends BaseServiceImpl<SystemConfigPO> imp
         }
 
         List<SystemConfigPO> sortedImages = (List<SystemConfigPO>) getAllResult.getData();
-        int sort = BlogConstants.RE_SORT_START;
+        int sort = constantsContext.reSortStart;
         for (SystemConfigPO po : sortedImages) {
             boolean isSortChanged = sort != po.getSort();
             if (isSortChanged) {
                 po.setSort(sort);
                 systemConfigDao.update(po);
             }
-            sort += BlogConstants.RE_SORT_OFFSET;
+            sort += constantsContext.reSortOffset;
         }
 
         return ResultUtils.success("success");

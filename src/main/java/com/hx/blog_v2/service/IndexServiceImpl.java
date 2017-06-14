@@ -6,7 +6,10 @@ import com.hx.blog_v2.domain.POVOTransferUtils;
 import com.hx.blog_v2.domain.dto.SessionUser;
 import com.hx.blog_v2.domain.extractor.ResourceTreeInfoExtractor;
 import com.hx.blog_v2.domain.form.BeanIdsForm;
-import com.hx.blog_v2.domain.mapper.*;
+import com.hx.blog_v2.domain.mapper.BlogVOMapper;
+import com.hx.blog_v2.domain.mapper.CommentVOMapper;
+import com.hx.blog_v2.domain.mapper.FacetByMonthMapper;
+import com.hx.blog_v2.domain.mapper.OneIntMapper;
 import com.hx.blog_v2.domain.po.BlogTagPO;
 import com.hx.blog_v2.domain.po.BlogTypePO;
 import com.hx.blog_v2.domain.po.ResourcePO;
@@ -19,6 +22,7 @@ import com.hx.blog_v2.service.interf.IndexService;
 import com.hx.blog_v2.service.interf.LinkService;
 import com.hx.blog_v2.util.BlogConstants;
 import com.hx.blog_v2.util.CacheContext;
+import com.hx.blog_v2.util.ConstantsContext;
 import com.hx.blog_v2.util.WebContext;
 import com.hx.common.interf.common.Result;
 import com.hx.common.util.ResultUtils;
@@ -56,6 +60,8 @@ public class IndexServiceImpl extends BaseServiceImpl<Object> implements IndexSe
     private JdbcTemplate jdbcTemplate;
     @Autowired
     private BlogConstants constants;
+    @Autowired
+    private ConstantsContext constantsContext;
 
     @Override
     public Result index() {
@@ -63,7 +69,7 @@ public class IndexServiceImpl extends BaseServiceImpl<Object> implements IndexSe
                 " where b.deleted = 0 and b.id >= 0 order by e.comment_cnt desc limit 0, 5 ";
         String latestCommentsSql = " select * from blog_comment order by created_at desc limit 0, 5 ";
         String contextBlogSql = " select b.* from blog as b inner join blog_ex as e on b.id = e.blog_id " +
-                " where b.id = " + BlogConstants.CONTEXT_BLOG_ID;
+                " where b.id = " + constantsContext.contextBlogId;
         String facetByMogroupnthSql = " select b.created_at_month as month, count(*) as cnt from blog as b " +
                 "where b.deleted = 0 and b.id >= 0 group by b.created_at_month ";
         String todayVisitedSql = " select count(*) as cnt from visitor where created_at >= (select cast(cast(sysdate() as date) AS datetime))";
@@ -123,7 +129,7 @@ public class IndexServiceImpl extends BaseServiceImpl<Object> implements IndexSe
     public Result adminMenus() {
         SessionUser user = (SessionUser) WebContext.getAttributeFromSession(BlogConstants.SESSION_USER);
         Result getResourceIdsResult = rltRoleResourceDao.getResourceIdsByRoleIds(new BeanIdsForm(user.getRoleIds()));
-        if(! getResourceIdsResult.isSuccess()) {
+        if (!getResourceIdsResult.isSuccess()) {
             return getResourceIdsResult;
         }
 
@@ -139,7 +145,7 @@ public class IndexServiceImpl extends BaseServiceImpl<Object> implements IndexSe
 
         final String childStr = "childs";
         JSONObject root = TreeUtils.generateTree(resources, new ResourceTreeInfoExtractor(), childStr,
-                BlogConstants.RESOURCE_ROOT_PARENT_ID);
+                constantsContext.resourceRootParentId);
         TreeUtils.childArrayify(root, childStr);
         return ResultUtils.success(root);
     }
@@ -252,7 +258,7 @@ public class IndexServiceImpl extends BaseServiceImpl<Object> implements IndexSe
         List<String> parentIds = new ArrayList<>(resourcesById.size());
         for (Map.Entry<String, ResourcePO> entry : resourcesById.entrySet()) {
             ResourcePO po = entry.getValue();
-            if (BlogConstants.RESOURCE_ROOT_PARENT_ID.equals(po.getParentId())) {
+            if (constantsContext.resourceRootParentId.equals(po.getParentId())) {
                 continue;
             }
 

@@ -58,6 +58,8 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
     private CacheContext cacheContext;
     @Autowired
     private BlogConstants constants;
+    @Autowired
+    private ConstantsContext constantsContext;
 
     @Override
     public Result save(BlogSaveForm params) {
@@ -457,7 +459,7 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
 
         BlogSenseForm params = new BlogSenseForm();
         params.setBlogId(blogId);
-        params.setSense(BlogConstants.UP_PRISE_SENSE);
+        params.setSense(constantsContext.upPriseSense);
         params.setUserInfo(user);
 
         Result getSenseResult = senseDao.get(params);

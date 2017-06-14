@@ -5,6 +5,7 @@ import com.hx.blog_v2.domain.form.ImageSearchForm;
 import com.hx.blog_v2.service.interf.ImageService;
 import com.hx.blog_v2.util.BlogConstants;
 import com.hx.blog_v2.util.CheckCodeUtils;
+import com.hx.blog_v2.util.ConstantsContext;
 import com.hx.blog_v2.util.WebContext;
 import com.hx.common.interf.common.Result;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,27 +29,29 @@ public class ImageController {
     @Autowired
     private ImageService imageService;
     @Autowired
-    private BlogConstants constants;
+    private ConstantsContext constantsContext;
+    @Autowired
+    private CheckCodeUtils checkCodeUtils;
 
     @RequestMapping(value = "/imgShowList", method = RequestMethod.GET)
     public Result imgShowList() {
 
-        ImageSearchForm params = new ImageSearchForm(constants.imgTypeImgShow);
+        ImageSearchForm params = new ImageSearchForm(constantsContext.imgTypeImgShow);
         return imageService.imageList(params);
     }
 
     @RequestMapping(value = "/headImgList", method = RequestMethod.GET)
     public Result headImgList() {
 
-        ImageSearchForm params = new ImageSearchForm(constants.imgTypeHeadImg);
+        ImageSearchForm params = new ImageSearchForm(constantsContext.imgTypeHeadImg);
         return imageService.imageList(params);
     }
 
     @RequestMapping("/checkCode")
     public void checkCode() {
-        CheckCode checkCode = CheckCodeUtils.getCheckCode(constants.checkCodeImgWidth, constants.checkCodeImgHeight,
-                constants.checkCodeImgBgColor, constants.checkCodeImgFont, constants.checkCodeLength,
-                constants.checkCodeCandidates, constants.checkCodeMinInterference, constants.checkCodeInterferenceOff);
+        CheckCode checkCode = checkCodeUtils.getCheckCode(constantsContext.checkCodeImgWidth, constantsContext.checkCodeImgHeight,
+                constantsContext.checkCodeImgBgColor, constantsContext.checkCodeImgFont, constantsContext.checkCodeLength,
+                constantsContext.checkCodeCandidates, constantsContext.checkCodeMinInterference, constantsContext.checkCodeInterferenceOff);
         WebContext.setAttributeForSession(BlogConstants.SESSION_CHECK_CODE, checkCode.getCheckCode());
 
         WebContext.responseNoCache();

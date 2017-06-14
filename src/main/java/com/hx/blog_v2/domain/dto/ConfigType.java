@@ -16,9 +16,13 @@ public enum ConfigType {
      */
     SYSTEM("systemConfig"),
     /**
+     * 规则配置
+     */
+    RULE("ruleConfig"),
+    /**
      * 首页配置
      */
-    FRONT_INDEX_CONFIG("fIdxConfig");
+    FRONT_INDEX_CONFIG("frontendIdxConfig");
 
     /**
      * type -> imageType

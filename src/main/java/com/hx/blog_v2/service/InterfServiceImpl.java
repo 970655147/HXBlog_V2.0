@@ -16,10 +16,7 @@ import com.hx.blog_v2.domain.vo.ResourceInterfVO;
 import com.hx.blog_v2.domain.vo.UserRoleVO;
 import com.hx.blog_v2.service.interf.BaseServiceImpl;
 import com.hx.blog_v2.service.interf.InterfService;
-import com.hx.blog_v2.util.BizUtils;
-import com.hx.blog_v2.util.BlogConstants;
-import com.hx.blog_v2.util.CacheContext;
-import com.hx.blog_v2.util.DateUtils;
+import com.hx.blog_v2.util.*;
 import com.hx.common.interf.common.Result;
 import com.hx.common.util.ResultUtils;
 import com.hx.json.JSONArray;
@@ -56,6 +53,8 @@ public class InterfServiceImpl extends BaseServiceImpl<InterfPO> implements Inte
     private JdbcTemplate jdbcTemplate;
     @Autowired
     private CacheContext cacheContext;
+    @Autowired
+    private ConstantsContext constantsContext;
 
     @Override
     public Result add(InterfSaveForm params) {
@@ -176,14 +175,14 @@ public class InterfServiceImpl extends BaseServiceImpl<InterfPO> implements Inte
     public Result reSort() {
         Map<String, InterfPO> types = cacheContext.allInterfs();
         List<InterfPO> sortedInterfs = BizUtils.resort(types);
-        int sort = BlogConstants.RE_SORT_START;
+        int sort = constantsContext.reSortStart;
         for (InterfPO interf : sortedInterfs) {
             boolean isSortChanged = sort != interf.getSort();
             if (isSortChanged) {
                 interf.setSort(sort);
                 interfDao.update(interf);
             }
-            sort += BlogConstants.RE_SORT_OFFSET;
+            sort += constantsContext.reSortOffset;
         }
 
         return ResultUtils.success("success");
@@ -246,7 +245,7 @@ public class InterfServiceImpl extends BaseServiceImpl<InterfPO> implements Inte
         List<ResourcePO> list = new ArrayList<>(resourcesById.size());
         for (Map.Entry<String, ResourcePO> entry : resourcesById.entrySet()) {
             ResourcePO role = entry.getValue();
-            if (BlogConstants.RESOURCE_LEAVE_LEVEL == role.getLevel()) {
+            if (constantsContext.resourceLeaveLevel == role.getLevel()) {
                 list.add(role);
             }
         }

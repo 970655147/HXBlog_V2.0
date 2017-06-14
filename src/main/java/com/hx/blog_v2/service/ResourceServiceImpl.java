@@ -17,6 +17,7 @@ import com.hx.blog_v2.service.interf.BaseServiceImpl;
 import com.hx.blog_v2.service.interf.ResourceService;
 import com.hx.blog_v2.util.BlogConstants;
 import com.hx.blog_v2.util.CacheContext;
+import com.hx.blog_v2.util.ConstantsContext;
 import com.hx.blog_v2.util.DateUtils;
 import com.hx.common.interf.common.Result;
 import com.hx.common.util.ResultUtils;
@@ -54,6 +55,8 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourcePO> implements 
     private JdbcTemplate jdbcTemplate;
     @Autowired
     private CacheContext cacheContext;
+    @Autowired
+    private ConstantsContext constantsContext;
 
     @Override
     public Result add(ResourceSaveForm params) {
@@ -83,7 +86,7 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourcePO> implements 
         List<ResourcePO> leaves = new ArrayList<>(resourcesById.size());
         for (Map.Entry<String, ResourcePO> entry : resourcesById.entrySet()) {
             ResourcePO resource = entry.getValue();
-            if (resource.getLevel() == BlogConstants.RESOURCE_LEAVE_LEVEL) {
+            if (resource.getLevel() == constantsContext.resourceLeaveLevel) {
                 leaves.add(resource);
             }
         }
@@ -253,10 +256,10 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourcePO> implements 
         for (ResourcePO po : allResources) {
             Integer sortNow = parent2Sort.get(po.getParentId());
             if (sortNow == null) {
-                sortNow = BlogConstants.RE_SORT_START;
+                sortNow = constantsContext.reSortStart;
             }
 
-            Integer newSort = sortNow + BlogConstants.RE_SORT_OFFSET;
+            Integer newSort = sortNow + constantsContext.reSortOffset;
             parent2Sort.put(po.getParentId(), newSort);
             if (po.getLevel() != newSort.intValue()) {
                 po.setSort(newSort);

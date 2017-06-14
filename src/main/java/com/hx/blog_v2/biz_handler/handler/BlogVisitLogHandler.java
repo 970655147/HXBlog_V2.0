@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -34,6 +33,8 @@ public class BlogVisitLogHandler extends BizHandlerAdapter {
     private BlogExDao blogExDao;
     @Autowired
     private CacheContext cacheContext;
+    @Autowired
+    private ConstantsContext constantsContext;
 
 
     @Override
@@ -41,12 +42,16 @@ public class BlogVisitLogHandler extends BizHandlerAdapter {
         Result result = (Result) context.result();
         if (result.isSuccess()) {
             List<String> blogIdCandidate = new ArrayList<>();
-            if((context.args().length > 0) && (context.args()[0] instanceof BeanIdForm)) {
-                blogIdCandidate.add(((BeanIdForm) context.args()[0]).getId() );
+            if ((context.args().length > 0) && (context.args()[0] instanceof BeanIdForm)) {
+                blogIdCandidate.add(((BeanIdForm) context.args()[0]).getId());
             }
-            Collections.addAll(blogIdCandidate, context.bizHandle().others());
+            if (context.bizHandle().others().length > 0) {
+                if (BlogConstants.CONTEXT_BLOG_ID.equals(context.bizHandle().others()[0])) {
+                    blogIdCandidate.add(constantsContext.contextBlogId);
+                }
+            }
 
-            for(String blogId : blogIdCandidate) {
+            for (String blogId : blogIdCandidate) {
                 BlogVisitLogForm params = new BlogVisitLogForm(blogId, BizUtils.getIp());
                 BlogExPO blogEx = (BlogExPO) blogExDao.get(new BeanIdForm(blogId)).getData();
 

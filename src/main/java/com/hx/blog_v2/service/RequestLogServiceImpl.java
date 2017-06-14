@@ -7,6 +7,7 @@ import com.hx.blog_v2.service.interf.BaseServiceImpl;
 import com.hx.blog_v2.service.interf.RequestLogService;
 import com.hx.blog_v2.util.BizUtils;
 import com.hx.blog_v2.util.BlogConstants;
+import com.hx.blog_v2.util.ConstantsContext;
 import com.hx.blog_v2.util.WebContext;
 import com.hx.json.JSONObject;
 import org.aspectj.lang.JoinPoint;
@@ -27,12 +28,14 @@ public class RequestLogServiceImpl extends BaseServiceImpl<RequestLogPO> impleme
 
     @Autowired
     private RequestLogDao requestLogDao;
+    @Autowired
+    private ConstantsContext constantsContext;
 
     @Override
     public void saveRequestLog(JoinPoint point, long cost) {
         HttpServletRequest req = WebContext.getRequest();
         String requestUri = req.getRequestURI();
-        if (BlogConstants.REQUEST_LOG_URI_TO_IGNORE.contains(requestUri)) {
+        if (constantsContext.requestLogUriToIgnore.contains(requestUri)) {
             return;
         }
 

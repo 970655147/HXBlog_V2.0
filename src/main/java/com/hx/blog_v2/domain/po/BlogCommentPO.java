@@ -67,7 +67,7 @@ public class BlogCommentPO implements JSONTransferable<BlogCommentPO> {
         createdAt = DateUtils.formate(now, BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
         updatedAt = createdAt;
         deleted = 0;
-        parentCommentId = BlogConstants.RESOURCE_ROOT_PARENT_ID;
+        parentCommentId = BlogConstants.getInstance().reply2FloorOwner;
     }
 
     public String getId() {

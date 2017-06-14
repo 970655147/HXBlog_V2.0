@@ -8,10 +8,7 @@ import com.hx.blog_v2.domain.po.BlogTypePO;
 import com.hx.blog_v2.domain.vo.BlogTypeVO;
 import com.hx.blog_v2.service.interf.BaseServiceImpl;
 import com.hx.blog_v2.service.interf.BlogTypeService;
-import com.hx.blog_v2.util.BizUtils;
-import com.hx.blog_v2.util.BlogConstants;
-import com.hx.blog_v2.util.CacheContext;
-import com.hx.blog_v2.util.DateUtils;
+import com.hx.blog_v2.util.*;
 import com.hx.common.interf.common.Result;
 import com.hx.common.util.ResultUtils;
 import com.hx.log.util.Tools;
@@ -40,6 +37,8 @@ public class BlogTypeServiceImpl extends BaseServiceImpl<BlogTypePO> implements 
     private CacheContext cacheContext;
     @Autowired
     private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private ConstantsContext constantsContext;
 
     @Override
     public Result add(BlogTypeSaveForm params) {
@@ -114,14 +113,14 @@ public class BlogTypeServiceImpl extends BaseServiceImpl<BlogTypePO> implements 
     public Result reSort() {
         Map<String, BlogTypePO> types = cacheContext.allBlogTypes();
         List<BlogTypePO> sortedTypes = BizUtils.resort(types);
-        int sort = BlogConstants.RE_SORT_START;
+        int sort = constantsContext.reSortStart;
         for (BlogTypePO tag : sortedTypes) {
             boolean isSortChanged = sort != tag.getSort();
             if (isSortChanged) {
                 tag.setSort(sort);
                 blogTypeDao.update(tag);
             }
-            sort += BlogConstants.RE_SORT_OFFSET;
+            sort += constantsContext.reSortOffset;
         }
 
         return ResultUtils.success("success");
