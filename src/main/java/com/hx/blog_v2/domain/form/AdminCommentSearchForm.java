@@ -21,12 +21,16 @@ public class AdminCommentSearchForm {
      * 根据评论时间
      */
     public static final int SORT_CREATE = SORT_BLOG + 1;
+    /**
+     * 所有的支持的 类型
+     */
+    public static final int[] SORT_TYPES = new int[]{SORT_BLOG, SORT_CREATE};
 
     /**
      * 排序的val -> sql排序的关键字
      */
     public static final Map<Integer, String> SORT_2_FIELD = Tools.asMap(
-            new Integer[]{SORT_BLOG, SORT_CREATE },
+            new Integer[]{SORT_BLOG, SORT_CREATE},
             "b.created_at", "c.created_at"
     );
 

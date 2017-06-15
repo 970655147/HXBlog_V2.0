@@ -5,6 +5,7 @@ import com.hx.blog_v2.domain.form.AdminCommentSearchForm;
 import com.hx.blog_v2.domain.form.BeanIdForm;
 import com.hx.blog_v2.domain.form.CommentSaveForm;
 import com.hx.blog_v2.domain.form.FloorCommentListSearchForm;
+import com.hx.blog_v2.domain.validator.AdminCommentSearchValidator;
 import com.hx.blog_v2.domain.vo.AdminCommentVO;
 import com.hx.blog_v2.domain.vo.AdminLinkVO;
 import com.hx.blog_v2.domain.vo.CommentVO;
@@ -29,6 +30,8 @@ public class CommentController {
 
     @Autowired
     private BlogCommentService commentService;
+    @Autowired
+    private AdminCommentSearchValidator searchValidator;
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     @BizHandle(handler = "commentAddHandler")
@@ -40,6 +43,10 @@ public class CommentController {
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public Result list(AdminCommentSearchForm params, SimplePage<AdminCommentVO> page) {
+        Result result = searchValidator.validate(params, null);
+        if(! result.isSuccess()) {
+            return result;
+        }
 
         return commentService.adminList(params, page);
     }

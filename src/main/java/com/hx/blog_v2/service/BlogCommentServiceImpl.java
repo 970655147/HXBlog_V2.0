@@ -254,15 +254,15 @@ public class BlogCommentServiceImpl extends BaseServiceImpl<BlogCommentPO> imple
      */
     private void encapQueryForAdminList(AdminCommentSearchForm params, StringBuilder condSqlSb, List<Object> selectParams) {
         if (!Tools.isEmpty(params.getBlogId())) {
-            condSqlSb.append(" and b.blog_id = ");
+            condSqlSb.append(" and b.blog_id = ? ");
             selectParams.add(params.getBlogId());
         }
         if (!Tools.isEmpty(params.getBlogTypeId())) {
-            condSqlSb.append(" and b.blog_type_id = ");
+            condSqlSb.append(" and b.blog_type_id = ? ");
             selectParams.add(params.getBlogTypeId());
         }
         if (!Tools.isEmpty(params.getBlogName())) {
-            condSqlSb.append(" and b.name like ? ");
+            condSqlSb.append(" and b.title like ? ");
             selectParams.add(SqlUtils.wrapWildcard(params.getBlogTypeId()));
         }
         if (!Tools.isEmpty(params.getUserName())) {

@@ -18,7 +18,6 @@ layui.define(['element', 'laypage', 'layer', 'form', 'pagesize'], function (expo
 
     initilData(1);
     //页数据初始化
-
     function initilData(pageNow) {
         var index = layer.load(1);
 

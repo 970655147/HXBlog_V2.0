@@ -113,6 +113,10 @@ public class ConstantsContext {
         return systemConfig;
     }
 
+    public String systemConfig(String key, String defaultValue) {
+        return Tools.optString(systemConfig, key, defaultValue);
+    }
+
     public String systemConfig(String key) {
         return Tools.optString(systemConfig, key, null);
     }
@@ -133,6 +137,10 @@ public class ConstantsContext {
         return ruleConfig;
     }
 
+    public String ruleConfig(String key, String defaultValue) {
+        return Tools.optString(ruleConfig, key, defaultValue);
+    }
+
     public String ruleConfig(String key) {
         return Tools.optString(ruleConfig, key, null);
     }
@@ -151,6 +159,10 @@ public class ConstantsContext {
      */
     public Map<String, Object> allFrontendIdxConfig() {
         return frontendIdxConfig;
+    }
+
+    public String frontendIdxConfig(String key, String defaultValue) {
+        return Tools.optString(frontendIdxConfig, key, defaultValue);
     }
 
     public String frontendIdxConfig(String key) {

@@ -5,6 +5,8 @@
  * @version 1.0
  * @date 5/25/2017 7:41 PM
  */
+// 加载类型, 标签, 同步加载, 否则 可能 layui 绑定不了事件
+initTypeAndTags()
 
 layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
     var $ = layui.jquery;
@@ -20,68 +22,73 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
      */
     var addReplyConfirmDialog = null, addReplyDialog = null
 
+    form.on('submit(formSearch)', function (data) {
+        var index = layer.load(1);
+        doSearch(layer, index, 1)
+        return false;
+    });
 
     initilData(1);
-    //页数据初始化
-    //currentIndex：当前页面
-    //pageSize：页容量（每页显示的条数）
     function initilData(pageNow) {
         var index = layer.load(1);
-        //模拟数据加载
-        setTimeout(function () {
-            layer.close(index);
-            $.ajax({
-                url: "/admin/comment/list",
-                type: "GET",
-                data: {
-                    "pageNow": pageNow,
-                    "pageSize": pageSize
-                },
-                success: function (resp) {
-                    if (resp.success) {
-                        var html = '';
-                        var comments = resp.data.list
-                        for (var idx in comments) {
-                            var item = comments[idx];
-                            html += '<tr>';
-                            html += '<td>' + item.id + '</td>';
-                            html += '<td><a href="/static/main/blogDetail.html?id=' + item.blogId + '" >' + item.blogName + '</a></td>';
-                            html += '<td>' + item.floorId + '</td>';
-                            html += '<td>' + item.commentId + '</td>';
-                            html += '<td>' + item.name + '</td>';
-                            html += '<td><img src="' + item.headImgUrl + '" width="40px" height="40px" /> </td>';
-                            html += '<td>' + item.toUser + '</td>';
-                            html += '<td>' + item.comment + '</td>';
-                            html += '<td>' + item.createdAt + '</td>';
-                            html += '<td><i class="layui-icon layui-btn-small" style="cursor:pointer;font-size: 30px; color: #FA4B2A;vertical-align: middle;" onclick="layui.funcs.addReply(' + item.id + ', ' + item.blogId + ', ' + item.floorId + ', ' + item.commentId + ',\'' + item.name + '\',\'' + encodeURI(item.comment) + '\')" >&#x1005;</i> </td>';
-                            html += '<td><button class="layui-btn layui-btn-small" onclick=\'layui.funcs.showData("' + item.blogName + '", ' + item.blogId + ', ' + item.floorId + ')\'><i class="layui-icon">&#xe63a;</i></button></td>';
-                            html += '<td><button class="layui-btn layui-btn-small layui-btn-normal" onclick="layui.funcs.editData(' + item.id + ',\'' + item.toUser + '\',\'' + encodeURI(item.comment) + '\')"><i class="layui-icon">&#xe642;</i></button></td>';
-                            html += '<td><button class="layui-btn layui-btn-small layui-btn-danger" onclick="layui.funcs.deleteData(' + item.id + ')"><i class="layui-icon">&#xe640;</i></button></td>';
-                            html += '</tr>';
-                        }
-                        $('#dataContent').html(html);
-                        element.init();
 
-                        $('#dataConsole,#dataList').attr('style', 'display:block'); //显示FiledBox
-                        laypage({
-                            cont: laypageId,
-                            pages: resp.data.totalPage,
-                            groups: 5,
-                            skip: true,
-                            curr: pageNow,
-                            jump: function (obj, first) {
-                                var pageNow = obj.curr;
-                                if (!first) {
-                                    initilData(pageNow, pageSize);
-                                }
-                            }
-                        });
-                    } else {
-                        layer.alert("拉取评论列表失败[" + resp.data + "] !", {icon: 5});
+        //模拟数据加载
+        setTimeout(doSearch(layer, index, pageNow), 1000);
+    }
+    function doSearch(layer, index, pageNow) {
+        var params = $("#commentSearchForm").serialize()
+        params += "&pageNow=" + pageNow
+        params += "&pageSize=" + pageSize
+
+        layer.close(index);
+        $.ajax({
+            url: "/admin/comment/list",
+            type: "GET",
+            data: params,
+            success: function (resp) {
+                if (resp.success) {
+                    var html = '';
+                    var comments = resp.data.list
+                    for (var idx in comments) {
+                        var item = comments[idx];
+                        html += '<tr>';
+                        html += '<td>' + item.id + '</td>';
+                        html += '<td><a href="/static/main/blogDetail.html?id=' + item.blogId + '" >' + item.blogName + '</a></td>';
+                        html += '<td>' + item.floorId + '</td>';
+                        html += '<td>' + item.commentId + '</td>';
+                        html += '<td>' + item.name + '</td>';
+                        html += '<td><img src="' + item.headImgUrl + '" width="40px" height="40px" /> </td>';
+                        html += '<td>' + item.toUser + '</td>';
+                        html += '<td>' + item.comment + '</td>';
+                        html += '<td>' + item.createdAt + '</td>';
+                        html += '<td><i class="layui-icon layui-btn-small" style="cursor:pointer;font-size: 30px; color: #FA4B2A;vertical-align: middle;" onclick="layui.funcs.addReply(' + item.id + ', ' + item.blogId + ', ' + item.floorId + ', ' + item.commentId + ',\'' + item.name + '\',\'' + encodeURI(item.comment) + '\')" >&#x1005;</i> </td>';
+                        html += '<td><button class="layui-btn layui-btn-small" onclick=\'layui.funcs.showData("' + item.blogName + '", ' + item.blogId + ', ' + item.floorId + ')\'><i class="layui-icon">&#xe63a;</i></button></td>';
+                        html += '<td><button class="layui-btn layui-btn-small layui-btn-normal" onclick="layui.funcs.editData(' + item.id + ',\'' + item.toUser + '\',\'' + encodeURI(item.comment) + '\')"><i class="layui-icon">&#xe642;</i></button></td>';
+                        html += '<td><button class="layui-btn layui-btn-small layui-btn-danger" onclick="layui.funcs.deleteData(' + item.id + ')"><i class="layui-icon">&#xe640;</i></button></td>';
+                        html += '</tr>';
                     }
+                    $('#dataContent').html(html);
+                    element.init();
+
+                    $('#dataConsole,#dataList').attr('style', 'display:block'); //显示FiledBox
+                    laypage({
+                        cont: laypageId,
+                        pages: resp.data.totalPage,
+                        groups: 5,
+                        skip: true,
+                        curr: pageNow,
+                        jump: function (obj, first) {
+                            var pageNow = obj.curr;
+                            if (!first) {
+                                initilData(pageNow, pageSize);
+                            }
+                        }
+                    });
+                } else {
+                    layer.alert("拉取评论列表失败[" + resp.data + "] !", {icon: 5});
                 }
-            }, 500);
-        });
+            }
+        }, 500);
     }
 
     form.on('submit(addReplySubmit)', function(data){
@@ -246,3 +253,32 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
     };
     exports('funcs', funcs);
 });
+
+/**
+ * 加载类型 和标签列表
+ */
+function initTypeAndTags() {
+    $.ajax({
+        url: "/composite/typeAndTags",
+        type: "GET",
+        success: function (resp) {
+            if (resp.success) {
+                var types = resp.data.types
+                var typeIdEle = $("#typeId")
+                typeIdEle.append("<option value=''> 全部 </option>")
+                for (idx in types) {
+                    typeIdEle.append("<option value='" + types[idx].id + "'> " + types[idx].name + " </option>")
+                }
+
+                var tags = resp.data.tags
+                var tagIdEle = $("#tagId")
+                tagIdEle.append("<option value=''> 全部 </option>")
+                for (idx in tags) {
+                    tagIdEle.append("<option value='" + tags[idx].id + "'> " + tags[idx].name + " </option>")
+                }
+            } else {
+                layer.alert("拉取类型/标签列表失败[" + resp.data + "] !", {icon: 5});
+            }
+        }
+    });
+}

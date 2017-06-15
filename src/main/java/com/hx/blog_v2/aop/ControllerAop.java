@@ -70,6 +70,7 @@ public class ControllerAop {
      */
     @AfterThrowing(pointcut = "controllerPoint()", throwing = "e")
     public void doAfterThrowing(JoinPoint point, Throwable e) {
+        e.printStackTrace();
         exceptionLogService.saveExceptionLog(point, null, e);
     }
 
