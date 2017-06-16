@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 public class UserNameValidator implements Validator<String> {
 
     @Autowired
-    private KeywordsValidator keywordsValidator;
+    private RegexWValidator regexWValidator;
     @Autowired
     private ConstantsContext constantsContext;
     /**
@@ -37,7 +37,7 @@ public class UserNameValidator implements Validator<String> {
         if (!((userName.length() >= minLen) && (userName.length() < maxLen))) {
             return ResultUtils.failed(" userName 长度不在范围内 !");
         }
-        Result result = keywordsValidator.validate(userName, extra);
+        Result result = regexWValidator.validate(userName, extra);
         if (!result.isSuccess()) {
             return result;
         }

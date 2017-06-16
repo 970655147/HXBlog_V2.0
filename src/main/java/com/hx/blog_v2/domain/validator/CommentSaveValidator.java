@@ -29,22 +29,22 @@ public class CommentSaveValidator implements Validator<CommentSaveForm> {
     @Autowired
     private IpValidator ipValidator;
     @Autowired
-    private KeywordsValidator keywordsValidator;
+    private RegexWValidator regexWValidator;
     @Autowired
     private MysqlKeywordsValidator mysqlKeywordsValidator;
 
     @Override
     public Result validate(CommentSaveForm form, Object extra) {
-        if (!StringUtils.isNumeric(form.getBlogId()).isSuccess()) {
+        if (!StringUtils.isNumeric(form.getBlogId())) {
             return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " blogId 非数字 ! ");
         }
         if (!Tools.isEmpty(form.getFloorId())) {
-            if (!StringUtils.isNumeric(form.getFloorId()).isSuccess()) {
+            if (!StringUtils.isNumeric(form.getFloorId())) {
                 return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " blogTypeId 非数字 ! ");
             }
         }
         if (!Tools.isEmpty(form.getCommentId())) {
-            if (!StringUtils.isNumeric(form.getCommentId()).isSuccess()) {
+            if (!StringUtils.isNumeric(form.getCommentId())) {
                 return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " blogTagId 非数字 ! ");
             }
         }
@@ -52,44 +52,28 @@ public class CommentSaveValidator implements Validator<CommentSaveForm> {
         if (!Tools.isEmpty(form.getName())) {
             Result result = userNameValidator.validate(form.getName(), extra);
             if (!result.isSuccess()) {
-                return result;
+                return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " 用户名格式不合法 ! ");
             }
         }
-        if (!Tools.isEmpty(form.getToUser())) {
-            Result result = userNameValidator.validate(form.getToUser(), extra);
-            if (!result.isSuccess()) {
-                return result;
-            }
+        Result result = userNameValidator.validate(form.getToUser(), extra);
+        if (!result.isSuccess()) {
+            return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " 用户名格式不合法 ! ");
         }
         if (!Tools.isEmpty(form.getEmail())) {
-            Result result = emailValidator.validate(form.getEmail(), extra);
+            result = emailValidator.validate(form.getEmail(), extra);
             if (!result.isSuccess()) {
-                return result;
+                return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " email 格式不合法 ! ");
             }
         }
         if (!Tools.isEmpty(form.getRequestIp())) {
-            Result result = ipValidator.validate(form.getRequestIp(), extra);
+            result = ipValidator.validate(form.getRequestIp(), extra);
             if (!result.isSuccess()) {
-                return result;
+                return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " requestIp 格式不合法 ! ");
             }
         }
-        if (!Tools.isEmpty(form.getIpFromSohu())) {
-            Result result = ipValidator.validate(form.getIpFromSohu(), extra);
-            if (!result.isSuccess()) {
-                return result;
-            }
-        }
-        if (!Tools.isEmpty(form.getHeadImgUrl())) {
-            Result result = urlValidator.validate(form.getHeadImgUrl(), extra);
-            if (!result.isSuccess()) {
-                return result;
-            }
-        }
-        if (!Tools.isEmpty(form.getIpAddr())) {
-            Result result = keywordsValidator.validate(form.getIpAddr(), extra);
-            if (!result.isSuccess()) {
-                return result;
-            }
+        result = urlValidator.validate(form.getHeadImgUrl(), extra);
+        if (!result.isSuccess()) {
+            return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " 头像url 格式不合法 ! ");
         }
 
         // comment 的处理

@@ -1,13 +1,10 @@
 package com.hx.blog_v2.service.interf;
 
-import com.baidu.ueditor.ActionEnter;
+import com.hx.blog_v2.domain.form.UploadedFileSaveForm;
 import com.hx.blog_v2.domain.form.UploadedImageSaveForm;
 import com.hx.blog_v2.domain.po.UploadFilePO;
-import com.hx.blog_v2.util.WebContext;
 import com.hx.common.interf.common.Result;
 import com.hx.json.JSONObject;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * BlogService
@@ -19,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 public interface UploadFileService extends BaseService<UploadFilePO> {
 
     /**
-     * 增加一个 心情
+     * 上传一个文件
      *
      * @return result
      * @author Jerry.X.He
@@ -27,6 +24,16 @@ public interface UploadFileService extends BaseService<UploadFilePO> {
      * @since 1.0
      */
     Result add(UploadedImageSaveForm params);
+
+    /**
+     * 上传一个文件
+     *
+     * @return result
+     * @author Jerry.X.He
+     * @date 5/20/2017 6:21 PM
+     * @since 1.0
+     */
+    Result add(UploadedFileSaveForm params);
 
     /**
      * 处理 ueditor 上传的相关逻辑

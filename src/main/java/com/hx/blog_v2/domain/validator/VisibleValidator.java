@@ -1,5 +1,6 @@
 package com.hx.blog_v2.domain.validator;
 
+import com.hx.blog_v2.domain.ErrorCode;
 import com.hx.common.interf.common.Result;
 import com.hx.common.interf.validator.Validator;
 import com.hx.common.util.ResultUtils;
@@ -13,14 +14,20 @@ import org.springframework.stereotype.Component;
  * @date 6/15/2017 7:42 PM
  */
 @Component
-public class KeywordsValidator implements Validator<String> {
+public class VisibleValidator implements Validator<String> {
+
+    /**
+     * 需要过滤的部分的, start, end 的pair
+     */
+    public static final int[] START_POS = {0};
+    public static final int[] END_POS = {31};
 
     @Override
     public Result validate(String form, Object extra) {
         for (int i = 0, len = form.length(); i < len; i++) {
             char ch = form.charAt(i);
             if (!isCharLegal(ch)) {
-                return ResultUtils.failed(" 包含非法字符[非数字|字母|汉字] ! ");
+                return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " 包含非可视字符 ! ");
             }
         }
 
@@ -38,20 +45,10 @@ public class KeywordsValidator implements Validator<String> {
      * @since 1.0
      */
     private boolean isCharLegal(char ch) {
-        if (ch >= 0 && ch <= 31) {
-            return false;
-        }
-        if (ch >= 34 && ch <= 47) {
-            return false;
-        }
-        if (ch >= 58 && ch <= 64) {
-            return false;
-        }
-        if (ch >= 91 && ch <= 96) {
-            return false;
-        }
-        if (ch >= 123 && ch <= 127) {
-            return false;
+        for (int i = 0; i < START_POS.length; i++) {
+            if ((ch >= START_POS[i]) && (ch <= END_POS[i])) {
+                return false;
+            }
         }
 
         return true;

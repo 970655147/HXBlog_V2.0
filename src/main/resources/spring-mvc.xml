@@ -7,12 +7,12 @@
         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
     <!-- @Values 注解使用 -->
-    <context:property-placeholder location="classpath:props/*.properties" ignore-unresolvable="true" />
+    <context:property-placeholder location="classpath:props/*.properties" ignore-unresolvable="true"/>
     <!-- 优先添加 Constants 的 bean -->
-    <bean class="com.hx.blog_v2.util.BlogConstants" />
+    <bean class="com.hx.blog_v2.util.BlogConstants"/>
 
     <!-- aspectj -->
-    <aop:aspectj-autoproxy proxy-target-class="true" />
+    <aop:aspectj-autoproxy proxy-target-class="true"/>
     <!-- switch on annotation-driven, component-scan -->
     <mvc:annotation-driven/>
     <context:component-scan base-package="com.hx.blog_v2"/>
@@ -46,15 +46,15 @@
         </mvc:interceptor>
     </mvc:interceptors>
 
-    <mvc:resources mapping="/static/**" location="/static/" />
+    <mvc:resources mapping="/static/**" location="/static/"/>
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="prefix" value="/"/>
         <property name="suffix" value=".html"/>
     </bean>
-    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver" />
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"/>
 
     <bean id="exceptionResolver" class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
-        <property name="defaultErrorView" value="/static/e/500" />
+        <property name="defaultErrorView" value="/static/e/500"/>
         <property name="exceptionMappings">
             <props>
                 <prop key="java.io.Exception">/static/e/500</prop>

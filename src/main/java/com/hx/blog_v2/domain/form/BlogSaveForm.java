@@ -1,10 +1,5 @@
 package com.hx.blog_v2.domain.form;
 
-import com.hx.blog_v2.util.BlogConstants;
-import com.hx.blog_v2.util.DateUtils;
-
-import java.util.*;
-
 /**
  * 博客的一条记录
  *
@@ -37,10 +32,6 @@ public class BlogSaveForm {
      */
     private String content;
 
-    private String createdAt;
-    private String createdAtMonth;
-    private String updatedAt;
-
     public BlogSaveForm(String title, String author, String coverUrl, String blogTypeId, String blogTagIds,
                         String summary, String content) {
         this();
@@ -53,10 +44,6 @@ public class BlogSaveForm {
     }
 
     public BlogSaveForm() {
-        Date now = new Date();
-        createdAtMonth = DateUtils.formate(now, BlogConstants.FORMAT_YYYY_MM);
-        createdAt = DateUtils.formate(now, BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
-        updatedAt = createdAt;
     }
 
     public String getId() {
@@ -99,22 +86,6 @@ public class BlogSaveForm {
         this.summary = summary;
     }
 
-    public String getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(String createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public String getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(String updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
     public String getBlogTagIds() {
         return blogTagIds;
     }
@@ -129,13 +100,5 @@ public class BlogSaveForm {
 
     public void setContent(String content) {
         this.content = content;
-    }
-
-    public String getCreatedAtMonth() {
-        return createdAtMonth;
-    }
-
-    public void setCreatedAtMonth(String createdAtMonth) {
-        this.createdAtMonth = createdAtMonth;
     }
 }

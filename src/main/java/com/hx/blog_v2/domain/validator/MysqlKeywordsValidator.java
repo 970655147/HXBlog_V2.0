@@ -1,9 +1,11 @@
 package com.hx.blog_v2.domain.validator;
 
+import com.hx.blog_v2.domain.ErrorCode;
 import com.hx.blog_v2.util.ConstantsContext;
 import com.hx.common.interf.common.Result;
 import com.hx.common.interf.validator.Validator;
 import com.hx.common.util.ResultUtils;
+import com.hx.log.util.Tools;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -27,7 +29,7 @@ public class MysqlKeywordsValidator implements Validator<String> {
         for (int i = 0, len = form.length(); i < len; i++) {
             char ch = form.charAt(i);
             if (!isCharLegal(ch)) {
-                return ResultUtils.failed(" 包含非法字符[非数字|字母|汉字] ! ");
+                return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " 包含非法字符[非数字|字母|汉字] ! ");
             }
         }
 

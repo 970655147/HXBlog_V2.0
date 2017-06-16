@@ -2,6 +2,7 @@ package com.hx.blog_v2.service;
 
 import com.hx.blog_v2.dao.interf.BlogTypeDao;
 import com.hx.blog_v2.domain.POVOTransferUtils;
+import com.hx.blog_v2.domain.form.BeanIdForm;
 import com.hx.blog_v2.domain.form.BlogTypeSaveForm;
 import com.hx.blog_v2.domain.mapper.OneIntMapper;
 import com.hx.blog_v2.domain.po.BlogTypePO;
@@ -87,7 +88,7 @@ public class BlogTypeServiceImpl extends BaseServiceImpl<BlogTypePO> implements 
     }
 
     @Override
-    public Result remove(BlogTypeSaveForm params) {
+    public Result remove(BeanIdForm params) {
         BlogTypePO po = cacheContext.allBlogTypes().get(params.getId());
         if (po == null) {
             return ResultUtils.failed("该类型不存在 !");

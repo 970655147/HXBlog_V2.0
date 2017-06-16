@@ -1,9 +1,12 @@
 package com.hx.blog_v2.controller;
 
 import com.hx.blog_v2.biz_handler.anno.BizHandle;
+import com.hx.blog_v2.domain.dto.SessionUser;
 import com.hx.blog_v2.domain.form.BeanIdForm;
 import com.hx.blog_v2.domain.form.BlogSearchForm;
-import com.hx.blog_v2.domain.dto.SessionUser;
+import com.hx.blog_v2.domain.validator.BeanIdValidator;
+import com.hx.blog_v2.domain.validator.BlogSearchValidator;
+import com.hx.blog_v2.domain.validator.PageValidator;
 import com.hx.blog_v2.domain.vo.BlogVO;
 import com.hx.blog_v2.service.interf.BlogService;
 import com.hx.blog_v2.util.BlogConstants;
@@ -13,8 +16,6 @@ import com.hx.common.result.SimplePage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import static com.hx.log.util.Log.info;
 
 /**
  * BlogController
@@ -29,18 +30,36 @@ public class BlogController {
 
     @Autowired
     private BlogService blogService;
+    @Autowired
+    private BlogSearchValidator blogSearchValidator;
+    @Autowired
+    private BeanIdValidator beanIdValidator;
+    @Autowired
+    private PageValidator pageValidator;
 
     @RequestMapping("/list")
-    public Result list(BlogSearchForm prams, SimplePage<BlogVO> page) {
+    public Result list(BlogSearchForm params, SimplePage<BlogVO> page) {
+        Result errResult = blogSearchValidator.validate(params, null);
+        if (!errResult.isSuccess()) {
+            return errResult;
+        }
+        errResult = pageValidator.validate(page, null);
+        if (!errResult.isSuccess()) {
+            return errResult;
+        }
 
-        return blogService.list(prams, page);
+        return blogService.list(params, page);
     }
 
     @RequestMapping("/get")
     @BizHandle(handler = "blogVisitLogHandler")
-    public Result get(BeanIdForm prams) {
+    public Result get(BeanIdForm params) {
+        Result errResult = beanIdValidator.validate(params, null);
+        if (!errResult.isSuccess()) {
+            return errResult;
+        }
 
-        Result result = blogService.get(prams);
+        Result result = blogService.get(params);
         SessionUser user = (SessionUser) WebContext.getAttributeFromSession(BlogConstants.SESSION_USER);
         result.setExtra(user);
         return result;

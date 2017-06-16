@@ -1,10 +1,7 @@
 package com.hx.blog_v2.controller;
 
-import com.hx.blog_v2.domain.vo.BlogTagVO;
 import com.hx.blog_v2.service.interf.BlogTagService;
-import com.hx.blog_v2.service.interf.BlogTypeService;
 import com.hx.common.interf.common.Result;
-import com.hx.common.result.SimplePage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -23,7 +20,6 @@ public class BlogTagController {
 
     @Autowired
     private BlogTagService blogTagService;
-
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public Result list() {

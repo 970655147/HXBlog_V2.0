@@ -1,5 +1,6 @@
 package com.hx.blog_v2.service.interf;
 
+import com.hx.blog_v2.domain.form.BeanIdForm;
 import com.hx.blog_v2.domain.form.BlogTypeSaveForm;
 import com.hx.blog_v2.domain.po.BlogTypePO;
 import com.hx.common.interf.common.Result;
@@ -51,7 +52,7 @@ public interface BlogTypeService extends BaseService<BlogTypePO> {
      * @date 5/20/2017 6:21 PM
      * @since 1.0
      */
-    Result remove(BlogTypeSaveForm params);
+    Result remove(BeanIdForm params);
 
     /**
      * 对资源进行重排

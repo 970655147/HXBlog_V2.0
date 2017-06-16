@@ -23,13 +23,11 @@ public class IndexController {
 
     @RequestMapping("/menus")
     public Result index() {
-
         return indexService.adminMenus();
     }
 
     @RequestMapping("/statistics")
     public Result statistics() {
-
         return indexService.adminStatistics();
     }
 

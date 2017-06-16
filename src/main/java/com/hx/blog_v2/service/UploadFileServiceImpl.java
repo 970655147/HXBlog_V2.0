@@ -4,6 +4,7 @@ import com.baidu.ueditor.ConfigManager;
 import com.baidu.ueditor.define.ActionMap;
 import com.baidu.ueditor.utils.Constants;
 import com.hx.blog_v2.dao.interf.UploadFileDao;
+import com.hx.blog_v2.domain.form.UploadedFileSaveForm;
 import com.hx.blog_v2.domain.form.UploadedImageSaveForm;
 import com.hx.blog_v2.domain.po.UploadFilePO;
 import com.hx.blog_v2.service.interf.BaseServiceImpl;
@@ -50,42 +51,13 @@ public class UploadFileServiceImpl extends BaseServiceImpl<UploadFilePO> impleme
     @Override
     public Result add(UploadedImageSaveForm params) {
         MultipartFile file = params.getFile();
-        Result digestResult = generateDigest(file);
-        ;
-        if (!digestResult.isSuccess()) {
-            return digestResult;
-        }
+        return add0(file);
+    }
 
-        String digest = (String) digestResult.getData();
-        UploadFilePO po = getUploadedImageFromExists(file, digest);
-        if (po != null) {
-            JSONObject data = new JSONObject()
-                    .element("originFileName", po.getOriginalFileName()).element("length", po.getSize())
-                    .element("contentType", po.getContentType()).element("url", getImageVisitUrl(po.getUrl()));
-            return ResultUtils.success(data);
-        }
-
-        String relativePath = generateImgPath(file);
-        String filePath = Tools.getFilePath(constants.fileRootDir, relativePath);
-        try {
-            FileUtils.createIfNotExists(filePath, true);
-            file.transferTo(new File(filePath));
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResultUtils.failed("failed !");
-        }
-
-        po = new UploadFilePO(file.getOriginalFilename(), file.getContentType(), relativePath, digest, String.valueOf(file.getSize()));
-        Result addResult = uploadFileDao.add(po);
-        if (!addResult.isSuccess()) {
-            return addResult;
-        }
-
-        cacheContext.putUploadedFile(digest, po);
-        JSONObject data = new JSONObject()
-                .element("originFileName", po.getOriginalFileName()).element("length", po.getSize())
-                .element("contentType", po.getContentType()).element("url", getImageVisitUrl(relativePath));
-        return ResultUtils.success(data);
+    @Override
+    public Result add(UploadedFileSaveForm params) {
+        MultipartFile file = params.getFile();
+        return add0(file);
     }
 
     @Override
@@ -132,18 +104,6 @@ public class UploadFileServiceImpl extends BaseServiceImpl<UploadFilePO> impleme
                 data.element(Constants.STATE, result.isSuccess() ? "SUCCESS" : result.getMsg());
                 return data;
             }
-//			case ActionMap.CATCH_IMAGE:
-//				conf = configManager.getConfig( actionCode );
-//				String[] imageList = this.request.getParameterValues( (String)conf.get( "fieldName" ) );
-//				state = new ImageHunter( conf ).capture( imageList );
-//				break;
-//
-//			case ActionMap.LIST_IMAGE:
-//			case ActionMap.LIST_FILE:
-//				conf = configManager.getConfig( actionCode );
-//				int start = this.getStartIndex();
-//				state = new FileManager( conf ).listFile( start, request);
-//				break;
 
         }
 
@@ -151,6 +111,53 @@ public class UploadFileServiceImpl extends BaseServiceImpl<UploadFilePO> impleme
     }
 
     // -------------------- 辅助方法 --------------------------
+
+    /**
+     * 上传给定的文件, 持久化, 并在数据库中记录
+     *
+     * @param file file
+     * @return com.hx.common.interf.common.Result
+     * @author Jerry.X.He
+     * @date 6/16/2017 11:56 PM
+     * @since 1.0
+     */
+    private Result add0(MultipartFile file) {
+        Result digestResult = generateDigest(file);
+        if (!digestResult.isSuccess()) {
+            return digestResult;
+        }
+
+        String digest = (String) digestResult.getData();
+        UploadFilePO po = getUploadedImageFromExists(file, digest);
+        if (po != null) {
+            JSONObject data = new JSONObject()
+                    .element("originFileName", po.getOriginalFileName()).element("length", po.getSize())
+                    .element("contentType", po.getContentType()).element("url", getImageVisitUrl(po.getUrl()));
+            return ResultUtils.success(data);
+        }
+
+        String relativePath = generateImgPath(file);
+        String filePath = Tools.getFilePath(constants.fileRootDir, relativePath);
+        try {
+            FileUtils.createIfNotExists(filePath, true);
+            file.transferTo(new File(filePath));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResultUtils.failed("failed !");
+        }
+
+        po = new UploadFilePO(file.getOriginalFilename(), file.getContentType(), relativePath, digest, String.valueOf(file.getSize()));
+        Result addResult = uploadFileDao.add(po);
+        if (!addResult.isSuccess()) {
+            return addResult;
+        }
+
+        cacheContext.putUploadedFile(digest, po);
+        JSONObject data = new JSONObject()
+                .element("originFileName", po.getOriginalFileName()).element("length", po.getSize())
+                .element("contentType", po.getContentType()).element("url", getImageVisitUrl(relativePath));
+        return ResultUtils.success(data);
+    }
 
     /**
      * 根据给定的id生成该图片需要保存的路径 [相对]

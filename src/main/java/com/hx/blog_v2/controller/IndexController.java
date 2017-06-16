@@ -26,13 +26,11 @@ public class IndexController {
     @RequestMapping("/index")
     @BizHandle(handler = "blogVisitLogHandler", others = BlogConstants.CONTEXT_BLOG_ID)
     public Result index() {
-
         return indexService.index();
     }
 
     @RequestMapping("/latest")
     public Result latest() {
-
         return indexService.latest();
     }
 

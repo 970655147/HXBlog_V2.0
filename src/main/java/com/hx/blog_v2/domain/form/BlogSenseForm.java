@@ -1,7 +1,6 @@
 package com.hx.blog_v2.domain.form;
 
 import com.hx.blog_v2.domain.form.interf.UserInfoExtractor;
-import com.hx.blog_v2.util.BizUtils;
 
 /**
  * BlogSenseForm
@@ -20,8 +19,8 @@ public class BlogSenseForm implements UserInfoExtractor {
     private String headImgUrl;
     private String email;
     private String requestIp;
-    private String ipFromSohu;
-    private String ipAddr;
+//    private String ipFromSohu;
+//    private String ipAddr;
     /**
      * good or not good
      */
@@ -81,22 +80,6 @@ public class BlogSenseForm implements UserInfoExtractor {
         this.requestIp = requestIp;
     }
 
-    public String getIpFromSohu() {
-        return ipFromSohu;
-    }
-
-    public void setIpFromSohu(String ipFromSohu) {
-        this.ipFromSohu = ipFromSohu;
-    }
-
-    public String getIpAddr() {
-        return ipAddr;
-    }
-
-    public void setIpAddr(String ipAddr) {
-        this.ipAddr = ipAddr;
-    }
-
     public String getSense() {
         return sense;
     }
@@ -114,7 +97,7 @@ public class BlogSenseForm implements UserInfoExtractor {
     }
 
     public void setUserInfo(UserInfoExtractor extractor) {
-        this.name =  extractor.getName();
+        this.name = extractor.getName();
         this.headImgUrl = extractor.getHeadImgUrl();
         this.email = extractor.getEmail();
         this.requestIp = extractor.getRequestIp();

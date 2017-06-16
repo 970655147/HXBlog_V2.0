@@ -1,5 +1,6 @@
 package com.hx.blog_v2.service.interf;
 
+import com.hx.blog_v2.domain.form.BeanIdForm;
 import com.hx.blog_v2.domain.form.BlogTagSaveForm;
 import com.hx.blog_v2.domain.po.BlogTagPO;
 import com.hx.common.interf.common.Result;
@@ -51,7 +52,7 @@ public interface BlogTagService extends BaseService<BlogTagPO> {
      * @date 5/20/2017 6:21 PM
      * @since 1.0
      */
-    Result remove(BlogTagSaveForm params);
+    Result remove(BeanIdForm params);
 
     /**
      * 对当前所有的tag 进行重排

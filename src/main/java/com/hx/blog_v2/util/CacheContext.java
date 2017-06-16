@@ -738,7 +738,8 @@ public class CacheContext {
      * @since 1.0
      */
     private void initStastics() {
-        List<StatisticsInfo> allDayStatisInfo = BizUtils.collectRecentlyStatisticsInfo(jdbcTemplate, constantsContext.maxCacheStatisticsDays);
+        List<StatisticsInfo> allDayStatisInfo = BizUtils.collectRecentlyStatisticsInfo(jdbcTemplate,
+                constantsContext.maxCacheStatisticsDays);
         allStatistics.addAll(allDayStatisInfo);
         if (!Tools.isEmpty(allDayStatisInfo)) {
             todaysStatistics = allDayStatisInfo.get(allDayStatisInfo.size() - 1);
@@ -883,7 +884,8 @@ public class CacheContext {
     private class Switch5SecStatisInfoRunnable implements Runnable {
         @Override
         public void run() {
-            if ((System.currentTimeMillis() - fSecLastVisitDate) > ((constantsContext.realTimeChartTimeInterval + 1) << 10)) {
+            if ((System.currentTimeMillis() - fSecLastVisitDate) >
+                    ((constantsContext.realTimeChartTimeInterval + 1) << 10)) {
                 all5SecStatistics.clear();
                 fSecTaskFuture.cancel(false);
                 fSecTaskFuture = null;

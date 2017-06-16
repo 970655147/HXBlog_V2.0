@@ -118,8 +118,6 @@ function contentInit() {
                                 senseParams.blogId = params.id
                                 senseParams.sense = "good"
                                 senseParams.clicked = isPrise ? 1 : 0
-                                senseParams.ipFromSohu = returnCitySN["cip"]
-                                senseParams.ipAddr = returnCitySN["cname"]
 
                                 $.ajax({
                                     url: "/blog/sense/sense",
@@ -180,8 +178,6 @@ function contentInit() {
                     headImgUrl: that.userInfo.headImgUrl,
                     toUser: that.replyInfo.toUser,
                     comment: replyForm.find("[name='comment']").html(),
-                    ip: returnCitySN["cip"],
-                    ipAddr: returnCitySN["cname"]
                 }
                 console.log(params)
                 if (isEmpty(params.name)) {

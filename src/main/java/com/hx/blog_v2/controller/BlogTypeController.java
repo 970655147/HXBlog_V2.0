@@ -21,7 +21,6 @@ public class BlogTypeController {
     @Autowired
     private BlogTypeService blogTypeService;
 
-
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public Result list() {
 

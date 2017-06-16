@@ -2,6 +2,7 @@ package com.hx.blog_v2.service;
 
 import com.hx.blog_v2.dao.interf.BlogTagDao;
 import com.hx.blog_v2.domain.POVOTransferUtils;
+import com.hx.blog_v2.domain.form.BeanIdForm;
 import com.hx.blog_v2.domain.form.BlogTagSaveForm;
 import com.hx.blog_v2.domain.mapper.OneIntMapper;
 import com.hx.blog_v2.domain.po.BlogTagPO;
@@ -87,7 +88,7 @@ public class BlogTagServiceImpl extends BaseServiceImpl<BlogTagPO> implements Bl
     }
 
     @Override
-    public Result remove(BlogTagSaveForm params) {
+    public Result remove(BeanIdForm params) {
         BlogTagPO po = cacheContext.allBlogTags().get(params.getId());
         if (po == null) {
             return ResultUtils.failed("该标签不存在 !");

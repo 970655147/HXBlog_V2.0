@@ -35,14 +35,12 @@ public class ImageController {
 
     @RequestMapping(value = "/imgShowList", method = RequestMethod.GET)
     public Result imgShowList() {
-
         ImageSearchForm params = new ImageSearchForm(constantsContext.imgTypeImgShow);
         return imageService.imageList(params);
     }
 
     @RequestMapping(value = "/headImgList", method = RequestMethod.GET)
     public Result headImgList() {
-
         ImageSearchForm params = new ImageSearchForm(constantsContext.imgTypeHeadImg);
         return imageService.imageList(params);
     }

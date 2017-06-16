@@ -1,5 +1,6 @@
 package com.hx.blog_v2.domain.validator;
 
+import com.hx.blog_v2.domain.ErrorCode;
 import com.hx.blog_v2.util.ConstantsContext;
 import com.hx.common.interf.common.Result;
 import com.hx.common.interf.validator.Validator;
@@ -22,7 +23,7 @@ import java.util.regex.Pattern;
 public class EmailValidator implements Validator<String> {
 
     @Autowired
-    private KeywordsValidator keywordsValidator;
+    private RegexWValidator regexWValidator;
     @Autowired
     private ConstantsContext constantsContext;
     /**
@@ -35,15 +36,15 @@ public class EmailValidator implements Validator<String> {
     @Override
     public Result validate(String email, Object extra) {
         if (Tools.isEmpty(email)) {
-            return ResultUtils.failed(" email 为空 !");
+            return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " email 为空 !");
         }
         initIfNeed();
         if (!((email.length() >= minLen) && (email.length() < maxLen))) {
-            return ResultUtils.failed(" email 长度不在范围内 !");
+            return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " email 长度不在范围内 !");
         }
         Matcher matcher = pattern.matcher(email);
         if (!matcher.find()) {
-            return ResultUtils.failed(" email 的格式不正确 !");
+            return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " email 的格式不正确 !");
         }
 
         return ResultUtils.success();

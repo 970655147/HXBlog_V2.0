@@ -23,8 +23,8 @@ public class CommentSaveForm implements UserInfoExtractor {
     private String email;
     private String headImgUrl;
     private String requestIp;
-    private String ipFromSohu;
-    private String ipAddr;
+    //    private String ipFromSohu;
+//    private String ipAddr;
     private String toUser;
     private String comment;
 
@@ -121,22 +121,6 @@ public class CommentSaveForm implements UserInfoExtractor {
 
     public void setRequestIp(String requestIp) {
         this.requestIp = requestIp;
-    }
-
-    public String getIpFromSohu() {
-        return ipFromSohu;
-    }
-
-    public void setIpFromSohu(String ipFromSohu) {
-        this.ipFromSohu = ipFromSohu;
-    }
-
-    public String getIpAddr() {
-        return ipAddr;
-    }
-
-    public void setIpAddr(String ipAddr) {
-        this.ipAddr = ipAddr;
     }
 
 }

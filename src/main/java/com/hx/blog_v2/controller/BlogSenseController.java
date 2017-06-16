@@ -3,6 +3,7 @@ package com.hx.blog_v2.controller;
 import com.hx.blog_v2.biz_handler.anno.BizHandle;
 import com.hx.blog_v2.domain.dto.SessionUser;
 import com.hx.blog_v2.domain.form.BlogSenseForm;
+import com.hx.blog_v2.domain.validator.BlogSenseValidator;
 import com.hx.blog_v2.service.interf.BlogSenseService;
 import com.hx.blog_v2.util.BizUtils;
 import com.hx.blog_v2.util.BlogConstants;
@@ -25,10 +26,16 @@ public class BlogSenseController {
 
     @Autowired
     private BlogSenseService senseService;
+    @Autowired
+    private BlogSenseValidator blogSenseValidator;
 
     @RequestMapping("/sense")
     @BizHandle(handler = "blogSenseHandler")
     public Result sense(BlogSenseForm params) {
+        Result errResult = blogSenseValidator.validate(params, null);
+        if (!errResult.isSuccess()) {
+            return errResult;
+        }
 
         SessionUser user = (SessionUser) WebContext.getAttributeFromSession(BlogConstants.SESSION_USER);
         user = BizUtils.updateUserIfBe(user, params);

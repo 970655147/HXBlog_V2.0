@@ -22,7 +22,7 @@ import org.springframework.stereotype.Component;
 public class AdminCommentSearchValidator implements Validator<AdminCommentSearchForm> {
 
     @Autowired
-    private KeywordsValidator keywordsValidator;
+    private RegexWValidator regexWValidator;
     @Autowired
     private MysqlKeywordsValidator mysqlKeywordsValidator;
 
@@ -33,38 +33,38 @@ public class AdminCommentSearchValidator implements Validator<AdminCommentSearch
         }
 
         if (!Tools.isEmpty(form.getBlogId())) {
-            if (!StringUtils.isNumeric(form.getBlogId()).isSuccess()) {
+            if (!StringUtils.isNumeric(form.getBlogId())) {
                 return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " blogId 非数字 ! ");
             }
         }
         if (!Tools.isEmpty(form.getBlogTypeId())) {
-            if (!StringUtils.isNumeric(form.getBlogTypeId()).isSuccess()) {
+            if (!StringUtils.isNumeric(form.getBlogTypeId())) {
                 return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " blogTypeId 非数字 ! ");
             }
         }
         if (!Tools.isEmpty(form.getBlogTagId())) {
-            if (!StringUtils.isNumeric(form.getBlogTagId()).isSuccess()) {
+            if (!StringUtils.isNumeric(form.getBlogTagId())) {
                 return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " blogTagId 非数字 ! ");
             }
         }
 
         if (!Tools.isEmpty(form.getBlogName())) {
-            if (!keywordsValidator.validate(form.getBlogName(), extra).isSuccess()) {
+            if (!regexWValidator.validate(form.getBlogName(), extra).isSuccess()) {
                 return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " blogName 包含敏感数据 ! ");
             }
         }
         if (!Tools.isEmpty(form.getUserName())) {
-            if (!keywordsValidator.validate(form.getUserName(), extra).isSuccess()) {
+            if (!regexWValidator.validate(form.getUserName(), extra).isSuccess()) {
                 return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " userName 包含敏感数据 ! ");
             }
         }
         if (!Tools.isEmpty(form.getToUserName())) {
-            if (!keywordsValidator.validate(form.getToUserName(), extra).isSuccess()) {
+            if (!regexWValidator.validate(form.getToUserName(), extra).isSuccess()) {
                 return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " toUserName 包含敏感数据 ! ");
             }
         }
         if (!Tools.isEmpty(form.getKeywords())) {
-            if (!keywordsValidator.validate(form.getKeywords(), extra).isSuccess()) {
+            if (!regexWValidator.validate(form.getKeywords(), extra).isSuccess()) {
                 return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " keywords 包含敏感数据 ! ");
             }
         }
