@@ -1,12 +1,13 @@
 package com.hx.blog_v2.controller.admin;
 
+import com.hx.blog_v2.biz_handler.anno.BizHandle;
+import com.hx.blog_v2.biz_handler.handler.AuthorityUpdateHandler;
 import com.hx.blog_v2.domain.ErrorCode;
 import com.hx.blog_v2.domain.form.BeanIdForm;
 import com.hx.blog_v2.domain.form.InterfSaveForm;
 import com.hx.blog_v2.domain.form.ResourceInterfUpdateForm;
 import com.hx.blog_v2.domain.validator.BeanIdValidator;
 import com.hx.blog_v2.domain.validator.InterfSaveValidator;
-import com.hx.blog_v2.domain.validator.PageValidator;
 import com.hx.blog_v2.domain.validator.ResourceInterfUpdateValidator;
 import com.hx.blog_v2.service.interf.InterfService;
 import com.hx.common.interf.common.Result;
@@ -74,6 +75,7 @@ public class InterfController {
     }
 
     @RequestMapping(value = "/resourceInterf/update", method = RequestMethod.POST)
+    @BizHandle(handler = "authorityUpdateHandler", others = AuthorityUpdateHandler.RESOURCE_INTERF)
     public Result userRoleUpdate(ResourceInterfUpdateForm params) {
         Result errResult = resourceInterfUpdateValidator.validate(params, null);
         if (!errResult.isSuccess()) {

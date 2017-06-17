@@ -1,17 +1,20 @@
 package com.hx.blog_v2.interceptor;
 
+import com.hx.blog_v2.context.CacheContext;
+import com.hx.blog_v2.context.WebContext;
 import com.hx.blog_v2.domain.dto.SessionUser;
 import com.hx.blog_v2.service.interf.ExceptionLogService;
 import com.hx.blog_v2.util.BlogConstants;
-import com.hx.blog_v2.context.WebContext;
 import com.hx.common.interf.common.Result;
 import com.hx.common.util.ResultUtils;
+import com.hx.log.util.Tools;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  * LoginInterceptor
@@ -24,36 +27,48 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
 
     @Autowired
     private ExceptionLogService exceptionLogService;
+    @Autowired
+    private CacheContext cacheContext;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
                              Object handler) throws Exception {
         SessionUser user = (SessionUser) WebContext.getAttributeFromSession(BlogConstants.SESSION_USER);
-        if((user == null) || (! user.isSystemUser()) ) {
+        if ((user == null) || (!user.isSystemUser())) {
             Result result = ResultUtils.failed("请先登录 !");
             WebContext.responseJson(result);
             exceptionLogService.saveExceptionLog(null, result, null);
+            return false;
+        }
+        /**
+         * 强制下线相关业务
+         */
+        String userId = user.getId();
+        String offlineReason = cacheContext.forceOffLine(userId);
+        if (!Tools.isEmpty(offlineReason)) {
+            Result result = ResultUtils.failed(offlineReason + ", 请重新登录 !");
+            WebContext.responseJson(result);
+            exceptionLogService.saveExceptionLog(null, result, null);
+            removeInfoFromSession();
             return false;
         }
 
         return super.preHandle(request, response, handler);
     }
 
-    @Override
-    public void postHandle(HttpServletRequest request, HttpServletResponse response,
-                           Object handler, ModelAndView modelAndView) throws Exception {
-        super.postHandle(request, response, handler, modelAndView);
+    /**
+     * 移除用户的信息
+     *
+     * @return void
+     * @author Jerry.X.He
+     * @date 6/17/2017 8:03 PM
+     * @since 1.0
+     */
+    private void removeInfoFromSession() {
+        HttpSession session = WebContext.getSession();
+        session.removeAttribute(BlogConstants.SESSION_USER);
+        session.removeAttribute(BlogConstants.SESSION_USER_ID);
+        session.removeAttribute(BlogConstants.SESSION_CHECK_CODE);
     }
 
-    @Override
-    public void afterCompletion(HttpServletRequest request, HttpServletResponse response,
-                                Object handler, Exception ex) throws Exception {
-        super.afterCompletion(request, response, handler, ex);
-    }
-
-    @Override
-    public void afterConcurrentHandlingStarted(HttpServletRequest request, HttpServletResponse response,
-                                               Object handler) throws Exception {
-        super.afterConcurrentHandlingStarted(request, response, handler);
-    }
 }

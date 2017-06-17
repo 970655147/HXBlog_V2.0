@@ -1,5 +1,6 @@
 package com.hx.blog_v2.service;
 
+import com.hx.blog_v2.context.CacheContext;
 import com.hx.blog_v2.context.ConstantsContext;
 import com.hx.blog_v2.context.WebContext;
 import com.hx.blog_v2.dao.interf.UserDao;
@@ -50,6 +51,8 @@ public class UserServiceImpl implements UserService {
     private JdbcTemplate jdbcTemplate;
     @Autowired
     private ConstantsContext constantsContext;
+    @Autowired
+    private CacheContext cacheContext;
 
     @Override
     public Result add(UserSaveForm params) {
@@ -180,6 +183,7 @@ public class UserServiceImpl implements UserService {
         }
         WebContext.setAttributeForSession(BlogConstants.SESSION_USER, sessionUser);
         WebContext.setAttributeForSession(BlogConstants.SESSION_USER_ID, user.getId());
+        cacheContext.removeForceOffLine(user.getId());
 
         IUpdateCriteria update = Criteria.set("last_login_ip", params.getIp())
                 .add("last_login_at", DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS));

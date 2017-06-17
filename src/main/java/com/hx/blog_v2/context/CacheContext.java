@@ -265,6 +265,19 @@ public class CacheContext {
     }
 
     /**
+     * 清理缓存的权限相关的数据
+     *
+     * @return void
+     * @author Jerry.X.He
+     * @date 6/17/2017 8:18 PM
+     * @since 1.0
+     */
+    public void clearAuthorityCached() {
+        roles2ResourceIds.clear();
+        resource2Interfs.clear();
+    }
+
+    /**
      * 刷新当前系统的配置
      *
      * @return void
@@ -801,8 +814,12 @@ public class CacheContext {
         forceOffLineMap.put(userId, reason, constantsContext.sesionTimeOut);
     }
 
-    public void removeForceOffLine(String userId, String reason) {
-        forceOffLineMap.put(userId, reason, constantsContext.sesionTimeOut);
+    public String forceOffLine(String userId) {
+        return forceOffLineMap.get(userId);
+    }
+
+    public void removeForceOffLine(String userId) {
+        forceOffLineMap.evict(userId);
     }
 
     /**
