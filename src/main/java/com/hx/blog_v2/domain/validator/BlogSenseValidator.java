@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component;
 public class BlogSenseValidator implements Validator<BlogSenseForm> {
 
     @Autowired
-    private RegexWValidator regexWValidator;
+    private BlogNameValidator blogNameValidator;
     @Autowired
     private EmailValidator emailValidator;
     @Autowired
@@ -32,15 +32,13 @@ public class BlogSenseValidator implements Validator<BlogSenseForm> {
     private SenseTypeValidator senseTypeValidator;
     @Autowired
     private IntableBooleanValidator intableBooleanValidator;
-    @Autowired
-    private MysqlKeywordsValidator mysqlKeywordsValidator;
 
     @Override
     public Result validate(BlogSenseForm form, Object extra) {
         if (!StringUtils.isNumeric(form.getBlogId())) {
             return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " blogId 非数字 ! ");
         }
-        Result errResult = regexWValidator.validate(form.getName(), extra);
+        Result errResult = blogNameValidator.validate(form.getName(), extra);
         if (!errResult.isSuccess()) {
             return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " 用户名不合法 ! ");
         }

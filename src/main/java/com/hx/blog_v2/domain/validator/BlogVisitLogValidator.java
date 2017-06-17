@@ -5,7 +5,6 @@ import com.hx.blog_v2.domain.form.BlogVisitLogForm;
 import com.hx.common.interf.common.Result;
 import com.hx.common.interf.validator.Validator;
 import com.hx.common.util.ResultUtils;
-import com.hx.log.str.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -20,13 +19,13 @@ import org.springframework.stereotype.Component;
 public class BlogVisitLogValidator implements Validator<BlogVisitLogForm> {
 
     @Autowired
-    private RegexWValidator regexWValidator;
+    private BeanIdStrValidator beanIdStrValidator;
     @Autowired
     private IpValidator ipValidator;
 
     @Override
     public Result validate(BlogVisitLogForm form, Object extra) {
-        if (!StringUtils.isNumeric(form.getBlogId())) {
+        if (!beanIdStrValidator.validate(form.getBlogId(), extra).isSuccess()) {
             return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " blogId 非数字 ! ");
         }
         Result errResult = ipValidator.validate(form.getRequestIp(), extra);

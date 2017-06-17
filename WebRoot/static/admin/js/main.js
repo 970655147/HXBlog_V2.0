@@ -348,7 +348,7 @@ function initStatistics() {
                 $("[name='sumInfo'] [name='blogCnt']").text(sumStats.blogCnt + todayStats.blogCnt)
                 $("[name='sumInfo'] [name='commentCnt']").text(sumStats.commentCnt + todayStats.commentCnt)
             } else {
-                // layer.alert("拉取菜单列表失败[" + resp.msg + "] !", {icon: 5});
+                // layer.alert("拉取菜单列表失败[" + resp.data + "] !", {icon: 5});
             }
         }
     });

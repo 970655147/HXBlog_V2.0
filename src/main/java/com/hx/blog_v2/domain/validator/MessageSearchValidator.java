@@ -21,31 +21,31 @@ import org.springframework.stereotype.Component;
 public class MessageSearchValidator implements Validator<MessageSearchForm> {
 
     @Autowired
-    private RegexWValidator regexWValidator;
-    @Autowired
     private SummaryValidator summaryValidator;
     @Autowired
     private VisibleValidator visibleValidator;
+    @Autowired
+    private BeanIdStrValidator beanIdStrValidator;
 
     @Override
     public Result validate(MessageSearchForm form, Object extra) {
         if (!Tools.isEmpty(form.getId())) {
-            if (!StringUtils.isNumeric(form.getId())) {
+            if (!beanIdStrValidator.validate(form.getId(), extra).isSuccess()) {
                 return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " id 非数字 ! ");
             }
         }
         if (!Tools.isEmpty(form.getSenderId())) {
-            if (!regexWValidator.validate(form.getSenderId(), extra).isSuccess()) {
+            if (!beanIdStrValidator.validate(form.getSenderId(), extra).isSuccess()) {
                 return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " 发送者数据非法 ! ");
             }
         }
         if (!Tools.isEmpty(form.getReceiverId())) {
-            if (!regexWValidator.validate(form.getReceiverId(), extra).isSuccess()) {
+            if (!beanIdStrValidator.validate(form.getReceiverId(), extra).isSuccess()) {
                 return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " 接收者数据非法 ! ");
             }
         }
         if (!Tools.isEmpty(form.getRoleId())) {
-            if (!StringUtils.isNumeric(form.getRoleId())) {
+            if (!beanIdStrValidator.validate(form.getRoleId(), extra).isSuccess()) {
                 return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " role 非数字 ! ");
             }
         }

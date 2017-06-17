@@ -1,7 +1,5 @@
 package com.hx.blog_v2.domain.validator;
 
-import com.hx.blog_v2.domain.ErrorCode;
-import com.hx.blog_v2.util.ConstantsContext;
 import com.hx.common.interf.common.Result;
 import com.hx.common.interf.validator.Validator;
 import com.hx.common.util.ResultUtils;
@@ -17,12 +15,10 @@ import org.springframework.stereotype.Component;
  * @date 6/15/2017 8:25 PM
  */
 @Component
-public class SummaryValidator extends ConfigRefreshableValidator<String> implements Validator<String> {
+public class EntityTitleValidator extends ConfigRefreshableValidator<String> implements Validator<String> {
 
     @Autowired
     private VisibleValidator visibleValidator;
-    @Autowired
-    private ConstantsContext constantsContext;
     /**
      * 最小长度, 最大长度
      */
@@ -30,14 +26,14 @@ public class SummaryValidator extends ConfigRefreshableValidator<String> impleme
     private int maxLen = -1;
 
     @Override
-    public Result doValidate(String form, Object extra) {
-        if (Tools.isEmpty(form)) {
-            return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " summary 为空 !");
+    public Result doValidate(String title, Object extra) {
+        if (Tools.isEmpty(title)) {
+            return ResultUtils.failed(" title 为空 !");
         }
-        if ((form.length() < minLen) || (form.length() > maxLen)) {
-            return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " summary 长度不在范围内 !");
+        if ((title.length() < minLen) || (title.length() > maxLen)) {
+            return ResultUtils.failed(" name 长度不在范围内 !");
         }
-        Result result = visibleValidator.validate(form, extra);
+        Result result = visibleValidator.validate(title, extra);
         if (!result.isSuccess()) {
             return result;
         }
@@ -52,7 +48,7 @@ public class SummaryValidator extends ConfigRefreshableValidator<String> impleme
 
     @Override
     public void refreshConfig() {
-        minLen = Integer.parseInt(constantsContext.ruleConfig("summary.min.length", "3"));
-        maxLen = Integer.parseInt(constantsContext.ruleConfig("summary.max.length", "2048"));
+        minLen = Integer.parseInt(constantsContext.ruleConfig("entity.title.min.length", "1"));
+        maxLen = Integer.parseInt(constantsContext.ruleConfig("entity.title.max.length", "256"));
     }
 }

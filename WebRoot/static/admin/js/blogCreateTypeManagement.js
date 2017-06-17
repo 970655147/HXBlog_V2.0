@@ -47,7 +47,7 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
                         $('#dataContent').html(html);
                         $('#dataConsole,#dataList').attr('style', 'display:block'); //显示FiledBox
                     } else {
-                        layer.alert("拉取创建类型列表失败[" + resp.msg + "] !", {icon: 5});
+                        layer.alert("拉取创建类型列表失败[" + resp.data + "] !", {icon: 5});
                     }
                 }
             });
@@ -69,7 +69,7 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
                         refresh()
                     });
                 } else {
-                    layer.alert("添加创建类型失败[" + resp.msg + "] !", {icon: 5});
+                    layer.alert("添加创建类型失败[" + resp.data + "] !", {icon: 5});
                 }
             }
         });
@@ -91,7 +91,7 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
                         refresh()
                     });
                 } else {
-                    layer.alert("更新创建类型失败[" + resp.msg + "] !", {icon: 5});
+                    layer.alert("更新创建类型失败[" + resp.data + "] !", {icon: 5});
                 }
             }
         });
@@ -183,7 +183,7 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
                                 refresh()
                             });
                         } else {
-                            layer.alert("删除创建类型失败[" + resp.msg + "] !", {icon: 5});
+                            layer.alert("删除创建类型失败[" + resp.data + "] !", {icon: 5});
                         }
                     }
                 });

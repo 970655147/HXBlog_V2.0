@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
  * @date 6/15/2017 8:25 PM
  */
 @Component
-public class UserNameValidator extends ConfigRefreshableValidator<String> implements Validator<String> {
+public class BlogNameValidator extends ConfigRefreshableValidator<String> implements Validator<String> {
 
     @Autowired
     private RegexWValidator regexWValidator;
@@ -28,10 +28,10 @@ public class UserNameValidator extends ConfigRefreshableValidator<String> implem
     @Override
     public Result doValidate(String userName, Object extra) {
         if (Tools.isEmpty(userName)) {
-            return ResultUtils.failed(" userName 为空 !");
+            return ResultUtils.failed(" blogName 为空 !");
         }
         if ((userName.length() < minLen) || (userName.length() > maxLen)) {
-            return ResultUtils.failed(" userName 长度不在范围内 !");
+            return ResultUtils.failed(" blogName 长度不在范围内 !");
         }
         Result result = regexWValidator.validate(userName, extra);
         if (!result.isSuccess()) {
@@ -48,7 +48,7 @@ public class UserNameValidator extends ConfigRefreshableValidator<String> implem
 
     @Override
     public void refreshConfig() {
-        minLen = Integer.parseInt(constantsContext.ruleConfig("user.name.min.length", "3"));
-        maxLen = Integer.parseInt(constantsContext.ruleConfig("user.name.max.length", "64"));
+        minLen = Integer.parseInt(constantsContext.ruleConfig("blog.name.min.length", "3"));
+        maxLen = Integer.parseInt(constantsContext.ruleConfig("blog.name.max.length", "256"));
     }
 }

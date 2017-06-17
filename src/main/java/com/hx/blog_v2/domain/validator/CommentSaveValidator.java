@@ -5,7 +5,6 @@ import com.hx.blog_v2.domain.form.CommentSaveForm;
 import com.hx.common.interf.common.Result;
 import com.hx.common.interf.validator.Validator;
 import com.hx.common.util.ResultUtils;
-import com.hx.log.str.StringUtils;
 import com.hx.log.util.Tools;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -29,23 +28,23 @@ public class CommentSaveValidator implements Validator<CommentSaveForm> {
     @Autowired
     private IpValidator ipValidator;
     @Autowired
-    private RegexWValidator regexWValidator;
+    private BeanIdStrValidator beanIdStrValidator;
     @Autowired
     private MysqlKeywordsValidator mysqlKeywordsValidator;
 
     @Override
     public Result validate(CommentSaveForm form, Object extra) {
-        if (!StringUtils.isNumeric(form.getBlogId())) {
+        if (!beanIdStrValidator.validate(form.getBlogId(), extra).isSuccess()) {
             return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " blogId 非数字 ! ");
         }
         if (!Tools.isEmpty(form.getFloorId())) {
-            if (!StringUtils.isNumeric(form.getFloorId())) {
-                return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " blogTypeId 非数字 ! ");
+            if (!beanIdStrValidator.validate(form.getFloorId(), extra).isSuccess()) {
+                return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " floorId 非数字 ! ");
             }
         }
         if (!Tools.isEmpty(form.getCommentId())) {
-            if (!StringUtils.isNumeric(form.getCommentId())) {
-                return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " blogTagId 非数字 ! ");
+            if (!beanIdStrValidator.validate(form.getCommentId(), extra).isSuccess()) {
+                return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " commentId 非数字 ! ");
             }
         }
 

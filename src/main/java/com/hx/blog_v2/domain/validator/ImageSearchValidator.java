@@ -27,7 +27,7 @@ public class ImageSearchValidator implements Validator<ImageSearchForm> {
         if (!Tools.isEmpty(form.getType())) {
             Result errResult = imageTypeValidator.validate(form.getType(), extra);
             if (!errResult.isSuccess()) {
-                return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " imageType 不存在 ! ");
+                return errResult;
             }
         }
 

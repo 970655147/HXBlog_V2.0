@@ -18,10 +18,8 @@ import org.springframework.stereotype.Component;
  * @date 6/15/2017 8:25 PM
  */
 @Component
-public class CheckCodeValidator implements Validator<String> {
+public class CheckCodeValidator extends ConfigRefreshableValidator<String> implements Validator<String> {
 
-    @Autowired
-    private ConstantsContext constantsContext;
     /**
      * 最小长度, 最大长度
      */
@@ -30,14 +28,14 @@ public class CheckCodeValidator implements Validator<String> {
     private String checkCodeCandidatesStr = null;
 
     @Override
-    public Result validate(String checkCode, Object extra) {
+    public Result doValidate(String checkCode, Object extra) {
         if (Tools.isEmpty(checkCode)) {
             return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " checkCode 为空 !");
         }
-        initIfNeed();
-        if (!((checkCode.length() >= minLen) && (checkCode.length() < maxLen))) {
+        if ((checkCode.length() < minLen) || (checkCode.length() > maxLen)) {
             return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " checkCode 长度不在范围内 !");
         }
+
         for (int i = 0, len = checkCode.length(); i < len; i++) {
             char ch = checkCode.charAt(i);
             if (!StringUtils.containsChar(checkCodeCandidatesStr, ch)) {
@@ -47,14 +45,15 @@ public class CheckCodeValidator implements Validator<String> {
         return ResultUtils.success();
     }
 
-    private void initIfNeed() {
-        if (minLen < 0) {
-            minLen = Integer.parseInt(constantsContext.ruleConfig("check_code.min.length", "3"));
-            maxLen = Integer.parseInt(constantsContext.ruleConfig("check_code.max.length", "6"));
-        }
-        if (checkCodeCandidatesStr == null) {
-            checkCodeCandidatesStr = constantsContext.checkCodeCandidatesStr;
-        }
+    @Override
+    public boolean needRefresh() {
+        return (minLen < 0) || (checkCodeCandidatesStr == null);
     }
 
+    @Override
+    public void refreshConfig() {
+        minLen = Integer.parseInt(constantsContext.ruleConfig("check_code.min.length", "3"));
+        maxLen = Integer.parseInt(constantsContext.ruleConfig("check_code.max.length", "6"));
+        checkCodeCandidatesStr = constantsContext.checkCodeCandidatesStr;
+    }
 }

@@ -5,7 +5,6 @@ import com.hx.blog_v2.domain.form.MoodSaveForm;
 import com.hx.common.interf.common.Result;
 import com.hx.common.interf.validator.Validator;
 import com.hx.common.util.ResultUtils;
-import com.hx.log.str.StringUtils;
 import com.hx.log.util.Tools;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -19,31 +18,27 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class MoodSaveValidator implements Validator<MoodSaveForm> {
-
+    
     @Autowired
-    private RegexWValidator regexWValidator;
+    private BeanIdStrValidator beanIdStrValidator;
     @Autowired
-    private UrlValidator urlValidator;
+    private EntityTitleValidator entityTitleValidator;
     @Autowired
-    private SummaryValidator summaryValidator;
-    @Autowired
-    private CommentContentValidator commentContentValidator;
-    @Autowired
-    private BeanIdsValidator beanIdsValidator;
+    private CommentContentValidator contentValidator;
 
     @Override
     public Result validate(MoodSaveForm form, Object extra) {
         if (!Tools.isEmpty(form.getId())) {
-            if (!StringUtils.isNumeric(form.getId())) {
+            if (!beanIdStrValidator.validate(form.getId(), extra).isSuccess()) {
                 return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " id 非数字 ! ");
             }
         }
 
-        Result errResult = regexWValidator.validate(form.getTitle(), extra);
+        Result errResult = entityTitleValidator.validate(form.getTitle(), extra);
         if (!errResult.isSuccess()) {
-            return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " 标题不合法 ! ");
+            return errResult;
         }
-        errResult = regexWValidator.validate(form.getContent(), extra);
+        errResult = contentValidator.validate(form.getContent(), extra);
         if (!errResult.isSuccess()) {
             return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " 内容不合法 ! ");
         }

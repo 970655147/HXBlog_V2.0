@@ -5,7 +5,6 @@ import com.hx.blog_v2.domain.form.RoleSaveForm;
 import com.hx.common.interf.common.Result;
 import com.hx.common.interf.validator.Validator;
 import com.hx.common.util.ResultUtils;
-import com.hx.log.str.StringUtils;
 import com.hx.log.util.Tools;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -21,23 +20,25 @@ import org.springframework.stereotype.Component;
 public class RoleSaveValidator implements Validator<RoleSaveForm> {
 
     @Autowired
-    private RegexWValidator regexWValidator;
+    private EntityNameValidator entityNameValidator;
     @Autowired
     private SortValidator sortValidator;
     @Autowired
     private IntableBooleanValidator intableBooleanValidator;
+    @Autowired
+    private BeanIdStrValidator beanIdStrValidator;
 
     @Override
     public Result validate(RoleSaveForm form, Object extra) {
         if (!Tools.isEmpty(form.getId())) {
-            if (!StringUtils.isNumeric(form.getId())) {
+            if (!beanIdStrValidator.validate(form.getId(), extra).isSuccess()) {
                 return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " id 非数字 ! ");
             }
         }
 
-        Result errResult = regexWValidator.validate(form.getName(), extra);
+        Result errResult = entityNameValidator.validate(form.getName(), extra);
         if (!errResult.isSuccess()) {
-            return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " name 包含敏感数据 ! ");
+            return errResult;
         }
         errResult = sortValidator.validate(form.getSort(), extra);
         if (!errResult.isSuccess()) {

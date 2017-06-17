@@ -78,7 +78,7 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
                             }
                         });
                     } else {
-                        layer.alert("拉取图片墙列表失败[" + resp.msg + "] !", {icon: 5});
+                        layer.alert("拉取图片墙列表失败[" + resp.data + "] !", {icon: 5});
                     }
                 }
             });
@@ -101,7 +101,7 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
                         refresh()
                     });
                 } else {
-                    layer.alert("添加图片失败[" + resp.msg + "] !", {icon: 5});
+                    layer.alert("添加图片失败[" + resp.data + "] !", {icon: 5});
                 }
             }
         });
@@ -124,7 +124,7 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
                         refresh()
                     });
                 } else {
-                    layer.alert("更新图片失败[" + resp.msg + "] !", {icon: 5});
+                    layer.alert("更新图片失败[" + resp.data + "] !", {icon: 5});
                 }
             }
         });
@@ -223,7 +223,7 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
                                 refresh()
                             });
                         } else {
-                            layer.alert("删除图片失败[" + resp.msg + "] !", {icon: 5});
+                            layer.alert("删除图片失败[" + resp.data + "] !", {icon: 5});
                         }
                     }
                 });

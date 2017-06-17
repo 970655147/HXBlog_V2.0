@@ -19,17 +19,17 @@ import org.springframework.stereotype.Component;
 public class UpdatePwdValidator implements Validator<UpdatePwdForm> {
 
     @Autowired
-    private VisibleValidator visibleValidator;
+    private PasswordValidator passwordValidator;
 
     @Override
     public Result validate(UpdatePwdForm form, Object extra) {
-        Result errResult = visibleValidator.validate(form.getOldPwd(), extra);
+        Result errResult = passwordValidator.validate(form.getOldPwd(), extra);
         if (!errResult.isSuccess()) {
-            return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " password 格式不正确 ! ");
+            return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " oldPassword 格式不正确 ! ");
         }
-        errResult = visibleValidator.validate(form.getNewPwd(), extra);
+        errResult = passwordValidator.validate(form.getNewPwd(), extra);
         if (!errResult.isSuccess()) {
-            return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " password 格式不正确 ! ");
+            return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " newPassword 格式不正确 ! ");
         }
 
         return ResultUtils.success();

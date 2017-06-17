@@ -77,7 +77,7 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
                             }
                         });
                     } else {
-                        layer.alert("拉取系统配置墙列表失败[" + resp.msg + "] !", {icon: 5});
+                        layer.alert("拉取系统配置墙列表失败[" + resp.data + "] !", {icon: 5});
                     }
                 }
             });
@@ -100,7 +100,7 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
                         refresh()
                     });
                 } else {
-                    layer.alert("添加系统配置失败[" + resp.msg + "] !", {icon: 5});
+                    layer.alert("添加系统配置失败[" + resp.data + "] !", {icon: 5});
                 }
             }
         });
@@ -123,7 +123,7 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
                         refresh()
                     });
                 } else {
-                    layer.alert("更新系统配置失败[" + resp.msg + "] !", {icon: 5});
+                    layer.alert("更新系统配置失败[" + resp.data + "] !", {icon: 5});
                 }
             }
         });
@@ -218,7 +218,7 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
                                 refresh()
                             });
                         } else {
-                            layer.alert("删除系统配置失败[" + resp.msg + "] !", {icon: 5});
+                            layer.alert("删除系统配置失败[" + resp.data + "] !", {icon: 5});
                         }
                     }
                 });

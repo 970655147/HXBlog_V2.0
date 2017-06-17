@@ -27,11 +27,9 @@ public class UserSaveValidator implements Validator<UserSaveForm> {
     @Autowired
     private UrlValidator urlValidator;
     @Autowired
-    private IpValidator ipValidator;
+    private EntityTitleValidator entityTitleValidator;
     @Autowired
-    private RegexWValidator regexWValidator;
-    @Autowired
-    private VisibleValidator visibleValidator;
+    private EntityDescValidator entityDescValidator;
 
     @Override
     public Result validate(UserSaveForm form, Object extra) {
@@ -41,25 +39,25 @@ public class UserSaveValidator implements Validator<UserSaveForm> {
             }
         }
 
-        Result result = userNameValidator.validate(form.getUserName(), extra);
-        if (!result.isSuccess()) {
+        Result errResult = userNameValidator.validate(form.getUserName(), extra);
+        if (!errResult.isSuccess()) {
             return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " userName 格式不合法 ! ");
         }
-        result = emailValidator.validate(form.getEmail(), extra);
-        if (!result.isSuccess()) {
+        errResult = emailValidator.validate(form.getEmail(), extra);
+        if (!errResult.isSuccess()) {
             return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " email 格式不合法 ! ");
         }
-        result = regexWValidator.validate(form.getTitle(), extra);
-        if (!result.isSuccess()) {
-            return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " userTitle 格式不合法 ! ");
+        errResult = entityTitleValidator.validate(form.getTitle(), extra);
+        if (!errResult.isSuccess()) {
+            return errResult;
         }
-        result = urlValidator.validate(form.getHeadImgUrl(), extra);
-        if (!result.isSuccess()) {
+        errResult = urlValidator.validate(form.getHeadImgUrl(), extra);
+        if (!errResult.isSuccess()) {
             return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " headImgUrl 格式不合法 ! ");
         }
         if (!Tools.isEmpty(form.getMotto())) {
-            result = visibleValidator.validate(form.getMotto(), extra);
-            if (!result.isSuccess()) {
+            errResult = entityDescValidator.validate(form.getMotto(), extra);
+            if (!errResult.isSuccess()) {
                 return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " motto 格式不合法 ! ");
             }
         }

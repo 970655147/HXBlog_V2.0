@@ -5,7 +5,6 @@ import com.hx.blog_v2.domain.form.BlogCreateTypeSaveForm;
 import com.hx.common.interf.common.Result;
 import com.hx.common.interf.validator.Validator;
 import com.hx.common.util.ResultUtils;
-import com.hx.log.str.StringUtils;
 import com.hx.log.util.Tools;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -21,7 +20,11 @@ import org.springframework.stereotype.Component;
 public class BlogCreateTypeSaveValidator implements Validator<BlogCreateTypeSaveForm> {
 
     @Autowired
-    private RegexWValidator regexWValidator;
+    private BeanIdStrValidator beanIdValidator;
+    @Autowired
+    private EntityNameValidator entityNameValidator;
+    @Autowired
+    private EntityDescValidator entityDescValidator;
     @Autowired
     private UrlValidator urlValidator;
     @Autowired
@@ -35,17 +38,18 @@ public class BlogCreateTypeSaveValidator implements Validator<BlogCreateTypeSave
         }
 
         if (!Tools.isEmpty(form.getId())) {
-            if (!StringUtils.isNumeric(form.getId())) {
+            errResult = beanIdValidator.validate(form.getId(), extra);
+            if (!errResult.isSuccess()) {
                 return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " id 非数字 ! ");
             }
         }
-        errResult = regexWValidator.validate(form.getName(), extra);
+        errResult = entityNameValidator.validate(form.getName(), extra);
         if (!errResult.isSuccess()) {
-            return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " name 包含敏感数据 ! ");
+            return errResult;
         }
-        errResult = regexWValidator.validate(form.getDesc(), extra);
+        errResult = entityDescValidator.validate(form.getDesc(), extra);
         if (!errResult.isSuccess()) {
-            return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " desc 包含敏感数据 ! ");
+            return errResult;
         }
         errResult = urlValidator.validate(form.getImgUrl(), extra);
         if (!errResult.isSuccess()) {

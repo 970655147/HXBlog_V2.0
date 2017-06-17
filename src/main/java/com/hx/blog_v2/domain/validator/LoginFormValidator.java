@@ -19,40 +19,42 @@ import org.springframework.stereotype.Component;
 public class LoginFormValidator implements Validator<LoginForm> {
 
     @Autowired
-    private RegexWValidator regexWValidator;
+    private UserNameValidator userNameValidator;
     @Autowired
-    private VisibleValidator visibleValidator;
+    private PasswordValidator passwordValidator;
     @Autowired
     private EmailValidator emailValidator;
     @Autowired
     private CheckCodeValidator checkCodeValidator;
     @Autowired
     private IpValidator ipValidator;
+    @Autowired
+    private IpAddrValidator ipAddrValidator;
 
     @Override
     public Result validate(LoginForm form, Object extra) {
-        Result errResult = regexWValidator.validate(form.getUserName(), extra);
+        Result errResult = userNameValidator.validate(form.getUserName(), extra);
         if (!errResult.isSuccess()) {
             errResult = emailValidator.validate(form.getUserName(), extra);
             if (!errResult.isSuccess()) {
                 return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " username 格式不正确 ! ");
             }
         }
-        errResult = visibleValidator.validate(form.getPassword(), extra);
+        errResult = passwordValidator.validate(form.getPassword(), extra);
         if (!errResult.isSuccess()) {
-            return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " password 格式不正确 ! ");
+            return errResult;
         }
         errResult = checkCodeValidator.validate(form.getCheckCode(), extra);
         if (!errResult.isSuccess()) {
-            return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " checkCode 格式不合法 ! ");
+            return errResult;
         }
         errResult = ipValidator.validate(form.getIp(), extra);
         if (!errResult.isSuccess()) {
-            return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " ip 格式不合法 ! ");
+            return errResult;
         }
-        errResult = visibleValidator.validate(form.getIpAddr(), extra);
+        errResult = ipAddrValidator.validate(form.getIpAddr(), extra);
         if (!errResult.isSuccess()) {
-            return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " ip地址 格式不合法 ! ");
+            return errResult;
         }
 
         return ResultUtils.success();

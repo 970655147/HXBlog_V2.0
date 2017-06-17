@@ -27,6 +27,9 @@ import java.util.List;
 @Component
 public class ConstantsContext {
 
+    @Autowired
+    private SystemConfigDao systemConfigDao;
+
     /**
      * 维护系统配置
      */
@@ -39,9 +42,10 @@ public class ConstantsContext {
      * 维护前台首页相关配置
      */
     private Map<String, Object> frontendIdxConfig = new LinkedHashMap<>();
-
-    @Autowired
-    private SystemConfigDao systemConfigDao;
+    /**
+     * 上一次刷新缓存的时间戳
+     */
+    private long lastRefreshTs;
 
     /**
      * 初始化 ConstantsContext
@@ -55,6 +59,48 @@ public class ConstantsContext {
     public void init() {
         loadFullCachedConfigs();
         refreshConfigs();
+    }
+
+    /**
+     * 清理所有的缓存的 配置项
+     *
+     * @return void
+     * @author Jerry.X.He
+     * @date 6/17/2017 9:43 AM
+     * @since 1.0
+     */
+    public void clear() {
+        systemConfig.clear();
+        ruleConfig.clear();
+        frontendIdxConfig.clear();
+    }
+
+    /**
+     * 刷新当前系统的配置
+     *
+     * @return void
+     * @author Jerry.X.He
+     * @date 6/17/2017 9:43 AM
+     * @since 1.0
+     */
+    public void refresh() {
+        clear();
+
+        loadFullCachedConfigs();
+        refreshConfigs();
+        lastRefreshTs = System.currentTimeMillis();
+    }
+
+    /**
+     * 获取上一次刷新的时间戳
+     *
+     * @return long
+     * @author Jerry.X.He
+     * @date 6/17/2017 9:48 AM
+     * @since 1.0
+     */
+    public long lastRefreshTs() {
+        return lastRefreshTs;
     }
 
     /**

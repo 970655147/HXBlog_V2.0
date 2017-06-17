@@ -6,7 +6,6 @@ import com.hx.blog_v2.domain.form.MessageSaveForm;
 import com.hx.common.interf.common.Result;
 import com.hx.common.interf.validator.Validator;
 import com.hx.common.util.ResultUtils;
-import com.hx.log.str.StringUtils;
 import com.hx.log.util.Tools;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -22,29 +21,27 @@ import org.springframework.stereotype.Component;
 public class MessageSaveValidator implements Validator<MessageSaveForm> {
 
     @Autowired
-    private RegexWValidator regexWValidator;
-    @Autowired
-    private UrlValidator urlValidator;
-    @Autowired
     private SummaryValidator summaryValidator;
     @Autowired
     private CommentContentValidator commentContentValidator;
     @Autowired
-    private BeanIdsValidator beanIdsValidator;
+    private BeanIdsStrValidator beanIdsStrValidator;
+    @Autowired
+    private BeanIdStrValidator beanIdStrValidator;
 
     @Override
     public Result validate(MessageSaveForm form, Object extra) {
         if (!Tools.isEmpty(form.getId())) {
-            if (!StringUtils.isNumeric(form.getId())) {
+            if (!beanIdStrValidator.validate(form.getId(), extra).isSuccess()) {
                 return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " id 非数字 ! ");
             }
         }
 
-        Result errResult = beanIdsValidator.validate(new BeanIdsForm(form.getUserIds()), extra);
+        Result errResult = beanIdsStrValidator.validate(form.getUserIds(), extra);
         if (!errResult.isSuccess()) {
             return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " 指定的 userId 列表格式不正确 ! ");
         }
-        errResult = beanIdsValidator.validate(new BeanIdsForm(form.getRoleIds()), extra);
+        errResult = beanIdsStrValidator.validate(form.getRoleIds(), extra);
         if (!errResult.isSuccess()) {
             return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " 指定的 roleIds 列表格式不正确 ! ");
         }

@@ -5,7 +5,6 @@ import com.hx.blog_v2.domain.form.BlogSearchForm;
 import com.hx.common.interf.common.Result;
 import com.hx.common.interf.validator.Validator;
 import com.hx.common.util.ResultUtils;
-import com.hx.log.str.StringUtils;
 import com.hx.log.util.Tools;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -21,24 +20,24 @@ import org.springframework.stereotype.Component;
 public class BlogSearchValidator implements Validator<BlogSearchForm> {
 
     @Autowired
-    private RegexWValidator regexWValidator;
+    private BeanIdStrValidator beanIdStrValidator;
     @Autowired
     private MysqlKeywordsValidator mysqlKeywordsValidator;
 
     @Override
     public Result validate(BlogSearchForm form, Object extra) {
         if (!Tools.isEmpty(form.getId())) {
-            if (!StringUtils.isNumeric(form.getId())) {
+            if (!beanIdStrValidator.validate(form.getId(), extra).isSuccess()) {
                 return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " blogId 非数字 ! ");
             }
         }
         if (!Tools.isEmpty(form.getTypeId())) {
-            if (!StringUtils.isNumeric(form.getTypeId())) {
+            if (!beanIdStrValidator.validate(form.getTypeId(), extra).isSuccess()) {
                 return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " typeId 非数字 ! ");
             }
         }
         if (!Tools.isEmpty(form.getTagId())) {
-            if (!StringUtils.isNumeric(form.getTagId())) {
+            if (!beanIdStrValidator.validate(form.getTagId(), extra).isSuccess()) {
                 return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " getTagId 非数字 ! ");
             }
         }

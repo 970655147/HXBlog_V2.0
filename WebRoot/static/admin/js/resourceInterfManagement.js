@@ -56,7 +56,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
 
                         $('#dataConsole,#dataList').attr('style', 'display:block'); //显示FiledBox
                     } else {
-                        layer.alert("拉取资源接口列表失败[" + resp.msg + "] !", {icon: 5});
+                        layer.alert("拉取资源接口列表失败[" + resp.data + "] !", {icon: 5});
                     }
                 }
             });
@@ -78,7 +78,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
                         refresh()
                     });
                 } else {
-                    layer.alert("更新资源接口信息失败[" + resp.msg + "] !", {icon: 5});
+                    layer.alert("更新资源接口信息失败[" + resp.data + "] !", {icon: 5});
                 }
             }
         });
@@ -162,7 +162,7 @@ function initInterfs() {
             if (resp.success) {
                 interfs = resp.data;
             } else {
-                layer.alert("拉取接口列表失败[" + resp.msg + "] !", {icon: 5});
+                layer.alert("拉取接口列表失败[" + resp.data + "] !", {icon: 5});
             }
         }
     });

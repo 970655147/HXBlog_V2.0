@@ -3,11 +3,9 @@ package com.hx.blog_v2.domain.validator;
 import com.baidu.ueditor.utils.FileUtils;
 import com.hx.blog_v2.domain.ErrorCode;
 import com.hx.blog_v2.domain.form.UploadedFileSaveForm;
-import com.hx.blog_v2.util.ConstantsContext;
 import com.hx.common.interf.common.Result;
 import com.hx.common.interf.validator.Validator;
 import com.hx.common.util.ResultUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,12 +17,8 @@ import org.springframework.web.multipart.MultipartFile;
  * @date 6/15/2017 8:25 PM
  */
 @Component
-public class UploadFileSaveValidator implements Validator<UploadedFileSaveForm> {
+public class UploadFileSaveValidator extends ConfigRefreshableValidator<UploadedFileSaveForm> implements Validator<UploadedFileSaveForm> {
 
-    @Autowired
-    private RegexWValidator regexWValidator;
-    @Autowired
-    private ConstantsContext constantsContext;
     /**
      * 最小长度, 最大长度
      */
@@ -33,11 +27,10 @@ public class UploadFileSaveValidator implements Validator<UploadedFileSaveForm> 
     private String supportedSuffixes = null;
 
     @Override
-    public Result validate(UploadedFileSaveForm form, Object extra) {
+    public Result doValidate(UploadedFileSaveForm form, Object extra) {
         MultipartFile file = form.getFile();
         String fileName = file.getOriginalFilename();
         String suffix = FileUtils.getSuffixByFilename(fileName, ".");
-        initIfNeed();
 
         if (!supportedSuffixes.contains(suffix)) {
             return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " 给定的文件类型当前系统不支持 ! ");
@@ -50,14 +43,15 @@ public class UploadFileSaveValidator implements Validator<UploadedFileSaveForm> 
         return ResultUtils.success();
     }
 
-    private void initIfNeed() {
-        if (minLen < 0) {
-            minLen = Long.parseLong(constantsContext.ruleConfig("file.upload.min.length", "3"));
-            maxLen = Long.parseLong(constantsContext.ruleConfig("file.upload.max.length", "20971520"));
-        }
-        if (supportedSuffixes == null) {
-            supportedSuffixes = constantsContext.ruleConfig("file.upload.supported.types", ".txt|.html|.css|.js|.java|.php|.c|.h|.cpp");
-        }
+    @Override
+    public boolean needRefresh() {
+        return (minLen < 0) || (supportedSuffixes == null);
     }
 
+    @Override
+    public void refreshConfig() {
+        minLen = Long.parseLong(constantsContext.ruleConfig("file.upload.min.length", "3"));
+        maxLen = Long.parseLong(constantsContext.ruleConfig("file.upload.max.length", "20971520"));
+        supportedSuffixes = constantsContext.ruleConfig("file.upload.supported.types", ".txt|.html|.css|.js|.java|.php|.c|.h|.cpp");
+    }
 }

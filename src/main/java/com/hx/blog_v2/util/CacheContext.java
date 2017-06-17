@@ -217,6 +217,8 @@ public class CacheContext {
         clear();
         loadFullCachedResources();
         initStastics();
+
+        constantsContext.refresh();
     }
 
     /**

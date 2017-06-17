@@ -5,7 +5,6 @@ import com.hx.blog_v2.domain.form.ImageSaveForm;
 import com.hx.common.interf.common.Result;
 import com.hx.common.interf.validator.Validator;
 import com.hx.common.util.ResultUtils;
-import com.hx.log.str.StringUtils;
 import com.hx.log.util.Tools;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -21,7 +20,7 @@ import org.springframework.stereotype.Component;
 public class ImageSaveValidator implements Validator<ImageSaveForm> {
 
     @Autowired
-    private RegexWValidator regexWValidator;
+    private EntityTitleValidator entityTitleValidator;
     @Autowired
     private UrlValidator urlValidator;
     @Autowired
@@ -30,30 +29,32 @@ public class ImageSaveValidator implements Validator<ImageSaveForm> {
     private SortValidator sortValidator;
     @Autowired
     private IntableBooleanValidator intableBooleanValidator;
+    @Autowired
+    private BeanIdStrValidator beanIdStrValidator;
 
     @Override
     public Result validate(ImageSaveForm form, Object extra) {
         if (!Tools.isEmpty(form.getId())) {
-            if (!StringUtils.isNumeric(form.getId())) {
+            if (!beanIdStrValidator.validate(form.getId(), extra).isSuccess()) {
                 return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " id 非数字 ! ");
             }
         }
 
-        Result errResult = regexWValidator.validate(form.getTitle(), extra);
+        Result errResult = entityTitleValidator.validate(form.getTitle(), extra);
         if (!errResult.isSuccess()) {
-            return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " title 包含敏感数据 ! ");
+            return errResult;
         }
         errResult = urlValidator.validate(form.getUrl(), extra);
         if (!errResult.isSuccess()) {
-            return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " url 格式不合法 ! ");
+            return errResult;
         }
         errResult = imageTypeValidator.validate(form.getType(), extra);
         if (!errResult.isSuccess()) {
-            return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " imageType 不存在 ! ");
+            return errResult;
         }
         errResult = sortValidator.validate(form.getSort(), extra);
         if (!errResult.isSuccess()) {
-            return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " sort 不合法 ! ");
+            return errResult;
         }
         errResult = intableBooleanValidator.validate(form.getEnable(), extra);
         if (!errResult.isSuccess()) {

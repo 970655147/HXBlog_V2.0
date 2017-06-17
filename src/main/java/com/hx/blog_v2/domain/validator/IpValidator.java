@@ -1,11 +1,9 @@
 package com.hx.blog_v2.domain.validator;
 
-import com.hx.blog_v2.util.ConstantsContext;
 import com.hx.common.interf.common.Result;
 import com.hx.common.interf.validator.Validator;
 import com.hx.common.util.ResultUtils;
 import com.hx.log.util.Tools;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.regex.Matcher;
@@ -19,10 +17,8 @@ import java.util.regex.Pattern;
  * @date 6/15/2017 8:25 PM
  */
 @Component
-public class IpValidator implements Validator<String> {
+public class IpValidator extends ConfigRefreshableValidator<String> implements Validator<String> {
 
-    @Autowired
-    private ConstantsContext constantsContext;
     /**
      * 最小长度, 最大长度
      */
@@ -31,12 +27,11 @@ public class IpValidator implements Validator<String> {
     private Pattern pattern = null;
 
     @Override
-    public Result validate(String ip, Object extra) {
+    public Result doValidate(String ip, Object extra) {
         if (Tools.isEmpty(ip)) {
             return ResultUtils.failed(" ip 为空 !");
         }
-        initIfNeed();
-        if (!((ip.length() >= minLen) && (ip.length() < maxLen))) {
+        if ((ip.length() < minLen) || (ip.length() > maxLen)) {
             return ResultUtils.failed(" ip 长度不在范围内 !");
         }
         Matcher matcher = pattern.matcher(ip);
@@ -47,15 +42,16 @@ public class IpValidator implements Validator<String> {
         return ResultUtils.success();
     }
 
-    private void initIfNeed() {
-        if (minLen < 0) {
-            minLen = Integer.parseInt(constantsContext.ruleConfig("ip.min.length", "7"));
-            maxLen = Integer.parseInt(constantsContext.ruleConfig("ip.max.length", "24"));
-        }
-        if (pattern == null) {
-            String patternStr = constantsContext.ruleConfig("ip.pattern_str", "(\\d+)(.\\d+){3,7}");
-            pattern = Pattern.compile(patternStr);
-        }
+    @Override
+    public boolean needRefresh() {
+        return (minLen < 0) || (pattern == null);
     }
 
+    @Override
+    public void refreshConfig() {
+        minLen = Integer.parseInt(constantsContext.ruleConfig("ip.min.length", "7"));
+        maxLen = Integer.parseInt(constantsContext.ruleConfig("ip.max.length", "24"));
+        String patternStr = constantsContext.ruleConfig("ip.pattern_str", "(\\d+)(.\\d+){3,7}");
+        pattern = Pattern.compile(patternStr);
+    }
 }

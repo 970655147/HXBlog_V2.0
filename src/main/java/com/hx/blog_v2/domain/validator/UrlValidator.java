@@ -1,11 +1,9 @@
 package com.hx.blog_v2.domain.validator;
 
-import com.hx.blog_v2.util.ConstantsContext;
 import com.hx.common.interf.common.Result;
 import com.hx.common.interf.validator.Validator;
 import com.hx.common.util.ResultUtils;
 import com.hx.log.util.Tools;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -16,10 +14,8 @@ import org.springframework.stereotype.Component;
  * @date 6/15/2017 8:25 PM
  */
 @Component
-public class UrlValidator implements Validator<String> {
+public class UrlValidator extends ConfigRefreshableValidator<String> implements Validator<String> {
 
-    @Autowired
-    private ConstantsContext constantsContext;
     /**
      * 最小长度, 最大长度
      */
@@ -28,12 +24,11 @@ public class UrlValidator implements Validator<String> {
     private String mustContains = null;
 
     @Override
-    public Result validate(String url, Object extra) {
+    public Result doValidate(String url, Object extra) {
         if (Tools.isEmpty(url)) {
             return ResultUtils.failed(" url 为空 !");
         }
-        initIfNeed();
-        if (!((url.length() >= minLen) && (url.length() < maxLen))) {
+        if ((url.length() < minLen) || (url.length() > maxLen)) {
             return ResultUtils.failed(" url 长度不在范围内 !");
         }
         if (!url.contains(mustContains)) {
@@ -43,14 +38,15 @@ public class UrlValidator implements Validator<String> {
         return ResultUtils.success();
     }
 
-    private void initIfNeed() {
-        if (minLen < 0) {
-            minLen = Integer.parseInt(constantsContext.ruleConfig("url.min.length", "5"));
-            maxLen = Integer.parseInt(constantsContext.ruleConfig("url.max.length", "2048"));
-        }
-        if (mustContains == null) {
-            mustContains = constantsContext.ruleConfig("url.must_contains", "://");
-        }
+    @Override
+    public boolean needRefresh() {
+        return (minLen < 0) || (mustContains == null);
     }
 
+    @Override
+    public void refreshConfig() {
+        minLen = Integer.parseInt(constantsContext.ruleConfig("url.min.length", "5"));
+        maxLen = Integer.parseInt(constantsContext.ruleConfig("url.max.length", "2048"));
+        mustContains = constantsContext.ruleConfig("url.must_contains", "://");
+    }
 }

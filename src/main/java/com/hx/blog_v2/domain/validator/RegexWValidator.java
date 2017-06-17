@@ -1,11 +1,9 @@
 package com.hx.blog_v2.domain.validator;
 
-import com.hx.blog_v2.util.ConstantsContext;
 import com.hx.common.interf.common.Result;
 import com.hx.common.interf.validator.Validator;
 import com.hx.common.util.ResultUtils;
 import com.hx.log.util.Tools;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -16,10 +14,8 @@ import org.springframework.stereotype.Component;
  * @date 6/15/2017 7:42 PM
  */
 @Component
-public class RegexWValidator implements Validator<String> {
+public class RegexWValidator extends ConfigRefreshableValidator<String> implements Validator<String> {
 
-    @Autowired
-    private ConstantsContext constantsContext;
     /**
      * 需要过滤的部分的, start, end 的pair
      */
@@ -31,13 +27,13 @@ public class RegexWValidator implements Validator<String> {
     private int minLen = -1;
     private int maxLen = -1;
 
+
     @Override
-    public Result validate(String form, Object extra) {
+    public Result doValidate(String form, Object extra) {
         if (Tools.isEmpty(form)) {
             return ResultUtils.failed(" 输入为空 !");
         }
-        initIfNeed();
-        if (!((form.length() >= minLen) && (form.length() < maxLen))) {
+        if ((form.length() < minLen) || (form.length() > maxLen)) {
             return ResultUtils.failed(" 输入长度不在范围内 !");
         }
 
@@ -51,6 +47,17 @@ public class RegexWValidator implements Validator<String> {
         return ResultUtils.success("success");
     }
 
+    @Override
+    public boolean needRefresh() {
+        return minLen < 0;
+    }
+
+    @Override
+    public void refreshConfig() {
+        minLen = Integer.parseInt(constantsContext.ruleConfig("regex.w.min.length", "3"));
+        maxLen = Integer.parseInt(constantsContext.ruleConfig("regex.w.max.length", "1024"));
+    }
+
     /**
      * 判断给定的字符是否合法
      * 过滤特殊字符
@@ -62,21 +69,13 @@ public class RegexWValidator implements Validator<String> {
      * @since 1.0
      */
     private boolean isCharLegal(char ch) {
-        for(int i=0; i<START_POS.length; i++) {
-            if((ch >= START_POS[i]) && (ch <= END_POS[i]) ) {
+        for (int i = 0; i < START_POS.length; i++) {
+            if ((ch >= START_POS[i]) && (ch <= END_POS[i])) {
                 return false;
             }
         }
 
         return true;
     }
-
-    private void initIfNeed() {
-        if (minLen < 0) {
-            minLen = Integer.parseInt(constantsContext.ruleConfig("regex.w.min.length", "3"));
-            maxLen = Integer.parseInt(constantsContext.ruleConfig("regex.w.max.length", "1024"));
-        }
-    }
-
 
 }

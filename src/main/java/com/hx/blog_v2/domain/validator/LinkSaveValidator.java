@@ -5,7 +5,6 @@ import com.hx.blog_v2.domain.form.LinkSaveForm;
 import com.hx.common.interf.common.Result;
 import com.hx.common.interf.validator.Validator;
 import com.hx.common.util.ResultUtils;
-import com.hx.log.str.StringUtils;
 import com.hx.log.util.Tools;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -21,37 +20,41 @@ import org.springframework.stereotype.Component;
 public class LinkSaveValidator implements Validator<LinkSaveForm> {
 
     @Autowired
-    private RegexWValidator regexWValidator;
+    private EntityNameValidator entityNameValidator;
+    @Autowired
+    private EntityDescValidator entityDescValidator;
     @Autowired
     private UrlValidator urlValidator;
     @Autowired
     private SortValidator sortValidator;
     @Autowired
     private IntableBooleanValidator intableBooleanValidator;
+    @Autowired
+    private BeanIdStrValidator beanIdStrValidator;
 
     @Override
     public Result validate(LinkSaveForm form, Object extra) {
         if (!Tools.isEmpty(form.getId())) {
-            if (!StringUtils.isNumeric(form.getId())) {
+            if (!beanIdStrValidator.validate(form.getId(), extra).isSuccess()) {
                 return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " id 非数字 ! ");
             }
         }
 
-        Result errResult = regexWValidator.validate(form.getName(), extra);
+        Result errResult = entityNameValidator.validate(form.getName(), extra);
         if (!errResult.isSuccess()) {
-            return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " name 包含敏感数据 ! ");
+            return errResult;
         }
-        errResult = regexWValidator.validate(form.getDesc(), extra);
+        errResult = entityDescValidator.validate(form.getDesc(), extra);
         if (!errResult.isSuccess()) {
-            return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " desc 包含敏感数据 ! ");
+            return errResult;
         }
         errResult = urlValidator.validate(form.getUrl(), extra);
         if (!errResult.isSuccess()) {
-            return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " url 格式不合法 ! ");
+            return errResult;
         }
         errResult = sortValidator.validate(form.getSort(), extra);
         if (!errResult.isSuccess()) {
-            return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " sort 不合法 ! ");
+            return errResult;
         }
         errResult = intableBooleanValidator.validate(form.getEnable(), extra);
         if (!errResult.isSuccess()) {

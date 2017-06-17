@@ -6,7 +6,6 @@ import com.hx.blog_v2.domain.form.ResourceInterfUpdateForm;
 import com.hx.common.interf.common.Result;
 import com.hx.common.interf.validator.Validator;
 import com.hx.common.util.ResultUtils;
-import com.hx.log.str.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -21,19 +20,21 @@ import org.springframework.stereotype.Component;
 public class ResourceInterfUpdateValidator implements Validator<ResourceInterfUpdateForm> {
 
     @Autowired
-    private RegexWValidator regexWValidator;
+    private EntityNameValidator entityNameValidator;
     @Autowired
     private BeanIdsValidator beanIdsValidator;
+    @Autowired
+    private BeanIdStrValidator beanIdStrValidator;
 
     @Override
     public Result validate(ResourceInterfUpdateForm form, Object extra) {
-        if (!StringUtils.isNumeric(form.getResourceId())) {
+        if (!beanIdStrValidator.validate(form.getResourceId(), extra).isSuccess()) {
             return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " resourceId 非数字 ! ");
         }
 
-        Result errResult = regexWValidator.validate(form.getResourceName(), extra);
+        Result errResult = entityNameValidator.validate(form.getResourceName(), extra);
         if (!errResult.isSuccess()) {
-            return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " resourceName 格式不正确 ! ");
+            return errResult;
         }
         errResult = beanIdsValidator.validate(new BeanIdsForm(form.getInterfIds()), extra);
         if (!errResult.isSuccess()) {

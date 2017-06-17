@@ -72,7 +72,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
                             }
                         });
                     } else {
-                        layer.alert("拉取用户列表失败[" + resp.msg + "] !", {icon: 5});
+                        layer.alert("拉取用户列表失败[" + resp.data + "] !", {icon: 5});
                     }
                 }
             });
@@ -94,7 +94,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
                         refresh()
                     });
                 } else {
-                    layer.alert("更新用户角色信息失败[" + resp.msg + "] !", {icon: 5});
+                    layer.alert("更新用户角色信息失败[" + resp.data + "] !", {icon: 5});
                 }
             }
         });
@@ -178,7 +178,7 @@ function initRoles() {
             if (resp.success) {
                 roles = resp.data;
             } else {
-                layer.alert("拉取角色列表失败[" + resp.msg + "] !", {icon: 5});
+                layer.alert("拉取角色列表失败[" + resp.data + "] !", {icon: 5});
             }
         }
     });
