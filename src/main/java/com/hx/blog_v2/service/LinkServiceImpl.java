@@ -17,7 +17,6 @@ import com.hx.mongo.criteria.Criteria;
 import com.hx.mongo.criteria.interf.IQueryCriteria;
 import com.hx.mongo.criteria.interf.IUpdateCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -37,8 +36,6 @@ public class LinkServiceImpl extends BaseServiceImpl<LinkPO> implements LinkServ
 
     @Autowired
     private LinkDao linkDao;
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
     @Autowired
     private CacheContext cacheContext;
 

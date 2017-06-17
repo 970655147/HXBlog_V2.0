@@ -7,6 +7,7 @@ import com.hx.blog_v2.domain.POVOTransferUtils;
 import com.hx.blog_v2.domain.form.BeanIdForm;
 import com.hx.blog_v2.domain.form.BlogTagSaveForm;
 import com.hx.blog_v2.domain.mapper.OneIntMapper;
+import com.hx.blog_v2.domain.po.BlogCreateTypePO;
 import com.hx.blog_v2.domain.po.BlogTagPO;
 import com.hx.blog_v2.domain.vo.BlogTagVO;
 import com.hx.blog_v2.service.interf.BaseServiceImpl;
@@ -16,7 +17,6 @@ import com.hx.blog_v2.util.BlogConstants;
 import com.hx.blog_v2.util.DateUtils;
 import com.hx.common.interf.common.Result;
 import com.hx.common.util.ResultUtils;
-import com.hx.log.util.Tools;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -47,7 +47,8 @@ public class BlogTagServiceImpl extends BaseServiceImpl<BlogTagPO> implements Bl
 
     @Override
     public Result add(BlogTagSaveForm params) {
-        if (contains(cacheContext.allBlogTags(), params.getName())) {
+        BlogCreateTypePO poByName = BizUtils.findByLogisticId(cacheContext.allBlogCreateTypes(), params.getName());
+        if (poByName != null) {
             return ResultUtils.failed("该标签已经存在 !");
         }
 
@@ -78,6 +79,10 @@ public class BlogTagServiceImpl extends BaseServiceImpl<BlogTagPO> implements Bl
         if (po == null) {
             return ResultUtils.failed("该标签不存在 !");
         }
+        BlogTagPO poByName = BizUtils.findByLogisticId(cacheContext.allBlogTags(), params.getName());
+        if ((poByName != null) && (!po.getId().equals(poByName.getId()))) {
+            return ResultUtils.failed("该标签已经存在 !");
+        }
 
         po.setName(params.getName());
         po.setSort(params.getSort());
@@ -103,7 +108,6 @@ public class BlogTagServiceImpl extends BaseServiceImpl<BlogTagPO> implements Bl
             return ResultUtils.failed("该标签下面还有 " + totalRecord + "篇博客, 请先迁移这部分博客 !");
         }
 
-        cacheContext.allBlogTags().remove(params.getId());
         po.setUpdatedAt(DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS));
         po.setDeleted(1);
         Result result = blogTagDao.update(po);
@@ -111,6 +115,7 @@ public class BlogTagServiceImpl extends BaseServiceImpl<BlogTagPO> implements Bl
             return result;
         }
 
+        cacheContext.allBlogTags().remove(params.getId());
         return ResultUtils.success(params.getId());
     }
 
@@ -131,25 +136,5 @@ public class BlogTagServiceImpl extends BaseServiceImpl<BlogTagPO> implements Bl
         return ResultUtils.success("success");
     }
 
-    // -------------------- 辅助方法 --------------------------
-
-    /**
-     * 判断当前所有的 BlogType 中 是否有名字为 name的 BlogType
-     *
-     * @param blogTypes blogTypes
-     * @param name      name
-     * @return boolean
-     * @author Jerry.X.He
-     * @date 5/21/2017 6:20 PM
-     * @since 1.0
-     */
-    private boolean contains(Map<String, BlogTagPO> blogTypes, String name) {
-        for (Map.Entry<String, BlogTagPO> entry : blogTypes.entrySet()) {
-            if (Tools.equalsIgnoreCase(entry.getValue().getName(), name)) {
-                return true;
-            }
-        }
-        return false;
-    }
 
 }

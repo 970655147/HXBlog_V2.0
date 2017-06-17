@@ -7,6 +7,7 @@ import com.hx.blog_v2.domain.dto.SessionUser;
 import com.hx.blog_v2.domain.dto.StatisticsInfo;
 import com.hx.blog_v2.domain.form.interf.UserInfoExtractor;
 import com.hx.blog_v2.domain.mapper.ToMapMapper;
+import com.hx.blog_v2.domain.po.interf.LogisticalId;
 import com.hx.json.JSONArray;
 import com.hx.json.JSONObject;
 import com.hx.log.json.JSONUtils;
@@ -293,6 +294,41 @@ public final class BizUtils {
     }
 
     /**
+     * 判断给定的 flag 对应于 mask 的标志位是否存在
+     *
+     * @param flag flag
+     * @param mask mask
+     * @return boolean
+     * @author Jerry.X.He
+     * @date 6/17/2017 12:11 PM
+     * @since 1.0
+     */
+    public static boolean flagExists(int flag, int mask) {
+        return ((flag & mask) != 0);
+    }
+
+    /**
+     * 遍历 map, 查询 id 为给定的id的元素
+     *
+     * @param map map
+     * @return java.util.List<T>
+     * @author Jerry.X.He
+     * @date 6/10/2017 4:33 PM
+     * @since 1.0
+     */
+    public static <T extends LogisticalId<ID>, ID> T findByLogisticId(Map<String, T> map, ID id) {
+        for (Map.Entry<String, T> entry : map.entrySet()) {
+            if (Objects.equals(id, entry.getValue().logisticalId())) {
+                return entry.getValue();
+            }
+        }
+
+        return null;
+    }
+
+    // ----------------- 辅助方法 -----------------------
+
+    /**
      * 根据给定的日期定位 到日期对应的记录
      *
      * @param rsByDay rsByDay
@@ -342,20 +378,6 @@ public final class BizUtils {
         if (!Tools.isEmpty(commentCntMap)) {
             dayInfo.setCommentCnt(Tools.optInt(commentCntMap, "commentCnt", 0));
         }
-    }
-
-    /**
-     * 判断给定的 flag 对应于 mask 的标志位是否存在
-     *
-     * @param flag flag
-     * @param mask mask
-     * @return boolean
-     * @author Jerry.X.He
-     * @date 6/17/2017 12:11 PM
-     * @since 1.0
-     */
-    public static boolean flagExists(int flag, int mask) {
-        return ((flag & mask) != 0);
     }
 
 

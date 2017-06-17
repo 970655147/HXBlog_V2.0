@@ -1,5 +1,7 @@
 package com.hx.blog_v2.service;
 
+import com.hx.blog_v2.context.ConstantsContext;
+import com.hx.blog_v2.context.WebContext;
 import com.hx.blog_v2.dao.interf.UserDao;
 import com.hx.blog_v2.domain.POVOTransferUtils;
 import com.hx.blog_v2.domain.dto.SessionUser;
@@ -15,9 +17,7 @@ import com.hx.blog_v2.domain.vo.AdminUserVO;
 import com.hx.blog_v2.domain.vo.Id2NameVO;
 import com.hx.blog_v2.service.interf.UserService;
 import com.hx.blog_v2.util.BlogConstants;
-import com.hx.blog_v2.context.ConstantsContext;
 import com.hx.blog_v2.util.DateUtils;
-import com.hx.blog_v2.context.WebContext;
 import com.hx.common.interf.common.Page;
 import com.hx.common.interf.common.Result;
 import com.hx.common.util.ResultUtils;
@@ -88,8 +88,17 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Result update(UserSaveForm params) {
-        UserPO po = new UserPO(null, null, params.getNickName(), params.getTitle(), params.getEmail(),
-                params.getHeadImgUrl(), params.getMotto());
+        Result getUserResult = userDao.get(Criteria.eq("user_name", params.getUserName()));
+        if (!getUserResult.isSuccess()) {
+            return getUserResult;
+        }
+        UserPO userFromDb = (UserPO) getUserResult.getData();
+        if (!userFromDb.getId().equals(params.getId())) {
+            return ResultUtils.failed("用户[" + params.getUserName() + "]已经存在 !");
+        }
+
+        UserPO po = new UserPO(null, null, params.getNickName(), params.getTitle(),
+                params.getEmail(), params.getHeadImgUrl(), params.getMotto());
         po.setId(params.getId());
         po.setUpdatedAt(DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS));
 
@@ -148,19 +157,13 @@ public class UserServiceImpl implements UserService {
 //            return ResultUtils.failed("验证码不正确 !");
 //        }
 
-        UserPO user = null;
         IQueryCriteria query = Criteria.and(Criteria.eq("user_name", params.getUserName()))
                 .add(Criteria.eq("deleted", "0"));
-        IUpdateCriteria update = Criteria.set("last_login_ip", params.getIp())
-                .add("last_login_at", DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS));
-        try {
-            user = userDao.findOne(query, BlogConstants.LOAD_ALL_CONFIG);
-        } catch (Exception e) {
-            return ResultUtils.failed("bad userName !");
+        Result getResult = userDao.get(query);
+        if (!getResult.isSuccess()) {
+            return getResult;
         }
-        if (user == null) {
-            return ResultUtils.failed("没有 这个用户");
-        }
+        UserPO user = (UserPO) getResult.getData();
         if (!encodePwd(params.getPassword(), user.getPwdSalt()).equals(user.getPassword())) {
             return ResultUtils.failed("用户名 或者密码不正确");
         }
@@ -178,10 +181,11 @@ public class UserServiceImpl implements UserService {
         WebContext.setAttributeForSession(BlogConstants.SESSION_USER, sessionUser);
         WebContext.setAttributeForSession(BlogConstants.SESSION_USER_ID, user.getId());
 
-        try {
-            userDao.updateOne(Criteria.eq("id", user.getId()), update);
-        } catch (Exception e) {
-            return ResultUtils.failed("bad userName !");
+        IUpdateCriteria update = Criteria.set("last_login_ip", params.getIp())
+                .add("last_login_at", DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS));
+        Result updateResult = userDao.update(Criteria.eq("id", user.getId()), update);
+        if (!updateResult.isSuccess()) {
+            return updateResult;
         }
         return ResultUtils.success("success");
     }

@@ -1,5 +1,6 @@
 package com.hx.blog_v2.domain.po;
 
+import com.hx.blog_v2.domain.po.interf.LogisticalId;
 import com.hx.blog_v2.util.BlogConstants;
 import com.hx.blog_v2.util.DateUtils;
 import com.hx.json.JSONObject;
@@ -21,7 +22,7 @@ import java.util.Map;
  * @version 1.0
  * @date 5/20/2017 10:03 AM
  */
-public class BlogTagPO implements JSONTransferable<BlogTagPO>, Comparable<BlogTagPO> {
+public class BlogTagPO implements JSONTransferable<BlogTagPO>, Comparable<BlogTagPO>, LogisticalId<String> {
 
     @JSONField({"id", "id"})
     private String id;
@@ -147,5 +148,10 @@ public class BlogTagPO implements JSONTransferable<BlogTagPO>, Comparable<BlogTa
         }
 
         return this.name.compareTo(o.name);
+    }
+
+    @Override
+    public String logisticalId() {
+        return name;
     }
 }

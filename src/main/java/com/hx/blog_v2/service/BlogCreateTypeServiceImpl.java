@@ -10,10 +10,11 @@ import com.hx.blog_v2.domain.po.BlogCreateTypePO;
 import com.hx.blog_v2.domain.vo.BlogCreateTypeVO;
 import com.hx.blog_v2.service.interf.BaseServiceImpl;
 import com.hx.blog_v2.service.interf.BlogCreateTypeService;
-import com.hx.blog_v2.util.*;
+import com.hx.blog_v2.util.BizUtils;
+import com.hx.blog_v2.util.BlogConstants;
+import com.hx.blog_v2.util.DateUtils;
 import com.hx.common.interf.common.Result;
 import com.hx.common.util.ResultUtils;
-import com.hx.log.util.Tools;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -41,7 +42,8 @@ public class BlogCreateTypeServiceImpl extends BaseServiceImpl<BlogCreateTypePO>
 
     @Override
     public Result add(BlogCreateTypeSaveForm params) {
-        if (contains(cacheContext.allBlogCreateTypes(), params.getName())) {
+        BlogCreateTypePO poByName = BizUtils.findByLogisticId(cacheContext.allBlogCreateTypes(), params.getName());
+        if (poByName != null) {
             return ResultUtils.failed("该创建类型已经存在 !");
         }
 
@@ -71,6 +73,10 @@ public class BlogCreateTypeServiceImpl extends BaseServiceImpl<BlogCreateTypePO>
         if (po == null) {
             return ResultUtils.failed("该创建类型不存在 !");
         }
+        BlogCreateTypePO poByName = BizUtils.findByLogisticId(cacheContext.allBlogCreateTypes(), params.getName());
+        if ((poByName != null) && (!po.getId().equals(poByName.getId()))) {
+            return ResultUtils.failed("该创建类型已经存在 !");
+        }
 
         po.setName(params.getName());
         po.setSort(params.getSort());
@@ -90,13 +96,14 @@ public class BlogCreateTypeServiceImpl extends BaseServiceImpl<BlogCreateTypePO>
         if (po == null) {
             return ResultUtils.failed("该类型不存在 !");
         }
+
+        // TODO: 6/17/2017 检查下面的博客
 //        String countSql = " select count(*) as totalRecord from blog where deleted = 0 and blog_create_type = ? ";
 //        Integer totalRecord = jdbcTemplate.queryForObject(countSql, new Object[]{params.getId()}, new OneIntMapper("totalRecord"));
 //        if (totalRecord > 0) {
 //            return ResultUtils.failed("该创建类型下面还有 " + totalRecord + "篇博客, 请先迁移这部分博客 !");
 //        }
 
-        cacheContext.allBlogCreateTypes().remove(params.getId());
         po.setUpdatedAt(DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS));
         po.setDeleted(1);
         Result result = blogCreateTypeDao.update(po);
@@ -104,6 +111,7 @@ public class BlogCreateTypeServiceImpl extends BaseServiceImpl<BlogCreateTypePO>
             return result;
         }
 
+        cacheContext.allBlogCreateTypes().remove(params.getId());
         return ResultUtils.success(params.getId());
     }
 
@@ -122,27 +130,6 @@ public class BlogCreateTypeServiceImpl extends BaseServiceImpl<BlogCreateTypePO>
         }
 
         return ResultUtils.success("success");
-    }
-
-    // -------------------- 辅助方法 --------------------------
-
-    /**
-     * 判断当前所有的 BlogType 中 是否有名字为 name的 BlogType
-     *
-     * @param blogTypes blogTypes
-     * @param name      name
-     * @return boolean
-     * @author Jerry.X.He
-     * @date 5/21/2017 6:20 PM
-     * @since 1.0
-     */
-    private boolean contains(Map<String, BlogCreateTypePO> blogTypes, String name) {
-        for (Map.Entry<String, BlogCreateTypePO> entry : blogTypes.entrySet()) {
-            if (Tools.equalsIgnoreCase(entry.getValue().getName(), name)) {
-                return true;
-            }
-        }
-        return false;
     }
 
 }

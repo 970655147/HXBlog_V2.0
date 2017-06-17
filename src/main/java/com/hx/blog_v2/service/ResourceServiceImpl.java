@@ -5,6 +5,7 @@ import com.hx.blog_v2.context.ConstantsContext;
 import com.hx.blog_v2.dao.interf.ResourceDao;
 import com.hx.blog_v2.dao.interf.RltRoleResourceDao;
 import com.hx.blog_v2.domain.POVOTransferUtils;
+import com.hx.blog_v2.domain.extractor.AdminResourceTreeInfoExtractor;
 import com.hx.blog_v2.domain.form.BeanIdForm;
 import com.hx.blog_v2.domain.form.ResourceSaveForm;
 import com.hx.blog_v2.domain.form.RoleResourceUpdateForm;
@@ -17,6 +18,7 @@ import com.hx.blog_v2.domain.vo.ResourceVO;
 import com.hx.blog_v2.domain.vo.RoleResourceVO;
 import com.hx.blog_v2.service.interf.BaseServiceImpl;
 import com.hx.blog_v2.service.interf.ResourceService;
+import com.hx.blog_v2.util.BizUtils;
 import com.hx.blog_v2.util.BlogConstants;
 import com.hx.blog_v2.util.DateUtils;
 import com.hx.common.interf.common.Result;
@@ -24,7 +26,6 @@ import com.hx.common.util.ResultUtils;
 import com.hx.json.JSONArray;
 import com.hx.json.JSONObject;
 import com.hx.log.alogrithm.tree.TreeUtils;
-import com.hx.log.alogrithm.tree.interf.TreeInfoExtractor;
 import com.hx.log.collection.CollectionUtils;
 import com.hx.log.util.Log;
 import com.hx.log.util.Tools;
@@ -61,7 +62,8 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourcePO> implements 
     @Override
     public Result add(ResourceSaveForm params) {
         Map<String, ResourcePO> resourcesById = cacheContext.allResources();
-        if (contains(resourcesById, params.getName())) {
+        ResourcePO poByName = BizUtils.findByLogisticId(resourcesById, params.getName());
+        if (poByName != null) {
             return ResultUtils.failed("该资源已经存在 !");
         }
         ResourcePO parentPo = resourcesById.get(params.getParentId());
@@ -90,6 +92,7 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourcePO> implements 
                 leaves.add(resource);
             }
         }
+
         return ResultUtils.success(leaves);
     }
 
@@ -103,20 +106,8 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourcePO> implements 
             }
         }
 
-        final boolean spreadTmp = spread;
-        JSONObject root = TreeUtils.generateTree(resources, new TreeInfoExtractor<ResourceVO>() {
-            @Override
-            public void extract(ResourceVO bean, JSONObject obj) {
-                obj.element("id", bean.getId());
-                obj.element("name", bean.getName());
-                obj.element("iconClass", bean.getIconClass());
-                obj.element("url", bean.getUrl());
-                obj.element("sort", bean.getSort());
-                obj.element("parentId", bean.getParentId());
-                obj.element("enable", bean.getEnable());
-                obj.element("spread", spreadTmp);
-            }
-        }, "children", constantsContext.resourceRootParentId);
+        JSONObject root = TreeUtils.generateTree(resources, new AdminResourceTreeInfoExtractor(spread),
+                "children", constantsContext.resourceRootParentId);
         TreeUtils.childArrayify(root, "children");
         return ResultUtils.success(root);
     }
@@ -129,20 +120,8 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourcePO> implements 
             resources.add(POVOTransferUtils.resourcePO2ResourceVO(entry.getValue()));
         }
 
-        final boolean spreadTmp = spread;
-        JSONObject root = TreeUtils.generateTree(resources, new TreeInfoExtractor<ResourceVO>() {
-            @Override
-            public void extract(ResourceVO bean, JSONObject obj) {
-                obj.element("id", bean.getId());
-                obj.element("name", bean.getName());
-                obj.element("iconClass", bean.getIconClass());
-                obj.element("url", bean.getUrl());
-                obj.element("sort", bean.getSort());
-                obj.element("parentId", bean.getParentId());
-                obj.element("enable", bean.getEnable());
-                obj.element("spread", spreadTmp);
-            }
-        }, "children", constantsContext.resourceRootParentId);
+        JSONObject root = TreeUtils.generateTree(resources, new AdminResourceTreeInfoExtractor(spread),
+                "children", constantsContext.resourceRootParentId);
         TreeUtils.childArrayify(root, "children");
         return ResultUtils.success(root);
     }
@@ -174,6 +153,10 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourcePO> implements 
         ResourcePO po = cacheContext.resource(params.getId());
         if (po == null) {
             return ResultUtils.failed("该资源不存在 !");
+        }
+        ResourcePO poByName = BizUtils.findByLogisticId(cacheContext.allResources(), params.getName());
+        if ((poByName != null) && (!po.getId().equals(poByName.getId()))) {
+            return ResultUtils.failed("该资源已经存在 !");
         }
         ResourcePO parentPo = cacheContext.resource(po.getParentId());
         if (parentPo == null) {
@@ -207,14 +190,15 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourcePO> implements 
             }
         }
 
-        try {
-            rltRoleResourceDao.deleteMany(Criteria.eq("role_id", params.getRoleId()));
-            if (!CollectionUtils.isEmpty(roleResources)) {
-                rltRoleResourceDao.insertMany(roleResources, BlogConstants.ADD_BEAN_CONFIG);
+        Result removeOldResult = rltRoleResourceDao.remove(Criteria.eq("role_id", params.getRoleId()), true);
+        if (!removeOldResult.isSuccess()) {
+            return removeOldResult;
+        }
+        if (!CollectionUtils.isEmpty(roleResources)) {
+            Result addResourceResult = rltRoleResourceDao.add(roleResources);
+            if (!addResourceResult.isSuccess()) {
+                return addResourceResult;
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResultUtils.failed(Tools.errorMsg(e));
         }
         return ResultUtils.success(params.getRoleId());
     }
@@ -225,13 +209,14 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourcePO> implements 
         if (po == null) {
             return ResultUtils.failed("该资源不存在 !");
         }
-        String countSql = " select count(*) as totalRecord from `role` where deleted = 0 and id in ( select role_id from rlt_role_resource where resource_id = ? ) ";
-        Integer totalRecord = jdbcTemplate.queryForObject(countSql, new Object[]{params.getId()}, new OneIntMapper("totalRecord"));
+        String countSql = " select count(*) as totalRecord from `role` where deleted = 0 " +
+                " and id in ( select role_id from rlt_role_resource where resource_id = ? ) ";
+        Integer totalRecord = jdbcTemplate.queryForObject(countSql, new Object[]{params.getId()},
+                new OneIntMapper("totalRecord"));
         if (totalRecord > 0) {
             return ResultUtils.failed("该资源下面还有 " + totalRecord + "个角色, 请先迁移这部分角色 !");
         }
 
-        cacheContext.allResources().remove(params.getId());
         String updatedAt = DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
         IQueryCriteria query = Criteria.eq("id", params.getId());
         IUpdateCriteria update = Criteria.set("deleted", "1").add("updated_at", updatedAt);
@@ -239,6 +224,8 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourcePO> implements 
         if (!result.isSuccess()) {
             return result;
         }
+
+        cacheContext.allResources().remove(params.getId());
         return ResultUtils.success(params.getId());
     }
 
@@ -246,7 +233,6 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourcePO> implements 
     public Result reSort() {
         Map<String, ResourcePO> resourcesById = cacheContext.allResources();
         List<ResourcePO> allResources = new ArrayList<>(resourcesById.size());
-
         for (Map.Entry<String, ResourcePO> entry : resourcesById.entrySet()) {
             allResources.add(entry.getValue());
         }
@@ -337,23 +323,5 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourcePO> implements 
         return -1;
     }
 
-    /**
-     * 判断当前所有的 Resource 中 是否有名字为 name的 BlogType
-     *
-     * @param resourcesById resourcesById
-     * @param name          name
-     * @return boolean
-     * @author Jerry.X.He
-     * @date 5/21/2017 6:20 PM
-     * @since 1.0
-     */
-    private boolean contains(Map<String, ResourcePO> resourcesById, String name) {
-        for (Map.Entry<String, ResourcePO> entry : resourcesById.entrySet()) {
-            if (Tools.equalsIgnoreCase(entry.getValue().getName(), name)) {
-                return true;
-            }
-        }
-        return false;
-    }
 
 }

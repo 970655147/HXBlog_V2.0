@@ -60,7 +60,8 @@ public class RoleServiceImpl extends BaseServiceImpl<RolePO> implements RoleServ
 
     @Override
     public Result add(RoleSaveForm params) {
-        if (contains(cacheContext.allRoles(), params.getName())) {
+        RolePO poByName = BizUtils.findByLogisticId(cacheContext.allRoles(), params.getName());
+        if (poByName != null) {
             return ResultUtils.failed("角色[" + params.getName() + "]已经存在 !");
         }
 
@@ -117,6 +118,10 @@ public class RoleServiceImpl extends BaseServiceImpl<RolePO> implements RoleServ
         if (po == null) {
             return ResultUtils.failed("该角色不存在 !");
         }
+        RolePO poByName = BizUtils.findByLogisticId(cacheContext.allRoles(), params.getName());
+        if ((poByName != null) && (!po.getId().equals(poByName.getId()))) {
+            return ResultUtils.failed("该角色已经存在 !");
+        }
 
         po.setName(params.getName());
         po.setDesc(params.getDesc());
@@ -163,13 +168,14 @@ public class RoleServiceImpl extends BaseServiceImpl<RolePO> implements RoleServ
         if (po == null) {
             return ResultUtils.failed("该角色不存在 !");
         }
-        String countSql = " select count(*) as totalRecord from `user` where deleted = 0 and id in ( select user_id from rlt_user_role where role_id = ? ) ";
-        Integer totalRecord = jdbcTemplate.queryForObject(countSql, new Object[]{params.getId()}, new OneIntMapper("totalRecord"));
+        String countSql = " select count(*) as totalRecord from `user` where deleted = 0 and " +
+                " id in ( select user_id from rlt_user_role where role_id = ? ) ";
+        Integer totalRecord = jdbcTemplate.queryForObject(countSql, new Object[]{params.getId()},
+                new OneIntMapper("totalRecord"));
         if (totalRecord > 0) {
             return ResultUtils.failed("该角色下面还有 " + totalRecord + "个用户, 请先迁移这部分用户 !");
         }
 
-        cacheContext.allRoles().remove(params.getId());
         po.setUpdatedAt(DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS));
         po.setDeleted(1);
         Result result = roleDao.update(po);
@@ -177,6 +183,7 @@ public class RoleServiceImpl extends BaseServiceImpl<RolePO> implements RoleServ
             return result;
         }
 
+        cacheContext.allRoles().remove(params.getId());
         return ResultUtils.success(params.getId());
     }
 
@@ -198,25 +205,6 @@ public class RoleServiceImpl extends BaseServiceImpl<RolePO> implements RoleServ
     }
 
     // -------------------- 辅助方法 --------------------------
-
-    /**
-     * 判断当前所有的 BlogType 中 是否有名字为 name的 BlogType
-     *
-     * @param blogTypes blogTypes
-     * @param name      name
-     * @return boolean
-     * @author Jerry.X.He
-     * @date 5/21/2017 6:20 PM
-     * @since 1.0
-     */
-    private boolean contains(Map<String, RolePO> blogTypes, String name) {
-        for (Map.Entry<String, RolePO> entry : blogTypes.entrySet()) {
-            if (Tools.equalsIgnoreCase(entry.getValue().getName(), name)) {
-                return true;
-            }
-        }
-        return false;
-    }
 
     /**
      * 收集给定的用户列表的所有用户的id

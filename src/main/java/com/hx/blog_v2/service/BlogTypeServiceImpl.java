@@ -16,7 +16,6 @@ import com.hx.blog_v2.util.BlogConstants;
 import com.hx.blog_v2.util.DateUtils;
 import com.hx.common.interf.common.Result;
 import com.hx.common.util.ResultUtils;
-import com.hx.log.util.Tools;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -47,7 +46,8 @@ public class BlogTypeServiceImpl extends BaseServiceImpl<BlogTypePO> implements 
 
     @Override
     public Result add(BlogTypeSaveForm params) {
-        if (contains(cacheContext.allBlogTypes(), params.getName())) {
+        BlogTypePO poByName = BizUtils.findByLogisticId(cacheContext.allBlogTypes(), params.getName());
+        if (poByName != null) {
             return ResultUtils.failed("该类型已经存在 !");
         }
 
@@ -78,6 +78,10 @@ public class BlogTypeServiceImpl extends BaseServiceImpl<BlogTypePO> implements 
         if (po == null) {
             return ResultUtils.failed("该类型不存在 !");
         }
+        BlogTypePO poByName = BizUtils.findByLogisticId(cacheContext.allBlogTypes(), params.getName());
+        if ((poByName != null) && (!po.getId().equals(poByName.getId()))) {
+            return ResultUtils.failed("该类型已经存在 !");
+        }
 
         po.setName(params.getName());
         po.setSort(params.getSort());
@@ -103,7 +107,6 @@ public class BlogTypeServiceImpl extends BaseServiceImpl<BlogTypePO> implements 
             return ResultUtils.failed("该类型下面还有 " + totalRecord + "篇博客, 请先迁移这部分博客 !");
         }
 
-        cacheContext.allBlogTypes().remove(params.getId());
         po.setUpdatedAt(DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS));
         po.setDeleted(1);
         Result result = blogTypeDao.update(po);
@@ -111,6 +114,7 @@ public class BlogTypeServiceImpl extends BaseServiceImpl<BlogTypePO> implements 
             return result;
         }
 
+        cacheContext.allBlogTypes().remove(params.getId());
         return ResultUtils.success(params.getId());
     }
 
@@ -131,25 +135,5 @@ public class BlogTypeServiceImpl extends BaseServiceImpl<BlogTypePO> implements 
         return ResultUtils.success("success");
     }
 
-    // -------------------- 辅助方法 --------------------------
-
-    /**
-     * 判断当前所有的 BlogType 中 是否有名字为 name的 BlogType
-     *
-     * @param blogTypes blogTypes
-     * @param name      name
-     * @return boolean
-     * @author Jerry.X.He
-     * @date 5/21/2017 6:20 PM
-     * @since 1.0
-     */
-    private boolean contains(Map<String, BlogTypePO> blogTypes, String name) {
-        for (Map.Entry<String, BlogTypePO> entry : blogTypes.entrySet()) {
-            if (Tools.equalsIgnoreCase(entry.getValue().getName(), name)) {
-                return true;
-            }
-        }
-        return false;
-    }
 
 }

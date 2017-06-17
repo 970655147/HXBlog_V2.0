@@ -15,7 +15,6 @@ import com.hx.blog_v2.domain.po.ResourcePO;
 import com.hx.blog_v2.domain.po.RltResourceInterfPO;
 import com.hx.blog_v2.domain.vo.AdminInterfVO;
 import com.hx.blog_v2.domain.vo.ResourceInterfVO;
-import com.hx.blog_v2.domain.vo.UserRoleVO;
 import com.hx.blog_v2.service.interf.BaseServiceImpl;
 import com.hx.blog_v2.service.interf.InterfService;
 import com.hx.blog_v2.util.BizUtils;
@@ -62,7 +61,8 @@ public class InterfServiceImpl extends BaseServiceImpl<InterfPO> implements Inte
 
     @Override
     public Result add(InterfSaveForm params) {
-        if (contains(cacheContext.allInterfs(), params.getName())) {
+        InterfPO poByName = BizUtils.findByLogisticId(cacheContext.allInterfs(), params.getName());
+        if (poByName != null) {
             return ResultUtils.failed("该接口已经存在 !");
         }
 
@@ -114,6 +114,10 @@ public class InterfServiceImpl extends BaseServiceImpl<InterfPO> implements Inte
         if (po == null) {
             return ResultUtils.failed("该接口不存在 !");
         }
+        InterfPO poByName = BizUtils.findByLogisticId(cacheContext.allInterfs(), params.getName());
+        if ((poByName != null) && (!po.getId().equals(poByName.getId()))) {
+            return ResultUtils.failed("该接口已经存在 !");
+        }
 
         po.setName(params.getName());
         po.setDesc(params.getDesc());
@@ -157,13 +161,14 @@ public class InterfServiceImpl extends BaseServiceImpl<InterfPO> implements Inte
         if (po == null) {
             return ResultUtils.failed("该接口不存在 !");
         }
-        String countSql = " select count(*) as totalRecord from `resource` where deleted = 0 and id in ( select resource_id from rlt_resource_interf where interf_id = ? ) ";
-        Integer totalRecord = jdbcTemplate.queryForObject(countSql, new Object[]{params.getId()}, new OneIntMapper("totalRecord"));
+        String countSql = " select count(*) as totalRecord from `resource` where deleted = 0 " +
+                " and id in ( select resource_id from rlt_resource_interf where interf_id = ? ) ";
+        Integer totalRecord = jdbcTemplate.queryForObject(countSql, new Object[]{params.getId()},
+                new OneIntMapper("totalRecord"));
         if (totalRecord > 0) {
             return ResultUtils.failed("该接口下面还有 " + totalRecord + "个资源, 请先迁移这部分资源 !");
         }
 
-        cacheContext.allInterfs().remove(params.getId());
         String updatedAt = DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
         IQueryCriteria query = Criteria.eq("id", params.getId());
         IUpdateCriteria update = Criteria.set("deleted", "1").add("updated_at", updatedAt);
@@ -171,6 +176,8 @@ public class InterfServiceImpl extends BaseServiceImpl<InterfPO> implements Inte
         if (!result.isSuccess()) {
             return result;
         }
+
+        cacheContext.allInterfs().remove(params.getId());
         return ResultUtils.success(params.getId());
     }
 
@@ -194,47 +201,6 @@ public class InterfServiceImpl extends BaseServiceImpl<InterfPO> implements Inte
 
 
     // -------------------- 辅助方法 --------------------------
-
-    /**
-     * 判断当前所有的 BlogType 中 是否有名字为 name的 BlogType
-     *
-     * @param blogTypes blogTypes
-     * @param name      name
-     * @return boolean
-     * @author Jerry.X.He
-     * @date 5/21/2017 6:20 PM
-     * @since 1.0
-     */
-    private boolean contains(Map<String, InterfPO> blogTypes, String name) {
-        for (Map.Entry<String, InterfPO> entry : blogTypes.entrySet()) {
-            if (Tools.equalsIgnoreCase(entry.getValue().getName(), name)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * 获取 用户接口 列表中给定的用户的索引
-     *
-     * @param userRoles userRoles
-     * @param id        id
-     * @return int
-     * @author Jerry.X.He
-     * @date 5/30/2017 5:43 PM
-     * @since 1.0
-     */
-    private int idxOfUser(List<UserRoleVO> userRoles, String id) {
-        int idx = 0;
-        for (UserRoleVO userRole : userRoles) {
-            if (userRole.getId().equals(id)) {
-                return idx;
-            }
-            idx++;
-        }
-
-        return -1;
-    }
 
     /**
      * 获取所有的 RolePO
