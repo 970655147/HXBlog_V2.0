@@ -24,8 +24,8 @@ public abstract class ConfigRefreshableValidator<T> implements Validator<T> {
 
     @Override
     public Result validate(T obj, Object extra) {
-        if (needRefresh() || (lastRefreshTs < constantsContext.lastRuleConfigRefreshTs())) {
-            lastRefreshTs = constantsContext.lastRuleConfigRefreshTs();
+        if (needRefresh() || (lastRefreshTs < constantsContext.ruleConfigLastRefreshTs())) {
+            lastRefreshTs = constantsContext.ruleConfigLastRefreshTs();
             refreshConfig();
         }
 

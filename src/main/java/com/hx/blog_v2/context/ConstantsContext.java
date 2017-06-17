@@ -6,6 +6,7 @@ import com.hx.blog_v2.domain.dto.ImageType;
 import com.hx.blog_v2.domain.po.SystemConfigPO;
 import com.hx.blog_v2.util.BizUtils;
 import com.hx.blog_v2.util.BlogConstants;
+import com.hx.json.JSONArray;
 import com.hx.log.util.Constants;
 import com.hx.log.util.Log;
 import com.hx.log.util.Tools;
@@ -62,10 +63,65 @@ public class ConstantsContext {
      * 维护前台首页相关配置
      */
     private Map<String, Object> frontendIdxConfig = new LinkedHashMap<>();
+
     /**
-     * 上一次规则配置的缓存的时间戳
+     * 上一次刷新系统配置的缓存的时间戳
      */
-    private long lastRuleConfigRefreshTs;
+    private long systemConfigLastRefreshTs;
+    /**
+     * 上一次刷新规则配置的缓存的时间戳
+     */
+    private long ruleConfigLastRefreshTs;
+    /**
+     * 上一次刷新首页配置的缓存的时间戳
+     */
+    private long frontIdxConfigLastRefreshTs;
+
+    /**
+     * 相关特殊的具体的常量
+     */
+    public String contextBlogId;
+    public String adviceBlogId;
+    public String selfProfileBlogId;
+    public String resourceRootParentId;
+    public int resourceLeaveLevel;
+    public String replyCommentPrefix;
+    public String replyCommentSuffix;
+    public String upPriseSense;
+    public String viewSense;
+    public int reSortStart;
+    public int reSortOffset;
+
+    public String defaultCharset;
+    public int maxCachedBlog2FloorId;
+    public int maxCachedBlogFloor2CommentId;
+    public int sesionTimeOut;
+
+    public int maxCachedUploadedImage;
+    public int maxRoleIds2ResourceIds;
+    public int maxSense2Clicked;
+    public int maxBlogId2BlogEx;
+    public int maxRequestIp2BlogVisitLog;
+
+    public String imgTypeImgShow = ImageType.IMAGE_SHOW.getType();
+    public String imgTypeHeadImg = ImageType.HEAD_IMG.getType();
+    public final Set<String> supportedImageTypes = Tools.asSet(imgTypeImgShow, imgTypeHeadImg);
+    public String imageUrlPrefix = "http://localhost/files/";
+    public int pwdSaltNums;
+    public int checkCodeLength;
+    public int checkCodeImgWidth;
+    public int checkCodeImgHeight;
+    public Color checkCodeImgBgColor = Color.WHITE;
+    public Font checkCodeImgFont = new Font("微软雅黑", Font.ITALIC, 40);
+    public String checkCodeCandidatesStr = "123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTVUWXYZ";
+    public List<Character> checkCodeCandidates = new ArrayList<>(checkCodeCandidatesStr.length());
+    public int checkCodeMinInterference = 30;
+    public int checkCodeInterferenceOff = 10;
+
+    public int maxCacheStatisticsDays;
+    public int realTimeChartTimeInterval;
+    public int maxRealTimeCacheStasticsTimes;
+    public String requestLogUriToIgnore;
 
     /**
      * 初始化 ConstantsContext
@@ -115,7 +171,10 @@ public class ConstantsContext {
         clear(refreshFlag);
         loadFullCachedConfigs(refreshFlag);
         refreshConfigs(refreshFlag);
-        lastRuleConfigRefreshTs = System.currentTimeMillis();
+
+        systemConfigLastRefreshTs = System.currentTimeMillis();
+        ruleConfigLastRefreshTs = systemConfigLastRefreshTs;
+        frontIdxConfigLastRefreshTs = systemConfigLastRefreshTs;
     }
 
     /**
@@ -131,6 +190,8 @@ public class ConstantsContext {
         clear(refreshFlag);
         loadFullCachedConfigs(refreshFlag);
         refreshConfigs(refreshFlag);
+
+        systemConfigLastRefreshTs = System.currentTimeMillis();
     }
 
     /**
@@ -146,7 +207,8 @@ public class ConstantsContext {
         clear(refreshFlag);
         loadFullCachedConfigs(refreshFlag);
         refreshConfigs(refreshFlag);
-        lastRuleConfigRefreshTs = System.currentTimeMillis();
+
+        ruleConfigLastRefreshTs = System.currentTimeMillis();
     }
 
     /**
@@ -162,6 +224,24 @@ public class ConstantsContext {
         clear(refreshFlag);
         loadFullCachedConfigs(refreshFlag);
         refreshConfigs(refreshFlag);
+
+        frontIdxConfigLastRefreshTs = System.currentTimeMillis();
+    }
+
+    /**
+     * 获取所有的 他缓存 容量信息
+     *
+     * @return com.hx.json.JSONArray
+     * @author Jerry.X.He
+     * @date 6/17/2017 4:38 PM
+     * @since 1.0
+     */
+    public JSONArray cachedCapacities() {
+        JSONArray result = new JSONArray();
+        result.add(systemConfig.size());
+        result.add(ruleConfig.size());
+        result.add(frontendIdxConfig.size());
+        return result;
     }
 
     /**
@@ -172,55 +252,82 @@ public class ConstantsContext {
      * @date 6/17/2017 9:48 AM
      * @since 1.0
      */
-    public long lastRuleConfigRefreshTs() {
-        return lastRuleConfigRefreshTs;
+    public long ruleConfigLastRefreshTs() {
+        return ruleConfigLastRefreshTs;
+    }
+
+    public long systemConfigLastRefreshTs() {
+        return systemConfigLastRefreshTs;
+    }
+
+    public long frontIdxConfigLastRefreshTs() {
+        return frontIdxConfigLastRefreshTs;
     }
 
     /**
-     * 相关特殊的具体的常量
+     * 获取给定的 type 对应的所有的 配置信息
+     *
+     * @param type type
+     * @return java.util.Map<java.lang.String,java.lang.Object>
+     * @author Jerry.X.He
+     * @date 6/17/2017 6:05 PM
+     * @since 1.0
      */
-    public String contextBlogId;
-    public String adviceBlogId;
-    public String selfProfileBlogId;
-    public String resourceRootParentId;
-    public int resourceLeaveLevel;
-    public String replyCommentPrefix;
-    public String replyCommentSuffix;
-    public String upPriseSense;
-    public String viewSense;
-    public int reSortStart;
-    public int reSortOffset;
+    public Map<String, Object> configByType(String type) {
+        ConfigType typeE = ConfigType.of(type);
 
-    public String defaultCharset;
-    public int maxCachedBlog2FloorId;
-    public int maxCachedBlogFloor2CommentId;
-    public int sesionTimeOut;
+        if (ConfigType.SYSTEM == typeE) {
+            return systemConfig;
+        } else if (ConfigType.RULE == typeE) {
+            return ruleConfig;
+        } else if (ConfigType.FRONT_INDEX_CONFIG == typeE) {
+            return frontendIdxConfig;
+        } else {
+            return Collections.emptyMap();
+        }
+    }
 
-    public int maxCachedUploadedImage;
-    public int maxRoleIds2ResourceIds;
-    public int maxSense2Clicked;
-    public int maxBlogId2BlogEx;
-    public int maxRequestIp2BlogVisitLog;
+    /**
+     * 获取所有的 给定的type下面的 key对应的配置
+     *
+     * @return java.util.Map<java.lang.String,com.hx.blog_v2.domain.po.BlogTypePO>
+     * @author Jerry.X.He
+     * @date 5/21/2017 6:13 PM
+     * @since 1.0
+     */
+    public String configByTypeAndKey(String type, String key, String defaultValue) {
+        ConfigType typeE = ConfigType.of(type);
 
-    public String imgTypeImgShow = ImageType.IMAGE_SHOW.getType();
-    public String imgTypeHeadImg = ImageType.HEAD_IMG.getType();
-    public final Set<String> supportedImageTypes = Tools.asSet(imgTypeImgShow, imgTypeHeadImg);
-    public String imageUrlPrefix = "http://localhost/files/";
-    public int pwdSaltNums;
-    public int checkCodeLength;
-    public int checkCodeImgWidth;
-    public int checkCodeImgHeight;
-    public Color checkCodeImgBgColor = Color.WHITE;
-    public Font checkCodeImgFont = new Font("微软雅黑", Font.ITALIC, 40);
-    public String checkCodeCandidatesStr = "123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTVUWXYZ";
-    public List<Character> checkCodeCandidates = new ArrayList<>(checkCodeCandidatesStr.length());
-    public int checkCodeMinInterference = 30;
-    public int checkCodeInterferenceOff = 10;
+        if (ConfigType.SYSTEM == typeE) {
+            return systemConfig(key, defaultValue);
+        } else if (ConfigType.RULE == typeE) {
+            return ruleConfig(key, defaultValue);
+        } else if (ConfigType.FRONT_INDEX_CONFIG == typeE) {
+            return frontendIdxConfig(key, defaultValue);
+        } else {
+            return defaultValue;
+        }
+    }
 
-    public int maxCacheStatisticsDays;
-    public int realTimeChartTimeInterval;
-    public int maxRealTimeCacheStasticsTimes;
-    public String requestLogUriToIgnore;
+    public String configByTypeAndKey(String type, String key) {
+        return configByTypeAndKey(type, key, null);
+    }
+
+    public boolean putConfigByTypeAndKey(String type, String key, String value) {
+        ConfigType typeE = ConfigType.of(type);
+
+        if (ConfigType.SYSTEM == typeE) {
+            putSystemConfig(key, value);
+        } else if (ConfigType.RULE == typeE) {
+            putRuleConfig(key, value);
+        } else if (ConfigType.FRONT_INDEX_CONFIG == typeE) {
+            putFrontendIdxConfig(key, value);
+        } else {
+            return false;
+        }
+
+        return true;
+    }
 
     /**
      * 获取所有的 SystemConfig

@@ -305,11 +305,14 @@ function initMenu() {
                     }
                     $("#leftNav").append(html)
                 } else {
-                    alert("请先登录 !")
+                    layer.alert("请先登录 !", function(){
+                        location.href = "/static/admin/index.html"
+                    })
                 }
             } else {
-                alert("请先登录 !")
-                location.href = "/static/admin/index.html"
+                layer.alert("请先登录 !", function(){
+                    location.href = "/static/admin/index.html"
+                })
             }
         }
     });

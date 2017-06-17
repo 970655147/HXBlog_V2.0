@@ -52,7 +52,7 @@ public class EmailValidator extends ConfigRefreshableValidator<String> implement
     public void refreshConfig() {
         minLen = Integer.parseInt(constantsContext.ruleConfig("email.min.length", "3"));
         maxLen = Integer.parseInt(constantsContext.ruleConfig("email.max.length", "64"));
-        String emailPatStr = constantsContext.ruleConfig("email.validate.pattern", "(\\w+)@(\\.\\w+)+");
+        String emailPatStr = constantsContext.ruleConfig("email.validate.pattern", "(\\w+)@(\\w+)(\\.\\w+)+");
         pattern = Pattern.compile(emailPatStr);
     }
 }

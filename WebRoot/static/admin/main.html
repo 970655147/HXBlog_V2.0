@@ -1,6 +1,6 @@
 ﻿<!DOCTYPE html>
 
-<html xmlns:th="http://www.thymeleaf.org">
+<html>
 <head>
     <meta charset="utf-8"/>
     <title>HXBlog_V2.0 后台管理系统</title>
@@ -11,8 +11,10 @@
     <link href="./css/main.css" rel="stylesheet"/>
 
     <!-- common imports -->
-    <script type="text/javascript" src="../js/jquery-1.11.1.min.js" ></script>
+    <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
     <script type="text/javascript" src="./js/commonImport.js"></script>
+    <!-- 需要放在 layui.js 前面 -->
+    <script type="text/javascript" src="./plugin/layui/lay/modules/layer.js"></script>
     <script type="text/javascript" src="./plugin/layui/layui.js"></script>
 
 </head>
@@ -66,13 +68,13 @@
                 <div class="layui-tab-item layui-show">
                     <p style="padding: 10px 15px; margin-bottom: 20px; margin-top: 10px; border:1px solid #ddd;display:inline-block;">
                         本次登陆
-                        IP :<span style="padding-left:1em;" name="loginIp" > / </span> &nbsp;&nbsp;
+                        IP :<span style="padding-left:1em;" name="loginIp"> / </span> &nbsp;&nbsp;
                         地点 :<span style="padding-left:1em;" name="loginAddr"> / </span> &nbsp;&nbsp;
                         时间 :<span style="padding-left:1em;" name="loginDate"> / </span> &nbsp;&nbsp;
                     </p>
                     <fieldset class="layui-elem-field layui-field-title">
                         <legend>今日统计信息</legend>
-                        <div class="layui-field-box" name="todayInfo" >
+                        <div class="layui-field-box" name="todayInfo">
                             <div style="display: inline-block; width: 100%;">
                                 <div class="ht-box layui-bg-blue">
                                     <p name="dayFlushViewCnt">0</p>
@@ -103,7 +105,7 @@
                     </fieldset>
                     <fieldset class="layui-elem-field layui-field-title">
                         <legend>合计统计信息</legend>
-                        <div class="layui-field-box" name="sumInfo" >
+                        <div class="layui-field-box" name="sumInfo">
                             <div style="display: inline-block; width: 100%;">
                                 <div class="ht-box layui-bg-blue">
                                     <p name="dayFlushViewCnt">0</p>

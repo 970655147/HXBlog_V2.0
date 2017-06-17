@@ -1,5 +1,6 @@
 package com.hx.blog_v2.service;
 
+import com.hx.blog_v2.context.ConstantsContext;
 import com.hx.blog_v2.dao.interf.SystemConfigDao;
 import com.hx.blog_v2.domain.form.BeanIdForm;
 import com.hx.blog_v2.domain.form.SystemConfigSaveForm;
@@ -11,7 +12,6 @@ import com.hx.blog_v2.domain.vo.SystemConfigVO;
 import com.hx.blog_v2.service.interf.BaseServiceImpl;
 import com.hx.blog_v2.service.interf.SystemConfigService;
 import com.hx.blog_v2.util.BlogConstants;
-import com.hx.blog_v2.context.ConstantsContext;
 import com.hx.blog_v2.util.DateUtils;
 import com.hx.common.interf.common.Page;
 import com.hx.common.interf.common.Result;
@@ -46,14 +46,19 @@ public class SystemConfigServiceImpl extends BaseServiceImpl<SystemConfigPO> imp
 
     @Override
     public Result add(SystemConfigSaveForm params) {
+        String val = constantsContext.configByTypeAndKey(params.getType(), params.getName());
+        if (val != null) {
+            return ResultUtils.failed(" 该配置已经存在 !");
+        }
+
         SystemConfigPO po = new SystemConfigPO(params.getName(), params.getValue(), params.getDesc(),
                 params.getType(), params.getSort(), params.getEnable());
-
-        // TODO: 6/14/2017 key 的唯一性校验
         Result result = systemConfigDao.add(po);
         if (!result.isSuccess()) {
             return result;
         }
+
+        constantsContext.putConfigByTypeAndKey(params.getType(), params.getName(), po.getValue());
         return ResultUtils.success(po.getId());
     }
 
@@ -72,29 +77,44 @@ public class SystemConfigServiceImpl extends BaseServiceImpl<SystemConfigPO> imp
 
     @Override
     public Result update(SystemConfigSaveForm params) {
+        String val = constantsContext.configByTypeAndKey(params.getType(), params.getName());
+        if (val == null) {
+            return ResultUtils.failed(" 该配置不存在 !");
+        }
+
         SystemConfigPO po = new SystemConfigPO(params.getName(), params.getValue(), params.getDesc(),
                 params.getType(), params.getSort(), params.getEnable());
         po.setId(params.getId());
         po.setUpdatedAt(DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS));
-
-        // TODO: 6/14/2017 key 的唯一性校验
         Result result = systemConfigDao.update(po);
         if (!result.isSuccess()) {
             return result;
         }
+
+        constantsContext.putConfigByTypeAndKey(params.getType(), params.getName(), po.getValue());
         return ResultUtils.success(po.getId());
     }
 
     @Override
     public Result remove(BeanIdForm params) {
+        Result getResult = systemConfigDao.get(params);
+        if(! getResult.isSuccess()) {
+            return getResult;
+        }
+        SystemConfigPO po = (SystemConfigPO) getResult.getData();
+        if(! constantsContext.configByType(po.getType()).containsKey(po.getName())) {
+            return ResultUtils.failed(" 缓存和数据库数据不一致 !");
+        }
+
         String updatedAt = DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
         IQueryCriteria query = Criteria.eq("id", params.getId());
         IUpdateCriteria update = Criteria.set("deleted", "1").add("updated_at", updatedAt);
-
         Result result = systemConfigDao.update(query, update);
         if (!result.isSuccess()) {
             return result;
         }
+
+        constantsContext.configByType(po.getType()).remove(po.getName());
         return ResultUtils.success(params.getId());
     }
 

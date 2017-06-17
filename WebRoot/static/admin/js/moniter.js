@@ -101,7 +101,7 @@ function encapStats() {
                 }
                 options.realTimeOption = encapOptions(realTimeInfo, realTimeXAxisArr)
             } else {
-                layer.msg("拉取统计数据失败 !")
+                layer.msg("拉取统计数据失败[" + resp.data + "] !")
             }
         }
     });

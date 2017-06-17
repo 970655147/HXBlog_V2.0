@@ -10,6 +10,7 @@ import com.hx.blog_v2.util.BlogConstants;
 import com.hx.blog_v2.util.DateUtils;
 import com.hx.blog_v2.util.JSONTransferableCacheListener;
 import com.hx.common.interf.cache.Cache;
+import com.hx.json.JSONArray;
 import com.hx.json.JSONObject;
 import com.hx.log.alogrithm.tree.TreeUtils;
 import com.hx.log.alogrithm.tree.interf.TreeInfoExtractor;
@@ -188,6 +189,23 @@ public class CacheContext {
     private ScheduledFuture fSecTaskFuture;
 
     /**
+     * 上一次刷新 全表缓存部分缓存的时间戳
+     */
+    private long tableCachedLastRefreshTs;
+    /**
+     * 上一次刷新 局部缓存部分缓存的时间戳
+     */
+    private long localCachedLastRefreshTs;
+    /**
+     * 上一次刷新 统计数据缓存部分缓存的时间戳
+     */
+    private long statsLastRefreshTs;
+    /**
+     * 上一次刷新 其他缓存部分缓存的时间戳
+     */
+    private long otherLastRefreshTs;
+
+    /**
      * 初始化 CacheContext
      *
      * @return void
@@ -258,6 +276,11 @@ public class CacheContext {
         clear(REFRESH_ALL_CONFIG);
         loadFullCachedResources();
         loadStastics();
+
+        tableCachedLastRefreshTs = System.currentTimeMillis();
+        localCachedLastRefreshTs = tableCachedLastRefreshTs;
+        statsLastRefreshTs = tableCachedLastRefreshTs;
+        otherLastRefreshTs = tableCachedLastRefreshTs;
     }
 
     /**
@@ -271,6 +294,7 @@ public class CacheContext {
     public void refreshTableCached() {
         clear(REFRESH_ALL_TABLE_CACHED);
         loadFullCachedResources();
+        tableCachedLastRefreshTs = System.currentTimeMillis();
     }
 
     /**
@@ -283,19 +307,7 @@ public class CacheContext {
      */
     public void refreshLocalCached() {
         clear(REFRESH_LOCAL_CACHED);
-    }
-
-    /**
-     * 刷新其他缓存的数据
-     * 一般对于业务没有影响的数据
-     *
-     * @return void
-     * @author Jerry.X.He
-     * @date 6/17/2017 12:13 PM
-     * @since 1.0
-     */
-    public void refreshOthersCached() {
-        clear(REFRESH_OTHER_CACHED);
+        localCachedLastRefreshTs = System.currentTimeMillis();
     }
 
     /**
@@ -309,18 +321,45 @@ public class CacheContext {
     public void refreshStatisticsInfo() {
         clear(REFRESH_STATISTICS_CACHED);
         loadStastics();
+        statsLastRefreshTs = System.currentTimeMillis();
     }
 
     /**
-     * 刷新系统配置
+     * 刷新其他缓存的数据
+     * 一般对于业务没有影响的数据
      *
      * @return void
      * @author Jerry.X.He
      * @date 6/17/2017 12:13 PM
      * @since 1.0
      */
-    public void refreshConfigCached() {
-        constantsContext.refresh();
+    public void refreshOthersCached() {
+        clear(REFRESH_OTHER_CACHED);
+        otherLastRefreshTs = System.currentTimeMillis();
+    }
+
+    /**
+     * 获取上一次全表 refresh 的时间戳
+     *
+     * @return long
+     * @author Jerry.X.He
+     * @date 6/17/2017 4:28 PM
+     * @since 1.0
+     */
+    public long tableCachedLastRefreshTs() {
+        return tableCachedLastRefreshTs;
+    }
+
+    public long localCachedLastRefreshTs() {
+        return localCachedLastRefreshTs;
+    }
+
+    public long statsLastRefreshTs() {
+        return statsLastRefreshTs;
+    }
+
+    public long otherLastRefreshTs() {
+        return otherLastRefreshTs;
     }
 
     /**
@@ -599,22 +638,6 @@ public class CacheContext {
     }
 
     /**
-     * 一天末尾到第二天的数据的切换
-     *
-     * @return void
-     * @author Jerry.X.He
-     * @date 6/10/2017 9:06 PM
-     * @since 1.0
-     */
-    public void switchStatistics() {
-        if (allStatistics.size() > constantsContext.maxCacheStatisticsDays) {
-            allStatistics.poll();
-        }
-        allStatistics.add(todaysStatistics);
-        todaysStatistics = new StatisticsInfo();
-    }
-
-    /**
      * 获取今天的统计数据的结果
      *
      * @return com.hx.blog_v2.domain.dto.StatisticsInfo
@@ -647,19 +670,61 @@ public class CacheContext {
     }
 
     /**
-     * 一天末尾到第二天的数据的切换
+     * 获取所有的 局部缓存的 容量信息
      *
-     * @return void
+     * @return com.hx.json.JSONArray
      * @author Jerry.X.He
-     * @date 6/10/2017 9:06 PM
+     * @date 6/17/2017 4:38 PM
      * @since 1.0
      */
-    public void switch5SecStatistics() {
-        if (all5SecStatistics.size() > constantsContext.maxRealTimeCacheStasticsTimes) {
-            all5SecStatistics.poll();
-        }
-        all5SecStatistics.add(now5SecStatistics);
-        now5SecStatistics = new StatisticsInfo();
+    public JSONArray localCachedCapacities() {
+        JSONArray result = new JSONArray();
+        result.add(blogId2BlogEx.capacity());
+        result.add(requestIp2BlogVisitLog.capacity());
+        result.add(blogIdUserInfo2Sense.capacity());
+        result.add(roles2ResourceIds.capacity());
+        result.add(resource2Interfs.capacity());
+        result.add(digest2UploadedFiles.capacity());
+        return result;
+    }
+
+    /**
+     * 获取所有的 局部缓存的 已经使用了的信息
+     *
+     * @return com.hx.json.JSONArray
+     * @author Jerry.X.He
+     * @date 6/17/2017 4:38 PM
+     * @since 1.0
+     */
+    public JSONArray localCachedUsed() {
+        JSONArray result = new JSONArray();
+        result.add(blogId2BlogEx.size());
+        result.add(requestIp2BlogVisitLog.size());
+        result.add(blogIdUserInfo2Sense.size());
+        result.add(roles2ResourceIds.size());
+        result.add(resource2Interfs.size());
+        result.add(digest2UploadedFiles.size());
+        return result;
+    }
+
+    /**
+     * 获取所有的 除了局部缓存的其他缓存 容量信息
+     *
+     * @return com.hx.json.JSONArray
+     * @author Jerry.X.He
+     * @date 6/17/2017 4:38 PM
+     * @since 1.0
+     */
+    public JSONArray cachedCapacities() {
+        JSONArray result = new JSONArray();
+        result.add(blogTypesById.size());
+        result.add(blogTagsById.size());
+        result.add(linksById.size());
+        result.add(rolesById.size());
+        result.add(resourcesById.size());
+        result.add(interfsById.size());
+        result.add(createTypesById.size());
+        return result;
     }
 
     /**
@@ -982,6 +1047,38 @@ public class CacheContext {
         for (Map.Entry<String, Object> entry : childs.entrySet()) {
             collectResultByLevel((JSONObject) entry.getValue(), childStr, result);
         }
+    }
+
+    /**
+     * 一天末尾到第二天的数据的切换
+     *
+     * @return void
+     * @author Jerry.X.He
+     * @date 6/10/2017 9:06 PM
+     * @since 1.0
+     */
+    private void switchStatistics() {
+        if (allStatistics.size() > constantsContext.maxCacheStatisticsDays) {
+            allStatistics.poll();
+        }
+        allStatistics.add(todaysStatistics);
+        todaysStatistics = new StatisticsInfo();
+    }
+
+    /**
+     * 一天末尾到第二天的数据的切换
+     *
+     * @return void
+     * @author Jerry.X.He
+     * @date 6/10/2017 9:06 PM
+     * @since 1.0
+     */
+    private void switch5SecStatistics() {
+        if (all5SecStatistics.size() > constantsContext.maxRealTimeCacheStasticsTimes) {
+            all5SecStatistics.poll();
+        }
+        all5SecStatistics.add(now5SecStatistics);
+        now5SecStatistics = new StatisticsInfo();
     }
 
     /**
