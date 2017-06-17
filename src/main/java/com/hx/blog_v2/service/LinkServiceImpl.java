@@ -1,21 +1,18 @@
 package com.hx.blog_v2.service;
 
+import com.hx.blog_v2.context.CacheContext;
 import com.hx.blog_v2.dao.interf.LinkDao;
 import com.hx.blog_v2.domain.POVOTransferUtils;
 import com.hx.blog_v2.domain.form.BeanIdForm;
 import com.hx.blog_v2.domain.form.LinkSaveForm;
-import com.hx.blog_v2.domain.mapper.AdminLinkVOMapper;
 import com.hx.blog_v2.domain.po.LinkPO;
 import com.hx.blog_v2.domain.vo.AdminLinkVO;
 import com.hx.blog_v2.service.interf.BaseServiceImpl;
 import com.hx.blog_v2.service.interf.LinkService;
 import com.hx.blog_v2.util.BlogConstants;
-import com.hx.blog_v2.util.CacheContext;
 import com.hx.blog_v2.util.DateUtils;
-import com.hx.common.interf.common.Page;
 import com.hx.common.interf.common.Result;
 import com.hx.common.util.ResultUtils;
-import com.hx.log.util.Tools;
 import com.hx.mongo.criteria.Criteria;
 import com.hx.mongo.criteria.interf.IQueryCriteria;
 import com.hx.mongo.criteria.interf.IUpdateCriteria;
@@ -50,7 +47,7 @@ public class LinkServiceImpl extends BaseServiceImpl<LinkPO> implements LinkServ
         LinkPO po = new LinkPO(params.getName(), params.getDesc(), params.getUrl(), params.getSort(), params.getEnable());
 
         Result result = linkDao.add(po);
-        if(! result.isSuccess()) {
+        if (!result.isSuccess()) {
             return result;
         }
         cacheContext.putLink(po);
@@ -62,7 +59,7 @@ public class LinkServiceImpl extends BaseServiceImpl<LinkPO> implements LinkServ
         Map<String, LinkPO> allLinks = cacheContext.allLinks();
 
         List<AdminLinkVO> list = new ArrayList<>(allLinks.size());
-        for(Map.Entry<String, LinkPO> entry : allLinks.entrySet()) {
+        for (Map.Entry<String, LinkPO> entry : allLinks.entrySet()) {
             LinkPO link = entry.getValue();
             list.add(POVOTransferUtils.linkPO2AdminLinkVO(link));
         }
@@ -76,7 +73,7 @@ public class LinkServiceImpl extends BaseServiceImpl<LinkPO> implements LinkServ
         po.setId(params.getId());
         po.setUpdatedAt(DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS));
         Result result = linkDao.update(po);
-        if(! result.isSuccess()) {
+        if (!result.isSuccess()) {
             return result;
         }
         cacheContext.putLink(po);
@@ -86,7 +83,7 @@ public class LinkServiceImpl extends BaseServiceImpl<LinkPO> implements LinkServ
     @Override
     public Result remove(BeanIdForm params) {
         LinkPO po = cacheContext.link(params.getId());
-        if(po == null) {
+        if (po == null) {
             return ResultUtils.failed("没有对应的链接 !");
         }
 
@@ -95,7 +92,7 @@ public class LinkServiceImpl extends BaseServiceImpl<LinkPO> implements LinkServ
         IQueryCriteria query = Criteria.eq("id", params.getId());
         IUpdateCriteria update = Criteria.set("deleted", "1").add("updated_at", updatedAt);
         Result result = linkDao.update(query, update);
-        if(! result.isSuccess()) {
+        if (!result.isSuccess()) {
             return result;
         }
 

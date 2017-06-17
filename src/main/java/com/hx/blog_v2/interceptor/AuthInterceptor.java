@@ -6,7 +6,7 @@ import com.hx.blog_v2.domain.dto.SessionUser;
 import com.hx.blog_v2.domain.form.BeanIdsForm;
 import com.hx.blog_v2.service.interf.ExceptionLogService;
 import com.hx.blog_v2.util.BlogConstants;
-import com.hx.blog_v2.util.WebContext;
+import com.hx.blog_v2.context.WebContext;
 import com.hx.common.interf.common.Result;
 import com.hx.common.str.AntPathMatcher;
 import com.hx.common.str.interf.PathMatcher;

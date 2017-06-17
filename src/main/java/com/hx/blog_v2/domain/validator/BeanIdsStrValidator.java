@@ -33,7 +33,7 @@ public class BeanIdsStrValidator extends ConfigRefreshableValidator<String> impl
 
         String[] idSplited = ids.split(idsSep);
         for (String id : idSplited) {
-            Result errResult = beanIdStrValidator.validate(id, extra);
+            Result errResult = beanIdStrValidator.validate(id.trim(), extra);
             if (!errResult.isSuccess()) {
                 return errResult;
             }

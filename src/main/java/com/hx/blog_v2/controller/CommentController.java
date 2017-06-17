@@ -12,7 +12,7 @@ import com.hx.blog_v2.domain.vo.CommentVO;
 import com.hx.blog_v2.service.interf.BlogCommentService;
 import com.hx.blog_v2.util.BizUtils;
 import com.hx.blog_v2.util.BlogConstants;
-import com.hx.blog_v2.util.WebContext;
+import com.hx.blog_v2.context.WebContext;
 import com.hx.common.interf.common.Result;
 import com.hx.common.result.SimplePage;
 import com.hx.common.util.ResultUtils;

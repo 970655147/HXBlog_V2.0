@@ -1,5 +1,7 @@
 package com.hx.blog_v2.service;
 
+import com.hx.blog_v2.context.CacheContext;
+import com.hx.blog_v2.context.ConstantsContext;
 import com.hx.blog_v2.dao.interf.ResourceDao;
 import com.hx.blog_v2.dao.interf.RltRoleResourceDao;
 import com.hx.blog_v2.domain.POVOTransferUtils;
@@ -16,8 +18,6 @@ import com.hx.blog_v2.domain.vo.RoleResourceVO;
 import com.hx.blog_v2.service.interf.BaseServiceImpl;
 import com.hx.blog_v2.service.interf.ResourceService;
 import com.hx.blog_v2.util.BlogConstants;
-import com.hx.blog_v2.util.CacheContext;
-import com.hx.blog_v2.util.ConstantsContext;
 import com.hx.blog_v2.util.DateUtils;
 import com.hx.common.interf.common.Result;
 import com.hx.common.util.ResultUtils;
@@ -116,7 +116,7 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourcePO> implements 
                 obj.element("enable", bean.getEnable());
                 obj.element("spread", spreadTmp);
             }
-        }, "children", BlogConstants.RESOURCE_ROOT_PARENT_ID);
+        }, "children", constantsContext.resourceRootParentId);
         TreeUtils.childArrayify(root, "children");
         return ResultUtils.success(root);
     }
@@ -142,7 +142,7 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourcePO> implements 
                 obj.element("enable", bean.getEnable());
                 obj.element("spread", spreadTmp);
             }
-        }, "children", BlogConstants.RESOURCE_ROOT_PARENT_ID);
+        }, "children", constantsContext.resourceRootParentId);
         TreeUtils.childArrayify(root, "children");
         return ResultUtils.success(root);
     }
@@ -262,9 +262,9 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourcePO> implements 
             Integer newSort = sortNow + constantsContext.reSortOffset;
             parent2Sort.put(po.getParentId(), newSort);
             if (po.getLevel() != newSort.intValue()) {
-                po.setSort(newSort);
+                po.setSort(sortNow);
                 try {
-                    resourceDao.updateOne(Criteria.eq("id", po.getId()), Criteria.set("sort", newSort));
+                    resourceDao.updateOne(Criteria.eq("id", po.getId()), Criteria.set("sort", sortNow));
                 } catch (Exception e) {
                     Log.err("update ResourcePO[" + po.getId() + "] failed !");
                 }

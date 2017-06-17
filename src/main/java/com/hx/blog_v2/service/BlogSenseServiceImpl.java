@@ -9,7 +9,7 @@ import com.hx.blog_v2.domain.po.BlogSensePO;
 import com.hx.blog_v2.service.interf.BaseServiceImpl;
 import com.hx.blog_v2.service.interf.BlogSenseService;
 import com.hx.blog_v2.util.BizUtils;
-import com.hx.blog_v2.util.CacheContext;
+import com.hx.blog_v2.context.CacheContext;
 import com.hx.common.interf.common.Result;
 import com.hx.common.util.ResultUtils;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,6 +1,6 @@
 package com.hx.blog_v2.domain.validator;
 
-import com.hx.blog_v2.util.ConstantsContext;
+import com.hx.blog_v2.context.ConstantsContext;
 import com.hx.common.interf.common.Result;
 import com.hx.common.interf.validator.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +24,8 @@ public abstract class ConfigRefreshableValidator<T> implements Validator<T> {
 
     @Override
     public Result validate(T obj, Object extra) {
-        if (needRefresh() || (lastRefreshTs < constantsContext.lastRefreshTs())) {
-            lastRefreshTs = constantsContext.lastRefreshTs();
+        if (needRefresh() || (lastRefreshTs < constantsContext.lastRuleConfigRefreshTs())) {
+            lastRefreshTs = constantsContext.lastRuleConfigRefreshTs();
             refreshConfig();
         }
 

@@ -91,9 +91,9 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
             html += '<form id="updateRoleResourceForm" class="layui-form layui-form-pane" action="/admin/role/userRole/update" method="post">';
             html += '<input type="hidden" name="roleId" value="' + roleId + '" />'
             html += '<input type="hidden" name="resourceIds" />'
-            html += '<label class="layui-form-label" style="border: none;width: 180px;" >用户名 :</label>';
-            html += '<input style="width:50%;margin: auto;color: #000!important;" name="userName"  class="layui-input" value="' + roleName + '" readonly />';
-            html += '<label class="layui-form-label" style="border: none;width: 180px;" >角色列表:</label>';
+            html += '<label class="layui-form-label" style="border: none;width: 180px;" >角色名 :</label>';
+            html += '<input style="width:50%;margin: auto;color: #000!important;" name="roleName"  class="layui-input" value="' + roleName + '" readonly />';
+            html += '<label class="layui-form-label" style="border: none;width: 180px;" >资源列表:</label>';
             html += '<div class="layui-input-block" id="resourceSelected" >'
             html += '</div>'
             html += '<div class="layui-form-item">';

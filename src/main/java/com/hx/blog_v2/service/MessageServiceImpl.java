@@ -18,7 +18,7 @@ import com.hx.blog_v2.service.interf.MessageService;
 import com.hx.blog_v2.util.BlogConstants;
 import com.hx.blog_v2.util.DateUtils;
 import com.hx.blog_v2.util.SqlUtils;
-import com.hx.blog_v2.util.WebContext;
+import com.hx.blog_v2.context.WebContext;
 import com.hx.common.interf.common.Page;
 import com.hx.common.interf.common.Result;
 import com.hx.common.util.ResultUtils;

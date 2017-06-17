@@ -1,7 +1,6 @@
 package com.hx.blog_v2.interceptor;
 
-import com.hx.blog_v2.util.WebContext;
-import org.springframework.web.servlet.ModelAndView;
+import com.hx.blog_v2.context.WebContext;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;

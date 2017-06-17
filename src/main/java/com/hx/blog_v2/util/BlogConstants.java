@@ -223,6 +223,10 @@ public final class BlogConstants {
     /**
      * 缓存的 blogId, floorId -> nextCommentId 的个数
      */
+    public static final String SESSION_TIME_OUT = "session.timeout";
+    /**
+     * 缓存的 blogId, floorId -> nextCommentId 的个数
+     */
     public static final String MAX_CACHED_UPLOADED_IMAGE = "cache.max.upload_image";
     /**
      * 缓存的 roleIds -> resourceIds 的个数

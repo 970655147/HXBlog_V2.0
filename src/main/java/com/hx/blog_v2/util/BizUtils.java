@@ -2,6 +2,7 @@ package com.hx.blog_v2.util;
 
 import com.hx.attr_handler.util.AttrHandlerConstants;
 import com.hx.attr_handler.util.AttrHandlerUtils;
+import com.hx.blog_v2.context.WebContext;
 import com.hx.blog_v2.domain.dto.SessionUser;
 import com.hx.blog_v2.domain.dto.StatisticsInfo;
 import com.hx.blog_v2.domain.form.interf.UserInfoExtractor;
@@ -341,6 +342,20 @@ public final class BizUtils {
         if (!Tools.isEmpty(commentCntMap)) {
             dayInfo.setCommentCnt(Tools.optInt(commentCntMap, "commentCnt", 0));
         }
+    }
+
+    /**
+     * 判断给定的 flag 对应于 mask 的标志位是否存在
+     *
+     * @param flag flag
+     * @param mask mask
+     * @return boolean
+     * @author Jerry.X.He
+     * @date 6/17/2017 12:11 PM
+     * @since 1.0
+     */
+    public static boolean flagExists(int flag, int mask) {
+        return ((flag & mask) != 0);
     }
 
 

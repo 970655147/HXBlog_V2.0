@@ -2,25 +2,19 @@ package com.hx.blog_v2.dao;
 
 import com.hx.blog_v2.dao.interf.BaseDaoImpl;
 import com.hx.blog_v2.dao.interf.RltRoleResourceDao;
-import com.hx.blog_v2.domain.form.BeanIdForm;
 import com.hx.blog_v2.domain.form.BeanIdsForm;
 import com.hx.blog_v2.domain.mapper.OneStringMapper;
-import com.hx.blog_v2.domain.po.RltResourceInterfPO;
 import com.hx.blog_v2.domain.po.RltRoleResourcePO;
 import com.hx.blog_v2.util.BlogConstants;
-import com.hx.blog_v2.util.CacheContext;
+import com.hx.blog_v2.context.CacheContext;
 import com.hx.blog_v2.util.MyMysqlConnectionProvider;
 import com.hx.common.interf.common.Result;
 import com.hx.common.util.ResultUtils;
 import com.hx.mongo.config.MysqlDbConfig;
-import com.hx.mongo.config.interf.DbConfig;
-import com.hx.mongo.connection.interf.ConnectionProvider;
-import com.hx.mongo.dao.MysqlBaseDaoImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Connection;
 import java.util.List;
 
 /**

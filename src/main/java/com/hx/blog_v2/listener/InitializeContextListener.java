@@ -1,8 +1,8 @@
 package com.hx.blog_v2.listener;
 
-import com.hx.blog_v2.util.CacheContext;
-import com.hx.blog_v2.util.SpringContext;
-import com.hx.blog_v2.util.WebContext;
+import com.hx.blog_v2.context.CacheContext;
+import com.hx.blog_v2.context.SpringContext;
+import com.hx.blog_v2.context.WebContext;
 import com.hx.log.util.Tools;
 
 import javax.servlet.ServletContextEvent;
@@ -26,6 +26,6 @@ public class InitializeContextListener implements ServletContextListener {
     public void contextDestroyed(ServletContextEvent servletContextEvent) {
         Tools.forceShutdown();
         CacheContext cacheContext = SpringContext.getBean(CacheContext.class);
-        cacheContext.clear();
+        cacheContext.clear(CacheContext.REFRESH_ALL_CONFIG);
     }
 }

@@ -61,7 +61,6 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
                             html += '</tr>';
                         }
                         $('#dataContent').html(html);
-                        $('#dataConsole,#dataList').attr('style', 'display:block'); //显示FiledBox
 
                         laypage({
                             cont: laypageId,
@@ -130,7 +129,7 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
         return false
     });
 
-    //输出接口，主要是两个函数，一个删除一个编辑
+    // exports
     var funcs = {
         addData: function () {
             var html = '';

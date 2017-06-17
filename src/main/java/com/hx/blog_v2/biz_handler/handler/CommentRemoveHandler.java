@@ -1,7 +1,7 @@
 package com.hx.blog_v2.biz_handler.handler;
 
 import com.hx.blog_v2.biz_handler.interf.BizContext;
-import com.hx.blog_v2.util.CacheContext;
+import com.hx.blog_v2.context.CacheContext;
 import com.hx.common.interf.common.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

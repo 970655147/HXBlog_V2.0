@@ -5,10 +5,7 @@ var $;
 initMenu()
 initStatistics()
 
-$("[name='refreshConfig']").click(function() {
-    refreshConfig();
-})
-$("#logout").click(function() {
+$("#logout").click(function () {
     logout();
 })
 
@@ -355,33 +352,16 @@ function initStatistics() {
 }
 
 /**
- * 申请刷新系统缓存
- */
-function refreshConfig() {
-    $.ajax({
-        url: "/admin/system/refreshConfig",
-        data: { },
-        success: function (resp) {
-            if (resp.success) {
-                layer.alert("刷新缓存配置成功 !")
-            } else {
-                layer.alert("刷新缓存配置出现了点问题, 请联系管理员 !")
-            }
-        }
-    })
-}
-
-/**
  * 登出系统
  */
 function logout() {
     $.ajax({
         url: "/admin/user/logout",
-        data: { },
+        data: {},
         type: "POST",
         success: function (resp) {
             if (resp.success) {
-                layer.alert("登出成功 !", function(){
+                layer.alert("登出成功 !", function () {
                     location.href = "/static/admin/index.html"
                 })
             } else {

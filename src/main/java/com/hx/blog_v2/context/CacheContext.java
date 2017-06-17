@@ -1,15 +1,20 @@
-package com.hx.blog_v2.util;
+package com.hx.blog_v2.context;
 
 import com.hx.blog_v2.dao.interf.*;
 import com.hx.blog_v2.domain.dto.StatisticsInfo;
 import com.hx.blog_v2.domain.form.BlogSenseForm;
 import com.hx.blog_v2.domain.form.BlogVisitLogForm;
 import com.hx.blog_v2.domain.po.*;
+import com.hx.blog_v2.util.BizUtils;
+import com.hx.blog_v2.util.BlogConstants;
+import com.hx.blog_v2.util.DateUtils;
+import com.hx.blog_v2.util.JSONTransferableCacheListener;
 import com.hx.common.interf.cache.Cache;
 import com.hx.json.JSONObject;
 import com.hx.log.alogrithm.tree.TreeUtils;
 import com.hx.log.alogrithm.tree.interf.TreeInfoExtractor;
 import com.hx.log.cache.mem.LRUMCache;
+import com.hx.log.cache.mem.UniverseCache;
 import com.hx.log.util.Log;
 import com.hx.log.util.Tools;
 import com.hx.mongo.criteria.Criteria;
@@ -38,6 +43,27 @@ public class CacheContext {
      * blogSense 的key 的分隔符
      */
     public static final String BLOG_SENSE_KEY_SEP = "&%$";
+    /**
+     * 刷新缓存了表的所有的数据的缓存的标志位
+     */
+    public static final int REFRESH_ALL_TABLE_CACHED = 0x0001;
+    /**
+     * 刷新部分缓存的标志位
+     */
+    public static final int REFRESH_LOCAL_CACHED = 0x0010;
+    /**
+     * 刷新统计数据的标志位
+     */
+    public static final int REFRESH_STATISTICS_CACHED = 0x0100;
+    /**
+     * 刷新其他数据的标志位
+     */
+    public static final int REFRESH_OTHER_CACHED = 0x1000;
+    /**
+     * 刷新所有的缓存的标志位
+     */
+    public static final int REFRESH_ALL_CONFIG = REFRESH_ALL_TABLE_CACHED | REFRESH_LOCAL_CACHED
+            | REFRESH_STATISTICS_CACHED | REFRESH_OTHER_CACHED;
 
     @Autowired
     private BlogTagDao blogTagDao;
@@ -101,6 +127,11 @@ public class CacheContext {
      * blogId, floorId -> 给定的博客给定的层级下一个评论索引
      */
     private Cache<String, AtomicLong> blogFloor2NextCommentId;
+    /**
+     * requestIp[_create_at_day] -> BlogVisitLogPO 的缓存
+     */
+    private Cache<String, String> forceOffLineMap;
+
     /**
      * digest -> uploadedImage 的缓存
      */
@@ -168,7 +199,7 @@ public class CacheContext {
     public void init() {
         initICache();
         loadFullCachedResources();
-        initStastics();
+        loadStastics();
         initSchedule();
     }
 
@@ -180,29 +211,39 @@ public class CacheContext {
      * @date 6/9/2017 11:16 PM
      * @since 1.0
      */
-    public void clear() {
-        blogTagsById.clear();
-        blogTypesById.clear();
-        linksById.clear();
-        rolesById.clear();
-        resourcesById.clear();
-        interfsById.clear();
-        createTypesById.clear();
+    public void clear(int clearFlag) {
+        if (BizUtils.flagExists(clearFlag, REFRESH_ALL_TABLE_CACHED)) {
+            blogTagsById.clear();
+            blogTypesById.clear();
+            linksById.clear();
+            rolesById.clear();
+            resourcesById.clear();
+            interfsById.clear();
+            createTypesById.clear();
+        }
 
-        blog2NextFloorId.clear();
-        blogFloor2NextCommentId.clear();
-        digest2UploadedFiles.clear();
-        roles2ResourceIds.clear();
-        resource2Interfs.clear();
-        blogIdUserInfo2Sense.clear();
-        blogId2BlogEx.clear();
-        requestIp2BlogVisitLog.clear();
+        if (BizUtils.flagExists(clearFlag, REFRESH_LOCAL_CACHED)) {
+            digest2UploadedFiles.clear();
+            roles2ResourceIds.clear();
+            resource2Interfs.clear();
+            blogIdUserInfo2Sense.clear();
+            blogId2BlogEx.clear();
+            requestIp2BlogVisitLog.clear();
+        }
 
-        todaysStatistics = new StatisticsInfo();
-        allStatistics.clear();
-        sumStatistics = new StatisticsInfo();
-        now5SecStatistics = new StatisticsInfo();
-        all5SecStatistics.clear();
+        if (BizUtils.flagExists(clearFlag, REFRESH_STATISTICS_CACHED)) {
+            todaysStatistics = new StatisticsInfo();
+            allStatistics.clear();
+            sumStatistics = new StatisticsInfo();
+            now5SecStatistics = new StatisticsInfo();
+            all5SecStatistics.clear();
+        }
+
+        if (BizUtils.flagExists(clearFlag, REFRESH_OTHER_CACHED)) {
+            blog2NextFloorId.clear();
+            blogFloor2NextCommentId.clear();
+            forceOffLineMap.clear();
+        }
     }
 
     /**
@@ -214,10 +255,71 @@ public class CacheContext {
      * @since 1.0
      */
     public void refresh() {
-        clear();
+        clear(REFRESH_ALL_CONFIG);
         loadFullCachedResources();
-        initStastics();
+        loadStastics();
+    }
 
+    /**
+     * 刷新全部缓存在内存中的表的映射的数据
+     *
+     * @return void
+     * @author Jerry.X.He
+     * @date 6/17/2017 12:13 PM
+     * @since 1.0
+     */
+    public void refreshTableCached() {
+        clear(REFRESH_ALL_TABLE_CACHED);
+        loadFullCachedResources();
+    }
+
+    /**
+     * 刷新局部缓存的数据
+     *
+     * @return void
+     * @author Jerry.X.He
+     * @date 6/17/2017 12:13 PM
+     * @since 1.0
+     */
+    public void refreshLocalCached() {
+        clear(REFRESH_LOCAL_CACHED);
+    }
+
+    /**
+     * 刷新其他缓存的数据
+     * 一般对于业务没有影响的数据
+     *
+     * @return void
+     * @author Jerry.X.He
+     * @date 6/17/2017 12:13 PM
+     * @since 1.0
+     */
+    public void refreshOthersCached() {
+        clear(REFRESH_OTHER_CACHED);
+    }
+
+    /**
+     * 刷新当前统计的的数据
+     *
+     * @return void
+     * @author Jerry.X.He
+     * @date 6/17/2017 12:13 PM
+     * @since 1.0
+     */
+    public void refreshStatisticsInfo() {
+        clear(REFRESH_STATISTICS_CACHED);
+        loadStastics();
+    }
+
+    /**
+     * 刷新系统配置
+     *
+     * @return void
+     * @author Jerry.X.He
+     * @date 6/17/2017 12:13 PM
+     * @since 1.0
+     */
+    public void refreshConfigCached() {
         constantsContext.refresh();
     }
 
@@ -621,6 +723,24 @@ public class CacheContext {
     }
 
     /**
+     * 增加一条强制用户下线的信息
+     *
+     * @param userId userId
+     * @param reason reason
+     * @return void
+     * @author Jerry.X.He
+     * @date 6/17/2017 1:27 PM
+     * @since 1.0
+     */
+    public void putForceOffLine(String userId, String reason) {
+        forceOffLineMap.put(userId, reason, constantsContext.sesionTimeOut);
+    }
+
+    public void removeForceOffLine(String userId, String reason) {
+        forceOffLineMap.put(userId, reason, constantsContext.sesionTimeOut);
+    }
+
+    /**
      * 根据给定的role集合, 获取所有的可以访问的资源
      *
      * @param roleIds roleIds
@@ -667,6 +787,8 @@ public class CacheContext {
     private void initICache() {
         blog2NextFloorId = new LRUMCache<>(constantsContext.maxCachedBlog2FloorId, false);
         blogFloor2NextCommentId = new LRUMCache<>(constantsContext.maxCachedBlogFloor2CommentId, false);
+        forceOffLineMap = new UniverseCache<>(true);
+
         digest2UploadedFiles = new LRUMCache<>(constantsContext.maxCachedUploadedImage, false);
         roles2ResourceIds = new LRUMCache<>(constantsContext.maxRoleIds2ResourceIds, false);
         resource2Interfs = new LRUMCache<>(constantsContext.maxRoleIds2ResourceIds, false);
@@ -739,7 +861,7 @@ public class CacheContext {
      * @date 6/10/2017 9:08 PM
      * @since 1.0
      */
-    private void initStastics() {
+    private void loadStastics() {
         List<StatisticsInfo> allDayStatisInfo = BizUtils.collectRecentlyStatisticsInfo(jdbcTemplate,
                 constantsContext.maxCacheStatisticsDays);
         allStatistics.addAll(allDayStatisInfo);

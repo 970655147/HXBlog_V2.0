@@ -1,5 +1,6 @@
-package com.hx.blog_v2.util;
+package com.hx.blog_v2.context;
 
+import com.hx.blog_v2.util.BlogConstants;
 import com.hx.json.JSONParseUtils;
 import com.hx.json.interf.JSON;
 import com.hx.log.util.Log;

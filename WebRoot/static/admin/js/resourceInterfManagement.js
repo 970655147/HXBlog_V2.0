@@ -93,9 +93,9 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
             html += '<form id="updateResourceInterfForm" class="layui-form layui-form-pane" action="/admin/role/userRole/update" method="post">';
             html += '<input type="hidden" name="resourceId" value="' + resourceId + '" />'
             html += '<input type="hidden" name="interfIds" />'
-            html += '<label class="layui-form-label" style="border: none;width: 180px;" >用户名 :</label>';
-            html += '<input style="width:50%;margin: auto;color: #000!important;" name="userName"  class="layui-input" value="' + resourceName + '" readonly />';
-            html += '<label class="layui-form-label" style="border: none;width: 180px;" >角色列表:</label>';
+            html += '<label class="layui-form-label" style="border: none;width: 180px;" >资源名 :</label>';
+            html += '<input style="width:50%;margin: auto;color: #000!important;" name="resourceName"  class="layui-input" value="' + resourceName + '" readonly />';
+            html += '<label class="layui-form-label" style="border: none;width: 180px;" >接口列表:</label>';
             html += '<div class="layui-input-block" id="interfSelected" >'
             html += '</div>'
             html += '<div class="layui-form-item">';
@@ -112,7 +112,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
              * @type {*}
              */
             $htmlDoc = $(html)
-            for(idx in interfs) {
+            for (idx in interfs) {
                 var value = interfs[idx].id
                 var text = interfs[idx].name
                 $htmlDoc.find("#interfSelected").append(

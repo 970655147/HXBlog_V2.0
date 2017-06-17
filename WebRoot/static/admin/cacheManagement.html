@@ -1,0 +1,63 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>数据列表页面</title>
+
+    <!-- common imports -->
+    <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="./js/commonImport.js"></script>
+    <script type="text/javascript" src="./plugin/layui/layui.js"></script>
+
+</head>
+<body>
+<button class="layui-btn" style="margin-left: 30px" onclick="refresh()">
+    <i class="layui-icon">&#x1002;</i> 刷新
+</button>
+
+<fieldset id="dataList" class="layui-elem-field layui-field-title sys-list-field">
+    <legend style="text-align:center;">缓存控制列表</legend>
+    <div style="margin-top: 20px" ></div>
+    <button class="layui-btn" name="refreshAll" style="margin-left: 800px" onclick="layui.funcs.refreshAll()">
+        <i class="layui-icon">&#x1002;</i> 全部刷新
+    </button>
+    <div style="margin-top: 20px" ></div>
+    <button class="layui-btn" name="allCached" style="margin-left: 500px" onclick="layui.funcs.refreshAllCached()">
+        <i class="layui-icon">&#x1002;</i> 所有缓存 ⑴
+    </button>
+    <button class="layui-btn" name="tableCached" onclick="layui.funcs.refreshTableCached()">
+        <i class="layui-icon">&#x1002;</i> 缓存的表 ①
+    </button>
+    <button class="layui-btn" name="localCached" onclick="layui.funcs.refreshLocalCached()">
+        <i class="layui-icon">&#x1002;</i> 局部缓存 ②
+    </button>
+    <button class="layui-btn" name="statisticsInfo" onclick="layui.funcs.refreshStatisticsInfo()">
+        <i class="layui-icon">&#x1002;</i> 统计数据 ③
+    </button>
+    <button class="layui-btn" name="otherCached" onclick="layui.funcs.refreshOtherCached()">
+        <i class="layui-icon">&#x1002;</i> 其他缓存 ④
+    </button>
+    <div style="margin-top: 20px" ></div>
+    <button class="layui-btn" name="refreshAllConfigured" style="margin-left: 500px" onclick="layui.funcs.refreshAllConfigured()">
+        <i class="layui-icon">&#x1002;</i> 所有配置 ⑵
+    </button>
+    <button class="layui-btn" name="systemConfig" onclick="layui.funcs.refreshSystemConfig()">
+        <i class="layui-icon">&#x1002;</i> 系统配置 ①
+    </button>
+    <button class="layui-btn" name="ruleConfig" onclick="layui.funcs.refreshRuleConfig()">
+        <i class="layui-icon">&#x1002;</i> 规则配置 ②
+    </button>
+    <button class="layui-btn" name="frontIdxConfig" onclick="layui.funcs.refreshFrontIdxConfig()">
+        <i class="layui-icon">&#x1002;</i> 主页配置 ③
+    </button>
+
+</fieldset>
+
+<script type="text/javascript">
+    layui.config({
+        base: './js/'
+    }).use('cacheManagement');
+</script>
+
+</body>
+</html>

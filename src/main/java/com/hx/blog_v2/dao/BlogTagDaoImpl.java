@@ -5,7 +5,7 @@ import com.hx.blog_v2.dao.interf.BlogTagDao;
 import com.hx.blog_v2.domain.form.BeanIdForm;
 import com.hx.blog_v2.domain.po.BlogTagPO;
 import com.hx.blog_v2.util.BlogConstants;
-import com.hx.blog_v2.util.CacheContext;
+import com.hx.blog_v2.context.CacheContext;
 import com.hx.blog_v2.util.MyMysqlConnectionProvider;
 import com.hx.common.interf.common.Result;
 import com.hx.common.util.ResultUtils;

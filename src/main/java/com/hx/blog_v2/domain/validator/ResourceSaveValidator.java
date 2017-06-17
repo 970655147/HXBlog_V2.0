@@ -24,7 +24,7 @@ public class ResourceSaveValidator implements Validator<ResourceSaveForm> {
     @Autowired
     private BeanIdStrValidator beanIdStrValidator;
     @Autowired
-    private UrlValidator urlValidator;
+    private RelativeUrlValidator relativeUrlValidator;
     @Autowired
     private SortValidator sortValidator;
     @Autowired
@@ -42,7 +42,7 @@ public class ResourceSaveValidator implements Validator<ResourceSaveForm> {
         if (!errResult.isSuccess()) {
             return errResult;
         }
-        errResult = urlValidator.validate(form.getUrl(), extra);
+        errResult = relativeUrlValidator.validate(form.getUrl(), extra);
         if (!errResult.isSuccess()) {
             return errResult;
         }

@@ -53,7 +53,7 @@
     </bean>
     <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"/>
 
-    <bean id="exceptionResolver" class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+    <bean id="exceptionResolver" class="com.hx.blog_v2.context.MyExceptionResolver">
         <property name="defaultErrorView" value="/static/e/500"/>
         <property name="exceptionMappings">
             <props>
