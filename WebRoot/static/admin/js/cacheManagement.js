@@ -119,8 +119,8 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
 
     var funcs = {
         refreshAll: function () {
-            $.ajax({
-                url: "/admin/cache/refreshAll",
+            ajax({
+                url: reqMap.cache.refreshAll,
                 data: {},
                 success: function (resp) {
                     if (resp.success) {
@@ -132,8 +132,8 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
             })
         },
         refreshAllCached: function () {
-            $.ajax({
-                url: "/admin/cache/refreshAllCached",
+            ajax({
+                url: reqMap.cache.refreshAllCached,
                 data: {},
                 success: function (resp) {
                     if (resp.success) {
@@ -145,8 +145,8 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
             })
         },
         refreshTableCached: function () {
-            $.ajax({
-                url: "/admin/cache/refreshTableCached",
+            ajax({
+                url: reqMap.cache.refreshTableCached,
                 data: {},
                 success: function (resp) {
                     if (resp.success) {
@@ -158,8 +158,8 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
             })
         },
         refreshLocalCached: function () {
-            $.ajax({
-                url: "/admin/cache/refreshLocalCached",
+            ajax({
+                url: reqMap.cache.refreshLocalCached,
                 data: {},
                 success: function (resp) {
                     if (resp.success) {
@@ -171,8 +171,8 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
             })
         },
         refreshStatisticsInfo: function () {
-            $.ajax({
-                url: "/admin/cache/refreshStatisticsInfo",
+            ajax({
+                url: reqMap.cache.refreshStatisticsInfo,
                 data: {},
                 success: function (resp) {
                     if (resp.success) {
@@ -184,8 +184,8 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
             })
         },
         refreshOtherCached: function () {
-            $.ajax({
-                url: "/admin/cache/refreshOtherCached",
+            ajax({
+                url: reqMap.cache.refreshOtherCached,
                 data: {},
                 success: function (resp) {
                     if (resp.success) {
@@ -198,8 +198,8 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
         },
 
         refreshAllConfigured: function () {
-            $.ajax({
-                url: "/admin/cache/refreshAllConfigured",
+            ajax({
+                url: reqMap.cache.refreshAllConfigured,
                 data: {},
                 success: function (resp) {
                     if (resp.success) {
@@ -211,8 +211,8 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
             })
         },
         refreshSystemConfig: function () {
-            $.ajax({
-                url: "/admin/cache/refreshSystemConfig",
+            ajax({
+                url: reqMap.cache.refreshSystemConfig,
                 data: {},
                 success: function (resp) {
                     if (resp.success) {
@@ -224,8 +224,8 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
             })
         },
         refreshRuleConfig: function () {
-            $.ajax({
-                url: "/admin/cache/refreshRuleConfig",
+            ajax({
+                url: reqMap.cache.refreshRuleConfig,
                 data: {},
                 success: function (resp) {
                     if (resp.success) {
@@ -237,8 +237,8 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
             })
         },
         refreshFrontIdxConfig: function () {
-            $.ajax({
-                url: "/admin/cache/refreshFrontIdxConfig",
+            ajax({
+                url: reqMap.cache.refreshFrontIdxConfig,
                 data: {},
                 success: function (resp) {
                     if (resp.success) {
@@ -259,8 +259,8 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
  * 填充相对比较固定的缓存的数据
  */
 function initCacheTable() {
-    $.ajax({
-        url: "/admin/system/cacheSummary",
+    ajax({
+        url: reqMap.system.cacheSummary,
         type: "GET",
         data: {},
         success: function (resp) {
@@ -319,8 +319,8 @@ function refreshCharts() {
  */
 function encapStats() {
     var options = {};
-    $.ajax({
-        url: "/admin/system/localCacheSummary",
+    ajax({
+        url: reqMap.system.localCacheSummary,
         data: {},
         async: false,
         success: function (resp) {

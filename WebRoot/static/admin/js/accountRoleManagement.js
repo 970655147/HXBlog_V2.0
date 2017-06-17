@@ -28,8 +28,8 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
         //模拟数据加载
         setTimeout(function () {
             layer.close(index);
-            $.ajax({
-                url: "/admin/role/userRole/list",
+            ajax({
+                url: reqMap.userRole.list,
                 type: "GET",
                 data: {
                     pageNow: pageNow,
@@ -81,8 +81,8 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
 
     form.on('submit(updateUserRoleSubmit)', function (data) {
         $("[name='roleIds']").attr("value", collectAttrValues($("#roleSelected .layui-form-checked"), "value", ", ", false))
-        $.ajax({
-            url: "/admin/role/userRole/update",
+        ajax({
+            url: reqMap.userRole.update,
             type: "POST",
             data: $("#updateUserRoleForm").serialize(),
             success: function (resp) {
@@ -170,8 +170,8 @@ function toggleCheckted(input) {
  * 初始化 role 列表
  */
 function initRoles() {
-    $.ajax({
-        url: "/admin/role/list",
+    ajax({
+        url: reqMap.role.list,
         type: "GET",
         data: {},
         success: function (resp) {

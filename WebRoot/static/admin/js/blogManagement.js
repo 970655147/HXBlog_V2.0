@@ -31,8 +31,8 @@ layui.define(['element', 'laypage', 'layer', 'form', 'pagesize'], function (expo
         params += "&pageNow=" + pageNow
         params += "&pageSize=" + pageSize
 
-        $.ajax({
-            url: "/admin/blog/list",
+        ajax({
+            url: reqMap.blog.adminList,
             type: "GET",
             data: params,
             success: function (resp) {
@@ -87,8 +87,8 @@ layui.define(['element', 'laypage', 'layer', 'form', 'pagesize'], function (expo
             layer.confirm('同时会删除对应评论，确定删除？', {
                 btn: ['确定', '取消'] //按钮
             }, function () {
-                $.ajax({
-                    url: '/admin/blog/remove',
+                ajax({
+                    url: reqMap.blog.remove,
                     data: {"id": id},
                     type: 'POST',
                     success: function (resp) {
@@ -116,8 +116,8 @@ layui.define(['element', 'laypage', 'layer', 'form', 'pagesize'], function (expo
  * 加载类型 和标签列表
  */
 function initTypeAndTags() {
-    $.ajax({
-        url: "/composite/typeAndTags",
+    ajax({
+        url: reqMap.composite.typeAndTags,
         type: "GET",
         success: function (resp) {
             if (resp.success) {

@@ -26,8 +26,8 @@ function contentInit() {
         },
         mounted: function () {
             var that = this
-            $.ajax({
-                url: "/composite/moodAndImages",
+            ajax({
+                url: reqMap.composite.moodAndImages,
                 data: {},
                 success: function (resp) {
                     if (resp.success) {

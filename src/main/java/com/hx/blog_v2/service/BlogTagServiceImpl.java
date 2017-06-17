@@ -7,7 +7,6 @@ import com.hx.blog_v2.domain.POVOTransferUtils;
 import com.hx.blog_v2.domain.form.BeanIdForm;
 import com.hx.blog_v2.domain.form.BlogTagSaveForm;
 import com.hx.blog_v2.domain.mapper.OneIntMapper;
-import com.hx.blog_v2.domain.po.BlogCreateTypePO;
 import com.hx.blog_v2.domain.po.BlogTagPO;
 import com.hx.blog_v2.domain.vo.BlogTagVO;
 import com.hx.blog_v2.service.interf.BaseServiceImpl;
@@ -47,7 +46,7 @@ public class BlogTagServiceImpl extends BaseServiceImpl<BlogTagPO> implements Bl
 
     @Override
     public Result add(BlogTagSaveForm params) {
-        BlogCreateTypePO poByName = BizUtils.findByLogisticId(cacheContext.allBlogCreateTypes(), params.getName());
+        BlogTagPO poByName = BizUtils.findByLogisticId(cacheContext.allBlogTags(), params.getName());
         if (poByName != null) {
             return ResultUtils.failed("该标签已经存在 !");
         }

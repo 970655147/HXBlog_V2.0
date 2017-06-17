@@ -1,6 +1,7 @@
 package com.hx.blog_v2.domain.form;
 
 import com.hx.blog_v2.domain.form.interf.UserInfoExtractor;
+import com.hx.blog_v2.util.BizUtils;
 
 /**
  * BlogSenseForm
@@ -28,6 +29,7 @@ public class BlogSenseForm implements UserInfoExtractor {
     private Integer clicked;
 
     public BlogSenseForm() {
+        this.requestIp = BizUtils.getIp();
     }
 
     public String getBlogId() {

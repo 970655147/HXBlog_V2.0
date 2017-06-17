@@ -79,8 +79,8 @@ function refreshCharts() {
 function encapStats() {
     var dayOfWeek = new Date().getDay()
     var options = {};
-    $.ajax({
-        url: "/admin/system/statsSummary",
+    ajax({
+        url: reqMap.system.statsSummary,
         data: {},
         async: false,
         success: function (resp) {

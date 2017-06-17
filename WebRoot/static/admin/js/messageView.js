@@ -37,8 +37,8 @@ layui.define(['element', 'laypage', 'layer', 'form', 'pagesize'], function (expo
         params += "&pageNow=" + pageNow
         params += "&pageSize=" + pageSize
 
-        $.ajax({
-            url: "/admin/message/list",
+        ajax({
+            url: reqMap.message.list,
             type: "GET",
             data: params,
             success: function (resp) {
@@ -84,8 +84,8 @@ layui.define(['element', 'laypage', 'layer', 'form', 'pagesize'], function (expo
 
     var addReplyDialog, addReplyConfirmDialog
     form.on('submit(addReplySubmit)', function (data) {
-        $.ajax({
-            url: "/admin/message/add",
+        ajax({
+            url: reqMap.message.add,
             type: "POST",
             data: $("#addReplyForm").serialize(),
             success: function (resp) {
@@ -162,8 +162,8 @@ layui.define(['element', 'laypage', 'layer', 'form', 'pagesize'], function (expo
  * 加载用户 角色列表
  */
 function initUserAndRoles() {
-    $.ajax({
-        url: "/composite/userAndRoles",
+    ajax({
+        url: reqMap.composite.userAndRoles,
         type: "GET",
         success: function (resp) {
             if (resp.success) {
@@ -193,8 +193,8 @@ function initUserAndRoles() {
 function consumeMessage(id) {
     if(! id2Consumed[id]) {
         id2Consumed[id] = true
-        $.ajax({
-            url: "/admin/message/markConsumed",
+        ajax({
+            url: reqMap.message.markConsumed,
             type: "POST",
             data: {id: id},
             success: function (resp) {

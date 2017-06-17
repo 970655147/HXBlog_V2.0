@@ -32,8 +32,8 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
         //模拟数据加载
         setTimeout(function () {
             layer.close(index);
-            $.ajax({
-                url: "/admin/image/list",
+            ajax({
+                url: reqMap.image.list,
                 type: "GET",
                 data: {
                     "type" : imageType,
@@ -88,8 +88,8 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
     form.on('submit(addImageSubmit)', function (data) {
         var params = $("#addImageForm").serialize()
         params += ("&type=" + imageType)
-        $.ajax({
-            url: "/admin/image/add",
+        ajax({
+            url: reqMap.image.add,
             type: "POST",
             data: params,
             success: function (resp) {
@@ -111,8 +111,8 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
     form.on('submit(updateImageSubmit)', function (data) {
         var params = $("#updateImageForm").serialize()
         params += ("&type=" + imageType)
-        $.ajax({
-            url: "/admin/image/update",
+        ajax({
+            url: reqMap.image.update,
             type: "POST",
             data: params,
             success: function (resp) {
@@ -210,8 +210,8 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
             layer.confirm('确定删除这个图片吗？', {
                 btn: ['确定', '取消'] //按钮
             }, function () {
-                $.ajax({
-                    url: '/admin/image/remove',
+                ajax({
+                    url: reqMap.image.remove,
                     data: {"id": id},
                     type: 'POST',
                     success: function (resp) {
@@ -234,8 +234,8 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
         fileUpload : function() {
             var formData = new FormData()
             formData.append("file", $("#uploadImgInput").get(0).files[0]);
-            $.ajax({
-                url: '/admin/upload/image', //上传接口
+            ajax({
+                url: reqMap.image.upload,
                 data : formData,
                 type : "POST",
                 processData : false,
@@ -255,14 +255,15 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
             $("#coverShow").attr("src", $("[name='url']").val());
         },
         reSort : function() {
-            $.ajax({
-                url: "/admin/image/reSort",
+            ajax({
+                url: reqMap.image.reSort,
                 type: "POST",
                 data: params,
                 success: function (resp) {
                     if (resp.success) {
-                        layer.alert('刷新排序成功 !');
-                        refresh()
+                        layer.alert('刷新排序成功 !', function(){
+                            refresh()
+                        });
                     } else {
                         layer.alert('刷新排序失败[' + resp.data + '], 请联系管理人员!');
                     }

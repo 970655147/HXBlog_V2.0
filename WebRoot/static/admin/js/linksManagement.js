@@ -25,8 +25,8 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
         //模拟数据加载
         setTimeout(function () {
             layer.close(index);
-            $.ajax({
-                url: "/admin/link/list",
+            ajax({
+                url: reqMap.link.list,
                 type: "GET",
                 data: { },
                 success: function (resp) {
@@ -54,21 +54,6 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
                         }
                         $('#dataContent').html(html);
                         element.init();
-
-                        $('#dataConsole,#dataList').attr('style', 'display:block'); //显示FiledBox
-                        laypage({
-                            cont: laypageId,
-                            pages: resp.data.totalPage,
-                            groups: 5,
-                            skip: true,
-                            curr: pageNow,
-                            jump: function (obj, first) {
-                                var pageNow = obj.curr;
-                                if (!first) {
-                                    initilData(pageNow);
-                                }
-                            }
-                        });
                     } else {
                         layer.alert("拉取友情链接列表失败[" + resp.data + "] !", {icon: 5});
                     }
@@ -78,8 +63,8 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
     }
 
     form.on('submit(addLinkSubmit)', function(data){
-        $.ajax({
-            url : "/admin/link/add",
+        ajax({
+            url : reqMap.link.add,
             type : "POST",
             data : $("#addLinkForm").serialize(),
             success : function (resp) {
@@ -99,8 +84,8 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
     })
 
     form.on('submit(updateLinkSubmit)', function(data){
-        $.ajax({
-            url : "/admin/link/update",
+        ajax({
+            url : reqMap.link.update,
             type : "POST",
             data : $("#updateLinkForm").serialize(),
             success : function (resp) {
@@ -193,8 +178,8 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
             layer.confirm('您确定要删除吗？', {
                 btn: ['确定', '取消'] //按钮
             }, function () {
-                $.ajax({
-                    url: '/admin/link/remove',
+                ajax({
+                    url: reqMap.link.remove,
                     data: {"id" : id },
                     type: 'POST',
                     success: function (resp) {

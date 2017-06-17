@@ -13,8 +13,8 @@ var jq = $
  * 加载header, footer
  */
 function importHeaderFooter() {
-    $.ajax({
-        url: templateUrl,
+    ajax({
+        url: reqMap.other.templateUrl,
         type: "GET",
         async: false,
         data: {},
@@ -35,8 +35,8 @@ function importHeaderFooter() {
  * 初始化头部, 右边栏, 底部
  */
 function headerFooterInit() {
-    $.ajax({
-        url: "/index/index",
+    ajax({
+        url: reqMap.index.index,
         success: function (resp) {
             if (resp.success) {
                 var data = resp.data
@@ -105,8 +105,8 @@ function headerFooterInit() {
                         sense : "good"
                     }
 
-                    $.ajax({
-                        url: "/blog/sense/sense",
+                    ajax({
+                        url: reqMap.blog.sense,
                         data: senseParams,
                         type : "POST",
                         success: function (resp) {

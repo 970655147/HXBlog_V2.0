@@ -41,7 +41,7 @@ public class BlogSenseServiceImpl extends BaseServiceImpl<BlogSensePO> implement
         if (exists) {
             po = (BlogSensePO) getSenseResult.getData();
         } else {
-            po = new BlogSensePO(params.getBlogId(), params.getName(), params.getEmail(), BizUtils.getIp(), params.getSense());
+            po = new BlogSensePO(params.getBlogId(), params.getName(), params.getEmail(), params.getRequestIp(), params.getSense());
         }
         if (params.getClicked().equals(po.getClicked())) {
             return ResultUtils.failed("wtf");

@@ -26,8 +26,8 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
         //模拟数据加载
         setTimeout(function () {
             layer.close(index);
-            $.ajax({
-                url: "/admin/interf/list",
+            ajax({
+                url: reqMap.interf.list,
                 type: "GET",
                 data: {},
                 success: function (resp) {
@@ -63,8 +63,8 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
     }
 
     form.on('submit(addMoodSubmit)', function (data) {
-        $.ajax({
-            url: "/admin/interf/add",
+        ajax({
+            url: reqMap.interf.add,
             type: "POST",
             data: $("#addInterfForm").serialize(),
             success: function (resp) {
@@ -85,8 +85,8 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
     })
 
     form.on('submit(updateMoodSubmit)', function (data) {
-        $.ajax({
-            url: "/admin/interf/update",
+        ajax({
+            url: reqMap.interf.update,
             type: "POST",
             data: $("#updateInterfForm").serialize(),
             success: function (resp) {
@@ -176,8 +176,8 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
             layer.confirm('确定删除这个接口吗？', {
                 btn: ['确定', '取消'] //按钮
             }, function () {
-                $.ajax({
-                    url: '/admin/interf/remove',
+                ajax({
+                    url: reqMap.interf.remove,
                     data: {"id": id},
                     type: 'POST',
                     success: function (resp) {
@@ -198,8 +198,8 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
             });
         },
         reSort : function() {
-            $.ajax({
-                url: "/admin/interf/reSort",
+            ajax({
+                url: reqMap.interf.reSort,
                 type: "POST",
                 data: { },
                 success: function (resp) {

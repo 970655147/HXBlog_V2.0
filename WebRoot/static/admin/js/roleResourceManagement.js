@@ -6,9 +6,6 @@
  * @date 5/24/2017 9:33 PM
  */
 
-var linkNum = 3;
-var resources = null
-
 layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
     var $ = layui.jquery;
     var layer = layui.layer;
@@ -28,8 +25,8 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
         //模拟数据加载
         setTimeout(function () {
             layer.close(index);
-            $.ajax({
-                url: "/admin/resource/roleResource/list",
+            ajax({
+                url: reqMap.roleResource.list,
                 type: "GET",
                 data: {},
                 success: function (resp) {
@@ -63,8 +60,8 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
 
     form.on('submit(updateRoleResourceSubmit)', function (data) {
         $("[name='resourceIds']").attr("value", collectAttrValues($("#resourceSelected .layui-form-checked"), "value", ", ", false))
-        $.ajax({
-            url: "/admin/resource/roleResource/update",
+        ajax({
+            url: reqMap.roleResource.update,
             type: "POST",
             data: $("#updateRoleResourceForm").serialize(),
             success: function (resp) {
@@ -152,8 +149,8 @@ function toggleCheckted(input) {
  * 初始化 role 列表
  */
 function initResources() {
-    $.ajax({
-        url: "/admin/resource/list",
+    ajax({
+        url: reqMap.resource.list,
         type: "GET",
         data: {},
         success: function (resp) {

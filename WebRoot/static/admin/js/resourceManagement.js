@@ -27,10 +27,10 @@ layui.define(['element', 'laypage', 'layer', 'form', 'tree'], function (exports)
             layer.close(index);
             var prams = getParamsFromUrl(location.href)
 
-            $.ajax({
-                url: "/admin/resource/adminTreeList",
+            ajax({
+                url: reqMap.resource.adminTreeList,
                 type: "GET",
-                async : false,
+                async: false,
                 data: prams,
                 success: function (resp) {
                     if (resp.success) {
@@ -40,7 +40,7 @@ layui.define(['element', 'laypage', 'layer', 'form', 'tree'], function (exports)
                             layui.tree({
                                 elem: '#resourceTree',
                                 nodes: root.children,
-                                click: function(node){
+                                click: function (node) {
                                     var resourceInfoForm = $("#updateResourceForm")
                                     resourceInfoForm.find("[name='id']").val(node.id)
                                     resourceInfoForm.find("[name='name']").val(node.name)
@@ -48,7 +48,7 @@ layui.define(['element', 'laypage', 'layer', 'form', 'tree'], function (exports)
                                     resourceInfoForm.find("[name='url']").val(node.url)
                                     resourceInfoForm.find("[name='sort']").val(node.sort)
                                     resourceInfoForm.find("[name='parentId']").val(node.parentId)
-                                    if(node.enable) {
+                                    if (node.enable) {
                                         var html = ''
                                         html += '<input type="radio" name="enable" value="1" title="是" checked />'
                                         html += '<input type="radio" name="enable" value="0" title="否" />'
@@ -76,8 +76,8 @@ layui.define(['element', 'laypage', 'layer', 'form', 'tree'], function (exports)
     }
 
     form.on('submit(addResourceSubmit)', function (data) {
-        $.ajax({
-            url: "/admin/resource/add",
+        ajax({
+            url: reqMap.resource.add,
             type: "POST",
             data: $("#addResourceForm").serialize(),
             success: function (resp) {
@@ -96,8 +96,8 @@ layui.define(['element', 'laypage', 'layer', 'form', 'tree'], function (exports)
     })
 
     form.on('submit(updateResourceSubmit)', function (data) {
-        $.ajax({
-            url: "/admin/resource/update",
+        ajax({
+            url: reqMap.resource.update,
             type: "POST",
             data: $("#updateResourceForm").serialize(),
             success: function (resp) {
@@ -120,9 +120,9 @@ layui.define(['element', 'laypage', 'layer', 'form', 'tree'], function (exports)
         layer.confirm('您确定要删除吗？', {
             btn: ['确定', '取消'] //按钮
         }, function () {
-            $.ajax({
-                url: '/admin/resource/remove',
-                data: {"id" : id },
+            ajax({
+                url: reqMap.resource.remove,
+                data: {"id": id},
                 type: 'POST',
                 success: function (resp) {
                     if (resp.success) {
@@ -177,11 +177,11 @@ layui.define(['element', 'laypage', 'layer', 'form', 'tree'], function (exports)
             })
             form.render('radio');  // ratio，编辑和添加的时候
         },
-        spreadAll : function() {
+        spreadAll: function () {
             var currentHref = location.href
             var newHref = new StringBuilder()
             newHref.append(currentHref)
-            if(currentHref.indexOf("?") < 0) {
+            if (currentHref.indexOf("?") < 0) {
                 newHref.append("?")
             } else {
                 newHref.append("&")
@@ -189,11 +189,11 @@ layui.define(['element', 'laypage', 'layer', 'form', 'tree'], function (exports)
             newHref.append("spread=true")
             location.href = newHref.toString()
         },
-        reSort : function() {
-            $.ajax({
-                url: "/admin/resource/reSort",
+        reSort: function () {
+            ajax({
+                url: reqMap.resource.reSort,
                 type: "POST",
-                data: { },
+                data: {},
                 success: function (resp) {
                     if (resp.success) {
                         layer.alert('刷新排序成功 !');

@@ -33,8 +33,8 @@ layui.define([ 'layer', 'form'], function (exports) {
         var checkCode = data.field.checkCode
         var ip = returnCitySN["cip"];
         var ipAddr = returnCitySN["cname"];
-        $.ajax({
-            url : "/admin/user/login",
+        ajax({
+            url : reqMap.user.login ,
             type : "POST",
             data:{
                 "userName" : userName,

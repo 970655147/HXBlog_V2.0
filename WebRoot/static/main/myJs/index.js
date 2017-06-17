@@ -21,7 +21,7 @@ function contentInit() {
         },
         mounted: function () {
             var that = this
-            $.ajax({
+            ajax({
                 url: "/index/latest",
                 success: function(resp) {
                     if(resp.success) {

@@ -22,8 +22,8 @@ layui.define(['form', 'upload', 'layer'], function (exports) {
             newPwd : hex_md5(data.field.newPwd),
             confirmNewPwd : hex_md5(data.field.confirmNewPwd)
         }
-        $.ajax({
-            url: "/admin/user/updatePwd",
+        ajax({
+            url: reqMap.user.updatePwd,
             type: "POST",
             data: prams,
             success: function (resp) {

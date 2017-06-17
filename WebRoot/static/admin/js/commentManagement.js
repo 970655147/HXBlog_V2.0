@@ -41,8 +41,8 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
         params += "&pageSize=" + pageSize
 
         layer.close(index);
-        $.ajax({
-            url: "/admin/comment/list",
+        ajax({
+            url: reqMap.comment.adminList,
             type: "GET",
             data: params,
             success: function (resp) {
@@ -92,8 +92,8 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
     }
 
     form.on('submit(addReplySubmit)', function(data){
-        $.ajax({
-            url : "/admin/comment/add",
+        ajax({
+            url : reqMap.comment.adminAdd,
             type : "POST",
             data : $("#addReplyForm").serialize(),
             success : function (resp) {
@@ -114,8 +114,8 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
     })
 
     form.on('submit(editCommentSubmit)', function(data){
-        $.ajax({
-            url : "/admin/comment/update",
+        ajax({
+            url : reqMap.comment.update,
             type : "POST",
             data : $("#updateReplyForm").serialize(),
             success : function (resp) {
@@ -134,8 +134,8 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
     //输出接口，主要是两个函数，一个删除一个编辑
     var funcs = {
         showData: function (blogName, blogId, floorId) {
-            $.ajax({
-                url: "/admin/comment/comment/list",
+            ajax({
+                url: reqMap.comment.commentsForFloor,
                 type: "GET",
                 data: {
                     "blogId" : blogId,
@@ -229,8 +229,8 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
             layer.confirm('同时会删除对应回复，确定删除？', {
                 btn: ['确定', '取消'] //按钮
             }, function () {
-                $.ajax({
-                    url: '/admin/comment/remove',
+                ajax({
+                    url: reqMap.comment.remove,
                     data: {"id" : id },
                     type: 'POST',
                     success: function (resp) {
@@ -258,8 +258,8 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
  * 加载类型 和标签列表
  */
 function initTypeAndTags() {
-    $.ajax({
-        url: "/composite/typeAndTags",
+    ajax({
+        url: reqMap.composite.typeAndTags,
         type: "GET",
         success: function (resp) {
             if (resp.success) {

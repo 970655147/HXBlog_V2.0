@@ -26,8 +26,8 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
         //模拟数据加载
         setTimeout(function () {
             layer.close(index);
-            $.ajax({
-                url: "/admin/mood/list",
+            ajax({
+                url: reqMap.mood.list,
                 type: "GET",
                 data: {
                     pageNow: currentIndex,
@@ -78,8 +78,8 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
     }
 
     form.on('submit(addMoodSubmit)', function (data) {
-        $.ajax({
-            url: "/admin/mood/add",
+        ajax({
+            url: reqMap.mood.add,
             type: "POST",
             data: $("#addMoodForm").serialize(),
             success: function (resp) {
@@ -99,8 +99,8 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
     })
 
     form.on('submit(updateMoodSubmit)', function (data) {
-        $.ajax({
-            url: "/admin/mood/update",
+        ajax({
+            url: reqMap.mood.update,
             type: "POST",
             data: $("#updateMoodForm").serialize(),
             success: function (resp) {
@@ -185,8 +185,8 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
             layer.confirm('确定删除这条心情吗？', {
                 btn: ['确定', '取消'] //按钮
             }, function () {
-                $.ajax({
-                    url: '/admin/mood/remove',
+                ajax({
+                    url: reqMap.mood.remove,
                     data: {"id": id},
                     type: 'POST',
                     success: function (resp) {

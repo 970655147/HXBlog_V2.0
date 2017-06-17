@@ -28,8 +28,8 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
         //模拟数据加载
         setTimeout(function () {
             layer.close(index);
-            $.ajax({
-                url: "/admin/interf/resourceInterf/list",
+            ajax({
+                url: reqMap.resourceInterf.list,
                 type: "GET",
                 data: {},
                 success: function (resp) {
@@ -65,8 +65,8 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
 
     form.on('submit(updateRoleResourceSubmit)', function (data) {
         $("[name='interfIds']").attr("value", collectAttrValues($("#interfSelected .layui-form-checked"), "value", ", ", false))
-        $.ajax({
-            url: "/admin/interf/resourceInterf/update",
+        ajax({
+            url: reqMap.resourceInterf.update,
             type: "POST",
             data: $("#updateResourceInterfForm").serialize(),
             success: function (resp) {
@@ -151,11 +151,11 @@ function toggleCheckted(input) {
 }
 
 /**
- * 初始化 role 列表
+ * 初始化 interf 列表
  */
 function initInterfs() {
-    $.ajax({
-        url: "/admin/interf/list",
+    ajax({
+        url: reqMap.interf.list,
         type: "GET",
         data: {},
         success: function (resp) {

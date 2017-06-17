@@ -89,8 +89,8 @@ function contentInit() {
                 this.userInfo.headImgUrl = $(event.target).find("option:selected").attr("value")
             },
             initBlogInfo: function (that) {
-                $.ajax({
-                    url: "/blog/get",
+                ajax({
+                    url: reqMap.blog.get,
                     data: params,
                     success: function (resp) {
                         if (resp.success) {
@@ -119,8 +119,8 @@ function contentInit() {
                                 senseParams.sense = "good"
                                 senseParams.clicked = isPrise ? 1 : 0
 
-                                $.ajax({
-                                    url: "/blog/sense/sense",
+                                ajax({
+                                    url: reqMap.blog.sense,
                                     data: senseParams,
                                     type: "POST",
                                     success: function (resp) {
@@ -137,8 +137,8 @@ function contentInit() {
                 that.updateComment(that.getUrlWithPage(1))
             },
             initHeadImages: function (that) {
-                $.ajax({
-                    url: "/image/headImgList",
+                ajax({
+                    url: reqMap.image.headImgList,
                     data: {},
                     type: "GET",
                     success: function (resp) {
@@ -189,8 +189,8 @@ function contentInit() {
                     return;
                 }
 
-                $.ajax({
-                    url: "/comment/add",
+                ajax({
+                    url: reqMap.comment.add,
                     data: params,
                     type: "POST",
                     success: function (resp) {
@@ -264,8 +264,8 @@ function contentInit() {
                 var params = getParamsFromUrl(url)
 
                 var loadCommentIdx = layer.load(0, {shade: false})
-                $.ajax({
-                    url: "/comment/list",
+                ajax({
+                    url: reqMap.comment.list,
                     data: params,
                     success: function (resp) {
                         if (resp.success) {

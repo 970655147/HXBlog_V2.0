@@ -211,4 +211,39 @@ function trimIfExceed(str, len, placeholder) {
     return str.substr(0, len - placeholder.length) + placeholder
 }
 
+/**
+ * 自己封装的一层 发送 ajax, 主要用于 处理一些 发送请求之前之后, 都要处理的业务
+ * @param config
+ */
+function ajax(config) {
+    var beforeSend = function() {
+        console.log(config.url)
+    }
+
+    ajax0(config, beforeSend)
+}
+
+function ajax0(config, beforeSend, beforeSucc, afterSucc, beforeEx, afterEx) {
+    var oldBeforeFunc = config.beforeSend
+    var oldSuccFunc = config.success
+    var oldErrorFunc = config.error
+    config.beforeSend = function(xhr) {
+        beforeSend && beforeSend(xhr)
+        oldBeforeFunc && oldBeforeFunc(xhr)
+    }
+    config.success = function(resp) {
+        beforeSucc && beforeSucc(resp)
+        oldSuccFunc && oldSuccFunc(resp)
+        afterSucc && afterSucc(resp)
+    }
+    config.error = function(xhr, errMsg, ex) {
+        beforeEx && beforeEx(xhr, errMsg, ex)
+        oldErrorFunc && oldErrorFunc(xhr, errMsg, ex)
+        afterEx && afterEx(xhr, errMsg, ex)
+    }
+
+    $.ajax(config);
+}
+
+
 

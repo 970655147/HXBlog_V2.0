@@ -106,7 +106,7 @@ public class ConstantsContext {
     public String imgTypeImgShow = ImageType.IMAGE_SHOW.getType();
     public String imgTypeHeadImg = ImageType.HEAD_IMG.getType();
     public final Set<String> supportedImageTypes = Tools.asSet(imgTypeImgShow, imgTypeHeadImg);
-    public String imageUrlPrefix = "http://localhost/files/";
+    public String imageUrlPrefix;
     public int pwdSaltNums;
     public int checkCodeLength;
     public int checkCodeImgWidth;

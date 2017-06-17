@@ -32,8 +32,8 @@ layui.define(['element', 'laypage', 'layer', 'form', 'pagesize'], function (expo
         params += "&pageNow=" + pageNow
         params += "&pageSize=" + pageSize
 
-        $.ajax({
-            url: "/admin/message/adminList",
+        ajax({
+            url: reqMap.message.list,
             type: "GET",
             data: params,
             success: function (resp) {
@@ -81,8 +81,8 @@ layui.define(['element', 'laypage', 'layer', 'form', 'pagesize'], function (expo
 
     var addReplyDialog, addReplyConfirmDialog
     form.on('submit(addReplySubmit)', function(data){
-        $.ajax({
-            url : "/admin/message/add",
+        ajax({
+            url : reqMap.message.add,
             type : "POST",
             data : $("#addReplyForm").serialize(),
             success : function (resp) {
@@ -103,8 +103,8 @@ layui.define(['element', 'laypage', 'layer', 'form', 'pagesize'], function (expo
     })
 
     form.on('submit(editMessageSubmit)', function(data){
-        $.ajax({
-            url : "/admin/message/update",
+        ajax({
+            url : reqMap.message.update,
             type : "POST",
             data : $("#editMessageForm").serialize(),
             success : function (resp) {
@@ -199,8 +199,8 @@ layui.define(['element', 'laypage', 'layer', 'form', 'pagesize'], function (expo
             layer.confirm('确定删除该消息？', {
                 btn: ['确定', '取消'] //按钮
             }, function () {
-                $.ajax({
-                    url: '/admin/message/remove',
+                ajax({
+                    url: reqMap.message.remove,
                     data: {"id" : id },
                     type: 'POST',
                     success: function (resp) {
@@ -225,8 +225,8 @@ layui.define(['element', 'laypage', 'layer', 'form', 'pagesize'], function (expo
  * 加载用户 角色列表
  */
 function initUserAndRoles() {
-    $.ajax({
-        url: "/composite/userAndRoles",
+    ajax({
+        url: reqMap.composite.userAndRoles,
         type: "GET",
         success: function (resp) {
             if (resp.success) {

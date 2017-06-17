@@ -13,9 +13,7 @@ var jses = [
     "./js/modernizr.custom.js",
     "./js/time.js",
     "./js/xiaolongbao.js",
-    "./js/myjs.js",
-    "../myJs/constants.js",
-    "../myJs/stringBuilder.js"
+    "./js/myjs.js"
 ]
 
 // 处理导入 css, js 的逻辑

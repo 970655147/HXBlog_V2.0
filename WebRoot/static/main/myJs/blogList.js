@@ -28,8 +28,8 @@ function contentInit() {
         mounted: function () {
             var that = this
             that.params = params
-            $.ajax({
-                url: "/blog/list",
+            ajax({
+                url: reqMap.blog.list,
                 data: params,
                 success: function (resp) {
                     if (resp.success) {

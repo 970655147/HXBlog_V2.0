@@ -23,8 +23,8 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
         //模拟数据加载
         setTimeout(function () {
             layer.close(index);
-            $.ajax({
-                url: "/admin/blog/createType/list",
+            ajax({
+                url: reqMap.createType.list,
                 type: "GET",
                 data: {},
                 success: function (resp) {
@@ -56,8 +56,8 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
 
     form.on('submit(addCreateTypeSubmit)', function (data) {
         var params = $("#addCreateTypeForm").serialize()
-        $.ajax({
-            url: "/admin/blog/createType/add",
+        ajax({
+            url: reqMap.createType.add,
             type: "POST",
             data: params,
             success: function (resp) {
@@ -78,8 +78,8 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
 
     form.on('submit(updateCreateTypeSubmit)', function (data) {
         var params = $("#updateCreateTypeForm").serialize()
-        $.ajax({
-            url: "/admin/blog/createType/update",
+        ajax({
+            url: reqMap.createType.update,
             type: "POST",
             data: params,
             success: function (resp) {
@@ -170,8 +170,8 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
             layer.confirm('确定删除这个创建类型吗？', {
                 btn: ['确定', '取消'] //按钮
             }, function () {
-                $.ajax({
-                    url: '/admin/blog/createType/remove',
+                ajax({
+                    url: reqMap.createType.remove,
                     data: {"id": id},
                     type: 'POST',
                     success: function (resp) {
@@ -194,8 +194,8 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
         fileUpload : function() {
             var formData = new FormData()
             formData.append("file", $("#uploadImgInput").get(0).files[0]);
-            $.ajax({
-                url: '/admin/upload/image', //上传接口
+            ajax({
+                url: reqMap.image.upload, //上传接口
                 data : formData,
                 type : "POST",
                 processData : false,
@@ -215,8 +215,8 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
             $("#coverShow").attr("src", $("[name='imgUrl']").val());
         },
         reSort : function() {
-            $.ajax({
-                url: "/admin/blog/createType/reSort",
+            ajax({
+                url: reqMap.createType.reSort,
                 type: "POST",
                 data: { },
                 success: function (resp) {

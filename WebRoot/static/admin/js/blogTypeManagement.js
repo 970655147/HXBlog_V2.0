@@ -18,13 +18,13 @@ layui.define(['layer', 'form'], function (exports) {
         //模拟数据加载
         setTimeout(function () {
             layer.close(index);
-            $.ajax({
-                url: "/admin/type/list",
+            ajax({
+                url: reqMap.type.list,
                 type: "GET",
                 data: {},
                 success: function (resp) {
                     var html = '';
-                    if(resp.success) {
+                    if (resp.success) {
                         for (var i in resp.data) {
                             var item = resp.data[i];
                             html += '<tr>';
@@ -46,12 +46,12 @@ layui.define(['layer', 'form'], function (exports) {
         }, 500);
     }
 
-    form.on('submit(addTypeSubmit)', function(data){
-        $.ajax({
-            url : "/admin/type/add",
-            type : "POST",
-            data :  $("#addTypeForm").serialize(),
-            success : function (resp) {
+    form.on('submit(addTypeSubmit)', function (data) {
+        ajax({
+            url: reqMap.tag.add,
+            type: "POST",
+            data: $("#addTypeForm").serialize(),
+            success: function (resp) {
                 if (resp.success) {
                     layer.alert('添加类型成功!', {
                         closeBtn: 0,
@@ -68,12 +68,12 @@ layui.define(['layer', 'form'], function (exports) {
         return false;
     })
 
-    form.on('submit(updateTypeSubmit)', function(data){
-        $.ajax({
-            url : "/admin/type/update",
-            type : "POST",
-            data : $("#updateTypeForm").serialize(),
-            success : function (resp) {
+    form.on('submit(updateTypeSubmit)', function (data) {
+        ajax({
+            url: reqMap.tag.update,
+            type: "POST",
+            data: $("#updateTypeForm").serialize(),
+            success: function (resp) {
                 if (resp.success) {
                     layer.alert('更新类型成功!', {
                         closeBtn: 0,
@@ -143,11 +143,11 @@ layui.define(['layer', 'form'], function (exports) {
             layer.confirm('您确定要删除吗？', {
                 btn: ['确定', '取消'] //按钮
             }, function () {
-                $.ajax({
-                    url: '/admin/type/remove',
+                ajax({
+                    url: reqMap.type.remove,
                     type: 'POST',
                     data: {
-                        "id" : id
+                        "id": id
                     },
                     success: function (resp) {
                         if (resp.success) {
@@ -166,11 +166,11 @@ layui.define(['layer', 'form'], function (exports) {
 
             });
         },
-        reSort : function() {
-            $.ajax({
-                url: "/admin/type/reSort",
+        reSort: function () {
+            ajax({
+                url: reqMap.type.reSort,
                 type: "POST",
-                data: { },
+                data: {},
                 success: function (resp) {
                     if (resp.success) {
                         layer.alert('刷新排序成功 !');

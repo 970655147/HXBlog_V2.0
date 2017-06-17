@@ -16,8 +16,8 @@ initTypeAndTags()
 queryParams = getParamsFromUrl(window.location.href)
 var currentBlogId = queryParams.id
 if (!isEmpty(currentBlogId)) {
-    $.ajax({
-        url: "/admin/blog/get",
+    ajax({
+        url: reqMap.blog.adminGet,
         type: "GET",
         data: {"id": currentBlogId},
         success: function (resp) {
@@ -61,9 +61,9 @@ layui.define(['form', 'upload', 'layer'], function (exports) {
     form.on('submit(submitBlog)', function (data) {
         $("[name='content']").attr("value", ue.getContent())
         $("[name='blogTagIds']").attr("value", collectAttrValues($("#tagSelected .layui-form-checked"), "value", ", ", false))
-        var saveUrl = (isEmpty(currentBlogId)) ? "/admin/blog/add" : "/admin/blog/update"
+        var saveUrl = (isEmpty(currentBlogId)) ? reqMap.blog.add : reqMap.blog.update
 
-        $.ajax({
+        ajax({
             url: saveUrl,
             type: "POST",
             data: $("#addBlogForm").serialize(),
@@ -85,8 +85,8 @@ layui.define(['form', 'upload', 'layer'], function (exports) {
     });
 
     form.on('submit(addTypeSubmit)', function (data) {
-        $.ajax({
-            url: "/admin/type/add",
+        ajax({
+            url: reqMap.type.add,
             type: "POST",
             data: $("#addTypeForm").serialize(),
             success: function (resp) {
@@ -107,8 +107,8 @@ layui.define(['form', 'upload', 'layer'], function (exports) {
     })
 
     form.on('submit(addTagSubmit)', function (data) {
-        $.ajax({
-            url: "/admin/tag/add",
+        ajax({
+            url: reqMap.tag.add,
             type: "POST",
             data: $("#addTagForm").serialize(),
             success: function (resp) {
@@ -185,6 +185,8 @@ layui.define(['form', 'upload', 'layer'], function (exports) {
             html += '<form id="addTypeForm" class="layui-form layui-form-pane" action="/admin/type/add" method="post" >';
             html += '<label class="layui-form-label" style="border: none" name="content" >类别名称:</label>';
             html += '<input style="width:87%;margin: auto;color: #000!important;" name="name"  class="layui-input" >';
+            html += '<label class="layui-form-label" style="border: none" name="content" >排序:</label>';
+            html += '<input style="width:87%;margin: auto;color: #000!important;" name="sort"  class="layui-input" >';
             html += '<div class="layui-form-item">';
             html += '<div class="layui-input-inline" style="margin:10px auto 0 auto;display: block;float: none;">';
             html += '<button class="layui-btn" id="submit" lay-submit="" lay-filter="addTypeSubmit">添加</button>';
@@ -205,6 +207,8 @@ layui.define(['form', 'upload', 'layer'], function (exports) {
             html += '<form id="addTagForm" class="layui-form layui-form-pane" action="/admin/tag/add" method="post >';
             html += '<label class="layui-form-label" style="border: none" name="content" >标签名称:</label>';
             html += '<input style="width:87%;margin: auto;color: #000!important;" name="name"  class="layui-input" >';
+            html += '<label class="layui-form-label" style="border: none" name="content" >排序:</label>';
+            html += '<input style="width:87%;margin: auto;color: #000!important;" name="sort"  class="layui-input" >';
             html += '<div class="layui-form-item">';
             html += '<div class="layui-input-inline" style="margin:10px auto 0 auto;display: block;float: none;">';
             html += '<button class="layui-btn" id="submit" lay-submit="" lay-filter="addTagSubmit">添加</button>';
@@ -242,8 +246,8 @@ layui.define(['form', 'upload', 'layer'], function (exports) {
  * 初始化类型, 标签列表
  */
 function initTypeAndTags() {
-    $.ajax({
-        url: "/composite/typeAndTags",
+    ajax({
+        url: reqMap.composite.typeAndTags,
         type: "GET",
         async: false,
         success: function (resp) {

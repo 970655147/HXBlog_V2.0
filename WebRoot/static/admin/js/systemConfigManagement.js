@@ -30,8 +30,8 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
         //模拟数据加载
         setTimeout(function () {
             layer.close(index);
-            $.ajax({
-                url: "/admin/config/list",
+            ajax({
+                url: reqMap.config.list,
                 type: "GET",
                 data: {
                     "type": configType,
@@ -86,8 +86,8 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
     form.on('submit(addConfigSubmit)', function (data) {
         var params = $("#addConfigForm").serialize()
         params += ("&type=" + configType)
-        $.ajax({
-            url: "/admin/config/add",
+        ajax({
+            url: reqMap.config.add,
             type: "POST",
             data: params,
             success: function (resp) {
@@ -109,8 +109,8 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
     form.on('submit(updateConfigSubmit)', function (data) {
         var params = $("#updateConfigForm").serialize()
         params += ("&type=" + configType)
-        $.ajax({
-            url: "/admin/config/update",
+        ajax({
+            url: reqMap.config.update,
             type: "POST",
             data: params,
             success: function (resp) {
@@ -204,8 +204,8 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
             layer.confirm('确定删除这个系统配置吗？', {
                 btn: ['确定', '取消'] //按钮
             }, function () {
-                $.ajax({
-                    url: '/admin/config/remove',
+                ajax({
+                    url: reqMap.config.remove,
                     data: {"id": id},
                     type: 'POST',
                     success: function (resp) {
@@ -228,8 +228,8 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
         fileUpload: function () {
             var formData = new FormData()
             formData.append("file", $("#uploadImgInput").get(0).files[0]);
-            $.ajax({
-                url: '/admin/upload/image', //上传接口
+            ajax({
+                url: reqMap.image.upload, //上传接口
                 data: formData,
                 type: "POST",
                 processData: false,
@@ -249,13 +249,13 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
             $("#coverShow").attr("src", $("[name='url']").val());
         },
         reSort: function () {
-            $.ajax({
-                url: "/admin/config/reSort",
+            ajax({
+                url: reqMap.config.reSort,
                 type: "POST",
                 data: params,
                 success: function (resp) {
                     if (resp.success) {
-                        layer.alert('刷新排序成功 !', function() {
+                        layer.alert('刷新排序成功 !', function () {
                             refresh()
                         });
                     } else {

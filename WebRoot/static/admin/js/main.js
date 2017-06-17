@@ -276,8 +276,8 @@ function switchTab($, element, title, url, id) {
  * 初始化菜单
  */
 function initMenu() {
-    $.ajax({
-        url: "/admin/index/menus",
+    ajax({
+        url: reqMap.index.adminMenu,
         data: {},
         async: false,
         type: "GET",
@@ -322,8 +322,8 @@ function initMenu() {
  * 初始化首页统计数据
  */
 function initStatistics() {
-    $.ajax({
-        url: "/admin/index/statistics",
+    ajax({
+        url: reqMap.index.adminStatistics,
         data: {},
         type: "GET",
         success: function (resp) {
@@ -358,8 +358,8 @@ function initStatistics() {
  * 登出系统
  */
 function logout() {
-    $.ajax({
-        url: "/admin/user/logout",
+    ajax({
+        url: reqMap.user.logout,
         data: {},
         type: "POST",
         success: function (resp) {

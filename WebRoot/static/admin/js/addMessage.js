@@ -38,8 +38,8 @@ layui.define(['form', 'upload', 'layer'], function (exports) {
             return false
         }
 
-        $.ajax({
-            url: "/admin/message/add",
+        ajax({
+            url: reqMap.message.add,
             type: "POST",
             data: $("#addMessageForm").serialize(),
             success: function (resp) {
@@ -124,8 +124,8 @@ layui.define(['form', 'upload', 'layer'], function (exports) {
  * 初始化类型, 标签列表
  */
 function initUserAndRoles() {
-    $.ajax({
-        url: "/composite/userAndRoles",
+    ajax({
+        url: reqMap.composite.userAndRoles,
         type: "GET",
         async: false,
         success: function (resp) {

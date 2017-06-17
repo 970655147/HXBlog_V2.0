@@ -25,8 +25,8 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
         //模拟数据加载
         setTimeout(function () {
             layer.close(index);
-            $.ajax({
-                url: "/admin/user/list",
+            ajax({
+                url: reqMap.user.list,
                 type: "GET",
                 data: {
                     pageNow: pageNow,
@@ -79,8 +79,8 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
     }
 
     form.on('submit(addAccountSubmit)', function (data) {
-        $.ajax({
-            url: "/admin/user/add",
+        ajax({
+            url: reqMap.user.add,
             type: "POST",
             data: $("#addAccountForm").serialize(),
             success: function (resp) {
@@ -100,8 +100,8 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
     })
 
     form.on('submit(updateAccountSubmit)', function (data) {
-        $.ajax({
-            url: "/admin/user/update",
+        ajax({
+            url: reqMap.user.update,
             type: "POST",
             data: $("#updateAccountForm").serialize(),
             success: function (resp) {
@@ -198,8 +198,8 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
             layer.confirm('您确定要删除吗？', {
                 btn: ['确定', '取消'] //按钮
             }, function () {
-                $.ajax({
-                    url: '/admin/user/remove',
+                ajax({
+                    url: reqMap.user.remove,
                     data: {"id" : id },
                     type: 'POST',
                     success: function (resp) {

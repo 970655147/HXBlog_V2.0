@@ -6,8 +6,6 @@
  * @date 5/24/2017 9:56 PM
  */
 
-var moodNum = 3
-
 layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
     var $ = layui.jquery;
     var layer = layui.layer;
@@ -26,8 +24,8 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
         //模拟数据加载
         setTimeout(function () {
             layer.close(index);
-            $.ajax({
-                url: "/admin/role/list",
+            ajax({
+                url: reqMap.role.list,
                 type: "GET",
                 data: {},
                 success: function (resp) {
@@ -63,8 +61,8 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
     }
 
     form.on('submit(addMoodSubmit)', function (data) {
-        $.ajax({
-            url: "/admin/role/add",
+        ajax({
+            url: reqMap.role.add,
             type: "POST",
             data: $("#addRoleForm").serialize(),
             success: function (resp) {
@@ -84,8 +82,8 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
     })
 
     form.on('submit(updateMoodSubmit)', function (data) {
-        $.ajax({
-            url: "/admin/role/update",
+        ajax({
+            url: reqMap.role.update,
             type: "POST",
             data: $("#updateRoleForm").serialize(),
             success: function (resp) {
@@ -174,8 +172,8 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
             layer.confirm('确定删除这个角色吗？', {
                 btn: ['确定', '取消'] //按钮
             }, function () {
-                $.ajax({
-                    url: '/admin/role/remove',
+                ajax({
+                    url: reqMap.role.remove,
                     data: {"id": id},
                     type: 'POST',
                     success: function (resp) {
@@ -196,8 +194,8 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
             });
         },
         reSort : function() {
-            $.ajax({
-                url: "/admin/role/reSort",
+            ajax({
+                url: reqMap.role.reSort,
                 type: "POST",
                 data: { },
                 success: function (resp) {

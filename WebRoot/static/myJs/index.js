@@ -15,7 +15,7 @@ var app = new Vue({
     },
     mounted: function () {
         var that = this
-        $.ajax({
+        ajax({
             url: "/tests/helloWorld",
             async: false,
             success: function(resp) {
