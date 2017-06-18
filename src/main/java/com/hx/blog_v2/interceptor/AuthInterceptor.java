@@ -50,12 +50,6 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
                              Object handler) throws Exception {
         SessionUser user = (SessionUser) WebContext.getAttributeFromSession(BlogConstants.SESSION_USER);
-        if ((user == null) || (!user.isSystemUser())) {
-            Result result = ResultUtils.failed(ErrorCode.NOT_LOGIN, " 您还没有登录, 或者登录过期, 请先登录 ! ");
-            WebContext.responseJson(result);
-            exceptionLogService.saveExceptionLog(null, result, null);
-            return false;
-        }
         Result preCheckResult = checkResourceAndInterfs(user);
         if (!preCheckResult.isSuccess()) {
             WebContext.responseJson(preCheckResult);

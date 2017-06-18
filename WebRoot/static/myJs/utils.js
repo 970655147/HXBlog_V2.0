@@ -6,6 +6,68 @@
  * @date 5/21/2017 10:43 AM
  */
 
+// -------------------------------------------------- prototype extends ------------------------------------------------
+/**
+ * refer : http://www.cnblogs.com/zhangpengshou/archive/2012/07/19/2599053.html
+ * 对Date的扩展，将 Date 转化为指定格式的String
+ * 月(M)、日(d)、小时(h)、分(m)、秒(s)、季度(q) 可以用 1-2 个占位符，
+ * 年(y)可以用 1-4 个占位符，毫秒(S)只能用 1 个占位符(是 1-3 位的数字)
+ * 例子：
+ * (new Date()).Format("yyyy-MM-dd hh:mm:ss.S") ==> 2006-07-02 08:09:04.423
+ * (new Date()).Format("yyyy-M-d h:m:s.S")      ==> 2006-7-2 8:9:4.18
+ *
+ * @param fmt
+ * @returns {*}
+ */
+Date.prototype.format = function (fmt) { //author: meizz
+    var o = {
+        "M+": this.getMonth() + 1, //月份
+        "d+": this.getDate(), //日
+        "h+": this.getHours(), //小时
+        "m+": this.getMinutes(), //分
+        "s+": this.getSeconds(), //秒
+        "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+        "S": this.getMilliseconds() //毫秒
+    };
+    if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+    for (var k in o)
+        if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+    return fmt;
+}
+
+/**
+ * 从当前数组对象中获取 target 的索引
+ * @param arr
+ * @param target
+ * @returns {*}
+ */
+function indexOf(arr, target) {
+    for (var idx in arr) {
+        if (arr[idx] === target) {
+            return idx
+        }
+    }
+
+    return -1
+}
+
+/**
+ * 从当前数组对象中获取 target 是否存在
+ * @param arr
+ * @param target
+ * @returns {boolean}
+ */
+function contains(arr, target) {
+    return indexOf(arr, target) >= 0
+}
+
+// -------------------------------------------------- utils ------------------------------------------------
+
+/**
+ * 判断给定的对象是否为空
+ * @param obj
+ * @returns {boolean}
+ */
 function isEmpty(obj) {
     return obj === null || obj === undefined || '' === obj.toString().trim();
 }
@@ -108,34 +170,6 @@ function getLength(o) {
 }
 
 /**
- * refer : http://www.cnblogs.com/zhangpengshou/archive/2012/07/19/2599053.html
- * 对Date的扩展，将 Date 转化为指定格式的String
- * 月(M)、日(d)、小时(h)、分(m)、秒(s)、季度(q) 可以用 1-2 个占位符，
- * 年(y)可以用 1-4 个占位符，毫秒(S)只能用 1 个占位符(是 1-3 位的数字)
- * 例子：
- * (new Date()).Format("yyyy-MM-dd hh:mm:ss.S") ==> 2006-07-02 08:09:04.423
- * (new Date()).Format("yyyy-M-d h:m:s.S")      ==> 2006-7-2 8:9:4.18
- *
- * @param fmt
- * @returns {*}
- */
-Date.prototype.format = function (fmt) { //author: meizz
-    var o = {
-        "M+": this.getMonth() + 1, //月份
-        "d+": this.getDate(), //日
-        "h+": this.getHours(), //小时
-        "m+": this.getMinutes(), //分
-        "s+": this.getSeconds(), //秒
-        "q+": Math.floor((this.getMonth() + 3) / 3), //季度
-        "S": this.getMilliseconds() //毫秒
-    };
-    if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
-    for (var k in o)
-        if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
-    return fmt;
-}
-
-/**
  * 刷新当前页面
  */
 refresh = function () {
@@ -204,6 +238,9 @@ function copyOf(data) {
  * @param placeholder
  */
 function trimIfExceed(str, len, placeholder) {
+    if (isEmpty(str)) {
+        return "";
+    }
     if (str.length <= len) {
         return str
     }
@@ -216,16 +253,33 @@ function trimIfExceed(str, len, placeholder) {
  * @type {boolean}
  */
 var interceptorDialog = null
+/**
+ * 放在请求头中的 token 的key
+ * @type {string}
+ */
+var tokenHeader = "hx_blog_token"
 
 /**
  * 自己封装的一层 发送 ajax, 主要用于 处理一些 发送请求之前之后, 都要处理的业务
  * @param config
  */
 function ajax(config) {
-    var beforeSend = function () {
+    if (contains(ajaxNeedFilter, config.url)) {
+        $.ajax(config)
+        return
+    }
+
+    var beforeSend = function (xhr) {
+        xhr.setRequestHeader(tokenHeader, localStorage.getItem(tokenHeader));
         return true
     }
-    var beforeSucc = function (resp) {
+    var beforeSucc = function (resp, status, xhr) {
+        var tokenFromServer = xhr.getResponseHeader(tokenHeader)
+        if(! isEmpty(tokenFromServer)) {
+            // hide this !!
+            var tokenClientHandled = hex_md5(tokenFromServer)
+            localStorage.setItem(tokenHeader, tokenClientHandled)
+        }
         if (resp.code === 200) {
             return true
         }
@@ -281,17 +335,17 @@ function ajax0(config, beforeSend, beforeSucc, afterSucc, beforeEx, afterEx) {
     config.beforeSend = function (xhr) {
         beforeSend && beforeSend(xhr) && oldBeforeFunc && oldBeforeFunc(xhr)
     }
-    config.success = function (resp) {
-        beforeSucc && beforeSucc(resp) && oldSuccFunc && oldSuccFunc(resp)
-        && afterSucc && afterSucc(resp)
+    config.success = function (resp, status, xhr) {
+        beforeSucc && beforeSucc(resp, status, xhr) && oldSuccFunc && oldSuccFunc(resp, status, xhr)
+        && afterSucc && afterSucc(resp, status, xhr)
     }
     config.error = function (xhr, errMsg, ex) {
         beforeEx && beforeEx(xhr, errMsg, ex) && oldErrorFunc && oldErrorFunc(xhr, errMsg, ex)
         && afterEx && afterEx(xhr, errMsg, ex)
     }
 
-    $.ajax(config);
+    $.ajax(config)
 }
 
-
+// -------------------------------------------------- to be continued ------------------------------------------------
 

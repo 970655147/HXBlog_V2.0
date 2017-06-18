@@ -159,6 +159,14 @@ public final class BlogConstants {
      * 用户验证码的key
      */
     public static final String SESSION_CHECK_CODE = "session:check_code";
+    /**
+     * 用户带回来的token的key
+     */
+    public static final String SESSION_TOKEN = "session:token";
+    /**
+     * 用户带过来token的请求头
+     */
+    public static final String COOKIE_TOKEN = "hx_blog_token";
 
     /**
      * 相关常量的 key
@@ -294,6 +302,10 @@ public final class BlogConstants {
      * 不需要记录在 requestLog 中的 url
      */
     public static final String REQUEST_LOG_URI_TO_IGNORE = "request_log.url.to_ignore";
+    /**
+     * 服务端刷新 token 的周期
+     */
+    public static final String TOKEN_REFRESH_INTERVAL = "request.token.refresh.interval";
 
     // ----------------------------------------- configurable -------------------------------------------------
 

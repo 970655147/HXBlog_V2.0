@@ -18,6 +18,25 @@ var pageSize = 10
 var encoding = "gbk"
 
 /**
+ * token的头的名称
+ * @type {string}
+ */
+var tokenHeader = "hx_blog_token"
+
+/**
+ * 项目的 contextPath
+ * @type {string}
+ */
+var contextPath = "/"
+
+function formatContextUrl(requestUri) {
+    if(requestUri.startsWith("/")) {
+        requestUri = requestUri.substr(1)
+    }
+    return contextPath + requestUri
+}
+
+/**
  * 所有的请求的路由
  *
  * @type {{}}
@@ -28,47 +47,47 @@ var reqMap = {
      * 博客相关
      */
     blog: {
-        add: "/admin/blog/add",
-        get: "/blog/get",
-        adminGet: "/admin/blog/get",
-        list: "/blog/list",
-        adminList: "/admin/blog/list",
-        sense: "/blog/sense/sense",
-        update: "/admin/blog/update",
-        remove: "/admin/blog/remove"
+        add: formatContextUrl("/admin/blog/add"),
+        get: formatContextUrl("/blog/get"),
+        adminGet: formatContextUrl("/admin/blog/get"),
+        list: formatContextUrl("/blog/list"),
+        adminList: formatContextUrl("/admin/blog/list"),
+        sense: formatContextUrl("/blog/sense/sense"),
+        update: formatContextUrl("/admin/blog/update"),
+        remove: formatContextUrl("/admin/blog/remove")
     },
 
     /**
      * 博客类型相关
      */
     type: {
-        add: "/admin/type/add",
-        list: "/admin/type/list",
-        update: "/admin/type/update",
-        reSort: "/admin/type/reSort",
-        remove: "/admin/type/remove"
+        add: formatContextUrl("/admin/type/add"),
+        list: formatContextUrl("/admin/type/list"),
+        update: formatContextUrl("/admin/type/update"),
+        reSort: formatContextUrl("/admin/type/reSort"),
+        remove: formatContextUrl("/admin/type/remove")
     },
 
     /**
      * 博客标签相关
      */
     tag: {
-        add: "/admin/tag/add",
-        list: "/admin/type/list",
-        update: "/admin/tag/update",
-        reSort: "/admin/tag/reSort",
-        remove: "/admin/tag/remove"
+        add: formatContextUrl("/admin/tag/add"),
+        list: formatContextUrl("/admin/type/list"),
+        update: formatContextUrl("/admin/tag/update"),
+        reSort: formatContextUrl("/admin/tag/reSort"),
+        remove: formatContextUrl("/admin/tag/remove")
     },
 
     /**
      * 博客创建类型相关
      */
     createType: {
-        add: "/admin/blog/createType/add",
-        list: "/admin/blog/createType/list",
-        update: "/admin/blog/createType/update",
-        reSort: "/admin/blog/createType/reSort",
-        remove: "/admin/blog/createType/remove"
+        add: formatContextUrl("/admin/blog/createType/add"),
+        list: formatContextUrl("/admin/blog/createType/list"),
+        update: formatContextUrl("/admin/blog/createType/update"),
+        reSort: formatContextUrl("/admin/blog/createType/reSort"),
+        remove: formatContextUrl("/admin/blog/createType/remove")
     }
     ,
 
@@ -76,14 +95,14 @@ var reqMap = {
      * 用户相关
      */
     user: {
-        add: "/admin/user/add",
-        list: "/admin/user/list",
-        update: "/admin/user/update",
-        updatePwd: "/admin/user/updatePwd",
-        remove: "/admin/user/remove",
+        add: formatContextUrl("/admin/user/add"),
+        list: formatContextUrl("/admin/user/list"),
+        update: formatContextUrl("/admin/user/update"),
+        updatePwd: formatContextUrl("/admin/user/updatePwd"),
+        remove: formatContextUrl("/admin/user/remove"),
 
-        login: "/admin/user/login",
-        logout: "/admin/user/logout"
+        login: formatContextUrl("/admin/user/login"),
+        logout: formatContextUrl("/admin/user/logout")
     }
     ,
 
@@ -91,11 +110,11 @@ var reqMap = {
      * 消息相关
      */
     message: {
-        add: "/admin/message/add",
-        list: "/admin/message/adminList",
-        update: "/admin/message/update",
-        markConsumed: "/admin/message/markConsumed",
-        remove: "/admin/message/remove"
+        add: formatContextUrl("/admin/message/add"),
+        list: formatContextUrl("/admin/message/adminList"),
+        update: formatContextUrl("/admin/message/update"),
+        markConsumed: formatContextUrl("/admin/message/markConsumed"),
+        remove: formatContextUrl("/admin/message/remove")
     }
     ,
 
@@ -103,8 +122,8 @@ var reqMap = {
      * 用户角色关联相关
      */
     userRole: {
-        list: "/admin/role/userRole/list",
-        update: "/admin/role/userRole/update"
+        list: formatContextUrl("/admin/role/userRole/list"),
+        update: formatContextUrl("/admin/role/userRole/update")
     }
     ,
 
@@ -112,11 +131,11 @@ var reqMap = {
      * 角色相关
      */
     role: {
-        add: "/admin/role/add",
-        list: "/admin/role/list",
-        update: "/admin/role/update",
-        reSort: "/admin/role/reSort",
-        remove: "/admin/role/remove"
+        add: formatContextUrl("/admin/role/add"),
+        list: formatContextUrl("/admin/role/list"),
+        update: formatContextUrl("/admin/role/update"),
+        reSort: formatContextUrl("/admin/role/reSort"),
+        remove: formatContextUrl("/admin/role/remove")
     }
     ,
 
@@ -124,62 +143,62 @@ var reqMap = {
      * 角色资源相关
      */
     roleResource: {
-        list: "/admin/resource/roleResource/list",
-        update: "/admin/resource/roleResource/update"
+        list: formatContextUrl("/admin/resource/roleResource/list"),
+        update: formatContextUrl("/admin/resource/roleResource/update")
     },
 
     /**
      * 资源相关
      */
     resource: {
-        add: "/admin/resource/add",
-        list: "/admin/resource/list",
-        adminTreeList: "/admin/resource/adminTreeList",
-        update: "/admin/resource/update",
-        reSort: "/admin/resource/reSort",
-        remove: "/admin/resource/remove"
+        add: formatContextUrl("/admin/resource/add"),
+        list: formatContextUrl("/admin/resource/list"),
+        adminTreeList: formatContextUrl("/admin/resource/adminTreeList"),
+        update: formatContextUrl("/admin/resource/update"),
+        reSort: formatContextUrl("/admin/resource/reSort"),
+        remove: formatContextUrl("/admin/resource/remove")
     },
 
     /**
      * 资源接口关联相关
      */
     resourceInterf: {
-        list: "/admin/interf/resourceInterf/list",
-        update: "/admin/interf/resourceInterf/update"
+        list: formatContextUrl("/admin/interf/resourceInterf/list"),
+        update: formatContextUrl("/admin/interf/resourceInterf/update")
     },
 
     /**
      * 接口相关
      */
     interf: {
-        add: "/admin/interf/add",
-        list: "/admin/interf/list",
-        update: "/admin/interf/update",
-        reSort: "/admin/interf/reSort",
-        remove: "/admin/interf/remove"
+        add: formatContextUrl("/admin/interf/add"),
+        list: formatContextUrl("/admin/interf/list"),
+        update: formatContextUrl("/admin/interf/update"),
+        reSort: formatContextUrl("/admin/interf/reSort"),
+        remove: formatContextUrl("/admin/interf/remove")
     },
 
     /**
      * 友情链接相关
      */
     link: {
-        add: "/admin/link/add",
-        list: "/admin/link/list",
-        update: "/admin/link/update",
-        remove: "/admin/link/remove"
+        add: formatContextUrl("/admin/link/add"),
+        list: formatContextUrl("/admin/link/list"),
+        update: formatContextUrl("/admin/link/update"),
+        remove: formatContextUrl("/admin/link/remove")
     },
 
     /**
      * 图片相关
      */
     image: {
-        add: "/admin/image/add",
-        upload: "/admin/upload/image",
-        headImgList: "/image/headImgList",
-        list: "/admin/image/list",
-        update: "/admin/image/update",
-        reSort: "/admin/image/reSort",
-        remove: "/admin/image/remove"
+        add: formatContextUrl("/admin/image/add"),
+        upload: formatContextUrl("/admin/upload/image"),
+        headImgList: formatContextUrl("/image/headImgList"),
+        list: formatContextUrl("/admin/image/list"),
+        update: formatContextUrl("/admin/image/update"),
+        reSort: formatContextUrl("/admin/image/reSort"),
+        remove: formatContextUrl("/admin/image/remove")
     }
     ,
 
@@ -187,23 +206,23 @@ var reqMap = {
      * 心情相关
      */
     mood: {
-        add: "/admin/mood/add",
-        list: "/admin/mood/list",
-        update: "/admin/mood/update",
-        remove: "/admin/mood/remove"
+        add: formatContextUrl("/admin/mood/add"),
+        list: formatContextUrl("/admin/mood/list"),
+        update: formatContextUrl("/admin/mood/update"),
+        remove: formatContextUrl("/admin/mood/remove")
     },
 
     /**
      * 评论相关
      */
     comment: {
-        add: "/comment/add",
-        adminAdd: "/admin/comment/add",
-        list: "/comment/list",
-        adminList: "/admin/comment/list",
-        commentsForFloor: "/admin/comment/comment/list",
-        update: "/admin/comment/update",
-        remove: "/admin/comment/remove"
+        add: formatContextUrl("/comment/add"),
+        adminAdd: formatContextUrl("/admin/comment/add"),
+        list: formatContextUrl("/comment/list"),
+        adminList: formatContextUrl("/admin/comment/list"),
+        commentsForFloor: formatContextUrl("/admin/comment/comment/list"),
+        update: formatContextUrl("/admin/comment/update"),
+        remove: formatContextUrl("/admin/comment/remove")
     }
     ,
 
@@ -211,20 +230,21 @@ var reqMap = {
      * 配置相关
      */
     config: {
-        add: "/admin/config/add",
-        list: "/admin/config/list",
-        update: "/admin/config/update",
-        remove: "/admin/config/remove",
-        reSort: "/admin/config/reSort"
+        add: formatContextUrl("/admin/config/add"),
+        list: formatContextUrl("/admin/config/list"),
+        update: formatContextUrl("/admin/config/update"),
+        remove: formatContextUrl("/admin/config/remove"),
+        reSort: formatContextUrl("/admin/config/reSort")
     },
 
     /**
      * 首页相关
      */
     index: {
-        index: "/index/index",
-        adminMenu: "/admin/index/menus",
-        adminStatistics: "/admin/index/statistics"
+        index: formatContextUrl("/index/index"),
+        latest : formatContextUrl("/index/latest"),
+        adminMenu: formatContextUrl("/admin/index/menus"),
+        adminStatistics: formatContextUrl("/admin/index/statistics")
     }
     ,
 
@@ -232,9 +252,9 @@ var reqMap = {
      * 返回复合数据的请求
      */
     composite: {
-        moodAndImages: "/composite/moodAndImages",
-        typeAndTags: "/composite/typeAndTags",
-        userAndRoles: "/composite/userAndRoles"
+        moodAndImages: formatContextUrl("/composite/moodAndImages"),
+        typeAndTags: formatContextUrl("/composite/typeAndTags"),
+        userAndRoles: formatContextUrl("/composite/userAndRoles")
     }
     ,
 
@@ -242,37 +262,43 @@ var reqMap = {
      * 缓存相关
      */
     cache: {
-        refreshAll: "/admin/cache/refreshAll",
-        refreshAllCached: "/admin/cache/refreshAllCached",
-        refreshTableCached: "/admin/cache/refreshTableCached",
-        refreshLocalCached: "/admin/cache/refreshLocalCached",
-        refreshStatisticsInfo: "/admin/cache/refreshStatisticsInfo",
-        refreshOtherCached: "/admin/cache/refreshOtherCached",
-        refreshAllConfigured: "/admin/cache/refreshAllConfigured",
-        refreshSystemConfig: "/admin/cache/refreshSystemConfig",
-        refreshRuleConfig: "/admin/cache/refreshRuleConfig",
-        refreshFrontIdxConfig: "/admin/cache/refreshFrontIdxConfig"
+        refreshAll: formatContextUrl("/admin/cache/refreshAll"),
+        refreshAllCached: formatContextUrl("/admin/cache/refreshAllCached"),
+        refreshTableCached: formatContextUrl("/admin/cache/refreshTableCached"),
+        refreshLocalCached: formatContextUrl("/admin/cache/refreshLocalCached"),
+        refreshStatisticsInfo: formatContextUrl("/admin/cache/refreshStatisticsInfo"),
+        refreshOtherCached: formatContextUrl("/admin/cache/refreshOtherCached"),
+        refreshAllConfigured: formatContextUrl("/admin/cache/refreshAllConfigured"),
+        refreshSystemConfig: formatContextUrl("/admin/cache/refreshSystemConfig"),
+        refreshRuleConfig: formatContextUrl("/admin/cache/refreshRuleConfig"),
+        refreshFrontIdxConfig: formatContextUrl("/admin/cache/refreshFrontIdxConfig")
     },
 
     /**
      * 系统管理相关
      */
     system: {
-        cacheSummary: "/admin/system/cacheSummary",
-        localCacheSummary: "/admin/system/localCacheSummary",
-        statsSummary: "/admin/system/statsSummary"
+        cacheSummary: formatContextUrl("/admin/system/cacheSummary"),
+        localCacheSummary: formatContextUrl("/admin/system/localCacheSummary"),
+        statsSummary: formatContextUrl("/admin/system/statsSummary")
     },
 
     /**
      * 其他配置
      */
     other: {
-        templateUrl: "/static/main/templates.html"
+        templateUrl: formatContextUrl("/static/main/templates.html")
 
     }
 
-
 }
+
+/**
+ * ajax() 方法需要过滤的请求, 直接使用 原生的 jq
+ * @type {{}}
+ */
+ajaxNeedFilter = [reqMap.other.templateUrl ]
+
 
 
 

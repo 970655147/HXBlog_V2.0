@@ -15,7 +15,9 @@ import com.hx.log.util.Tools;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.net.URL;
 import java.util.*;
 
@@ -324,6 +326,49 @@ public final class BizUtils {
         }
 
         return null;
+    }
+
+    /**
+     * 从 request 中获取 cookieName 对应的 cookie的值
+     *
+     * @param req        req
+     * @param cookieName cookieName
+     * @return java.lang.String
+     * @author Jerry.X.He
+     * @date 6/18/2017 11:55 AM
+     * @since 1.0
+     */
+    public static String getCookieValByName(HttpServletRequest req, String cookieName) {
+        Cookie[] cookies = req.getCookies();
+        if ((cookies == null) || (cookieName == null)) {
+            return null;
+        }
+
+        String res = null;
+        for (Cookie cookie : cookies) {
+            if (cookie.getName().equals(cookieName)) {
+                res = cookie.getValue();
+                break;
+            }
+        }
+        return res;
+    }
+
+    /**
+     * 向给定的 response 中放入一个 cookie
+     *
+     * @param resp        resp
+     * @param cookieName  cookieName
+     * @param cookieValue cookieValue
+     * @return java.lang.String
+     * @author Jerry.X.He
+     * @date 6/18/2017 11:55 AM
+     * @since 1.0
+     */
+    public static void addCookie(HttpServletResponse resp, String cookieName, String cookieValue) {
+        Cookie cookie  = new Cookie(cookieName, cookieValue);
+//        cookie.setPath("/");
+        resp.addCookie(cookie);
     }
 
     // ----------------- 辅助方法 -----------------------

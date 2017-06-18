@@ -29,6 +29,10 @@ public enum ErrorCode implements Code2Msg<Integer, String> {
      */
     NOT_AUTHORIZED(203, " have no privilege to visit this ! "),
     /**
+     * TOKEN_NOT_MATCH
+     */
+    TOKEN_NOT_MATCH(203, " your token not match ! "),
+    /**
      * NOT_FOUND
      */
     NOT_FOUND(404, "resource not found"),

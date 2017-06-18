@@ -26,6 +26,9 @@ public class Test03Md5 {
         String newPwd = encodePwd("e10adc3949ba59abbe56e057f20f883e", "11111111");
         info(newPwd);
 
+        String str = "D1A7B2963654A31104D7E41BC2A61C27";
+        info(Codec.byte2Hex(Codec.md5(str.getBytes())));
+
     }
 
     private static String encodePwd(String pwd, String salt) {

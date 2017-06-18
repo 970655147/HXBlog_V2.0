@@ -122,6 +122,7 @@ public class ConstantsContext {
     public int realTimeChartTimeInterval;
     public int maxRealTimeCacheStasticsTimes;
     public String requestLogUriToIgnore;
+    public long tokenRefreshInterval;
 
     /**
      * 初始化 ConstantsContext
@@ -487,6 +488,7 @@ public class ConstantsContext {
             realTimeChartTimeInterval = Tools.optInt(systemConfig, BlogConstants.REAL_TIME_CHART_TIME_INTERVAL, 5);
             maxRealTimeCacheStasticsTimes = Tools.optInt(systemConfig, BlogConstants.MAX_REAL_TIME_CACHE_STASTICS_TIMES, 12);
             requestLogUriToIgnore = Tools.optString(systemConfig, BlogConstants.REQUEST_LOG_URI_TO_IGNORE, "/index/index;/image/headImgList;/index/latest;");
+            tokenRefreshInterval = Tools.optLong(systemConfig, BlogConstants.TOKEN_REFRESH_INTERVAL, 60 * 1000);
         }
 
     }

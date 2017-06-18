@@ -22,7 +22,7 @@ function contentInit() {
         mounted: function () {
             var that = this
             ajax({
-                url: "/index/latest",
+                url: reqMap.index.latest,
                 success: function(resp) {
                     if(resp.success) {
                         var data = resp.data
