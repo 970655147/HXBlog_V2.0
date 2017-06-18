@@ -1,5 +1,6 @@
 package com.hx.blog_v2.util;
 
+import com.hx.blog_v2.domain.po.interf.LogisticalId;
 import com.hx.json.JSONArray;
 import com.hx.log.util.Tools;
 
@@ -42,8 +43,17 @@ public final class SqlUtils {
      * @date 6/5/2017 7:32 PM
      * @since 1.0
      */
-    public static <T> String wrapInSnippet(Collection<T> col) {
+    public static <T> String wrapInSnippetForIds(Collection<T> col) {
         JSONArray arr = JSONArray.fromObject(col);
+        String result = arr.toString();
+        return result.substring(result.indexOf("[")+1, result.lastIndexOf("]"));
+    }
+
+    public static <T extends LogisticalId<IDType>, IDType> String wrapInSnippet(Collection<T> col) {
+        JSONArray arr = new JSONArray();
+        for(T ele : col) {
+            arr.add(ele.logisticalId());
+        }
         String result = arr.toString();
         return result.substring(result.indexOf("[")+1, result.lastIndexOf("]"));
     }

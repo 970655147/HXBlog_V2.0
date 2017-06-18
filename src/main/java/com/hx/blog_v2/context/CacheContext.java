@@ -399,6 +399,10 @@ public class CacheContext {
         blogTypesById.put(po.getId(), po);
     }
 
+    public BlogTypePO removeBlogType(String id) {
+        return blogTypesById.remove(id);
+    }
+
     /**
      * 获取所有的 BlogType
      *
@@ -417,6 +421,10 @@ public class CacheContext {
 
     public void putBlogTag(BlogTagPO po) {
         blogTagsById.put(po.getId(), po);
+    }
+
+    public BlogTagPO removeBlogTag(String id) {
+        return blogTagsById.remove(id);
     }
 
     /**
@@ -439,6 +447,10 @@ public class CacheContext {
         linksById.put(po.getId(), po);
     }
 
+    public LinkPO removeLink(String id) {
+        return linksById.remove(id);
+    }
+
     /**
      * 获取所有的角色
      *
@@ -457,6 +469,10 @@ public class CacheContext {
 
     public void putRole(RolePO po) {
         rolesById.put(po.getId(), po);
+    }
+
+    public RolePO removeRole(String id) {
+        return rolesById.remove(id);
     }
 
     /**
@@ -479,6 +495,10 @@ public class CacheContext {
         resourcesById.put(po.getId(), po);
     }
 
+    public ResourcePO removeResource(String id) {
+        return resourcesById.remove(id);
+    }
+
     /**
      * 获取所有的接口列表
      *
@@ -497,6 +517,10 @@ public class CacheContext {
 
     public void putInterf(InterfPO po) {
         interfsById.put(po.getId(), po);
+    }
+
+    public InterfPO removeInterf(String id) {
+        return interfsById.remove(id);
     }
 
     /**
@@ -519,6 +543,10 @@ public class CacheContext {
         createTypesById.put(po.getId(), po);
     }
 
+    public BlogCreateTypePO removeBlogCreateType(String id) {
+        return createTypesById.remove(id);
+    }
+
     /**
      * 根据digest 获取图片的信息
      *
@@ -532,18 +560,12 @@ public class CacheContext {
         return digest2UploadedFiles.get(digest);
     }
 
-    /**
-     * 向缓存中添加一个图片信息
-     *
-     * @param digest digest
-     * @param image  image
-     * @return void
-     * @author Jerry.X.He
-     * @date 5/29/2017 4:28 PM
-     * @since 1.0
-     */
     public void putUploadedFile(String digest, UploadFilePO image) {
         digest2UploadedFiles.put(digest, image);
+    }
+
+    public UploadFilePO removeUploadedFile(String digest) {
+        return digest2UploadedFiles.evict(digest);
     }
 
     /**
@@ -559,18 +581,12 @@ public class CacheContext {
         return blogIdUserInfo2Sense.get(generateBlogSenseKey(params));
     }
 
-    /**
-     * 向缓存中增加 BlogSense
-     *
-     * @param params params
-     * @param po     po
-     * @return void
-     * @author Jerry.X.He
-     * @date 6/6/2017 8:33 PM
-     * @since 1.0
-     */
     public void putBlogSense(BlogSenseForm params, BlogSensePO po) {
         blogIdUserInfo2Sense.put(generateBlogSenseKey(params), po);
+    }
+
+    public BlogSensePO removeBlogSense(BlogSenseForm params) {
+        return blogIdUserInfo2Sense.evict(generateBlogSenseKey(params));
     }
 
     /**
@@ -586,17 +602,12 @@ public class CacheContext {
         return blogId2BlogEx.get(blogId);
     }
 
-    /**
-     * 添加给定的 blogExPO 到缓存中
-     *
-     * @param blogExPO blogExPO
-     * @return com.hx.blog_v2.domain.po.BlogExPO
-     * @author Jerry.X.He
-     * @date 6/6/2017 8:38 PM
-     * @since 1.0
-     */
     public void putBlogEx(BlogExPO blogExPO) {
         blogId2BlogEx.put(blogExPO.getBlogId(), blogExPO);
+    }
+
+    public BlogExPO removeBlogEx(String blogId) {
+        return blogId2BlogEx.evict(blogId);
     }
 
     /**
@@ -612,18 +623,12 @@ public class CacheContext {
         return requestIp2BlogVisitLog.get(generateBlogVisitLogKey(params));
     }
 
-    /**
-     * 向缓存中增加 BlogSense
-     *
-     * @param params params
-     * @param po     po
-     * @return void
-     * @author Jerry.X.He
-     * @date 6/6/2017 8:33 PM
-     * @since 1.0
-     */
     public void putBlogVisitLog(BlogVisitLogForm params, BlogVisitLogPO po) {
         requestIp2BlogVisitLog.put(generateBlogVisitLogKey(params), po);
+    }
+
+    public BlogVisitLogPO removeBlogVisitLog(BlogVisitLogForm params) {
+        return requestIp2BlogVisitLog.evict(generateBlogVisitLogKey(params));
     }
 
     /**
@@ -663,9 +668,9 @@ public class CacheContext {
      * @since 1.0
      */
     public StatisticsInfo recentlySumStatistics() {
-        if(recentlySumStatistics == null) {
+        if (recentlySumStatistics == null) {
             recentlySumStatistics = new StatisticsInfo();
-            for(StatisticsInfo stats : recentlyStatistics) {
+            for (StatisticsInfo stats : recentlyStatistics) {
                 recentlySumStatistics.merge(stats);
             }
         }
@@ -970,7 +975,7 @@ public class CacheContext {
         List<StatisticsInfo> allDayStatisInfo = BizUtils.collectRecentlyStatisticsInfo(jdbcTemplate,
                 constantsContext.maxCacheStatisticsDays);
         if (!Tools.isEmpty(allDayStatisInfo)) {
-            todaysStatistics = allDayStatisInfo.remove(allDayStatisInfo.size()-1);
+            todaysStatistics = allDayStatisInfo.remove(allDayStatisInfo.size() - 1);
         }
         recentlyStatistics.addAll(allDayStatisInfo);
         sumStatistics = BizUtils.collectSumStatisticsInfo(jdbcTemplate);
@@ -1099,7 +1104,7 @@ public class CacheContext {
      */
     private void switchStatistics() {
         // -1 去掉今天占用的容量[总共需要缓存的天数的数据-1]
-        if (recentlyStatistics.size() > (constantsContext.maxCacheStatisticsDays-1)) {
+        if (recentlyStatistics.size() > (constantsContext.maxCacheStatisticsDays - 1)) {
             recentlyStatistics.poll();
         }
         recentlyStatistics.add(todaysStatistics);

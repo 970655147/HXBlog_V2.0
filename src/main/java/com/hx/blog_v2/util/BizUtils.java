@@ -338,8 +338,20 @@ public final class BizUtils {
         return null;
     }
 
+    public static <T extends LogisticalId<ID>, ID> T findByLogisticId(List<T> list, ID id) {
+        for (T entry : list) {
+            if (Objects.equals(id, entry.logisticalId())) {
+                return entry;
+            }
+        }
+
+        return null;
+    }
+
     /**
      * 从 request 中获取 cookieName 对应的 cookie的值
+     * 本来是打算将 hx_blog_token 存放于 cookie的, 结果 放进去之后, 除了首页之外的其他页面 没有带token过来
+     * 因此 后来换了一种思路, 使用的 localSession 来解决问题 !
      *
      * @param req        req
      * @param cookieName cookieName
@@ -376,7 +388,7 @@ public final class BizUtils {
      * @since 1.0
      */
     public static void addCookie(HttpServletResponse resp, String cookieName, String cookieValue) {
-        Cookie cookie  = new Cookie(cookieName, cookieValue);
+        Cookie cookie = new Cookie(cookieName, cookieValue);
 //        cookie.setPath("/");
         resp.addCookie(cookie);
     }

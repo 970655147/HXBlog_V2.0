@@ -59,7 +59,7 @@ public class MessageServiceImpl extends BaseServiceImpl<MessagePO> implements Me
         if (!Tools.isEmpty(params.getRoleIds())) {
             String sql = " select user_id from rlt_user_role where role_id in ( %s ) ";
             String[] roleIds = params.getRoleIds().split(",");
-            String inSnippet = SqlUtils.wrapInSnippet(Tools.asSet(roleIds));
+            String inSnippet = SqlUtils.wrapInSnippetForIds(Tools.asSet(roleIds));
             List<String> userIdsByRole = jdbcTemplate.query(String.format(sql, inSnippet), new OneStringMapper("user_id"));
             userIds.addAll(userIdsByRole);
         }
@@ -242,7 +242,7 @@ public class MessageServiceImpl extends BaseServiceImpl<MessagePO> implements Me
         }
 
         String selectUserNameSql = " select id, user_name from user where id in ( %s ) ";
-        List<Map<String, Object>> id2Names = jdbcTemplate.query(String.format(selectUserNameSql, SqlUtils.wrapInSnippet(userIds)), new ToMapMapper());
+        List<Map<String, Object>> id2Names = jdbcTemplate.query(String.format(selectUserNameSql, SqlUtils.wrapInSnippetForIds(userIds)), new ToMapMapper());
         for (MessageVO msg : msgs) {
             msg.setSenderName(getNameFor(id2Names, "id", "user_name", msg.getSenderId()));
             msg.setReceiverName(getNameFor(id2Names, "id", "user_name", msg.getReceiverId()));

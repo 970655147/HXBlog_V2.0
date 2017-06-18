@@ -32,8 +32,8 @@ public final class POVOTransferUtils {
      */
     public static void main(String[] args) {
 
-        Class src = SystemConfigPO.class;
-        Class dst = SystemConfigVO.class;
+        Class src = RequestLogPO.class;
+        Class dst = RequestLogVO.class;
 
         String transfer = BeanTransferUtils.transferTo(src, dst);
         String transferList = BeanTransferUtils.transferListTo(src, dst);
@@ -981,7 +981,7 @@ public final class POVOTransferUtils {
 
     public static Collection<SystemConfigVO> systemConfigPO2SystemConfigVOList(Collection<SystemConfigPO> src) {
         List<SystemConfigVO> result = new ArrayList<>(src.size());
-        for(SystemConfigPO ele : src) {
+        for (SystemConfigPO ele : src) {
             result.add(systemConfigPO2SystemConfigVO(ele));
         }
         return result;
@@ -1001,8 +1001,104 @@ public final class POVOTransferUtils {
 
     public static Collection<SystemConfigPO> systemConfigVO2SystemConfigPOList(Collection<SystemConfigVO> src) {
         List<SystemConfigPO> result = new ArrayList<>(src.size());
-        for(SystemConfigVO ele : src) {
+        for (SystemConfigVO ele : src) {
             result.add(systemConfigVO2SystemConfigPO(ele));
+        }
+        return result;
+    }
+
+    // -------------------- RequestLogPO <-> RequestLogVO --------------------------
+    public static RequestLogVO requestLogPO2RequestLogVO(RequestLogPO src) {
+        RequestLogVO result = new RequestLogVO();
+        result.setName(src.getName());
+        result.setId(src.getId());
+        result.setHandler(src.getHandler());
+        result.setEmail(src.getEmail());
+        result.setUrl(src.getUrl());
+        result.setCreatedAt(src.getCreatedAt());
+        result.setIsSystemUser(src.getIsSystemUser());
+        result.setParams(src.getParams());
+        result.setRequestIp(src.getRequestIp());
+        result.setCost(src.getCost());
+        return result;
+    }
+
+    public static Collection<RequestLogVO> requestLogPO2RequestLogVOList(Collection<RequestLogPO> src) {
+        List<RequestLogVO> result = new ArrayList<>(src.size());
+        for (RequestLogPO ele : src) {
+            result.add(requestLogPO2RequestLogVO(ele));
+        }
+        return result;
+    }
+
+    public static RequestLogPO requestLogVO2RequestLogPO(RequestLogVO src) {
+        RequestLogPO result = new RequestLogPO();
+        result.setName(src.getName());
+        result.setId(src.getId());
+        result.setHandler(src.getHandler());
+        result.setEmail(src.getEmail());
+        result.setUrl(src.getUrl());
+        result.setCreatedAt(src.getCreatedAt());
+        result.setIsSystemUser(src.getIsSystemUser());
+        result.setParams(src.getParams());
+        result.setRequestIp(src.getRequestIp());
+        result.setCost(src.getCost());
+        return result;
+    }
+
+    public static Collection<RequestLogPO> requestLogVO2RequestLogPOList(Collection<RequestLogVO> src) {
+        List<RequestLogPO> result = new ArrayList<>(src.size());
+        for (RequestLogVO ele : src) {
+            result.add(requestLogVO2RequestLogPO(ele));
+        }
+        return result;
+    }
+
+    // -------------------- ExceptionLogPO <-> ExceptionLogVO --------------------------
+    public static ExceptionLogVO exceptionLogPO2ExceptionLogVO(ExceptionLogPO src) {
+        ExceptionLogVO result = new ExceptionLogVO();
+        result.setName(src.getName());
+        result.setId(src.getId());
+        result.setHandler(src.getHandler());
+        result.setHeaders(src.getHeaders());
+        result.setParams(src.getParams());
+        result.setRequestIp(src.getRequestIp());
+        result.setIsSystemUser(src.getIsSystemUser());
+        result.setUrl(src.getUrl());
+        result.setCreatedAt(src.getCreatedAt());
+        result.setEmail(src.getEmail());
+        result.setMsg(src.getMsg());
+        return result;
+    }
+
+    public static Collection<ExceptionLogVO> exceptionLogPO2ExceptionLogVOList(Collection<ExceptionLogPO> src) {
+        List<ExceptionLogVO> result = new ArrayList<>(src.size());
+        for (ExceptionLogPO ele : src) {
+            result.add(exceptionLogPO2ExceptionLogVO(ele));
+        }
+        return result;
+    }
+
+    public static ExceptionLogPO exceptionLogVO2ExceptionLogPO(ExceptionLogVO src) {
+        ExceptionLogPO result = new ExceptionLogPO();
+        result.setName(src.getName());
+        result.setId(src.getId());
+        result.setHandler(src.getHandler());
+        result.setHeaders(src.getHeaders());
+        result.setParams(src.getParams());
+        result.setRequestIp(src.getRequestIp());
+        result.setIsSystemUser(src.getIsSystemUser());
+        result.setUrl(src.getUrl());
+        result.setCreatedAt(src.getCreatedAt());
+        result.setEmail(src.getEmail());
+        result.setMsg(src.getMsg());
+        return result;
+    }
+
+    public static Collection<ExceptionLogPO> exceptionLogVO2ExceptionLogPOList(Collection<ExceptionLogVO> src) {
+        List<ExceptionLogPO> result = new ArrayList<>(src.size());
+        for (ExceptionLogVO ele : src) {
+            result.add(exceptionLogVO2ExceptionLogPO(ele));
         }
         return result;
     }

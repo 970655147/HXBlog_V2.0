@@ -121,7 +121,7 @@ public class BlogCommentServiceImpl extends BaseServiceImpl<BlogCommentPO> imple
         Integer totalRecord = jdbcTemplate.queryForObject(countSql, sqlParams, new OneIntMapper("totalRecord"));
         List<CommentVO> comments = Collections.emptyList();
         if (!Tools.isEmpty(floorIds)) {
-            comments = jdbcTemplate.query(String.format(selectSql, SqlUtils.wrapInSnippet(floorIds)), sqlParams, new CommentVOMapper());
+            comments = jdbcTemplate.query(String.format(selectSql, SqlUtils.wrapInSnippetForIds(floorIds)), sqlParams, new CommentVOMapper());
         }
         List<List<CommentVO>> result = generateCommentTree(comments);
 
@@ -193,13 +193,28 @@ public class BlogCommentServiceImpl extends BaseServiceImpl<BlogCommentPO> imple
 
     @Override
     public Result remove(BeanIdForm params) {
-        String updatedAt = DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
         IQueryCriteria query = Criteria.eq("id", params.getId());
-        IUpdateCriteria update = Criteria.set("deleted", "1").add("updated_at", updatedAt);
+        Result getResult = commentDao.get(query);
+        if(! getResult.isSuccess()) {
+            return getResult;
+        }
 
+        String updatedAt = DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
+        IUpdateCriteria update = Criteria.set("deleted", "1").add("updated_at", updatedAt);
         Result result = commentDao.update(query, update);
         if (!result.isSuccess()) {
             return result;
+        }
+
+        BlogCommentPO po = (BlogCommentPO) getResult.getData();
+        if("1".equals(po.getCommentId())) {
+            Result getExResult = blogExDao.get(new BeanIdForm(po.getBlogId()));
+            if (!getExResult.isSuccess()) {
+                return getExResult;
+            }
+            BlogExPO exPo = ((BlogExPO) getExResult.getData());
+            exPo.incCommentCnt(1);
+            cacheContext.putBlogEx(exPo);
         }
         return ResultUtils.success(params.getId());
     }

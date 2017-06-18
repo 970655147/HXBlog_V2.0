@@ -20,9 +20,9 @@ import com.hx.blog_v2.service.interf.RoleService;
 import com.hx.blog_v2.util.BizUtils;
 import com.hx.blog_v2.util.BlogConstants;
 import com.hx.blog_v2.util.DateUtils;
+import com.hx.blog_v2.util.ResultUtils;
 import com.hx.common.interf.common.Page;
 import com.hx.common.interf.common.Result;
-import com.hx.blog_v2.util.ResultUtils;
 import com.hx.json.JSONArray;
 import com.hx.log.collection.CollectionUtils;
 import com.hx.log.util.Log;
@@ -183,7 +183,7 @@ public class RoleServiceImpl extends BaseServiceImpl<RolePO> implements RoleServ
             return result;
         }
 
-        cacheContext.allRoles().remove(params.getId());
+        cacheContext.removeRole(params.getId());
         return ResultUtils.success(params.getId());
     }
 

@@ -14,8 +14,8 @@ import com.hx.blog_v2.service.interf.BlogTypeService;
 import com.hx.blog_v2.util.BizUtils;
 import com.hx.blog_v2.util.BlogConstants;
 import com.hx.blog_v2.util.DateUtils;
-import com.hx.common.interf.common.Result;
 import com.hx.blog_v2.util.ResultUtils;
+import com.hx.common.interf.common.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -114,7 +114,7 @@ public class BlogTypeServiceImpl extends BaseServiceImpl<BlogTypePO> implements 
             return result;
         }
 
-        cacheContext.allBlogTypes().remove(params.getId());
+        cacheContext.removeBlogType(params.getId());
         return ResultUtils.success(params.getId());
     }
 

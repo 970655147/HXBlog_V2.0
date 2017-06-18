@@ -284,6 +284,22 @@ var reqMap = {
     },
 
     /**
+     * 校正数据相关
+     */
+    correction : {
+        list : formatContextUrl("/admin/correction/list"),
+        doCorrection : formatContextUrl("/admin/correction/doCorrection")
+    },
+
+    /**
+     * 日志相关
+     */
+    log : {
+        requestLogList : formatContextUrl("/admin/log/request/list"),
+        exceptionLogList : formatContextUrl("/admin/log/exception/list")
+    },
+
+    /**
      * 其他配置
      */
     other: {

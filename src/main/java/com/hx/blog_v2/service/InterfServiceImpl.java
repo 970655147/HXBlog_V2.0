@@ -20,8 +20,8 @@ import com.hx.blog_v2.service.interf.InterfService;
 import com.hx.blog_v2.util.BizUtils;
 import com.hx.blog_v2.util.BlogConstants;
 import com.hx.blog_v2.util.DateUtils;
-import com.hx.common.interf.common.Result;
 import com.hx.blog_v2.util.ResultUtils;
+import com.hx.common.interf.common.Result;
 import com.hx.json.JSONArray;
 import com.hx.log.collection.CollectionUtils;
 import com.hx.log.util.Log;
@@ -177,7 +177,7 @@ public class InterfServiceImpl extends BaseServiceImpl<InterfPO> implements Inte
             return result;
         }
 
-        cacheContext.allInterfs().remove(params.getId());
+        cacheContext.removeInterf(params.getId());
         return ResultUtils.success(params.getId());
     }
 

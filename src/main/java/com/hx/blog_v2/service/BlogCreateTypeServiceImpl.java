@@ -13,8 +13,8 @@ import com.hx.blog_v2.service.interf.BlogCreateTypeService;
 import com.hx.blog_v2.util.BizUtils;
 import com.hx.blog_v2.util.BlogConstants;
 import com.hx.blog_v2.util.DateUtils;
-import com.hx.common.interf.common.Result;
 import com.hx.blog_v2.util.ResultUtils;
+import com.hx.common.interf.common.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -111,7 +111,7 @@ public class BlogCreateTypeServiceImpl extends BaseServiceImpl<BlogCreateTypePO>
             return result;
         }
 
-        cacheContext.allBlogCreateTypes().remove(params.getId());
+        cacheContext.removeBlogCreateType(params.getId());
         return ResultUtils.success(params.getId());
     }
 

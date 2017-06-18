@@ -21,8 +21,8 @@ import com.hx.blog_v2.service.interf.ResourceService;
 import com.hx.blog_v2.util.BizUtils;
 import com.hx.blog_v2.util.BlogConstants;
 import com.hx.blog_v2.util.DateUtils;
-import com.hx.common.interf.common.Result;
 import com.hx.blog_v2.util.ResultUtils;
+import com.hx.common.interf.common.Result;
 import com.hx.json.JSONArray;
 import com.hx.json.JSONObject;
 import com.hx.log.alogrithm.tree.TreeUtils;
@@ -225,7 +225,7 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourcePO> implements 
             return result;
         }
 
-        cacheContext.allResources().remove(params.getId());
+        cacheContext.removeResource(params.getId());
         return ResultUtils.success(params.getId());
     }
 
