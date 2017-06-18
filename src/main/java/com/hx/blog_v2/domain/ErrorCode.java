@@ -31,7 +31,7 @@ public enum ErrorCode implements Code2Msg<Integer, String> {
     /**
      * TOKEN_NOT_MATCH
      */
-    TOKEN_NOT_MATCH(203, " your token not match ! "),
+    TOKEN_NOT_MATCH(204, " your token not match ! "),
     /**
      * NOT_FOUND
      */

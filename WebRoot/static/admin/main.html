@@ -16,6 +16,7 @@
     <!-- 需要放在 layui.js 前面 -->
     <script type="text/javascript" src="./plugin/layui/lay/modules/layer.js"></script>
     <script type="text/javascript" src="./plugin/layui/layui.js"></script>
+    <script type="text/javascript" src="../myJs/md5.js"></script>
     <script type="text/javascript" src="../myJs/constants.js" ></script>
     <script type="text/javascript" src="../myJs/utils.js" ></script>
 
@@ -78,6 +79,14 @@
                         <legend>今日统计信息</legend>
                         <div class="layui-field-box" name="todayInfo">
                             <div style="display: inline-block; width: 100%;">
+                                <div class="ht-box layui-bg-green">
+                                    <p name="requestLogCnt">0</p>
+                                    <p>访问数量</p>
+                                </div>
+                                <div class="ht-box layui-bg-red">
+                                    <p name="exceptionLogCnt">0</p>
+                                    <p>异常数量</p>
+                                </div>
                                 <div class="ht-box layui-bg-blue">
                                     <p name="dayFlushViewCnt">0</p>
                                     <p>访问数量[uv]</p>
@@ -86,29 +95,38 @@
                                     <p name="viewCnt">0</p>
                                     <p>访问数量[pv]</p>
                                 </div>
-                                <div class="ht-box layui-bg-red">
-                                    <p name="goodCnt">0</p>
-                                    <p>点赞数量</p>
-                                </div>
-                                <div class="ht-box layui-bg-green">
-                                    <p name="notGoodCnt">0</p>
-                                    <p>取消点赞</p>
-                                </div>
                                 <div class="ht-box layui-bg-orange">
                                     <p name="blogCnt">0</p>
                                     <p>博客数量</p>
                                 </div>
-                                <div class="ht-box layui-bg-black">
+                                <div class="ht-box layui-bg-green">
                                     <p name="commentCnt">0</p>
                                     <p>评论数量</p>
+                                </div>
+                                <div class="ht-box layui-bg-green">
+                                    <p name="goodCnt">0</p>
+                                    <p>点赞数量</p>
+                                </div>
+                                <div class="ht-box layui-bg-red">
+                                    <p name="notGoodCnt">0</p>
+                                    <p>取消点赞</p>
                                 </div>
                             </div>
                         </div>
                     </fieldset>
+
                     <fieldset class="layui-elem-field layui-field-title">
-                        <legend>合计统计信息</legend>
-                        <div class="layui-field-box" name="sumInfo">
+                        <legend> 最近7天 </legend>
+                        <div class="layui-field-box" name="recentlyInfo">
                             <div style="display: inline-block; width: 100%;">
+                                <div class="ht-box layui-bg-green">
+                                    <p name="requestLogCnt">0</p>
+                                    <p>访问数量</p>
+                                </div>
+                                <div class="ht-box layui-bg-red">
+                                    <p name="exceptionLogCnt">0</p>
+                                    <p>异常数量</p>
+                                </div>
                                 <div class="ht-box layui-bg-blue">
                                     <p name="dayFlushViewCnt">0</p>
                                     <p>访问数量[uv]</p>
@@ -117,21 +135,61 @@
                                     <p name="viewCnt">0</p>
                                     <p>访问数量[pv]</p>
                                 </div>
-                                <div class="ht-box layui-bg-red">
+                                <div class="ht-box layui-bg-orange">
+                                    <p name="blogCnt">0</p>
+                                    <p>博客数量</p>
+                                </div>
+                                <div class="ht-box layui-bg-green">
+                                    <p name="commentCnt">0</p>
+                                    <p>评论数量</p>
+                                </div>
+                                <div class="ht-box layui-bg-green">
                                     <p name="goodCnt">0</p>
                                     <p>点赞数量</p>
                                 </div>
-                                <div class="ht-box layui-bg-green">
+                                <div class="ht-box layui-bg-red">
                                     <p name="notGoodCnt">0</p>
                                     <p>取消点赞</p>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <fieldset class="layui-elem-field layui-field-title">
+                        <legend>合计统计信息</legend>
+                        <div class="layui-field-box" name="sumInfo">
+                            <div style="display: inline-block; width: 100%;">
+                                <div class="ht-box layui-bg-green">
+                                    <p name="requestLogCnt">0</p>
+                                    <p>访问数量</p>
+                                </div>
+                                <div class="ht-box layui-bg-red">
+                                    <p name="exceptionLogCnt">0</p>
+                                    <p>异常数量</p>
+                                </div>
+                                <div class="ht-box layui-bg-blue">
+                                    <p name="dayFlushViewCnt">0</p>
+                                    <p>访问数量[uv]</p>
+                                </div>
+                                <div class="ht-box layui-bg-blue">
+                                    <p name="viewCnt">0</p>
+                                    <p>访问数量[pv]</p>
                                 </div>
                                 <div class="ht-box layui-bg-orange">
                                     <p name="blogCnt">0</p>
                                     <p>博客数量</p>
                                 </div>
-                                <div class="ht-box layui-bg-black">
+                                <div class="ht-box layui-bg-green">
                                     <p name="commentCnt">0</p>
                                     <p>评论数量</p>
+                                </div>
+                                <div class="ht-box layui-bg-green">
+                                    <p name="goodCnt">0</p>
+                                    <p>点赞数量</p>
+                                </div>
+                                <div class="ht-box layui-bg-red">
+                                    <p name="notGoodCnt">0</p>
+                                    <p>取消点赞</p>
                                 </div>
                             </div>
                         </div>

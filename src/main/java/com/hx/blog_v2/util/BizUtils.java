@@ -224,6 +224,8 @@ public final class BizUtils {
         String statsSenseCntSql = " select date_format(created_at, '%Y-%m-%d') as date, count(if (clicked = 1, true, null)) as goodCnt, count(if (clicked = 0, true, null)) as notGoodCnt from blog_sense where sense = 'good' and created_at >= ? and created_at <= ? group by DATE_FORMAT(created_at, '%Y-%m-%d') ";
         String statsBlogCntSql = " select date_format(created_at, '%Y-%m-%d') as date, count(*) as blogCnt from blog where deleted = 0 and created_at >= ? and created_at <= ? group by date_format(created_at, '%Y-%m-%d') ";
         String statsCommentCntSql = " select date_format(created_at, '%Y-%m-%d') as date, count(*) as commentCnt from blog_comment where deleted = 0 and created_at >= ? and created_at <= ? group by date_format(created_at, '%Y-%m-%d') ";
+        String requestLogCntSql = " select date_format(created_at, '%Y-%m-%d') as date, count(*) as requestCnt from request_log where created_at >= ? and created_at <= ? group by date_format(created_at, '%Y-%m-%d') ";
+        String exceptionLogCntSql = " select date_format(created_at, '%Y-%m-%d') as date, count(*) as exceptionCnt from exception_log where created_at >= ? and created_at <= ? group by date_format(created_at, '%Y-%m-%d') ";
         String dateKey = "date";
 
         Object[] params = new Object[]{begin, end};
@@ -232,6 +234,8 @@ public final class BizUtils {
         List<Map<String, Object>> senseCnts = jdbcTemplate.query(statsSenseCntSql, params, rowMapper);
         List<Map<String, Object>> blogCnts = jdbcTemplate.query(statsBlogCntSql, params, rowMapper);
         List<Map<String, Object>> commentCnts = jdbcTemplate.query(statsCommentCntSql, params, rowMapper);
+        List<Map<String, Object>> requestCnts = jdbcTemplate.query(requestLogCntSql, params, rowMapper);
+        List<Map<String, Object>> exceptionCnts = jdbcTemplate.query(exceptionLogCntSql, params, rowMapper);
 
         List<StatisticsInfo> result = new ArrayList<>(dayOff);
         for (int off = 0; off < dayOff; off++) {
@@ -240,9 +244,12 @@ public final class BizUtils {
             Map<String, Object> senseCntMap = locateByDate(senseCnts, dateKey, dayStr);
             Map<String, Object> blogCntMap = locateByDate(blogCnts, dateKey, dayStr);
             Map<String, Object> commentCntMap = locateByDate(commentCnts, dateKey, dayStr);
+            Map<String, Object> requestCntMap = locateByDate(requestCnts, dateKey, dayStr);
+            Map<String, Object> exceptionCntMap = locateByDate(exceptionCnts, dateKey, dayStr);
 
             StatisticsInfo dayInfo = new StatisticsInfo();
-            encapStatisticsInfo(viewCntMap, senseCntMap, blogCntMap, commentCntMap, dayInfo);
+            encapStatisticsInfo(viewCntMap, senseCntMap, blogCntMap, commentCntMap,
+                    requestCntMap, exceptionCntMap, dayInfo);
             result.add(dayInfo);
         }
 
@@ -264,16 +271,19 @@ public final class BizUtils {
         String statsSenseCntSql = " select count(if (clicked = 1, true, null)) as goodCnt, count(if (clicked = 0, true, null)) as notGoodCnt from blog_sense where sense = 'good' and date_format(created_at, '%y-%m-%d') <= ? ";
         String statsBlogCntSql = " select count(*) as blogCnt from blog where deleted = 0 and date_format(created_at, '%y-%m-%d') <= ? ";
         String statsCommentCntSql = " select count(*) as commentCnt from blog_comment where deleted = 0 and date_format(created_at, '%y-%m-%d') <= ? ";
+        String requestLogCntSql = " select count(*) as requestCnt from request_log where date_format(created_at, '%y-%m-%d') <= ? ";
+        String exceptionLogCntSql = " select count(*) as exceptionCnt from exception_log where date_format(created_at, '%y-%m-%d') <= ? ";
 
         Object[] params = new Object[]{yesterday};
-        RowMapper<Map<String, Object>> rowMapper = new ToMapMapper();
         Map<String, Object> viewCntMap = jdbcTemplate.queryForMap(statsViewCntSql, params);
         Map<String, Object> senseCntMap = jdbcTemplate.queryForMap(statsSenseCntSql, params);
         Map<String, Object> blogCntMap = jdbcTemplate.queryForMap(statsBlogCntSql, params);
         Map<String, Object> commentCntMap = jdbcTemplate.queryForMap(statsCommentCntSql, params);
+        Map<String, Object> requestCntMap = jdbcTemplate.queryForMap(requestLogCntSql, params);
+        Map<String, Object> exceptionCntMap = jdbcTemplate.queryForMap(exceptionLogCntSql, params);
 
         StatisticsInfo result = new StatisticsInfo();
-        encapStatisticsInfo(viewCntMap, senseCntMap, blogCntMap, commentCntMap, result);
+        encapStatisticsInfo(viewCntMap, senseCntMap, blogCntMap, commentCntMap, requestCntMap, exceptionCntMap, result);
         return result;
     }
 
@@ -408,6 +418,7 @@ public final class BizUtils {
      */
     private static void encapStatisticsInfo(Map<String, Object> viewCntMap, Map<String, Object> senseCntMap,
                                             Map<String, Object> blogCntMap, Map<String, Object> commentCntMap,
+                                            Map<String, Object> requestCntMap, Map<String, Object> exceptionCntMap,
                                             StatisticsInfo dayInfo) {
         if (!Tools.isEmpty(viewCntMap)) {
             dayInfo.setViewCnt(Tools.optInt(viewCntMap, "viewCount", 0));
@@ -422,6 +433,12 @@ public final class BizUtils {
         }
         if (!Tools.isEmpty(commentCntMap)) {
             dayInfo.setCommentCnt(Tools.optInt(commentCntMap, "commentCnt", 0));
+        }
+        if (!Tools.isEmpty(requestCntMap)) {
+            dayInfo.setRequestLogCnt(Tools.optInt(requestCntMap, "requestCnt", 0));
+        }
+        if (!Tools.isEmpty(exceptionCntMap)) {
+            dayInfo.setExceptionLogCnt(Tools.optInt(exceptionCntMap, "exceptionCnt", 0));
         }
     }
 

@@ -330,19 +330,32 @@ function initStatistics() {
                 $("[name='loginDate']").text(loginInfo.loginDate)
 
                 var todayStats = resp.data.todayStats
+                $("[name='todayInfo'] [name='requestLogCnt']").text(todayStats.requestLogCnt)
+                $("[name='todayInfo'] [name='exceptionLogCnt']").text(todayStats.exceptionLogCnt)
                 $("[name='todayInfo'] [name='dayFlushViewCnt']").text(todayStats.dayFlushViewCnt)
                 $("[name='todayInfo'] [name='viewCnt']").text(todayStats.viewCnt)
-                $("[name='todayInfo'] [name='goodCnt']").text(todayStats.goodCnt)
-                $("[name='todayInfo'] [name='notGoodCnt']").text(todayStats.notGoodCnt)
                 $("[name='todayInfo'] [name='blogCnt']").text(todayStats.blogCnt)
                 $("[name='todayInfo'] [name='commentCnt']").text(todayStats.commentCnt)
+                $("[name='todayInfo'] [name='goodCnt']").text(todayStats.goodCnt)
+                $("[name='todayInfo'] [name='notGoodCnt']").text(todayStats.notGoodCnt)
+                var recentlyStats = resp.data.recentlyStats
+                $("[name='recentlyInfo'] [name='requestLogCnt']").text(recentlyStats.requestLogCnt + todayStats.requestLogCnt)
+                $("[name='recentlyInfo'] [name='exceptionLogCnt']").text(recentlyStats.exceptionLogCnt + todayStats.exceptionLogCnt)
+                $("[name='recentlyInfo'] [name='dayFlushViewCnt']").text(recentlyStats.dayFlushViewCnt + todayStats.dayFlushViewCnt)
+                $("[name='recentlyInfo'] [name='viewCnt']").text(recentlyStats.viewCnt + todayStats.viewCnt)
+                $("[name='recentlyInfo'] [name='blogCnt']").text(recentlyStats.blogCnt + todayStats.blogCnt)
+                $("[name='recentlyInfo'] [name='commentCnt']").text(recentlyStats.commentCnt + todayStats.commentCnt)
+                $("[name='recentlyInfo'] [name='goodCnt']").text(recentlyStats.goodCnt + todayStats.goodCnt)
+                $("[name='recentlyInfo'] [name='notGoodCnt']").text(recentlyStats.notGoodCnt + todayStats.notGoodCnt)
                 var sumStats = resp.data.sumStats
+                $("[name='sumInfo'] [name='requestLogCnt']").text(sumStats.requestLogCnt + todayStats.requestLogCnt)
+                $("[name='sumInfo'] [name='exceptionLogCnt']").text(sumStats.exceptionLogCnt + todayStats.exceptionLogCnt)
                 $("[name='sumInfo'] [name='dayFlushViewCnt']").text(sumStats.dayFlushViewCnt + todayStats.dayFlushViewCnt)
                 $("[name='sumInfo'] [name='viewCnt']").text(sumStats.viewCnt + todayStats.viewCnt)
-                $("[name='sumInfo'] [name='goodCnt']").text(sumStats.goodCnt + todayStats.goodCnt)
-                $("[name='sumInfo'] [name='notGoodCnt']").text(sumStats.notGoodCnt + todayStats.notGoodCnt)
                 $("[name='sumInfo'] [name='blogCnt']").text(sumStats.blogCnt + todayStats.blogCnt)
                 $("[name='sumInfo'] [name='commentCnt']").text(sumStats.commentCnt + todayStats.commentCnt)
+                $("[name='sumInfo'] [name='goodCnt']").text(sumStats.goodCnt + todayStats.goodCnt)
+                $("[name='sumInfo'] [name='notGoodCnt']").text(sumStats.notGoodCnt + todayStats.notGoodCnt)
             } else {
                 // layer.alert("拉取菜单列表失败[" + resp.data + "] !", {icon: 5});
             }

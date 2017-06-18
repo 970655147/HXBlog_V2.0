@@ -27,6 +27,7 @@
         <mvc:interceptor>
             <mvc:mapping path="/**"/>
             <mvc:exclude-mapping path="/static/**"/>
+            <mvc:exclude-mapping path="/image/checkCode"/>
             <bean class="com.hx.blog_v2.interceptor.TokenInterceptor"/>
         </mvc:interceptor>
         <mvc:interceptor>

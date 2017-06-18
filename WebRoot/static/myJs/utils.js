@@ -290,7 +290,7 @@ function ajax(config) {
                 interceptorDialog = null
                 location.href = "/static/admin/index.html"
             })
-        } else if (203 === resp.code) {
+        } else if ((203 === resp.code) || (204 === resp.code) ) {
             alertIfException(resp.data, function () {
                 layer.close(interceptorDialog)
                 interceptorDialog = null

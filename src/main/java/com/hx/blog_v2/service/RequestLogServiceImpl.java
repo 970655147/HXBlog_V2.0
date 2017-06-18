@@ -1,5 +1,6 @@
 package com.hx.blog_v2.service;
 
+import com.hx.blog_v2.context.CacheContext;
 import com.hx.blog_v2.dao.interf.RequestLogDao;
 import com.hx.blog_v2.domain.dto.SessionUser;
 import com.hx.blog_v2.domain.po.RequestLogPO;
@@ -30,6 +31,8 @@ public class RequestLogServiceImpl extends BaseServiceImpl<RequestLogPO> impleme
     private RequestLogDao requestLogDao;
     @Autowired
     private ConstantsContext constantsContext;
+    @Autowired
+    private CacheContext cacheContext;
 
     @Override
     public void saveRequestLog(JoinPoint point, long cost) {
@@ -39,6 +42,8 @@ public class RequestLogServiceImpl extends BaseServiceImpl<RequestLogPO> impleme
             return;
         }
 
+        cacheContext.todaysStatistics().incRequestLogCnt(1);
+        cacheContext.now5SecStatistics().incRequestLogCnt(1);
         SessionUser user = (SessionUser) WebContext.getAttributeFromSession(BlogConstants.SESSION_USER);
         boolean withUserInfoInServer = (user != null);
         if (!withUserInfoInServer) {

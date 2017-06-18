@@ -1,5 +1,6 @@
 package com.hx.blog_v2.service;
 
+import com.hx.blog_v2.context.CacheContext;
 import com.hx.blog_v2.dao.interf.ExceptionLogDao;
 import com.hx.blog_v2.domain.dto.SessionUser;
 import com.hx.blog_v2.domain.po.ExceptionLogPO;
@@ -29,6 +30,8 @@ public class ExceptionLogServiceImpl extends BaseServiceImpl<ExceptionLogPO> imp
 
     @Autowired
     private ExceptionLogDao exceptionLogDao;
+    @Autowired
+    private CacheContext cacheContext;
 
     @Override
     public void saveExceptionLog(JoinPoint point, Result result, Throwable e) {
@@ -39,6 +42,8 @@ public class ExceptionLogServiceImpl extends BaseServiceImpl<ExceptionLogPO> imp
             user = SessionUser.DUMMY;
         }
 
+        cacheContext.todaysStatistics().incExceptionLogCnt(1);
+        cacheContext.now5SecStatistics().incExceptionLogCnt(1);
         JSONObject params = JSONObject.fromObject(req.getParameterMap());
         if ((params != null) && (result != null)) {
             params.put("resultFromHandler", JSONObject.fromObject(result));

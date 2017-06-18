@@ -36,7 +36,8 @@ public class SystemServiceImpl extends BaseServiceImpl<Object> implements System
 
     @Override
     public Result statsSummary() {
-        JSONObject data = new JSONObject().element("lastWeekInfo", cacheContext.allStatistics())
+        JSONObject data = new JSONObject().element("lastWeekInfo", cacheContext.recentlyStatistics())
+                .element("todayInfo", cacheContext.todaysStatistics())
                 .element("realTimeInfo", cacheContext.all5SecStatistics());
         return ResultUtils.success(data);
     }

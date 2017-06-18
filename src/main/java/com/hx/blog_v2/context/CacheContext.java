@@ -165,7 +165,11 @@ public class CacheContext {
     /**
      * 缓存的 7 天的 数据
      */
-    private Queue<StatisticsInfo> allStatistics = new LinkedList<>();
+    private Queue<StatisticsInfo> recentlyStatistics = new LinkedList<>();
+    /**
+     * 缓存 今天之前7-1 天的 数据的总和[每天刷新一次]
+     */
+    private StatisticsInfo recentlySumStatistics = null;
     /**
      * 今天之前的合计的统计数据
      */
@@ -176,7 +180,7 @@ public class CacheContext {
      */
     private StatisticsInfo now5SecStatistics = new StatisticsInfo();
     /**
-     * 缓存的 7 个5s的实时 数据
+     * 缓存的 7 个5s的实时 数据[保存的所有的统计信息]
      */
     private Queue<StatisticsInfo> all5SecStatistics = new LinkedList<>();
     /**
@@ -251,7 +255,7 @@ public class CacheContext {
 
         if (BizUtils.flagExists(clearFlag, REFRESH_STATISTICS_CACHED)) {
             todaysStatistics = new StatisticsInfo();
-            allStatistics.clear();
+            recentlyStatistics.clear();
             sumStatistics = new StatisticsInfo();
             now5SecStatistics = new StatisticsInfo();
             all5SecStatistics.clear();
@@ -646,8 +650,27 @@ public class CacheContext {
      * @date 6/10/2017 9:03 PM
      * @since 1.0
      */
-    public Queue<StatisticsInfo> allStatistics() {
-        return allStatistics;
+    public Queue<StatisticsInfo> recentlyStatistics() {
+        return recentlyStatistics;
+    }
+
+    /**
+     * 获取最近7天的的统计数据的总和
+     *
+     * @return com.hx.blog_v2.domain.dto.StatisticsInfo
+     * @author Jerry.X.He
+     * @date 6/10/2017 9:03 PM
+     * @since 1.0
+     */
+    public StatisticsInfo recentlySumStatistics() {
+        if(recentlySumStatistics == null) {
+            recentlySumStatistics = new StatisticsInfo();
+            for(StatisticsInfo stats : recentlyStatistics) {
+                recentlySumStatistics.merge(stats);
+            }
+        }
+
+        return recentlySumStatistics;
     }
 
     /**
@@ -946,10 +969,10 @@ public class CacheContext {
     private void loadStastics() {
         List<StatisticsInfo> allDayStatisInfo = BizUtils.collectRecentlyStatisticsInfo(jdbcTemplate,
                 constantsContext.maxCacheStatisticsDays);
-        allStatistics.addAll(allDayStatisInfo);
         if (!Tools.isEmpty(allDayStatisInfo)) {
-            todaysStatistics = allDayStatisInfo.get(allDayStatisInfo.size() - 1);
+            todaysStatistics = allDayStatisInfo.remove(allDayStatisInfo.size()-1);
         }
+        recentlyStatistics.addAll(allDayStatisInfo);
         sumStatistics = BizUtils.collectSumStatisticsInfo(jdbcTemplate);
     }
 
@@ -1075,10 +1098,13 @@ public class CacheContext {
      * @since 1.0
      */
     private void switchStatistics() {
-        if (allStatistics.size() > constantsContext.maxCacheStatisticsDays) {
-            allStatistics.poll();
+        // -1 去掉今天占用的容量[总共需要缓存的天数的数据-1]
+        if (recentlyStatistics.size() > (constantsContext.maxCacheStatisticsDays-1)) {
+            recentlyStatistics.poll();
         }
-        allStatistics.add(todaysStatistics);
+        recentlyStatistics.add(todaysStatistics);
+        sumStatistics.merge(todaysStatistics);
+        recentlySumStatistics = null;
         todaysStatistics = new StatisticsInfo();
     }
 

@@ -157,6 +157,7 @@ public class IndexServiceImpl extends BaseServiceImpl<Object> implements IndexSe
                 .element("loginInfo", new JSONObject().element("loginIp", user.getRequestIp())
                         .element("loginDate", user.getLoginDate()).element("loginAddr", user.getIpAddr()))
                 .element("todayStats", cacheContext.todaysStatistics())
+                .element("recentlyStats", cacheContext.recentlySumStatistics())
                 .element("sumStats", cacheContext.sumStatistics());
 
         return ResultUtils.success(data);

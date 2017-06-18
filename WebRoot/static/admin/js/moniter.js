@@ -86,8 +86,10 @@ function encapStats() {
         success: function (resp) {
             if (resp.success) {
                 var lastWeekInfo = resp.data.lastWeekInfo
+                var todayInfo = resp.data.todayInfo
                 var realTimeInfo = resp.data.realTimeInfo
                 var lastWeekXAxisArr = []
+                lastWeekInfo.push(todayInfo)
                 for (var i = 0; i < lastWeekInfo.length; i++) {
                     lastWeekXAxisArr.push(weeksStr((dayOfWeek + 7 - i) % 7))
                 }
@@ -113,18 +115,22 @@ function encapStats() {
  * 封装 echarts 的 option
  */
 function encapOptions(statsArr, xAxisArr) {
-    var statsDayFlushViewCnt = [], statsViewCnt = [], statsGoodCnt = []
-    var statsNotGoodCnt = [], statsBlogCnt = [], statsCommentCnt = []
+    var requestLogCnt = [], exceptionLogCnt = []
+    var statsDayFlushViewCnt = [], statsViewCnt = []
+    var statsBlogCnt = [], statsCommentCnt = []
+    var statsGoodCnt = [], statsNotGoodCnt = []
 
     var length = statsArr.length
     for (idx in statsArr) {
         var stats = statsArr[length - idx - 1]
+        requestLogCnt.push(stats.requestLogCnt)
+        exceptionLogCnt.push(stats.exceptionLogCnt)
         statsDayFlushViewCnt.push(stats.dayFlushViewCnt)
         statsViewCnt.push(stats.viewCnt)
-        statsGoodCnt.push(stats.goodCnt)
-        statsNotGoodCnt.push(stats.notGoodCnt)
         statsBlogCnt.push(stats.blogCnt)
         statsCommentCnt.push(stats.commentCnt)
+        statsGoodCnt.push(stats.goodCnt)
+        statsNotGoodCnt.push(stats.notGoodCnt)
     }
 
     var option = {
@@ -132,7 +138,7 @@ function encapOptions(statsArr, xAxisArr) {
             trigger: 'axis'
         },
         legend: {
-            data: ['访问数量[uv]', '访问数量[pv]', '点赞数量', '取消点赞', '博客数量', '评论数量']
+            data: ['请求数量', '异常数量', '访问数量[uv]', '访问数量[pv]', '点赞数量', '取消点赞', '博客数量', '评论数量']
         },
         toolbox: {
             show: true,
@@ -159,6 +165,18 @@ function encapOptions(statsArr, xAxisArr) {
         ],
         series: [
             {
+                name: '请求数量',
+                type: 'line',
+                stack: '总量',
+                data: requestLogCnt
+            },
+            {
+                name: '异常数量',
+                type: 'line',
+                stack: '总量',
+                data: exceptionLogCnt
+            },
+            {
                 name: '访问数量[uv]',
                 type: 'line',
                 stack: '总量',
@@ -171,18 +189,6 @@ function encapOptions(statsArr, xAxisArr) {
                 data: statsViewCnt
             },
             {
-                name: '点赞数量',
-                type: 'line',
-                stack: '总量',
-                data: statsGoodCnt
-            },
-            {
-                name: '取消点赞',
-                type: 'line',
-                stack: '总量',
-                data: statsNotGoodCnt
-            },
-            {
                 name: '博客数量',
                 type: 'line',
                 stack: '总量',
@@ -193,6 +199,18 @@ function encapOptions(statsArr, xAxisArr) {
                 type: 'line',
                 stack: '总量',
                 data: statsCommentCnt
+            },
+            {
+                name: '点赞数量',
+                type: 'line',
+                stack: '总量',
+                data: statsGoodCnt
+            },
+            {
+                name: '取消点赞',
+                type: 'line',
+                stack: '总量',
+                data: statsNotGoodCnt
             }
         ]
     }
