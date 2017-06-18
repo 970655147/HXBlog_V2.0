@@ -25,7 +25,7 @@ import com.hx.blog_v2.service.interf.IndexService;
 import com.hx.blog_v2.service.interf.LinkService;
 import com.hx.blog_v2.util.BlogConstants;
 import com.hx.common.interf.common.Result;
-import com.hx.common.util.ResultUtils;
+import com.hx.blog_v2.util.ResultUtils;
 import com.hx.json.JSONObject;
 import com.hx.log.alogrithm.tree.TreeUtils;
 import com.hx.log.util.Log;

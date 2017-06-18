@@ -1,7 +1,7 @@
 package com.hx.blog_v2.controller.admin;
 
 import com.hx.blog_v2.biz_handler.anno.BizHandle;
-import com.hx.blog_v2.biz_handler.handler.AuthorityUpdateHandler;
+import com.hx.blog_v2.biz_handler.handler.AuthUpdatedHandler;
 import com.hx.blog_v2.domain.ErrorCode;
 import com.hx.blog_v2.domain.form.BeanIdForm;
 import com.hx.blog_v2.domain.form.RoleSaveForm;
@@ -14,7 +14,7 @@ import com.hx.blog_v2.domain.vo.UserRoleVO;
 import com.hx.blog_v2.service.interf.RoleService;
 import com.hx.common.interf.common.Result;
 import com.hx.common.result.SimplePage;
-import com.hx.common.util.ResultUtils;
+import com.hx.blog_v2.util.ResultUtils;
 import com.hx.log.util.Tools;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -85,7 +85,7 @@ public class RoleController {
     }
 
     @RequestMapping(value = "/userRole/update", method = RequestMethod.POST)
-    @BizHandle(handler = "authorityUpdateHandler", others = AuthorityUpdateHandler.USER_ROLE)
+    @BizHandle(handler = "authUpdatedHandler", others = AuthUpdatedHandler.USER_ROLE)
     public Result userRoleUpdate(UserRoleUpdateForm params) {
         Result errResult = userRoleUpdateValidator.validate(params, null);
         if (!errResult.isSuccess()) {

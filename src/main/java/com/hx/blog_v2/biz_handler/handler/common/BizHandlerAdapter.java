@@ -1,4 +1,4 @@
-package com.hx.blog_v2.biz_handler.handler;
+package com.hx.blog_v2.biz_handler.handler.common;
 
 import com.hx.blog_v2.biz_handler.interf.BizContext;
 import com.hx.blog_v2.biz_handler.interf.BizHandler;

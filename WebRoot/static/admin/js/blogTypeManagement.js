@@ -41,8 +41,6 @@ layui.define(['layer', 'form'], function (exports) {
                     $('#dataContent').html(html);
                 }
             });
-
-            $('#dataConsole,#dataList').attr('style', 'display:block'); //显示FiledBox
         }, 500);
     }
 

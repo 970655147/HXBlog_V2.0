@@ -4,7 +4,7 @@ import com.hx.blog_v2.domain.ErrorCode;
 import com.hx.blog_v2.domain.form.ImageSearchForm;
 import com.hx.common.interf.common.Result;
 import com.hx.common.interf.validator.Validator;
-import com.hx.common.util.ResultUtils;
+import com.hx.blog_v2.util.ResultUtils;
 import com.hx.log.util.Tools;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

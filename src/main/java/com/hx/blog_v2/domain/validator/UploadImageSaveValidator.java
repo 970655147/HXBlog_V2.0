@@ -5,7 +5,7 @@ import com.hx.blog_v2.domain.ErrorCode;
 import com.hx.blog_v2.domain.form.UploadedImageSaveForm;
 import com.hx.common.interf.common.Result;
 import com.hx.common.interf.validator.Validator;
-import com.hx.common.util.ResultUtils;
+import com.hx.blog_v2.util.ResultUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 

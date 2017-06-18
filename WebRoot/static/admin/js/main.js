@@ -309,10 +309,6 @@ function initMenu() {
                         location.href = "/static/admin/index.html"
                     })
                 }
-            } else {
-                layer.alert("请先登录 !", function(){
-                    location.href = "/static/admin/index.html"
-                })
             }
         }
     });

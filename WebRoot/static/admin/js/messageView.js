@@ -61,7 +61,6 @@ layui.define(['element', 'laypage', 'layer', 'form', 'pagesize'], function (expo
                     element.init();
 
                     form.render('checkbox');  //重新渲染CheckBox，编辑和添加的时候
-                    $('#dataConsole, #dataList').attr('style', 'display:block'); //显示FiledBox
                     laypage({
                         cont: laypageId,
                         pages: resp.data.totalPage,

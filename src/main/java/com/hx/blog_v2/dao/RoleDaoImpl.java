@@ -8,7 +8,7 @@ import com.hx.blog_v2.util.BlogConstants;
 import com.hx.blog_v2.context.CacheContext;
 import com.hx.blog_v2.util.MyMysqlConnectionProvider;
 import com.hx.common.interf.common.Result;
-import com.hx.common.util.ResultUtils;
+import com.hx.blog_v2.util.ResultUtils;
 import com.hx.mongo.config.MysqlDbConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;

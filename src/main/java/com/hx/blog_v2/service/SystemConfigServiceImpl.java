@@ -15,7 +15,7 @@ import com.hx.blog_v2.util.BlogConstants;
 import com.hx.blog_v2.util.DateUtils;
 import com.hx.common.interf.common.Page;
 import com.hx.common.interf.common.Result;
-import com.hx.common.util.ResultUtils;
+import com.hx.blog_v2.util.ResultUtils;
 import com.hx.mongo.criteria.Criteria;
 import com.hx.mongo.criteria.SortByCriteria;
 import com.hx.mongo.criteria.interf.IQueryCriteria;

@@ -1,5 +1,6 @@
 package com.hx.blog_v2.biz_handler.handler;
 
+import com.hx.blog_v2.biz_handler.handler.common.BizHandlerAdapter;
 import com.hx.blog_v2.biz_handler.interf.BizContext;
 import com.hx.blog_v2.context.CacheContext;
 import com.hx.blog_v2.context.ConstantsContext;

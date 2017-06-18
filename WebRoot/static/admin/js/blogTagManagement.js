@@ -50,8 +50,6 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
                     }
                 }
             });
-
-            $('#dataConsole,#dataList').attr('style', 'display:block'); //显示FiledBox
         }, 500);
     }
 

@@ -21,7 +21,7 @@ import com.hx.blog_v2.util.BlogConstants;
 import com.hx.blog_v2.util.DateUtils;
 import com.hx.common.interf.common.Page;
 import com.hx.common.interf.common.Result;
-import com.hx.common.util.ResultUtils;
+import com.hx.blog_v2.util.ResultUtils;
 import com.hx.json.JSONArray;
 import com.hx.log.alogrithm.code.Codec;
 import com.hx.log.util.Tools;

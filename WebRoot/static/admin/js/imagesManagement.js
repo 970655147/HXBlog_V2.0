@@ -62,7 +62,6 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
                             html += '</tr>';
                         }
                         $('#dataContent').html(html);
-                        $('#dataConsole,#dataList').attr('style', 'display:block'); //显示FiledBox
 
                         laypage({
                             cont: laypageId,

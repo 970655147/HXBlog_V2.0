@@ -3,7 +3,7 @@ package com.hx.blog_v2.biz_handler.validator;
 import com.hx.blog_v2.biz_handler.interf.BizContext;
 import com.hx.blog_v2.biz_handler.interf.BizValidator;
 import com.hx.common.interf.common.Result;
-import com.hx.common.util.ResultUtils;
+import com.hx.blog_v2.util.ResultUtils;
 import com.hx.log.util.Tools;
 
 import java.util.List;

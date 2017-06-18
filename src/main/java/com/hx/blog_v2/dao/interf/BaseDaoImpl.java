@@ -3,7 +3,7 @@ package com.hx.blog_v2.dao.interf;
 import com.hx.blog_v2.domain.form.BeanIdForm;
 import com.hx.blog_v2.util.BlogConstants;
 import com.hx.common.interf.common.Result;
-import com.hx.common.util.ResultUtils;
+import com.hx.blog_v2.util.ResultUtils;
 import com.hx.log.json.interf.JSONTransferable;
 import com.hx.log.util.Tools;
 import com.hx.mongo.config.interf.DbConfig;

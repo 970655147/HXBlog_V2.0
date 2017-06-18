@@ -21,7 +21,7 @@ import com.hx.blog_v2.service.interf.BlogService;
 import com.hx.blog_v2.util.*;
 import com.hx.common.interf.common.Page;
 import com.hx.common.interf.common.Result;
-import com.hx.common.util.ResultUtils;
+import com.hx.blog_v2.util.ResultUtils;
 import com.hx.log.collection.CollectionUtils;
 import com.hx.log.file.FileUtils;
 import com.hx.log.util.Log;

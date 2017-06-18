@@ -52,8 +52,6 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
                             html += '</tr>';
                         }
                         $('#dataContent').html(html);
-
-                        $('#dataConsole,#dataList').attr('style', 'display:block'); //显示FiledBox
                     } else {
                         layer.alert("拉取接口列表失败[" + resp.data + "] !", {icon: 5});
                     }

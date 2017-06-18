@@ -1,7 +1,7 @@
 package com.hx.blog_v2.controller.admin;
 
 import com.hx.blog_v2.biz_handler.anno.BizHandle;
-import com.hx.blog_v2.biz_handler.handler.AuthorityUpdateHandler;
+import com.hx.blog_v2.biz_handler.handler.AuthUpdatedHandler;
 import com.hx.blog_v2.domain.ErrorCode;
 import com.hx.blog_v2.domain.form.BeanIdForm;
 import com.hx.blog_v2.domain.form.InterfSaveForm;
@@ -11,7 +11,7 @@ import com.hx.blog_v2.domain.validator.InterfSaveValidator;
 import com.hx.blog_v2.domain.validator.ResourceInterfUpdateValidator;
 import com.hx.blog_v2.service.interf.InterfService;
 import com.hx.common.interf.common.Result;
-import com.hx.common.util.ResultUtils;
+import com.hx.blog_v2.util.ResultUtils;
 import com.hx.log.util.Tools;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -75,7 +75,7 @@ public class InterfController {
     }
 
     @RequestMapping(value = "/resourceInterf/update", method = RequestMethod.POST)
-    @BizHandle(handler = "authorityUpdateHandler", others = AuthorityUpdateHandler.RESOURCE_INTERF)
+    @BizHandle(handler = "authUpdatedHandler", others = AuthUpdatedHandler.RESOURCE_INTERF)
     public Result userRoleUpdate(ResourceInterfUpdateForm params) {
         Result errResult = resourceInterfUpdateValidator.validate(params, null);
         if (!errResult.isSuccess()) {

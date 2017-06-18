@@ -1,16 +1,17 @@
 package com.hx.blog_v2.interceptor;
 
+import com.hx.blog_v2.context.WebContext;
 import com.hx.blog_v2.dao.interf.RltResourceInterfDao;
 import com.hx.blog_v2.dao.interf.RltRoleResourceDao;
+import com.hx.blog_v2.domain.ErrorCode;
 import com.hx.blog_v2.domain.dto.SessionUser;
 import com.hx.blog_v2.domain.form.BeanIdsForm;
 import com.hx.blog_v2.service.interf.ExceptionLogService;
 import com.hx.blog_v2.util.BlogConstants;
-import com.hx.blog_v2.context.WebContext;
 import com.hx.common.interf.common.Result;
 import com.hx.common.str.AntPathMatcher;
 import com.hx.common.str.interf.PathMatcher;
-import com.hx.common.util.ResultUtils;
+import com.hx.blog_v2.util.ResultUtils;
 import com.hx.json.JSONArray;
 import com.hx.log.util.Tools;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +51,7 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
                              Object handler) throws Exception {
         SessionUser user = (SessionUser) WebContext.getAttributeFromSession(BlogConstants.SESSION_USER);
         if ((user == null) || (!user.isSystemUser())) {
-            Result result = ResultUtils.failed("请先登录 !");
+            Result result = ResultUtils.failed(ErrorCode.NOT_LOGIN, " 您还没有登录, 或者登录过期, 请先登录 ! ");
             WebContext.responseJson(result);
             exceptionLogService.saveExceptionLog(null, result, null);
             return false;
@@ -72,8 +73,8 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
             }
         }
 
-        if(! allowVisit) {
-            Result result = ResultUtils.failed("您没有权限, 请联系管理员 !");
+        if (!allowVisit) {
+            Result result = ResultUtils.failed(ErrorCode.NOT_AUTHORIZED, "您没有权限, 请联系管理员 !");
             WebContext.responseJson(result);
             exceptionLogService.saveExceptionLog(null, preCheckResult, null);
             return false;
@@ -94,25 +95,25 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
     private Result checkResourceAndInterfs(SessionUser user) {
         String roleIds = user.getRoleIds();
         if (Tools.isEmpty(roleIds)) {
-            return ResultUtils.failed("您没有权限, 请联系管理员 !");
+            return ResultUtils.failed(ErrorCode.NOT_AUTHORIZED, "您没有权限, 请联系管理员 !");
         }
         Result getResourceIdsResult = rltRoleResourceDao.getResourceIdsByRoleIds(new BeanIdsForm(roleIds));
         if ((!getResourceIdsResult.isSuccess())) {
-            return ResultUtils.failed("您没有权限, 请联系管理员 !");
+            return ResultUtils.failed(ErrorCode.NOT_AUTHORIZED, "您没有权限, 请联系管理员 !");
         }
         List<String> resourceIds = (List<String>) getResourceIdsResult.getData();
         if (Tools.isEmpty(resourceIds)) {
-            return ResultUtils.failed("您没有权限, 请联系管理员 !");
+            return ResultUtils.failed(ErrorCode.NOT_AUTHORIZED, "您没有权限, 请联系管理员 !");
         }
 
         String resourceIdsStr = JSONArray.fromObject(resourceIds).toString();
         Result getInterfsResult = rltResourceInterfDao.getInterfsByResourceIds(new BeanIdsForm(resourceIdsStr));
         if ((!getInterfsResult.isSuccess())) {
-            return ResultUtils.failed("您没有权限, 请联系管理员 !");
+            return ResultUtils.failed(ErrorCode.NOT_AUTHORIZED, "您没有权限, 请联系管理员 !");
         }
         List<String> interfs = (List<String>) getInterfsResult.getData();
         if (Tools.isEmpty(interfs)) {
-            return ResultUtils.failed("您没有权限, 请联系管理员 !");
+            return ResultUtils.failed(ErrorCode.NOT_AUTHORIZED, "您没有权限, 请联系管理员 !");
         }
 
         return ResultUtils.success(interfs);

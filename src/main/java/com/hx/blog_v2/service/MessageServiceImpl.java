@@ -21,7 +21,7 @@ import com.hx.blog_v2.util.SqlUtils;
 import com.hx.blog_v2.context.WebContext;
 import com.hx.common.interf.common.Page;
 import com.hx.common.interf.common.Result;
-import com.hx.common.util.ResultUtils;
+import com.hx.blog_v2.util.ResultUtils;
 import com.hx.json.JSONArray;
 import com.hx.log.util.Tools;
 import com.hx.mongo.criteria.Criteria;

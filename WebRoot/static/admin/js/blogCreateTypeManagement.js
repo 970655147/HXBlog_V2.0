@@ -45,7 +45,6 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
                             html += '</tr>';
                         }
                         $('#dataContent').html(html);
-                        $('#dataConsole,#dataList').attr('style', 'display:block'); //显示FiledBox
                     } else {
                         layer.alert("拉取创建类型列表失败[" + resp.data + "] !", {icon: 5});
                     }

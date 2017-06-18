@@ -1,5 +1,6 @@
 package com.hx.blog_v2.biz_handler.handler;
 
+import com.hx.blog_v2.biz_handler.handler.common.BizHandlerAdapter;
 import com.hx.blog_v2.biz_handler.interf.BizContext;
 import com.hx.blog_v2.context.CacheContext;
 import com.hx.blog_v2.domain.form.ResourceInterfUpdateForm;
@@ -23,7 +24,7 @@ import java.util.List;
  * @date 6/11/2017 12:30 AM
  */
 @Component
-public class AuthorityUpdateHandler extends BizHandlerAdapter {
+public class AuthUpdatedHandler extends BizHandlerAdapter {
 
     /**
      * 三个常量, 标记三种场景
@@ -61,7 +62,7 @@ public class AuthorityUpdateHandler extends BizHandlerAdapter {
                 cacheContext.clearAuthorityCached();
             }
             for (String userId : userIdsToOffline) {
-                cacheContext.putForceOffLine(userId, " 您的权限发生了改变, 请重新登录 ! ");
+                cacheContext.putForceOffLine(userId, " 您的权限发生了改变 ! ");
             }
         }
     }

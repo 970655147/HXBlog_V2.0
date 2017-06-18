@@ -1,7 +1,7 @@
 package com.hx.blog_v2.controller.admin;
 
 import com.hx.blog_v2.biz_handler.anno.BizHandle;
-import com.hx.blog_v2.biz_handler.handler.AuthorityUpdateHandler;
+import com.hx.blog_v2.biz_handler.handler.AuthUpdatedHandler;
 import com.hx.blog_v2.domain.ErrorCode;
 import com.hx.blog_v2.domain.form.BeanIdForm;
 import com.hx.blog_v2.domain.form.ResourceSaveForm;
@@ -11,7 +11,7 @@ import com.hx.blog_v2.domain.validator.ResourceSaveValidator;
 import com.hx.blog_v2.domain.validator.RoleResourceUpdateValidator;
 import com.hx.blog_v2.service.interf.ResourceService;
 import com.hx.common.interf.common.Result;
-import com.hx.common.util.ResultUtils;
+import com.hx.blog_v2.util.ResultUtils;
 import com.hx.log.util.Tools;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -87,7 +87,7 @@ public class ResourceController {
     }
 
     @RequestMapping(value = "/roleResource/update", method = RequestMethod.POST)
-    @BizHandle(handler = "authorityUpdateHandler", others = AuthorityUpdateHandler.ROLE_RESOURCE)
+    @BizHandle(handler = "authUpdatedHandler", others = AuthUpdatedHandler.ROLE_RESOURCE)
     public Result roleResourceUpdate(RoleResourceUpdateForm params) {
         Result errResult = roleResourceUpdateValidator.validate(params, null);
         if (!errResult.isSuccess()) {

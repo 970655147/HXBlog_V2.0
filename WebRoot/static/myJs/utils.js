@@ -138,7 +138,7 @@ Date.prototype.format = function (fmt) { //author: meizz
 /**
  * 刷新当前页面
  */
-refresh = function() {
+refresh = function () {
     location.reload()
 }
 
@@ -149,9 +149,9 @@ refresh = function() {
  * @param params
  * @returns {*}
  */
-encapGetUrl = function(baseUrl, params) {
+encapGetUrl = function (baseUrl, params) {
     var sb = new StringBuilder()
-    for(key in params) {
+    for (key in params) {
         sb.append(key + "=" + params[key])
     }
     var sep = baseUrl.indexOf("?") > 0 ? "&" : "?";
@@ -167,21 +167,21 @@ encapGetUrl = function(baseUrl, params) {
  * @param pageNow
  * @param getPageUrlFunc
  */
-function collectPagination (pagination, pageInfo, pageNow, getPageUrlFunc) {
+function collectPagination(pagination, pageInfo, pageNow, getPageUrlFunc) {
     pageNow = parseInt(pageNow)
-    pagination.push({active : false, pageUrl : getPageUrlFunc(1), pageNo : "首页"})
-    if(pageNow !== 1) {
-        pagination.push({active : false, pageUrl : getPageUrlFunc(pageNow-1), pageNo : "上一页"})
+    pagination.push({active: false, pageUrl: getPageUrlFunc(1), pageNo: "首页"})
+    if (pageNow !== 1) {
+        pagination.push({active: false, pageUrl: getPageUrlFunc(pageNow - 1), pageNo: "上一页"})
     }
     var start = (pageNow - 3) >= 1 ? pageNow - 3 : 1
     var end = pageNow + 3 <= pageInfo.totalPage ? pageNow + 3 : pageInfo.totalPage
-    for(var i=start; i<=end; i++) {
-        pagination.push({active : (i === pageNow) ? "active" : "false", pageUrl : getPageUrlFunc(i), pageNo : i})
+    for (var i = start; i <= end; i++) {
+        pagination.push({active: (i === pageNow) ? "active" : "false", pageUrl: getPageUrlFunc(i), pageNo: i})
     }
-    if(pageNow !== pageInfo.totalPage) {
-        pagination.push({active : false, pageUrl : getPageUrlFunc(pageNow+1), pageNo : "下一页"})
+    if (pageNow !== pageInfo.totalPage) {
+        pagination.push({active: false, pageUrl: getPageUrlFunc(pageNow + 1), pageNo: "下一页"})
     }
-    pagination.push({active : false, pageUrl : getPageUrlFunc(pageInfo.totalPage), pageNo : "尾页"})
+    pagination.push({active: false, pageUrl: getPageUrlFunc(pageInfo.totalPage), pageNo: "尾页"})
 }
 
 /**
@@ -190,7 +190,7 @@ function collectPagination (pagination, pageInfo, pageNow, getPageUrlFunc) {
  * @param data
  */
 function copyOf(data) {
-    if(typeof data !== 'object') {
+    if (typeof data !== 'object') {
         return data
     }
 
@@ -204,7 +204,7 @@ function copyOf(data) {
  * @param placeholder
  */
 function trimIfExceed(str, len, placeholder) {
-    if(str.length <= len) {
+    if (str.length <= len) {
         return str
     }
 
@@ -212,34 +212,82 @@ function trimIfExceed(str, len, placeholder) {
 }
 
 /**
+ * 防止一个页面上多个 ajax, 然后 同时弹出多个弹框的场景
+ * @type {boolean}
+ */
+var interceptorDialog = null
+
+/**
  * 自己封装的一层 发送 ajax, 主要用于 处理一些 发送请求之前之后, 都要处理的业务
  * @param config
  */
 function ajax(config) {
-    var beforeSend = function() {
-        console.log(config.url)
+    var beforeSend = function () {
+        return true
+    }
+    var beforeSucc = function (resp) {
+        if (resp.code === 200) {
+            return true
+        }
+
+        if ((201 === resp.code) || (202 === resp.code)) {
+            alertIfException(resp.data, function () {
+                layer.close(interceptorDialog)
+                interceptorDialog = null
+                location.href = "/static/admin/index.html"
+            })
+        } else if (203 === resp.code) {
+            alertIfException(resp.data, function () {
+                layer.close(interceptorDialog)
+                interceptorDialog = null
+            })
+        } else if (500 === resp.code) {
+            alertIfException(resp.data, function () {
+                layer.close(interceptorDialog)
+                interceptorDialog = null
+            })
+        }
+        return false
     }
 
-    ajax0(config, beforeSend)
+    ajax0(config, beforeSend, beforeSucc)
 }
 
+/**
+ * 服务端返回异常数据之后的异常处理
+ * @param msg
+ * @param callback
+ */
+function alertIfException(msg, callback) {
+    if (interceptorDialog === null) {
+        interceptorDialog = layer.alert(msg, callback)
+    }
+}
+
+/**
+ * 在ajax的基础上面包装一层
+ * 统一的处理 beforeSend, beforeSuccess, afterSuccess, beforeException, afterException
+ * @param config 原有的参数, 按照 jquery 原生的格式传递
+ * @param beforeSend
+ * @param beforeSucc
+ * @param afterSucc
+ * @param beforeEx
+ * @param afterEx
+ */
 function ajax0(config, beforeSend, beforeSucc, afterSucc, beforeEx, afterEx) {
     var oldBeforeFunc = config.beforeSend
     var oldSuccFunc = config.success
     var oldErrorFunc = config.error
-    config.beforeSend = function(xhr) {
-        beforeSend && beforeSend(xhr)
-        oldBeforeFunc && oldBeforeFunc(xhr)
+    config.beforeSend = function (xhr) {
+        beforeSend && beforeSend(xhr) && oldBeforeFunc && oldBeforeFunc(xhr)
     }
-    config.success = function(resp) {
-        beforeSucc && beforeSucc(resp)
-        oldSuccFunc && oldSuccFunc(resp)
-        afterSucc && afterSucc(resp)
+    config.success = function (resp) {
+        beforeSucc && beforeSucc(resp) && oldSuccFunc && oldSuccFunc(resp)
+        && afterSucc && afterSucc(resp)
     }
-    config.error = function(xhr, errMsg, ex) {
-        beforeEx && beforeEx(xhr, errMsg, ex)
-        oldErrorFunc && oldErrorFunc(xhr, errMsg, ex)
-        afterEx && afterEx(xhr, errMsg, ex)
+    config.error = function (xhr, errMsg, ex) {
+        beforeEx && beforeEx(xhr, errMsg, ex) && oldErrorFunc && oldErrorFunc(xhr, errMsg, ex)
+        && afterEx && afterEx(xhr, errMsg, ex)
     }
 
     $.ajax(config);

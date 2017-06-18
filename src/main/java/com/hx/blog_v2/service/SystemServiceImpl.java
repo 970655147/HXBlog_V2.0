@@ -5,7 +5,7 @@ import com.hx.blog_v2.context.ConstantsContext;
 import com.hx.blog_v2.service.interf.BaseServiceImpl;
 import com.hx.blog_v2.service.interf.SystemService;
 import com.hx.common.interf.common.Result;
-import com.hx.common.util.ResultUtils;
+import com.hx.blog_v2.util.ResultUtils;
 import com.hx.json.JSONArray;
 import com.hx.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;

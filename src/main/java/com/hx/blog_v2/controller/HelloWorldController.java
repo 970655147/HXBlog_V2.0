@@ -3,7 +3,7 @@ package com.hx.blog_v2.controller;
 import com.hx.blog_v2.context.WebContext;
 import com.hx.blog_v2.service.interf.BlogService;
 import com.hx.common.interf.common.Result;
-import com.hx.common.util.ResultUtils;
+import com.hx.blog_v2.util.ResultUtils;
 import com.hx.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

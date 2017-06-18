@@ -17,6 +17,18 @@ public enum ErrorCode implements Code2Msg<Integer, String> {
      */
     SUCCESS(200, "success"),
     /**
+     * NOT_LOGIN
+     */
+    NOT_LOGIN(201, " please login first ! "),
+    /**
+     * BE_OFFLINE
+     */
+    BE_OFFLINE(202, " you have been offline ! "),
+    /**
+     * BE_OFFLINE
+     */
+    NOT_AUTHORIZED(203, " have no privilege to visit this ! "),
+    /**
      * NOT_FOUND
      */
     NOT_FOUND(404, "resource not found"),

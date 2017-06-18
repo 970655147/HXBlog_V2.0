@@ -62,8 +62,6 @@ layui.define(['element', 'laypage', 'layer', 'form', 'tree'], function (exports)
                                     form.render('radio');  //radio，编辑和添加的时候
                                 }
                             });
-
-                            $('#dataConsole,#dataList').attr('style', 'display:block'); //显示FiledBox
                         } else {
                             layer.alert("服务器返回数据异常 !", {icon: 5});
                         }

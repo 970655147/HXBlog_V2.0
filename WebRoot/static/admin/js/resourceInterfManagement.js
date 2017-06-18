@@ -53,8 +53,6 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
                         }
                         $('#dataContent').html(html);
                         element.init();
-
-                        $('#dataConsole,#dataList').attr('style', 'display:block'); //显示FiledBox
                     } else {
                         layer.alert("拉取资源接口列表失败[" + resp.data + "] !", {icon: 5});
                     }
