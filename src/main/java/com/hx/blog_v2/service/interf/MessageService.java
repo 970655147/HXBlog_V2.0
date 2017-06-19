@@ -38,6 +38,16 @@ public interface MessageService extends BaseService<MessagePO> {
     Result list(MessageSearchForm params, Page<MessageVO> page);
 
     /**
+     * 查询未读消息列表
+     *
+     * @return result
+     * @author Jerry.X.He
+     * @date 5/20/2017 6:21 PM
+     * @since 1.0
+     */
+    Result unread();
+
+    /**
      * 搜索符合的条件的消息列表
      *
      * @return result

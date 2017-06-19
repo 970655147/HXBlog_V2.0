@@ -26,6 +26,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -80,6 +81,9 @@ public class CorrectionServiceImpl extends BaseServiceImpl<Object> implements Co
      */
     private Result collectCommentCorrection() {
         List<CorrectionVO> vos = collectCommentCorrection0();
+        if (Tools.isEmpty(vos)) {
+            return ResultUtils.success(Collections.emptyList());
+        }
 
         /**
          * 封装附加信息
@@ -139,6 +143,10 @@ public class CorrectionServiceImpl extends BaseServiceImpl<Object> implements Co
     private List<CorrectionVO> collectCommentCorrection0() {
         String getBlogCommentSql = " select blog_id, count(*) as comment_cnt from blog_comment where deleted = 0 and comment_id = 1 group by blog_id ";
         List<StringStringPair> blog2CommentCnt = jdbcTemplate.query(getBlogCommentSql, new StringStringPairMapper("blog_id", "comment_cnt"));
+        if(Tools.isEmpty(blog2CommentCnt)) {
+            return Collections.emptyList();
+        }
+
         String getExCommentSqlTemplate = "select blog_id, comment_cnt from blog_ex where blog_id in ( %s ) ";
         String getExCommentSql = String.format(getExCommentSqlTemplate, SqlUtils.wrapInSnippet(blog2CommentCnt));
         List<StringStringPair> blog2CommentEx = jdbcTemplate.query(getExCommentSql, new StringStringPairMapper("blog_id", "comment_cnt"));

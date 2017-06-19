@@ -5,7 +5,7 @@ initUserAndRoles()
  * 记录 msgId -> isConsumed
  * @type {{}}
  */
-var id2Consumed = { }
+var id2Consumed = {}
 
 layui.define(['element', 'laypage', 'layer', 'form', 'pagesize'], function (exports) {
     var $ = layui.jquery;
@@ -48,7 +48,7 @@ layui.define(['element', 'laypage', 'layer', 'form', 'pagesize'], function (expo
                         var item = resp.data.list[i];
                         id2Consumed[item.id] = item.consumed
                         html += '<tr>';
-                        html += '<td>' + item.id + '</td>';
+                        html += '<td> <img src="' + mapMessageUrl(item.consumed) + '" name="imgOf' + item.id + '" width="40px" height="40px" /> </td>';
                         html += '<td>' + item.senderName + '</td>';
                         html += '<td>' + item.createdAt + '</td>';
                         html += '<td>' + item.subject + '</td>';
@@ -113,7 +113,7 @@ layui.define(['element', 'laypage', 'layer', 'form', 'pagesize'], function (expo
             html += '<div class="layui-field-box layui-form">';
             html += '<input style="width:87%;margin: auto;color: #000!important;" value="' + subject + '" lay-verify="required"  class="layui-input" readonly >';
             html += '<hr>'
-            html += '<div style="width:87%;margin: auto;color: #000!important; height:200px" lay-verify="required" name="content" class="layui-area" readonly >' + decodeURI(content) + '</div>';
+            html += '<div style="width:87%;margin-left:20px;color: #000!important; height:200px" lay-verify="required" name="content" class="layui-area" readonly >' + decodeURI(content) + '</div>';
             html += '<hr>';
             html += '</div>';
             html += '</fieldset>';
@@ -190,8 +190,9 @@ function initUserAndRoles() {
  * @param id
  */
 function consumeMessage(id) {
-    if(! id2Consumed[id]) {
+    if (!id2Consumed[id]) {
         id2Consumed[id] = true
+        $("[name=\"imgOf" + id + "\"]").attr("src", mapMessageUrl(1))
         ajax({
             url: reqMap.message.markConsumed,
             type: "POST",
@@ -202,3 +203,14 @@ function consumeMessage(id) {
         });
     }
 }
+
+/**
+ * 映射 是否已读的邮件的图标
+ * @param read
+ * @returns {string}
+ */
+function mapMessageUrl(read) {
+    return (read === 1) ? "/static/admin/images/message_readed.png" :
+        "/static/admin/images/message_unread.png"
+}
+

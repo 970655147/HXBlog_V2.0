@@ -288,7 +288,7 @@ function ajax(config) {
             alertIfException(resp.data, function () {
                 layer.close(interceptorDialog)
                 interceptorDialog = null
-                location.href = "/static/admin/index.html"
+                locateRoot(window).location.href = "/static/admin/index.html"
             })
         } else if ((203 === resp.code) || (204 === resp.code) ) {
             alertIfException(resp.data, function () {
@@ -316,6 +316,19 @@ function alertIfException(msg, callback) {
     if (interceptorDialog === null) {
         interceptorDialog = layer.alert(msg, callback)
     }
+}
+
+/**
+ * 定位顶级window节点
+ * 不知道 为什么递归 会stackoverflow, 顶级window.parent 不是null吗??
+ * @param window
+ * @returns {*}
+ */
+function locateRoot(window) {
+    if(window.parent) {
+        return window.parent
+    }
+    return window
 }
 
 /**

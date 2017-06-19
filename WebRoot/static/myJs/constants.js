@@ -111,7 +111,9 @@ var reqMap = {
      */
     message: {
         add: formatContextUrl("/admin/message/add"),
-        list: formatContextUrl("/admin/message/adminList"),
+        list: formatContextUrl("/admin/message/list"),
+        adminList: formatContextUrl("/admin/message/adminList"),
+        unread: formatContextUrl("/admin/message/unread"),
         update: formatContextUrl("/admin/message/update"),
         markConsumed: formatContextUrl("/admin/message/markConsumed"),
         remove: formatContextUrl("/admin/message/remove")

@@ -1,28 +1,25 @@
 package com.hx.blog_v2.service;
 
+import com.hx.blog_v2.context.WebContext;
 import com.hx.blog_v2.dao.interf.MessageDao;
 import com.hx.blog_v2.dao.interf.UserDao;
 import com.hx.blog_v2.domain.dto.MessageType;
 import com.hx.blog_v2.domain.dto.SessionUser;
+import com.hx.blog_v2.domain.dto.StringStringPair;
 import com.hx.blog_v2.domain.form.BeanIdForm;
 import com.hx.blog_v2.domain.form.MessageSaveForm;
 import com.hx.blog_v2.domain.form.MessageSearchForm;
-import com.hx.blog_v2.domain.mapper.MessageVOMapper;
-import com.hx.blog_v2.domain.mapper.OneIntMapper;
-import com.hx.blog_v2.domain.mapper.OneStringMapper;
-import com.hx.blog_v2.domain.mapper.ToMapMapper;
+import com.hx.blog_v2.domain.mapper.*;
 import com.hx.blog_v2.domain.po.MessagePO;
 import com.hx.blog_v2.domain.vo.MessageVO;
 import com.hx.blog_v2.service.interf.BaseServiceImpl;
 import com.hx.blog_v2.service.interf.MessageService;
-import com.hx.blog_v2.util.BlogConstants;
-import com.hx.blog_v2.util.DateUtils;
-import com.hx.blog_v2.util.SqlUtils;
-import com.hx.blog_v2.context.WebContext;
+import com.hx.blog_v2.util.*;
 import com.hx.common.interf.common.Page;
 import com.hx.common.interf.common.Result;
-import com.hx.blog_v2.util.ResultUtils;
 import com.hx.json.JSONArray;
+import com.hx.json.JSONObject;
+import com.hx.log.log.LogPatternUtils;
 import com.hx.log.util.Tools;
 import com.hx.mongo.criteria.Criteria;
 import com.hx.mongo.criteria.interf.IQueryCriteria;
@@ -99,6 +96,35 @@ public class MessageServiceImpl extends BaseServiceImpl<MessagePO> implements Me
         page.setList(list);
         page.setTotalRecord(totalRecord);
         return ResultUtils.success(page);
+    }
+
+    @Override
+    public Result unread() {
+        String userId = WebContext.getStrAttrFromSession(BlogConstants.SESSION_USER_ID);
+        String selectSql = " select type, sender_id, date_format(created_at, '%Y-%m-%d') as created_at, subject, content from message " +
+                " where deleted = 0 and receiver_id = '" + userId + "' and consumed = 0 order by created_at limit 0, 5 ";
+        String countSql = " select count(*) as totalRecord from message where deleted = 0 and receiver_id = '" + userId + "' and consumed = 0 ";
+        List<MessageVO> msgToRead = jdbcTemplate.query(selectSql, new MessageVOMapper());
+        String cnt = jdbcTemplate.queryForObject(countSql, new OneStringMapper("totalRecord"));
+        if (Tools.isEmpty(msgToRead)) {
+            return ResultUtils.success(new JSONObject().element("cnt", cnt)
+                    .element("list", Collections.emptyList()));
+        }
+
+        String selectUserSql = " select id, user_name from user where id in ( %s ) ";
+        List<StringStringPair> id2UserName = jdbcTemplate.query(String.format(selectUserSql, SqlUtils.wrapInSnippet(msgToRead)),
+                new StringStringPairMapper("id", "user_name"));
+        List<StringStringPair> list = new ArrayList<>(msgToRead.size());
+        for (MessageVO vo : msgToRead) {
+            StringStringPair pair = BizUtils.findByLogisticId(id2UserName, vo.getSenderId());
+            String userName = (pair == null) ? "unknown" : pair.getRight();
+            String left = LogPatternUtils.formatLogInfo(" [{}] [{}] at [{}] say ", vo.getType(), userName, vo.getCreatedAt());
+            list.add(new StringStringPair(left, vo.getContent()));
+        }
+
+        JSONObject data = new JSONObject().element("cnt", cnt)
+                .element("list", list);
+        return ResultUtils.success(data);
     }
 
     @Override

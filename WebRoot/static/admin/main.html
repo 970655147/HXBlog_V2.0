@@ -75,13 +75,18 @@
                         地点 :<span style="padding-left:1em;" name="loginAddr"> / </span> &nbsp;&nbsp;
                         时间 :<span style="padding-left:1em;" name="loginDate"> / </span> &nbsp;&nbsp;
                     </p>
+
+                    <button class="layui-btn" style="margin-left: 30px" onclick="initStatistics()">
+                        <i class="layui-icon">&#x1002;</i> 刷新
+                    </button>
+
                     <fieldset class="layui-elem-field layui-field-title">
                         <legend>今日统计信息</legend>
                         <div class="layui-field-box" name="todayInfo">
                             <div style="display: inline-block; width: 100%;">
                                 <div class="ht-box layui-bg-green">
                                     <p name="requestLogCnt">0</p>
-                                    <p>访问数量</p>
+                                    <p>请求数量</p>
                                 </div>
                                 <div class="ht-box layui-bg-red">
                                     <p name="exceptionLogCnt">0</p>
@@ -121,7 +126,7 @@
                             <div style="display: inline-block; width: 100%;">
                                 <div class="ht-box layui-bg-green">
                                     <p name="requestLogCnt">0</p>
-                                    <p>访问数量</p>
+                                    <p>请求数量</p>
                                 </div>
                                 <div class="ht-box layui-bg-red">
                                     <p name="exceptionLogCnt">0</p>
@@ -161,7 +166,7 @@
                             <div style="display: inline-block; width: 100%;">
                                 <div class="ht-box layui-bg-green">
                                     <p name="requestLogCnt">0</p>
-                                    <p>访问数量</p>
+                                    <p>请求数量</p>
                                 </div>
                                 <div class="ht-box layui-bg-red">
                                     <p name="exceptionLogCnt">0</p>
@@ -238,8 +243,6 @@
 </div>
 
 <script type="text/javascript">
-    var notReplyNum = 3;
-
     layui.config({
         base: './js/'
     }).use('main');

@@ -29,6 +29,7 @@ layui.define(['element', 'layer', 'util', 'pagesize', 'form'], function (exports
         $('div.short-menu').slideUp('fast');
         $('.individuation').removeClass('bounceInRight').addClass('flipOutY');
     });
+
     //个性化设置开关
     $('#individuation').click(function (e) {
         e.stopPropagation();    //阻止事件冒泡
@@ -44,17 +45,17 @@ layui.define(['element', 'layer', 'util', 'pagesize', 'form'], function (exports
     //监听左侧导航点击
     element.on('nav(leftNav)', function (elem) {
         var url = $(elem).children('a').attr('data-url');   //页面url
-        var id = $(elem).children('a').attr('data-id');     //tab唯一Id
+        var dataId = $(elem).children('a').attr('data-id');     //tab唯一Id
         var title = $(elem).children('a').text();           //菜单名称
-        if (title == "首页") {
+        if (title === "首页") {
             element.tabChange('tab', 0);
             return;
         }
-        if (url == undefined) {
+        if (url === undefined) {
             return;
         }
 
-        switchTab($, element, title, url, id);
+        switchTab($, element, title, url, dataId);
     });
 
 
@@ -77,22 +78,26 @@ layui.define(['element', 'layer', 'util', 'pagesize', 'form'], function (exports
 
     //鼠标靠左展开侧边导航
     $(document).mousemove(function (e) {
-        if (e.pageX == 0) {
+        if (e.pageX === 0) {
             showSideNav();
-            $('input[lay-filter=sidenav]').siblings('.layui-form-switch').addClass('layui-form-onswitch');
-            $('input[lay-filter=sidenav]').prop("checked", true);
+
+            var sideNavEle = $('input[lay-filter=sidenav]')
+            sideNavEle.siblings('.layui-form-switch').addClass('layui-form-onswitch');
+            sideNavEle.prop("checked", true);
         }
     });
 
     //皮肤切换
     $('.skin').click(function () {
         var skin = $(this).attr("data-skin");
-        $('body').removeClass();
-        $('body').addClass(skin);
+
+        var bodyEle = $('body')
+        bodyEle.removeClass();
+        bodyEle.addClass(skin);
     });
 
     var ishide = false;
-    //隐藏侧边导航
+    // 隐藏侧边导航
     function hideSideNav() {
         if (!ishide) {
             $('.layui-side').animate({left: '-200px'});
@@ -119,158 +124,126 @@ layui.define(['element', 'layer', 'util', 'pagesize', 'form'], function (exports
         }
     }
 
+    /**
+     * 是否停止管家
+     */
+    var isStop = true
+
     runSteward();
     //管家功能
     function runSteward() {
-        var layerSteward;   //管家窗口
+        var layerSteward;
 
         getNotReplyLeaveMessage();
-
         var interval = setTimeout(function () {
             getNotReplyLeaveMessage();
-        }, 60000);  //1分钟提醒一次
+        }, 60000);
 
         function getNotReplyLeaveMessage() {
-            clearInterval(interval); //停止计时器
-            var content = '<p>目前有<span>' + notReplyNum + '</span>条留言未回复<a href="javascript:layer.msg(\'跳转到相应页面\')">点击查看</a></p>';
-            content += '<div class="notnotice" >不再提醒</div>';
-            layerSteward = layer.open({
-                type: 1,
-                title: '管家提醒',
-                shade: 0,
-                resize: false,
-                area: ['340px', '215px'],
-                time: 10000, //10秒后自动关闭
-                skin: 'steward',
-                closeBtn: 1,
-                anim: 2,
-                content: content,
-                end: function () {
-                    if (!isStop) {
-                        interval = setInterval(function () {
-                            if (!isStop) {
-                                clearInterval(interval);
-                                getNotReplyLeaveMessage();
-                            }
-                        }, 60000);
+            var respInfo = []
+            ajax({
+                url: reqMap.message.unread,
+                async: false,
+                type: "GET",
+                success: function (resp) {
+                    if (resp.success) {
+                        respInfo = resp.data
                     }
                 }
-            });
-            $('.steward').click(function (e) {
-                event.stopPropagation();    //阻止事件冒泡
-            });
-            $('.notnotice').click(function () {
-                isStop = true;
-                layer.close(layerSteward);
-                $('input[lay-filter=steward]').siblings('.layui-form-switch').removeClass('layui-form-onswitch');
-                $('input[lay-filter=steward]').prop("checked", false);
-            });
-            form.on('switch(steward)', function (data) {
-                if (data.elem.checked) {
-                    isStop = false;
-                    clearInterval(interval);
-                    runSteward();
-                } else {
+            })
+
+            if ((isStop) && (respInfo.cnt > 0)) {
+                var content = '<p>目前有<span>' + respInfo.cnt + '</span>条消息<a href="javascript:void(0)" onclick="layui.funcs.toViewMessage()" >点击查看</a></p>';
+                for (var idx in respInfo.list) {
+                    var toRead = respInfo.list[idx]
+                    content += '<span>' + toRead.left + ' : <span style="display:inline;" >' + toRead.right + '</span></span>';
+                }
+                content += '<div class="notnotice" >不再提醒</div>';
+                layerSteward = layer.open({
+                    type: 1,
+                    title: '管家提醒',
+                    shade: 0,
+                    resize: false,
+                    area: ['340px', '215px'],
+                    // time: 10000, //10秒后自动关闭
+                    skin: 'steward',
+                    closeBtn: 1,
+                    anim: 2,
+                    content: content,
+                    end: function () {
+
+                    }
+                });
+                $('.steward').click(function (e) {
+                    event.stopPropagation();    //阻止事件冒泡
+                });
+                $('.notnotice').click(function () {
                     isStop = true;
                     layer.close(layerSteward);
-                }
-            })
+
+                    var stewardEle = $('input[lay-filter=steward]')
+                    stewardEle.siblings('.layui-form-switch').removeClass('layui-form-onswitch');
+                    stewardEle.prop("checked", false);
+                });
+                form.on('switch(steward)', function (data) {
+                    if (data.elem.checked) {
+                        isStop = false;
+                    } else {
+                        isStop = true;
+                        layer.close(layerSteward);
+                    }
+                })
+            }
         }
     }
 
-    runSteward();
-    //管家功能
-    function runSteward() {
-        var layerSteward;   //管家窗口
-        var isStop = false; //是否停止提醒
-
-        getNotReplyLeaveMessage();
-
-        var interval = setInterval(function () {
-            getNotReplyLeaveMessage();
-        }, 60000);  //1分钟提醒一次
-
-        function getNotReplyLeaveMessage() {
-            clearInterval(interval); //停止计时器
-            var content = '<p>目前有<span>' + notReplyNum + '</span>条留言未回复<a href="javascript:layer.msg(\'跳转到相应页面\')">点击查看</a></p>';
-            content += '<div class="notnotice" >不再提醒</div>';
-            layerSteward = layer.open({
-                type: 1,
-                title: '管家提醒',
-                shade: 0,
-                resize: false,
-                area: ['340px', '215px'],
-                time: 10000, //10秒后自动关闭
-                skin: 'steward',
-                closeBtn: 1,
-                anim: 2,
-                content: content,
-                end: function () {
-                    if (!isStop) {
-                        interval = setInterval(function () {
-                            if (!isStop) {
-                                clearInterval(interval);
-                                getNotReplyLeaveMessage();
-                            }
-                        }, 60000);
-                    }
-                }
-            });
-            $('.steward').click(function (e) {
-                event.stopPropagation();    //阻止事件冒泡
-            });
-            $('.notnotice').click(function () {
-                isStop = true;
-                layer.close(layerSteward);
-                $('input[lay-filter=steward]').siblings('.layui-form-switch').removeClass('layui-form-onswitch');
-                $('input[lay-filter=steward]').prop("checked", false);
-            });
-            form.on('switch(steward)', function (data) {
-                if (data.elem.checked) {
-                    isStop = false;
-                    clearInterval(interval);
-                    runSteward();
-                } else {
-                    isStop = true;
-                    layer.close(layerSteward);
-                }
-            })
+    /**
+     * 切换选项卡
+     * @param $
+     * @param element
+     * @param title
+     * @param url
+     * @param id
+     */
+    function switchTab($, element, title, url, id) {
+        var tabTitleDiv = $('.layui-tab[lay-filter=\'tab\']').children('.layui-tab-title')
+        var exist = tabTitleDiv.find('li[lay-id=' + id + ']')
+        if (exist.length > 0) {
+            element.tabChange('tab', id)
+        } else {
+            var index = layer.load(1)
+            //由于Ajax调用本地静态页面存在跨域问题，这里用iframe
+            setTimeout(function () {
+                layer.close(index);
+                element.tabAdd('tab', {
+                    title: title,
+                    content: '<iframe src="' + url + '" style="width:100%;height:100%;border:none;outline:none;"></iframe>',
+                    id: id
+                })
+                //切换到指定索引的卡片
+                element.tabChange('tab', id)
+            }, 500)
         }
     }
 
-    exports('main', {});
-});
+    var funcs = {
+        /**
+         * 查看消息的函数
+         */
+        toViewMessage: function () {
+            var viewMessageUrl = "/static/admin/messageView.html"
+            var viewMessageEle = $("[data-url='" + viewMessageUrl + "']")
 
-/**
- * 切换选项卡
- * @param $
- * @param element
- * @param title
- * @param url
- * @param id
- */
-function switchTab($, element, title, url, id) {
-    var tabTitleDiv = $('.layui-tab[lay-filter=\'tab\']').children('.layui-tab-title');
-    var exist = tabTitleDiv.find('li[lay-id=' + id + ']');
-    if (exist.length > 0) {
-        //切换到指定索引的卡片
-        element.tabChange('tab', id);
-    } else {
-        var index = layer.load(1);
-        //由于Ajax调用本地静态页面存在跨域问题，这里用iframe
-        setTimeout(function () {
-            //模拟菜单加载
-            layer.close(index);
-            element.tabAdd('tab', {
-                title: title,
-                content: '<iframe src="' + url + '" style="width:100%;height:100%;border:none;outline:none;"></iframe>',
-                id: id
-            });
-            //切换到指定索引的卡片
-            element.tabChange('tab', id);
-        }, 500);
+            var url = viewMessageUrl
+            var dataId = viewMessageEle.attr('data-id')
+            var title = viewMessageEle.text()
+            switchTab($, element, title, url, dataId);
+        }
     }
-}
+    exports('funcs', funcs);
+
+})
+
 
 /**
  * 初始化菜单
@@ -305,7 +278,7 @@ function initMenu() {
                     }
                     $("#leftNav").append(html)
                 } else {
-                    layer.alert("请先登录 !", function(){
+                    layer.alert("请先登录 !", function () {
                         location.href = "/static/admin/index.html"
                     })
                 }

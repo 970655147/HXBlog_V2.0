@@ -68,6 +68,11 @@ public class MessageController {
         return messageService.list(params, page);
     }
 
+    @RequestMapping(value = "/unread", method = RequestMethod.GET)
+    public Result unread() {
+        return messageService.unread();
+    }
+
     @RequestMapping(value = "/adminList", method = RequestMethod.GET)
     public Result adminList(MessageSearchForm params, SimplePage<MessageVO> page) {
         Result errResult = messageSearchValidator.validate(params, null);

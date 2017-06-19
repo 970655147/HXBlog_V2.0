@@ -138,7 +138,7 @@ function encapOptions(statsArr, xAxisArr) {
             trigger: 'axis'
         },
         legend: {
-            data: ['请求数量', '异常数量', '访问数量[uv]', '访问数量[pv]', '点赞数量', '取消点赞', '博客数量', '评论数量']
+            data: ['请求数量', '异常数量', '访问数量[uv]', '访问数量[pv]', '博客数量', '评论数量', '点赞数量', '取消点赞']
         },
         toolbox: {
             show: true,

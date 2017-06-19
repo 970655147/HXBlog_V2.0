@@ -1,5 +1,6 @@
 package com.hx.blog_v2.domain.vo;
 
+import com.hx.blog_v2.domain.po.interf.LogisticalId;
 import com.hx.blog_v2.util.BlogConstants;
 import com.hx.blog_v2.util.DateUtils;
 
@@ -12,7 +13,7 @@ import java.util.Date;
  * @version 1.0
  * @date 5/20/2017 9:42 AM
  */
-public class MessageVO {
+public class MessageVO implements LogisticalId<String> {
 
     private String id;
     private String senderId;
@@ -119,5 +120,10 @@ public class MessageVO {
 
     public void setUpdatedAt(String updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    @Override
+    public String logisticalId() {
+        return senderId;
     }
 }
