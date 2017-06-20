@@ -30,7 +30,7 @@ public final class BlogConstants {
     private static BlogConstants INSTANCE;
 
     public BlogConstants() {
-
+        INSTANCE = this;
     }
 
     public static BlogConstants getInstance() {
@@ -409,7 +409,6 @@ public final class BlogConstants {
 
     @PostConstruct
     public void init() {
-        INSTANCE = this;
         MYSQL_DB_CONFIG = new MysqlDbConfig().ip(dbIp).port(dbPort)
                 .db(dbDb).username(dbUsername).password(dbPassword);
 

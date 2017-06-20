@@ -21,9 +21,8 @@ public class BlogCreateTypeDaoImpl extends BaseDaoImpl<BlogCreateTypePO> impleme
     public BlogCreateTypeDaoImpl() {
         super(BlogCreateTypePO.PROTO_BEAN,
                 new MysqlDbConfig(BlogConstants.MYSQL_DB_CONFIG).table(tableName()).id(id()),
-                new MyMysqlConnectionProvider());
+                MyMysqlConnectionProvider.getInstance());
     }
-
 
     public static String tableName() {
         return BlogConstants.getInstance().tableBlogCreateType;

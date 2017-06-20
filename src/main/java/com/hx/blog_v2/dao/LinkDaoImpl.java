@@ -21,7 +21,7 @@ public class LinkDaoImpl extends BaseDaoImpl<LinkPO> implements LinkDao {
     public LinkDaoImpl() {
         super(LinkPO.PROTO_BEAN,
                 new MysqlDbConfig(BlogConstants.MYSQL_DB_CONFIG).table(tableName()).id(id()),
-                new MyMysqlConnectionProvider());
+                MyMysqlConnectionProvider.getInstance());
     }
 
 

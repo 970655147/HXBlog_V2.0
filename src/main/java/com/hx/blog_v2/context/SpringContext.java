@@ -17,7 +17,9 @@ import org.springframework.stereotype.Component;
 @Component
 public final class SpringContext implements ApplicationContextAware {
 
-    @Autowired
+    /**
+     * 上下文的 applicationContext
+     */
     private static ApplicationContext AC;
 
     public SpringContext() {

@@ -1,15 +1,15 @@
 package com.hx.blog_v2.dao;
 
+import com.hx.blog_v2.context.CacheContext;
 import com.hx.blog_v2.dao.interf.BaseDaoImpl;
 import com.hx.blog_v2.dao.interf.RltRoleResourceDao;
 import com.hx.blog_v2.domain.form.BeanIdsForm;
 import com.hx.blog_v2.domain.mapper.OneStringMapper;
 import com.hx.blog_v2.domain.po.RltRoleResourcePO;
 import com.hx.blog_v2.util.BlogConstants;
-import com.hx.blog_v2.context.CacheContext;
 import com.hx.blog_v2.util.MyMysqlConnectionProvider;
-import com.hx.common.interf.common.Result;
 import com.hx.blog_v2.util.ResultUtils;
+import com.hx.common.interf.common.Result;
 import com.hx.mongo.config.MysqlDbConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -35,7 +35,7 @@ public class RltRoleResourceDaoImpl extends BaseDaoImpl<RltRoleResourcePO> imple
     public RltRoleResourceDaoImpl() {
         super(RltRoleResourcePO.PROTO_BEAN,
                 new MysqlDbConfig(BlogConstants.MYSQL_DB_CONFIG).table(tableName()).id(id()),
-                new MyMysqlConnectionProvider());
+                MyMysqlConnectionProvider.getInstance());
     }
 
 

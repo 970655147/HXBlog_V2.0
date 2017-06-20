@@ -10,6 +10,7 @@
     <context:property-placeholder location="classpath:props/*.properties" ignore-unresolvable="true"/>
     <!-- 优先添加 Constants 的 bean -->
     <bean class="com.hx.blog_v2.util.BlogConstants"/>
+    <bean class="com.hx.blog_v2.util.MyMysqlConnectionProvider"/>
 
     <!-- aspectj -->
     <aop:aspectj-autoproxy proxy-target-class="true"/>

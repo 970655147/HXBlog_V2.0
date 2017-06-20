@@ -1,14 +1,14 @@
 package com.hx.blog_v2.dao;
 
+import com.hx.blog_v2.context.CacheContext;
 import com.hx.blog_v2.dao.interf.BaseDaoImpl;
 import com.hx.blog_v2.dao.interf.BlogTypeDao;
 import com.hx.blog_v2.domain.form.BeanIdForm;
 import com.hx.blog_v2.domain.po.BlogTypePO;
 import com.hx.blog_v2.util.BlogConstants;
-import com.hx.blog_v2.context.CacheContext;
 import com.hx.blog_v2.util.MyMysqlConnectionProvider;
-import com.hx.common.interf.common.Result;
 import com.hx.blog_v2.util.ResultUtils;
+import com.hx.common.interf.common.Result;
 import com.hx.mongo.config.MysqlDbConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -29,7 +29,7 @@ public class BlogTypeDaoImpl extends BaseDaoImpl<BlogTypePO> implements BlogType
     public BlogTypeDaoImpl() {
         super(BlogTypePO.PROTO_BEAN,
                 new MysqlDbConfig(BlogConstants.MYSQL_DB_CONFIG).table(tableName()).id(id()),
-                new MyMysqlConnectionProvider());
+                MyMysqlConnectionProvider.getInstance());
     }
 
 

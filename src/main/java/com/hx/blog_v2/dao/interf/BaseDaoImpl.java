@@ -13,6 +13,9 @@ import com.hx.mongo.criteria.SortByCriteria;
 import com.hx.mongo.criteria.interf.IQueryCriteria;
 import com.hx.mongo.criteria.interf.IUpdateCriteria;
 import com.hx.mongo.dao.MysqlBaseDaoImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 
 import java.sql.Connection;
 import java.util.List;

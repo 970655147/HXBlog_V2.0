@@ -21,7 +21,7 @@ public class InterfDaoImpl extends BaseDaoImpl<InterfPO> implements InterfDao {
     public InterfDaoImpl() {
         super(InterfPO.PROTO_BEAN,
                 new MysqlDbConfig(BlogConstants.MYSQL_DB_CONFIG).table(tableName()).id(id()),
-                new MyMysqlConnectionProvider());
+                MyMysqlConnectionProvider.getInstance());
     }
 
 

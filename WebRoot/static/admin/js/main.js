@@ -1,10 +1,16 @@
 ﻿var element;
 var $;
 
+/**
+ * 刷新统计的时间间隔
+ */
+var statsInterval = 5;
+var statsIntervalInMs = statsInterval * 1000;
+
 // 初始化菜单列表, 同步加载, 否则 可能 layui 绑定不了事件
 initMenu()
-initStatistics()
-
+refreshStatistics()
+initTips();
 $("#logout").click(function () {
     logout();
 })
@@ -277,10 +283,6 @@ function initMenu() {
                         html += '</li>'
                     }
                     $("#leftNav").append(html)
-                } else {
-                    layer.alert("请先登录 !", function () {
-                        location.href = "/static/admin/index.html"
-                    })
                 }
             }
         }
@@ -290,7 +292,7 @@ function initMenu() {
 /**
  * 初始化首页统计数据
  */
-function initStatistics() {
+function refreshStatistics() {
     ajax({
         url: reqMap.index.adminStatistics,
         data: {},
@@ -356,5 +358,43 @@ function logout() {
     })
 }
 
+/**
+ * 轮询任务的句柄
+ */
+var pollingTaskId = null
+
+/**
+ * 轮询拉取数据
+ */
+function pollingStatistics() {
+    if (pollingTaskId) {
+        clearInterval(pollingTaskId)
+        pollingTaskId = null
+    } else {
+        pollingTaskId = setInterval(refreshStatistics, statsIntervalInMs)
+    }
+    layer.msg("切换成功, 轮询状态 : " + (pollingTaskId !== null) + " !")
+}
+
+/**
+ * 初始化 绑定 tips
+ */
+function initTips() {
+    $("[name='refreshBtn']").hover(function () {
+        layer.tips("刷新统计数据", "[name='refreshBtn']", {
+            tips: [1, '#ff0000'],
+            time: 1000
+        })
+    }, function () {
+    })
+
+    $("[name='pollingBtn']").hover(function () {
+        layer.tips("轮询状态 : " + (pollingTaskId !== null), "[name='pollingBtn']", {
+            tips: [1, '#ff0000'],
+            time: 1000
+        })
+    }, function () {
+    })
+}
 
 

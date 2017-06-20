@@ -2,9 +2,7 @@ package com.hx.blog_v2.dao;
 
 import com.hx.blog_v2.dao.interf.BaseDaoImpl;
 import com.hx.blog_v2.dao.interf.MessageDao;
-import com.hx.blog_v2.dao.interf.MoodDao;
 import com.hx.blog_v2.domain.po.MessagePO;
-import com.hx.blog_v2.domain.po.MoodPO;
 import com.hx.blog_v2.util.BlogConstants;
 import com.hx.blog_v2.util.MyMysqlConnectionProvider;
 import com.hx.mongo.config.MysqlDbConfig;
@@ -23,7 +21,7 @@ public class MessageDaoImpl extends BaseDaoImpl<MessagePO> implements MessageDao
     public MessageDaoImpl() {
         super(MessagePO.PROTO_BEAN,
                 new MysqlDbConfig(BlogConstants.MYSQL_DB_CONFIG).table(tableName()).id(id()),
-                new MyMysqlConnectionProvider());
+                MyMysqlConnectionProvider.getInstance());
     }
 
 

@@ -1,19 +1,14 @@
 package com.hx.blog_v2.dao;
 
+import com.hx.blog_v2.context.SpringContext;
 import com.hx.blog_v2.dao.interf.BaseDaoImpl;
 import com.hx.blog_v2.dao.interf.BlogCommentDao;
 import com.hx.blog_v2.domain.po.BlogCommentPO;
-import com.hx.blog_v2.domain.po.BlogPO;
 import com.hx.blog_v2.util.BlogConstants;
 import com.hx.blog_v2.util.MyMysqlConnectionProvider;
 import com.hx.mongo.config.MysqlDbConfig;
-import com.hx.mongo.config.interf.DbConfig;
 import com.hx.mongo.connection.interf.ConnectionProvider;
-import com.hx.mongo.dao.MysqlBaseDaoImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-
-import java.sql.Connection;
 
 /**
  * BlogTagDaoImpl
@@ -28,7 +23,7 @@ public class BlogCommentDaoImpl extends BaseDaoImpl<BlogCommentPO> implements Bl
     public BlogCommentDaoImpl() {
         super(BlogCommentPO.PROTO_BEAN,
                 new MysqlDbConfig(BlogConstants.MYSQL_DB_CONFIG).table(tableName()).id(id()),
-                new MyMysqlConnectionProvider());
+                MyMysqlConnectionProvider.getInstance());
     }
 
 

@@ -21,7 +21,7 @@ public class SystemConfigDaoImpl extends BaseDaoImpl<SystemConfigPO> implements 
     public SystemConfigDaoImpl() {
         super(SystemConfigPO.PROTO_BEAN,
                 new MysqlDbConfig(BlogConstants.MYSQL_DB_CONFIG).table(tableName()).id(id()),
-                new MyMysqlConnectionProvider());
+                MyMysqlConnectionProvider.getInstance());
     }
 
 

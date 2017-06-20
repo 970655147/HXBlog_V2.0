@@ -21,7 +21,7 @@ public class MoodDaoImpl extends BaseDaoImpl<MoodPO> implements MoodDao {
     public MoodDaoImpl() {
         super(MoodPO.PROTO_BEAN,
                 new MysqlDbConfig(BlogConstants.MYSQL_DB_CONFIG).table(tableName()).id(id()),
-                new MyMysqlConnectionProvider());
+                MyMysqlConnectionProvider.getInstance());
     }
 
 

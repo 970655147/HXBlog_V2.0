@@ -21,7 +21,7 @@ public class BlogDaoImpl extends BaseDaoImpl<BlogPO> implements BlogDao {
     public BlogDaoImpl() {
         super(BlogPO.PROTO_BEAN,
                 new MysqlDbConfig(BlogConstants.MYSQL_DB_CONFIG).table(tableName()).id(id()),
-                new MyMysqlConnectionProvider());
+                MyMysqlConnectionProvider.getInstance());
     }
 
 

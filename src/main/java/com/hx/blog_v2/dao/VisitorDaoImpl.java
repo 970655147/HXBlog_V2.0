@@ -21,7 +21,7 @@ public class VisitorDaoImpl extends BaseDaoImpl<VisitorPO> implements VisitorDao
     public VisitorDaoImpl() {
         super(VisitorPO.PROTO_BEAN,
                 new MysqlDbConfig(BlogConstants.MYSQL_DB_CONFIG).table(tableName()).id(id()),
-                new MyMysqlConnectionProvider());
+                MyMysqlConnectionProvider.getInstance());
     }
 
 

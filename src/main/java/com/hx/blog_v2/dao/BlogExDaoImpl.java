@@ -1,14 +1,14 @@
 package com.hx.blog_v2.dao;
 
+import com.hx.blog_v2.context.CacheContext;
 import com.hx.blog_v2.dao.interf.BaseDaoImpl;
 import com.hx.blog_v2.dao.interf.BlogExDao;
 import com.hx.blog_v2.domain.form.BeanIdForm;
 import com.hx.blog_v2.domain.po.BlogExPO;
 import com.hx.blog_v2.util.BlogConstants;
-import com.hx.blog_v2.context.CacheContext;
 import com.hx.blog_v2.util.MyMysqlConnectionProvider;
-import com.hx.common.interf.common.Result;
 import com.hx.blog_v2.util.ResultUtils;
+import com.hx.common.interf.common.Result;
 import com.hx.log.util.Tools;
 import com.hx.mongo.config.MysqlDbConfig;
 import com.hx.mongo.criteria.Criteria;
@@ -32,9 +32,8 @@ public class BlogExDaoImpl extends BaseDaoImpl<BlogExPO> implements BlogExDao {
     public BlogExDaoImpl() {
         super(BlogExPO.PROTO_BEAN,
                 new MysqlDbConfig(BlogConstants.MYSQL_DB_CONFIG).table(tableName()).id(id()),
-                new MyMysqlConnectionProvider());
+                MyMysqlConnectionProvider.getInstance());
     }
-
 
     public static String tableName() {
         return BlogConstants.getInstance().tableBlogEx;
