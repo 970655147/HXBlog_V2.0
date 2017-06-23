@@ -155,6 +155,7 @@ public class UserServiceImpl implements UserService {
         if (Tools.isEmpty(checkCodeInServer)) {
             return ResultUtils.failed("您还没有验证码 !");
         }
+        WebContext.removeAttributeFromSession(BlogConstants.SESSION_CHECK_CODE);
         // TODO: 6/3/2017 完成之后 增加验证码的校验
 //        if(! checkCodeInServer.equalsIgnoreCase(params.getCheckCode())) {
 //            return ResultUtils.failed("验证码不正确 !");

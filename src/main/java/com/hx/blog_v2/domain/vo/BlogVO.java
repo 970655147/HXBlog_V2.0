@@ -51,17 +51,17 @@ public class BlogVO {
      */
     private int viewCnt;
     /**
-     * 点赞的数量
+     * 总共的 点赞次数
      */
-    private int goodCnt;
+    private int goodTotalCnt;
     /**
-     * 踩的数量
+     * 点赞的分值
      */
-    private int notGoodCnt;
+    private int goodSensed;
     /**
-     * 是否点赞了.
+     * 点赞的平均分值
      */
-    private boolean goodSensed;
+    private String goodAvgScore;
 
     public BlogVO() {
 
@@ -195,27 +195,27 @@ public class BlogVO {
         this.viewCnt = viewCnt;
     }
 
-    public int getGoodCnt() {
-        return goodCnt;
+    public int getGoodTotalCnt() {
+        return goodTotalCnt;
     }
 
-    public void setGoodCnt(int goodCnt) {
-        this.goodCnt = goodCnt;
+    public void setGoodTotalCnt(int goodTotalCnt) {
+        this.goodTotalCnt = goodTotalCnt;
     }
 
-    public int getNotGoodCnt() {
-        return notGoodCnt;
-    }
-
-    public void setNotGoodCnt(int notGoodCnt) {
-        this.notGoodCnt = notGoodCnt;
-    }
-
-    public boolean isGoodSensed() {
+    public int getGoodSensed() {
         return goodSensed;
     }
 
-    public void setGoodSensed(boolean goodSensed) {
+    public void setGoodSensed(int goodSensed) {
         this.goodSensed = goodSensed;
+    }
+
+    public String getGoodAvgScore() {
+        return goodAvgScore;
+    }
+
+    public void setGoodAvgScore(String goodAvgScore) {
+        this.goodAvgScore = goodAvgScore;
     }
 }

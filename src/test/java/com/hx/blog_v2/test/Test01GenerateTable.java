@@ -45,8 +45,8 @@ public class Test01GenerateTable {
         blog.setBlogId("12");
         blog.setCommentCnt(12);
         blog.setViewCnt(12);
-        blog.setGoodCnt(12);
-        blog.setNotGoodCnt(12);
+        blog.setGoodTotalCnt(12);
+        blog.setGoodTotalScore(12);
 
         JSONObject blogObj = blog.encapJSON(new SimpleJSONConfig());
         String sql = MysqlSqlGenerator.generateCreateTableSql(constants.tableBlogEx, blogObj);

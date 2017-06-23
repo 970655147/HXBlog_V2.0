@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="../css/element.css">
+    <link rel="stylesheet" href="../css/iconface.css">
+
+</head>
+<body>
+<div id="app">
+    <el-button @click="visible = true">按钮</el-button>
+    <el-dialog v-model="visible" title="Hello world">
+        <p>欢迎使用 Element</p>
+    </el-dialog>
+
+    <el-rate
+            v-model="value4"
+            :icon-classes="['icon-rate-face-1', 'icon-rate-face-2', 'icon-rate-face-3']"
+            void-icon-class="icon-rate-face-off"
+            :colors="['#99A9BF', '#F7BA2A', '#FF9900']">
+    </el-rate>
+
+</div>
+</body>
+<!-- 先引入 Vue -->
+<script src="../js/vue.js"></script>
+<!-- 引入组件库 -->
+<script src="../js/element.js"></script>
+<script>
+    new Vue({
+        el: '#app',
+        data: function () {
+            return {
+                visible: false,
+                value4 : null
+            }
+        }
+    })
+</script>
+</html>

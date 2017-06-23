@@ -1,6 +1,8 @@
 package com.hx.blog_v2.controller;
 
 import com.hx.blog_v2.biz_handler.anno.BizHandle;
+import com.hx.blog_v2.context.WebContext;
+import com.hx.blog_v2.domain.dto.SessionUser;
 import com.hx.blog_v2.service.interf.IndexService;
 import com.hx.blog_v2.util.BlogConstants;
 import com.hx.common.interf.common.Result;
@@ -26,7 +28,11 @@ public class IndexController {
     @RequestMapping("/index")
     @BizHandle(handler = "blogVisitLogHandler", others = BlogConstants.CONTEXT_BLOG_ID)
     public Result index() {
-        return indexService.index();
+        Result result = indexService.index();
+        
+        SessionUser user = (SessionUser) WebContext.getAttributeFromSession(BlogConstants.SESSION_USER);
+        result.setExtra(user);
+        return result;
     }
 
     @RequestMapping("/latest")

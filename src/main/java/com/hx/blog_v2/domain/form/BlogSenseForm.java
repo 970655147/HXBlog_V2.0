@@ -26,7 +26,7 @@ public class BlogSenseForm implements UserInfoExtractor {
      * good or not good
      */
     private String sense;
-    private Integer clicked;
+    private Integer score;
 
     public BlogSenseForm() {
         this.requestIp = BizUtils.getIp();
@@ -90,12 +90,12 @@ public class BlogSenseForm implements UserInfoExtractor {
         this.sense = sense;
     }
 
-    public Integer getClicked() {
-        return clicked;
+    public Integer getScore() {
+        return score;
     }
 
-    public void setClicked(Integer clicked) {
-        this.clicked = clicked;
+    public void setScore(Integer score) {
+        this.score = score;
     }
 
     public void setUserInfo(UserInfoExtractor extractor) {

@@ -11,6 +11,7 @@ import com.hx.blog_v2.context.WebContext;
 import com.hx.common.interf.common.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -29,7 +30,7 @@ public class BlogSenseController {
     @Autowired
     private BlogSenseValidator blogSenseValidator;
 
-    @RequestMapping("/sense")
+    @RequestMapping(value = "/sense", method = RequestMethod.POST)
     @BizHandle(handler = "blogSenseHandler")
     public Result sense(BlogSenseForm params) {
         Result errResult = blogSenseValidator.validate(params, null);

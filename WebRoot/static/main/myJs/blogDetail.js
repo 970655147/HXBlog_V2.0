@@ -31,6 +31,9 @@ function contentInit() {
                 headImgUrl: "",
                 systemUser: false
             },
+            senseVal : 0,
+            senseInitialized : false,
+            goodAvgScore : Number(0.00),
             comments: [],
             headImages: [],
             replyInfo: {
@@ -95,6 +98,9 @@ function contentInit() {
                     success: function (resp) {
                         if (resp.success) {
                             that.blog = resp.data
+                            that.senseVal = resp.data.goodSensed
+                            that.goodAvgScore = resp.data.goodAvgScore
+
                             $("#blogContent").html(that.blog.content)
                             that.replyInfo.blogId = that.blog.id
                             that.replyInfo.toUser = that.blog.author
@@ -108,26 +114,6 @@ function contentInit() {
                                     $("[name='email']").attr("readonly", "readonly")
                                 }
                             }
-
-                            /**
-                             * 处理 点赞
-                             */
-                            heartInit("[name='blogHeart']", "[name='blogLikeCount']", that.blog.goodCnt, that.blog.goodSensed)
-                            heartClick("[name='blogHeart']", "[name='blogLikeCount']", function (isPrise) {
-                                var senseParams = copyOf(that.userInfo)
-                                senseParams.blogId = params.id
-                                senseParams.sense = "good"
-                                senseParams.clicked = isPrise ? 1 : 0
-
-                                ajax({
-                                    url: reqMap.blog.sense,
-                                    data: senseParams,
-                                    type: "POST",
-                                    success: function (resp) {
-
-                                    }
-                                })
-                            })
                         } else {
                             layer.alert("拉取博客列表失败 !")
                         }
@@ -237,6 +223,28 @@ function contentInit() {
                         }
                     }
                 });
+            },
+            updateSense : function(newVal) {
+                if((this.senseVal > 0) && (! this.userInfo.systemUser)) {
+                    return
+                }
+                if(! this.senseInitialized) {
+                    this.senseInitialized = true
+                    return
+                }
+
+                var senseParams = copyOf(this.userInfo)
+                senseParams.blogId = params.id
+                senseParams.sense = "good"
+                senseParams.score = newVal
+                ajax({
+                    url: reqMap.blog.sense,
+                    data: senseParams,
+                    type: "POST",
+                    success: function (resp) {
+
+                    }
+                })
             },
             locateFloorComment: function (comments, floorId) {
                 var floorIdInt = parseInt(floorId)

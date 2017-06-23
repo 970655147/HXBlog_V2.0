@@ -130,9 +130,15 @@
             <h4>
                 评论
                 <span class="feed" style="float:right">
-                    <span class="heart" name="blogHeart" liked="unlike"></span>
-                    <span class="likeCount" name="blogLikeCount">0</span>
-
+                    <el-rate
+                            v-model="senseVal"
+                            :disabled="((senseVal != 0) && (! userInfo.systemUser))"
+                            :icon-classes="['icon-rate-face-1', 'icon-rate-face-2', 'icon-rate-face-3']"
+                            void-icon-class="icon-rate-face-off"
+                            :colors="['#99A9BF', '#F7BA2A', '#FF9900']"
+                            @change="updateSense"
+                    >
+                    </el-rate>
                 </span>
             </h4>
             <div id="replyForm">

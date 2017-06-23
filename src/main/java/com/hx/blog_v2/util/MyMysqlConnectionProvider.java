@@ -1,9 +1,10 @@
 package com.hx.blog_v2.util;
 
 import com.hx.log.util.Tools;
-import com.hx.mongo.config.interf.DbConfig;
+import com.hx.mongo.connection.interf.ConnectionContext;
 import com.hx.mongo.connection.interf.ConnectionProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.datasource.DataSourceUtils;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -43,7 +44,7 @@ public class MyMysqlConnectionProvider implements ConnectionProvider<Connection>
     }
 
     @Override
-    public Connection getConnection(DbConfig config) {
+    public Connection getConnection(ConnectionContext<Connection> context) {
         Connection con = null;
         try {
             con = dataSource.getConnection();
@@ -53,4 +54,24 @@ public class MyMysqlConnectionProvider implements ConnectionProvider<Connection>
 
         return con;
     }
+
+    @Override
+    public void closeConnection(ConnectionContext<Connection> context) {
+        try {
+            Object[] psAndRs = (Object[]) context.others();
+            if(psAndRs != null) {
+                for(Object res : psAndRs) {
+                    if(res != null) {
+                        ((AutoCloseable) res).close();
+                    }
+                }
+            }
+
+//            DataSourceUtils.releaseConnection(context.connection(), dataSource);
+            context.connection().close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }

@@ -1,6 +1,5 @@
 package com.hx.blog_v2.domain.po;
 
-import com.hx.blog_v2.util.BizUtils;
 import com.hx.blog_v2.util.BlogConstants;
 import com.hx.blog_v2.util.DateUtils;
 import com.hx.json.JSONObject;
@@ -36,23 +35,24 @@ public class BlogSensePO implements JSONTransferable<BlogSensePO> {
     private String requestIp;
     @JSONField({"sense", "sense"})
     private String sense;
-    @JSONField({"clicked", "clicked"})
-    private int clicked;
+    @JSONField({"score", "score"})
+    private int score;
     @JSONField({"createdAt", "created_at"})
     private String createdAt;
 
-    public BlogSensePO(String blogId, String name, String email, String requestIp, String sense) {
+    public BlogSensePO(String blogId, String name, String email, String requestIp, String sense, int score) {
         this();
         this.blogId = blogId;
         this.name = name;
         this.email = email;
         this.requestIp = requestIp;
         this.sense = sense;
+        this.score = score;
     }
 
     public BlogSensePO() {
         this.createdAt = DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
-        this.clicked = 0;
+        this.score = 0;
     }
 
     public String getId() {
@@ -103,12 +103,12 @@ public class BlogSensePO implements JSONTransferable<BlogSensePO> {
         this.sense = sense;
     }
 
-    public int getClicked() {
-        return clicked;
+    public int getScore() {
+        return score;
     }
 
-    public void setClicked(int clicked) {
-        this.clicked = clicked;
+    public void setScore(int score) {
+        this.score = score;
     }
 
     public String getCreatedAt() {

@@ -92,8 +92,8 @@ public class IndexServiceImpl extends BaseServiceImpl<Object> implements IndexSe
         data.put("hotBlogs", hotBlogs);
         data.put("latestComments", latestComments);
         data.put("facetByMonth", facetByMonth);
-        data.put("goodSensed", contextBlog.isGoodSensed());
-        data.put("goodCnt", contextBlog.getGoodCnt());
+        data.put("goodSensed", contextBlog.getGoodSensed() != 0);
+        data.put("goodCnt", contextBlog.getGoodTotalCnt());
         data.put("todayVisited", todayVisited);
         // 本周, 本月, 合计
 

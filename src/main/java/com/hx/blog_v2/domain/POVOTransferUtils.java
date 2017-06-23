@@ -483,8 +483,9 @@ public final class POVOTransferUtils {
     public static BlogVO blogExPO2BlogVO(BlogExPO src, BlogVO vo) {
         vo.setViewCnt(src.getViewCnt());
         vo.setCommentCnt(src.getCommentCnt());
-        vo.setGoodCnt(src.getGoodCnt());
-        vo.setNotGoodCnt(src.getNotGoodCnt());
+        vo.setGoodTotalCnt(src.getGoodTotalCnt());
+        vo.setGoodAvgScore((src.getGoodTotalCnt() == 0) ? "0.0" :
+                String.format("%.1f", (((src.getGoodTotalScore()*1.0F) / (src.getGoodTotalCnt()*5)) * 5)) );
         return vo;
     }
 

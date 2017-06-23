@@ -32,10 +32,20 @@ public class BlogExPO implements JSONTransferable<BlogExPO> {
     private int dayFlushViewCnt;
     @JSONField({"uniqueViewCnt", "unique_view_cnt"})
     private int uniqueViewCnt;
-    @JSONField({"goodCnt", "good_cnt"})
-    private int goodCnt;
-    @JSONField({"notGoodCnt", "not_good_cnt"})
-    private int notGoodCnt;
+    @JSONField({"good1Cnt", "good1_cnt"})
+    private int good1Cnt;
+    @JSONField({"good2Cnt", "good2_cnt"})
+    private int good2Cnt;
+    @JSONField({"good3Cnt", "good3_cnt"})
+    private int good3Cnt;
+    @JSONField({"good4Cnt", "good4_cnt"})
+    private int good4Cnt;
+    @JSONField({"good5Cnt", "good5_cnt"})
+    private int good5Cnt;
+    @JSONField({"goodTotalCnt", "good_total_cnt"})
+    private int goodTotalCnt;
+    @JSONField({"goodTotalScore", "good_total_score"})
+    private int goodTotalScore;
 
     public BlogExPO(String blogId) {
         this.blogId = blogId;
@@ -95,20 +105,60 @@ public class BlogExPO implements JSONTransferable<BlogExPO> {
         this.uniqueViewCnt = uniqueViewCnt;
     }
 
-    public int getGoodCnt() {
-        return goodCnt;
+    public int getGood1Cnt() {
+        return good1Cnt;
     }
 
-    public void setGoodCnt(int goodCnt) {
-        this.goodCnt = goodCnt;
+    public void setGood1Cnt(int good1Cnt) {
+        this.good1Cnt = good1Cnt;
     }
 
-    public int getNotGoodCnt() {
-        return notGoodCnt;
+    public int getGood2Cnt() {
+        return good2Cnt;
     }
 
-    public void setNotGoodCnt(int notGoodCnt) {
-        this.notGoodCnt = notGoodCnt;
+    public void setGood2Cnt(int good2Cnt) {
+        this.good2Cnt = good2Cnt;
+    }
+
+    public int getGood3Cnt() {
+        return good3Cnt;
+    }
+
+    public void setGood3Cnt(int good3Cnt) {
+        this.good3Cnt = good3Cnt;
+    }
+
+    public int getGood4Cnt() {
+        return good4Cnt;
+    }
+
+    public void setGood4Cnt(int good4Cnt) {
+        this.good4Cnt = good4Cnt;
+    }
+
+    public int getGood5Cnt() {
+        return good5Cnt;
+    }
+
+    public void setGood5Cnt(int good5Cnt) {
+        this.good5Cnt = good5Cnt;
+    }
+
+    public int getGoodTotalCnt() {
+        return goodTotalCnt;
+    }
+
+    public void setGoodTotalCnt(int goodTotalCnt) {
+        this.goodTotalCnt = goodTotalCnt;
+    }
+
+    public int getGoodTotalScore() {
+        return goodTotalScore;
+    }
+
+    public void setGoodTotalScore(int goodTotalScore) {
+        this.goodTotalScore = goodTotalScore;
     }
 
     public void incCommentCnt(int inc) {
@@ -127,8 +177,86 @@ public class BlogExPO implements JSONTransferable<BlogExPO> {
         uniqueViewCnt += inc;
     }
 
-    public void incGoodCnt(int inc) {
-        goodCnt += inc;
+    public void incGood1Cnt(int inc) {
+        good1Cnt += inc;
+    }
+
+    public void incGood2Cnt(int inc) {
+        good2Cnt += inc;
+    }
+
+    public void incGood3Cnt(int inc) {
+        good3Cnt += inc;
+    }
+
+    public void incGood4Cnt(int inc) {
+        good4Cnt += inc;
+    }
+
+    public void incGood5Cnt(int inc) {
+        good5Cnt += inc;
+    }
+
+    /**
+     * 处理 当前 blog 增加一个 score 的处理
+     *
+     * @param score score
+     * @param inc   inc
+     * @return void
+     * @author Jerry.X.He
+     * @date 6/23/2017 9:40 PM
+     * @since 1.0
+     */
+    public void incGoodCnt(int score, int inc) {
+        if (score == 1) {
+            incGood1Cnt(inc);
+        } else if (score == 2) {
+            incGood2Cnt(inc);
+        } else if (score == 3) {
+            incGood3Cnt(inc);
+        } else if (score == 4) {
+            incGood4Cnt(inc);
+        } else if (score == 5) {
+            incGood5Cnt(inc);
+        } else if(score == 0) {
+            // ignore
+        } else {
+            Tools.assert0(" unknown sense score ! ");
+        }
+
+        goodTotalCnt += 1;
+        goodTotalScore += score;
+    }
+
+    public void decGoodCnt(int score, int inc) {
+        if (score == 1) {
+            incGood1Cnt(inc);
+        } else if (score == 2) {
+            incGood2Cnt(inc);
+        } else if (score == 3) {
+            incGood3Cnt(inc);
+        } else if (score == 4) {
+            incGood4Cnt(inc);
+        } else if (score == 5) {
+            incGood5Cnt(inc);
+        } else if(score == 0) {
+            // ignore, offset the goodTotalCnt
+            // 0 -> [1|2|3|4|5]
+            goodTotalCnt += 1;
+        } else {
+            Tools.assert0(" unknown sense score ! ");
+        }
+
+        goodTotalCnt -= 1;
+        goodTotalScore -= score;
+    }
+
+    public void incGoodTotalCnt(int inc) {
+        goodTotalCnt += inc;
+    }
+
+    public void incGoodTotalScore(int inc) {
+        goodTotalScore += inc;
     }
 
     public static final BlogExPO PROTO_BEAN = new BlogExPO();

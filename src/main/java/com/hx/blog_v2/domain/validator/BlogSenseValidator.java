@@ -2,9 +2,9 @@ package com.hx.blog_v2.domain.validator;
 
 import com.hx.blog_v2.domain.ErrorCode;
 import com.hx.blog_v2.domain.form.BlogSenseForm;
+import com.hx.blog_v2.util.ResultUtils;
 import com.hx.common.interf.common.Result;
 import com.hx.common.interf.validator.Validator;
-import com.hx.blog_v2.util.ResultUtils;
 import com.hx.log.util.Tools;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -30,7 +30,7 @@ public class BlogSenseValidator implements Validator<BlogSenseForm> {
     @Autowired
     private SenseTypeValidator senseTypeValidator;
     @Autowired
-    private IntableBooleanValidator intableBooleanValidator;
+    private SenseScoreValidator senseScoreValidator;
     @Autowired
     private BeanIdStrValidator beanIdStrValidator;
 
@@ -66,7 +66,7 @@ public class BlogSenseValidator implements Validator<BlogSenseForm> {
         if (!errResult.isSuccess()) {
             return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " sense 不合法 ! ");
         }
-        errResult = intableBooleanValidator.validate(form.getClicked(), extra);
+        errResult = senseScoreValidator.validate(form.getScore(), extra);
         if (!errResult.isSuccess()) {
             return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " clicked 不合法 ! ");
         }

@@ -58,7 +58,7 @@ public class TokenInterceptor extends HandlerInterceptorAdapter {
             }
         }
 
-        updateTokenAndAddHeader(token, response);
+        updateTokenAndAddHeader(token, valid, response);
         if (!valid) {
             Result tokenCheckResult = ResultUtils.failed(ErrorCode.TOKEN_NOT_MATCH, " 系统繁忙, 请刷新后重试 ! ");
             WebContext.responseJson(tokenCheckResult);
@@ -79,10 +79,10 @@ public class TokenInterceptor extends HandlerInterceptorAdapter {
      * @date 6/18/2017 11:32 AM
      * @since 1.0
      */
-    private void updateTokenAndAddHeader(String oldToken, HttpServletResponse response) {
+    private void updateTokenAndAddHeader(String oldToken, boolean valid, HttpServletResponse response) {
         TokenInfo tokenInServer = (TokenInfo) WebContext.getAttributeFromSession(BlogConstants.SESSION_TOKEN);
         long nowTs = System.currentTimeMillis();
-        if ((tokenInServer == null) ||
+        if ((! valid) || (tokenInServer == null) ||
                 ((nowTs - tokenInServer.getLastUpdated()) > constantsContext.tokenRefreshInterval)) {
             if (tokenInServer == null) {
                 tokenInServer = new TokenInfo(Tools.NULL, Tools.NULL);

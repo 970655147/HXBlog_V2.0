@@ -1,17 +1,19 @@
 package com.hx.blog_v2.service;
 
+import com.hx.blog_v2.context.CacheContext;
+import com.hx.blog_v2.context.WebContext;
 import com.hx.blog_v2.dao.interf.BlogExDao;
 import com.hx.blog_v2.dao.interf.BlogSenseDao;
+import com.hx.blog_v2.domain.dto.SessionUser;
 import com.hx.blog_v2.domain.form.BeanIdForm;
 import com.hx.blog_v2.domain.form.BlogSenseForm;
 import com.hx.blog_v2.domain.po.BlogExPO;
 import com.hx.blog_v2.domain.po.BlogSensePO;
 import com.hx.blog_v2.service.interf.BaseServiceImpl;
 import com.hx.blog_v2.service.interf.BlogSenseService;
-import com.hx.blog_v2.util.BizUtils;
-import com.hx.blog_v2.context.CacheContext;
-import com.hx.common.interf.common.Result;
+import com.hx.blog_v2.util.BlogConstants;
 import com.hx.blog_v2.util.ResultUtils;
+import com.hx.common.interf.common.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,23 +37,20 @@ public class BlogSenseServiceImpl extends BaseServiceImpl<BlogSensePO> implement
 
     @Override
     public Result sense(BlogSenseForm params) {
+        SessionUser user = (SessionUser) WebContext.getAttributeFromSession(BlogConstants.SESSION_USER);
         Result getSenseResult = senseDao.get(params);
-        BlogSensePO po = null;
         boolean exists = (getSenseResult.isSuccess());
-        if (exists) {
-            po = (BlogSensePO) getSenseResult.getData();
-        } else {
-            po = new BlogSensePO(params.getBlogId(), params.getName(), params.getEmail(), params.getRequestIp(), params.getSense());
-        }
-        if (params.getClicked().equals(po.getClicked())) {
-            return ResultUtils.failed("wtf");
+        if (exists && (!user.isSystemUser())) {
+            return ResultUtils.failed(" do not sense again ! ");
         }
 
-        Result updateExResult = updateBlogEx(params);
+        BlogSensePO oldPo = exists ? (BlogSensePO) getSenseResult.getData() : null;
+        BlogSensePO po = new BlogSensePO(params.getBlogId(), params.getName(), params.getEmail(), params.getRequestIp(),
+                params.getSense(), params.getScore());
+        Result updateExResult = updateBlogEx(oldPo, params);
         if (!updateExResult.isSuccess()) {
             return updateExResult;
         }
-        po.setClicked(params.getClicked());
 
         if (!exists) {
             Result saveResult = senseDao.add(po);
@@ -73,14 +72,17 @@ public class BlogSenseServiceImpl extends BaseServiceImpl<BlogSensePO> implement
      * @date 6/6/2017 8:53 PM
      * @since 1.0
      */
-    private Result updateBlogEx(BlogSenseForm params) {
+    private Result updateBlogEx(BlogSensePO oldPo, BlogSenseForm params) {
         Result getResult = blogExDao.get(new BeanIdForm(params.getBlogId()));
         if (!getResult.isSuccess()) {
             return getResult;
         }
 
         BlogExPO po = (BlogExPO) getResult.getData();
-        po.incGoodCnt((params.getClicked() == 1) ? 1 : -1);
+        po.decGoodCnt(oldPo.getScore(), -1);
+        if (params.getScore() > 0) {
+            po.incGoodCnt(params.getScore(), 1);
+        }
         cacheContext.putBlogEx(po);
         return ResultUtils.success("success");
     }

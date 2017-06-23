@@ -454,10 +454,10 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
      * @date 6/6/2017 9:19 PM
      * @since 1.0
      */
-    public Result isSense(String blogId) {
+    public Result goodSensed(String blogId) {
         SessionUser user = (SessionUser) WebContext.getAttributeFromSession(BlogConstants.SESSION_USER);
         if (user == null) {
-            return ResultUtils.failed(false);
+            return ResultUtils.success(0);
         }
 
         BlogSenseForm params = new BlogSenseForm();
@@ -467,11 +467,11 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
 
         Result getSenseResult = senseDao.get(params);
         if (!getSenseResult.isSuccess()) {
-            return getSenseResult;
+            return ResultUtils.success(0);
         }
         BlogSensePO po = (BlogSensePO) getSenseResult.getData();
         cacheContext.putBlogSense(params, po);
-        return (po.getClicked() == 1) ? ResultUtils.success() : ResultUtils.failed();
+        return ResultUtils.success(po.getScore());
     }
 
     /**
@@ -484,7 +484,7 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
      * @since 1.0
      */
     Result encapSenseAndBlogEx(BlogVO vo) {
-        vo.setGoodSensed(isSense(vo.getId()).isSuccess());
+        vo.setGoodSensed((Integer) goodSensed(vo.getId()).getData());
         BlogExPO exPO = (BlogExPO) blogExDao.get(new BeanIdForm(vo.getId())).getData();
         vo = POVOTransferUtils.blogExPO2BlogVO(exPO, vo);
         return ResultUtils.success(vo);

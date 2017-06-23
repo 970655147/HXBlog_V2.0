@@ -296,10 +296,10 @@ function ajax(config) {
                 interceptorDialog = null
             })
         } else if (500 === resp.code) {
-            alertIfException(resp.data, function () {
-                layer.close(interceptorDialog)
-                interceptorDialog = null
-            })
+            // alertIfException(resp.data, function () {
+            //     layer.close(interceptorDialog)
+            //     interceptorDialog = null
+            // })
         }
         return false
     }

@@ -40,6 +40,7 @@ function headerFooterInit() {
         success: function (resp) {
             if (resp.success) {
                 var data = resp.data
+                var userInfo = resp.extra
 
                 $("[name='title']").text(data.title)
                 $("[name='subTitle']").text(data.subTitle)
@@ -98,17 +99,19 @@ function headerFooterInit() {
                 $("[name='todayVisitedEle']").text(data.todayVisited)
 
                 heartInit("[name='projHeartEle']", "[name='projLikeCntEle']", data.goodCnt, data.goodSensed)
-                heartClick("[name='projHeartEle']", "[name='projLikeCntEle']", function (isPrise) {
+                heartClick("[name='projHeartEle']", "[name='projLikeCntEle']", function () {
+                    return (!data.goodSensed) || (userInfo && (userInfo.systemUser))
+                }, function (isPrise) {
                     var senseParams = {
-                        blogId : "-1",
-                        clicked : isPrise ? 1 : 0,
-                        sense : "good"
+                        blogId: "-1",
+                        score: isPrise ? 1 : 0,
+                        sense: "good"
                     }
 
                     ajax({
                         url: reqMap.blog.sense,
                         data: senseParams,
-                        type : "POST",
+                        type: "POST",
                         success: function (resp) {
 
                         }
@@ -116,10 +119,10 @@ function headerFooterInit() {
                 })
 
                 selectHeader()
-                $("[name='hotBlogTitle']").hover(function(){
+                $("[name='hotBlogTitle']").hover(function () {
                     layer.tips($(this).attr("data-blog-title"), this,
                         {tips: [3], time: 1000});
-                }, function() {
+                }, function () {
 
                 })
             }
@@ -183,27 +186,30 @@ function headerFooterInit() {
  * 点赞, 踩的逻辑处理
  * @param heart
  * @param likeCnt
+ * @param shouldResp
  * @param callback
  */
-function heartClick(heart, likeCnt, callback) {
+function heartClick(heart, likeCnt, shouldResp, callback) {
     var heartEle = $(heart)
     heartEle.click(function () {
         var likeCntEle = $(likeCnt)
         var cntNow = parseInt(likeCntEle.html())
 
-        var isPrise = (heartEle.attr("liked") !== "like")
-        if (isPrise) {
-            likeCntEle.html(cntNow + 1)
-            heartEle.addClass("heartAnimation").attr("liked", "like")
-            // 我擦嘞, 因为 这个问题, 找了 半个小时了 ..
-            heartEle.css("background-position", "right")
-        } else {
-            likeCntEle.html(cntNow - 1)
-            heartEle.removeClass("heartAnimation").attr("liked", "unlike")
-            heartEle.css("background-position", "left")
-        }
-        if (callback) {
-            callback(isPrise)
+        if (shouldResp && shouldResp()) {
+            var isPrise = (heartEle.attr("liked") !== "like")
+            if (isPrise) {
+                likeCntEle.html(cntNow + 1)
+                heartEle.addClass("heartAnimation").attr("liked", "like")
+                // 我擦嘞, 因为 这个问题, 找了 半个小时了 ..
+                heartEle.css("background-position", "right")
+            } else {
+                likeCntEle.html(cntNow - 1)
+                heartEle.removeClass("heartAnimation").attr("liked", "unlike")
+                heartEle.css("background-position", "left")
+            }
+            if (callback) {
+                callback(isPrise)
+            }
         }
     })
 }
@@ -234,10 +240,10 @@ function selectHeader() {
     var url = location.href
 
     var allA = $("[name='headerNav0'] li a")
-    for(idx in allA) {
-        if(url.indexOf(allA[idx].href) >= 0) {
+    for (idx in allA) {
+        if (url.indexOf(allA[idx].href) >= 0) {
             $(allA[idx]).parent().addClass("active act")
-            break ;
+            break;
         }
     }
 }
