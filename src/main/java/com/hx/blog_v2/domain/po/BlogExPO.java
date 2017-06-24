@@ -161,6 +161,35 @@ public class BlogExPO implements JSONTransferable<BlogExPO> {
         this.goodTotalScore = goodTotalScore;
     }
 
+    /**
+     * 获取当前博客的 对应的分数的数量
+     *
+     * @param score score
+     * @return void
+     * @author Jerry.X.He
+     * @date 6/24/2017 10:41 AM
+     * @since 1.0
+     */
+    public int getGoodCnt(int score) {
+        if (score == 1) {
+            return good1Cnt;
+        } else if (score == 2) {
+            return good2Cnt;
+        } else if (score == 3) {
+            return good3Cnt;
+        } else if (score == 4) {
+            return good4Cnt;
+        } else if (score == 5) {
+            return good5Cnt;
+        } else if (score == 0) {
+            // ignore
+        } else {
+            Tools.assert0(" unknown sense score ! ");
+        }
+
+        return -1;
+    }
+
     public void incCommentCnt(int inc) {
         commentCnt += inc;
     }
@@ -218,7 +247,7 @@ public class BlogExPO implements JSONTransferable<BlogExPO> {
             incGood4Cnt(inc);
         } else if (score == 5) {
             incGood5Cnt(inc);
-        } else if(score == 0) {
+        } else if (score == 0) {
             // ignore
         } else {
             Tools.assert0(" unknown sense score ! ");
@@ -239,7 +268,7 @@ public class BlogExPO implements JSONTransferable<BlogExPO> {
             incGood4Cnt(inc);
         } else if (score == 5) {
             incGood5Cnt(inc);
-        } else if(score == 0) {
+        } else if (score == 0) {
             // ignore, offset the goodTotalCnt
             // 0 -> [1|2|3|4|5]
             goodTotalCnt += 1;

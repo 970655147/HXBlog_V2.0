@@ -14,7 +14,12 @@ public enum CorrectionType {
     /**
      * 评论数量校正
      */
-    COMMENT_CNT("commentCnt");
+    COMMENT_CNT("commentCnt"),
+    /**
+     * 评分数量校正
+     */
+    SCORE_CNT("scoreCnt")
+    ;
 
     /**
      * type -> imageType

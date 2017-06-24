@@ -282,6 +282,31 @@ public class CacheContext {
     }
 
     /**
+     * 清理BlogEx相关的缓存的相关的数据
+     *
+     * @return void
+     * @author Jerry.X.He
+     * @date 6/17/2017 8:18 PM
+     * @since 1.0
+     */
+    public void clearBlogExCached() {
+        blogId2BlogEx.clear();
+    }
+
+    /**
+     * 清理评分相关的缓存的相关的数据
+     *
+     * @return void
+     * @author Jerry.X.He
+     * @date 6/17/2017 8:18 PM
+     * @since 1.0
+     */
+    public void clearScoreCached() {
+        blogIdUserInfo2Sense.clear();
+        blogId2BlogEx.clear();
+    }
+
+    /**
      * 刷新当前系统的配置
      *
      * @return void
