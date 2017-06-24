@@ -136,10 +136,11 @@ public abstract class BaseDaoImpl<T extends JSONTransferable<T>> extends MysqlBa
 
     @Override
     public Result update(T po) {
+        long modified = 0;
         try {
-            long matched = updateById(po, BlogConstants.UPDATE_BEAN_CONFIG)
+            modified = updateById(po, BlogConstants.UPDATE_BEAN_CONFIG)
                     .getModifiedCount();
-            if (matched == 0) {
+            if (modified == 0) {
                 return ResultUtils.failed("该记录不存在 !");
             }
         } catch (Exception e) {
@@ -147,13 +148,13 @@ public abstract class BaseDaoImpl<T extends JSONTransferable<T>> extends MysqlBa
             return ResultUtils.failed(Tools.errorMsg(e));
         }
 
-        return ResultUtils.success();
+        return ResultUtils.success(modified);
     }
 
     @Override
     public Result update(IQueryCriteria query, IUpdateCriteria update, boolean withMulti) {
+        long modified = 0;
         try {
-            long modified = 0;
             if (withMulti) {
                 modified = updateMany(query, update).getModifiedCount();
             } else {
@@ -168,7 +169,7 @@ public abstract class BaseDaoImpl<T extends JSONTransferable<T>> extends MysqlBa
             return ResultUtils.failed(Tools.errorMsg(e));
         }
 
-        return ResultUtils.success("success");
+        return ResultUtils.success(modified);
     }
 
     @Override
@@ -178,8 +179,8 @@ public abstract class BaseDaoImpl<T extends JSONTransferable<T>> extends MysqlBa
 
     @Override
     public Result remove(IQueryCriteria query, boolean withMulti) {
+        long modified = 0;
         try {
-            long modified = 0;
             if (withMulti) {
                 modified = deleteMany(query).getDeletedCount();
             } else {
@@ -194,7 +195,7 @@ public abstract class BaseDaoImpl<T extends JSONTransferable<T>> extends MysqlBa
             return ResultUtils.failed(Tools.errorMsg(e));
         }
 
-        return ResultUtils.success("success");
+        return ResultUtils.success(modified);
     }
 
     @Override

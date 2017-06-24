@@ -31,8 +31,8 @@ function contentInit() {
                 headImgUrl: "",
                 systemUser: false
             },
-            senseVal : 0,
-            currentUserSenseFromServer : 0,
+            senseVal : -1,
+            currentUserSenseFromServer : -1,
             /**
              * 防止 systemUser 的页面刷新的 第一次发送sense请求
              */
@@ -170,7 +170,6 @@ function contentInit() {
                     toUser: that.replyInfo.toUser,
                     comment: replyForm.find("[name='comment']").html(),
                 }
-                console.log(params)
                 if (isEmpty(params.name)) {
                     layer.tips('请输入用户名', "[name='name']");
                     return;
@@ -202,7 +201,11 @@ function contentInit() {
                             var endReplyFlag = "[/reply]"
                             if (isEmpty(params.floorId) || (addedComment.comment.indexOf(endReplyFlag) < 0)) {
                                 if (that.comments.length < pageSize) {
-                                    addedComment.floorId = parseInt(that.comments[that.comments.length - 1].floorComment.floorId) + 1
+                                    if(that.comments.length === 0) {
+                                        addedComment.floorId = 1
+                                    } else {
+                                        addedComment.floorId = parseInt(that.comments[that.comments.length - 1].floorComment.floorId) + 1
+                                    }
                                     that.comments.push({
                                         floorComment: addedComment,
                                         replies: []
@@ -229,6 +232,7 @@ function contentInit() {
                     }
                 });
             },
+            // 如果 切换前后的 值相同, 是不会触发这个事件的 !
             updateSense : function(newVal) {
                 if(! this.senseInitialized) {
                     this.senseInitialized = true

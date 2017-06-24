@@ -58,7 +58,7 @@ public class IndexServiceImpl extends BaseServiceImpl<Object> implements IndexSe
     public Result index() {
         String hotBlogsSql = " select b.* from blog as b inner join blog_ex as e on b.id = e.blog_id " +
                 " where b.deleted = 0 and b.id >= 0 order by e.comment_cnt desc limit 0, 5 ";
-        String latestCommentsSql = " select * from blog_comment order by created_at desc limit 0, 5 ";
+        String latestCommentsSql = " select * from blog_comment where deleted = 0 order by created_at desc limit 0, 5 ";
         String contextBlogSql = " select b.* from blog as b inner join blog_ex as e on b.id = e.blog_id " +
                 " where b.id = " + constantsContext.contextBlogId;
 

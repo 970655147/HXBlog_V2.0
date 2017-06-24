@@ -129,6 +129,11 @@ public class ConstantsContext {
      */
     public String frontIdxPageTitle;
     public String frontIdxPageSubTitle;
+    /**
+     * 默认的用户的 title, 角色
+     */
+    public String guestTitle;
+    public String guestRoles;
 
     /**
      * 初始化 ConstantsContext
@@ -498,6 +503,8 @@ public class ConstantsContext {
 
             frontIdxPageTitle = Tools.optString(systemConfig, BlogConstants.FRONT_IDX_PAGE_TITLE, "生活有度, 人生添寿");
             frontIdxPageSubTitle = Tools.optString(systemConfig, BlogConstants.FRONT_IDX_PAGE_SUB_TITLE, "如果你浪费了自己的年龄, 那是挺可悲的 因为你的青春只能持续一点儿时间 -- 很短的一点儿时间");
+            guestTitle = Tools.optString(systemConfig, BlogConstants.DEFAULT_GUEST_TITLE, "guest");
+            guestRoles = Tools.optString(systemConfig, BlogConstants.DEFAULT_GUEST_ROLES, "guest");
         }
 
     }

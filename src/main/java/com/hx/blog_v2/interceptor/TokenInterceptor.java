@@ -112,6 +112,9 @@ public class TokenInterceptor extends HandlerInterceptorAdapter {
         SessionUser user = (SessionUser) WebContext.getAttributeFromSession(BlogConstants.SESSION_USER);
         if (user == null) {
             user = new SessionUser();
+            user.setTitle(constantsContext.guestTitle);
+            user.setRoleIds(constantsContext.guestRoles);
+            user.setSystemUser(false);
             WebContext.setAttributeForSession(BlogConstants.SESSION_USER, user);
         }
     }

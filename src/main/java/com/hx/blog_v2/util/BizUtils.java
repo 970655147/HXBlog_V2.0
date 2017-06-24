@@ -48,16 +48,11 @@ public final class BizUtils {
      * @since 1.0
      */
     public static SessionUser updateUserIfBe(SessionUser user, UserInfoExtractor params) {
-        if (user == null) {
-            user = new SessionUser(params.getName(), params.getEmail(), params.getHeadImgUrl(),
-                    "guest", "guest", false);
-        } else {
-            if (!user.isSystemUser()) {
-                user.setName(params.getName());
-                user.setEmail(params.getEmail());
-            }
-            user.setHeadImgUrl(params.getHeadImgUrl());
+        if (!user.isSystemUser()) {
+            user.setName(params.getName());
+            user.setEmail(params.getEmail());
         }
+        user.setHeadImgUrl(params.getHeadImgUrl());
 
         return user;
     }

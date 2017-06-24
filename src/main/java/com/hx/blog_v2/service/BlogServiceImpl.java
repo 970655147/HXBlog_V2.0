@@ -192,9 +192,9 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
                 return ResultUtils.failed("博客[" + params.getId() + "]不存在 !");
             }
 
-            long commentDeleted = commentDao.updateOne(Criteria.eq("id", params.getId()),
-                    Criteria.set("deleted", "1").add("updated_at", updatedAt))
-                    .getModifiedCount();
+            long commentDeleted = (Long) commentDao.update(Criteria.eq("blog_id", params.getId()),
+                    Criteria.set("deleted", "1").add("updated_at", updatedAt), true)
+                    .getData();
             Log.log(" 删除了 blog[{}], 级联删除 {} 条评论 ! ", params.getId(), commentDeleted);
         } catch (Exception e) {
             e.printStackTrace();
@@ -506,7 +506,7 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
      * @since 1.0
      */
     Result encapContent(BlogVO vo) {
-        if (!Tools.isEmpty(vo.getContentUrl())) {
+        if (Tools.isEmpty(vo.getContentUrl())) {
             return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " 该博客不合法, 没有 内容url ! ");
         }
 

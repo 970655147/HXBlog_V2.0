@@ -323,6 +323,14 @@ public final class BlogConstants {
      * 首页的子标题
      */
     public static final String FRONT_IDX_PAGE_SUB_TITLE = "front.idx_page.sub_title";
+    /**
+     * 游客的 title
+     */
+    public static final String DEFAULT_GUEST_TITLE = "guest.title";
+    /**
+     * 游客的 角色id[无用]
+     */
+    public static final String DEFAULT_GUEST_ROLES = "guest.roles";
 
     // ----------------------------------------- configurable -------------------------------------------------
 
@@ -409,7 +417,7 @@ public final class BlogConstants {
     /**
      * 回复博主, 层主的时候的 parentCommentId
      */
-    @Value("${reply_2_floor_owner}")
+    @Value("${comment.reply_2_floor_owner}")
     public String reply2FloorOwner = "-1";
     /**
      * 异常日志保留的异常 StackTrace 的行数
