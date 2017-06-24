@@ -19,7 +19,7 @@ public class FacetByMonthMapper implements RowMapper<FacetByMonthVO> {
     public FacetByMonthVO mapRow(ResultSet rs, int rowNum) throws SQLException {
         FacetByMonthVO vo = new FacetByMonthVO();
         vo.setMonth(rs.getString("month"));
-        vo.setCnt(rs.getString("cnt"));
+        vo.setCnt(rs.getInt("cnt"));
         return vo;
     }
 }

@@ -79,10 +79,20 @@ function headerFooterInit() {
                 }
 
                 var facetByMonthEle = $("[name='facetByMonthEle']")
-                for (idx in data.facetByMonth) {
-                    var facetByMonth = data.facetByMonth[idx]
-                    facetByMonthEle.append("<a>" + facetByMonth.month + " (" + facetByMonth.cnt + ")</a>")
+                var lenOfFacetByMonth = data.facetByMonth.length
+                var hiddenIfOver = monthFacetHideIfOver
+                if(lenOfFacetByMonth < hiddenIfOver) {
+                    addMonthFacet(facetByMonthEle, data.facetByMonth, lenOfFacetByMonth-1, 0)
+                } else {
+                    addMonthFacet(facetByMonthEle, data.facetByMonth, lenOfFacetByMonth-1, i-hiddenIfOver+1)
+                    facetByMonthEle.append("<a name='facetMore' > ( more ) </a>")
+
+                    $("[name='facetMore']").click(function(){
+                        facetByMonthEle.html("")
+                        addMonthFacet(facetByMonthEle, data.facetByMonth, lenOfFacetByMonth-1, 0)
+                    })
                 }
+
 
                 var latestComments = $("[name='latestCommentsEle']")
                 for (idx in data.latestComments) {
@@ -245,6 +255,18 @@ function selectHeader() {
             $(allA[idx]).parent().addClass("active act")
             break;
         }
+    }
+}
+
+/**
+ * 增加 monthFacet
+ * @param facetByMonthEle
+ * @param monthFacet
+ */
+function addMonthFacet(facetByMonthEle, monthFacet, start, min) {
+    for (var i=start; i>=min; i--) {
+        var facetByMonth = monthFacet[i]
+        facetByMonthEle.append("<a href='/static/main/blogList.html?createdAtMonth=" + facetByMonth.month + "' >" + facetByMonth.month + " (" + facetByMonth.cnt + ")</a>")
     }
 }
 

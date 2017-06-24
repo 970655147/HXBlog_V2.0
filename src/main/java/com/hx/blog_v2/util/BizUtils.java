@@ -5,7 +5,9 @@ import com.hx.attr_handler.util.AttrHandlerUtils;
 import com.hx.blog_v2.context.WebContext;
 import com.hx.blog_v2.domain.dto.SessionUser;
 import com.hx.blog_v2.domain.dto.StatisticsInfo;
+import com.hx.blog_v2.domain.dto.StringIntPair;
 import com.hx.blog_v2.domain.form.interf.UserInfoExtractor;
+import com.hx.blog_v2.domain.mapper.StringIntPairMapper;
 import com.hx.blog_v2.domain.mapper.ToMapMapper;
 import com.hx.blog_v2.domain.po.interf.LogisticalId;
 import com.hx.json.JSONArray;
@@ -284,6 +286,26 @@ public final class BizUtils {
 
         StatisticsInfo result = new StatisticsInfo();
         encapStatisticsInfo(viewCntMap, senseCntMap, blogCntMap, commentCntMap, requestCntMap, exceptionCntMap, result);
+        return result;
+    }
+
+    /**
+     * 收集当前所有的 month -> blogCnt
+     *
+     * @param jdbcTemplate jdbcTemplate
+     * @return java.util.Map<java.lang.String,java.lang.Integer>
+     * @author Jerry.X.He
+     * @date 6/24/2017 3:29 PM
+     * @since 1.0
+     */
+    public static Map<String, Integer> collectMonthFacet(JdbcTemplate jdbcTemplate) {
+        String statsBlogCntSql = " select created_at_month, count(*) as cnt from blog where id >= 0 and deleted = 0 group by created_at_month ";
+        List<StringIntPair> monthFacet = jdbcTemplate.query(statsBlogCntSql, new StringIntPairMapper("created_at_month", "cnt"));
+        Map<String, Integer> result = new LinkedHashMap<>(Tools.estimateMapSize(monthFacet.size()));
+        for (StringIntPair pair : monthFacet) {
+            result.put(pair.getLeft(), pair.getRight());
+        }
+
         return result;
     }
 

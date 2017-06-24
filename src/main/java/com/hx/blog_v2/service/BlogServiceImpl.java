@@ -442,6 +442,10 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
                 sqlParamsList.add(SqlUtils.wrapWildcard(params.getKeywords()));
                 sqlParamsList.add(SqlUtils.wrapWildcard(params.getKeywords()));
             }
+            if (!Tools.isEmpty(params.getCreatedAtMonth())) {
+                condSqlSb.append(" and b.created_at_month = ? ");
+                sqlParamsList.add(params.getCreatedAtMonth());
+            }
         }
     }
 

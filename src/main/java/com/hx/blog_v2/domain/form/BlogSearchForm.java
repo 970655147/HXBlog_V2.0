@@ -13,6 +13,7 @@ public class BlogSearchForm {
     private String typeId;
     private String tagId;
     private String keywords;
+    private String createdAtMonth;
 
     public BlogSearchForm() {
     }
@@ -47,5 +48,13 @@ public class BlogSearchForm {
 
     public void setKeywords(String keywords) {
         this.keywords = keywords;
+    }
+
+    public String getCreatedAtMonth() {
+        return createdAtMonth;
+    }
+
+    public void setCreatedAtMonth(String createdAtMonth) {
+        this.createdAtMonth = createdAtMonth;
     }
 }

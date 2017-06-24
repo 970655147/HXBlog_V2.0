@@ -11,8 +11,6 @@ import com.hx.blog_v2.domain.extractor.ResourceTreeInfoExtractor;
 import com.hx.blog_v2.domain.form.BeanIdsForm;
 import com.hx.blog_v2.domain.mapper.BlogVOMapper;
 import com.hx.blog_v2.domain.mapper.CommentVOMapper;
-import com.hx.blog_v2.domain.mapper.FacetByMonthMapper;
-import com.hx.blog_v2.domain.mapper.OneIntMapper;
 import com.hx.blog_v2.domain.po.BlogTagPO;
 import com.hx.blog_v2.domain.po.BlogTypePO;
 import com.hx.blog_v2.domain.po.ResourcePO;
@@ -24,8 +22,8 @@ import com.hx.blog_v2.service.interf.BaseServiceImpl;
 import com.hx.blog_v2.service.interf.IndexService;
 import com.hx.blog_v2.service.interf.LinkService;
 import com.hx.blog_v2.util.BlogConstants;
-import com.hx.common.interf.common.Result;
 import com.hx.blog_v2.util.ResultUtils;
+import com.hx.common.interf.common.Result;
 import com.hx.json.JSONObject;
 import com.hx.log.alogrithm.tree.TreeUtils;
 import com.hx.log.util.Log;
@@ -70,17 +68,17 @@ public class IndexServiceImpl extends BaseServiceImpl<Object> implements IndexSe
         String latestCommentsSql = " select * from blog_comment order by created_at desc limit 0, 5 ";
         String contextBlogSql = " select b.* from blog as b inner join blog_ex as e on b.id = e.blog_id " +
                 " where b.id = " + constantsContext.contextBlogId;
-        String facetByMogroupnthSql = " select b.created_at_month as month, count(*) as cnt from blog as b " +
-                "where b.deleted = 0 and b.id >= 0 group by b.created_at_month ";
-        String todayVisitedSql = " select count(*) as cnt from visitor where created_at >= (select cast(cast(sysdate() as date) AS datetime))";
 
         List<BlogVO> hotBlogs = jdbcTemplate.query(hotBlogsSql, new BlogVOMapper());
         List<CommentVO> latestComments = jdbcTemplate.query(latestCommentsSql, new CommentVOMapper());
         BlogVO contextBlog = jdbcTemplate.queryForObject(contextBlogSql, new BlogVOMapper());
-        List<FacetByMonthVO> facetByMonth = jdbcTemplate.query(facetByMogroupnthSql, new FacetByMonthMapper());
-        Integer todayVisited = jdbcTemplate.queryForObject(todayVisitedSql, new OneIntMapper("cnt"));
+        Integer todayVisited = cacheContext.todaysStatistics().getViewCnt();
         encapBlogVo(hotBlogs);
         encapBlogVo(Collections.singletonList(contextBlog));
+        List<FacetByMonthVO> facetByMonth = new ArrayList<>(cacheContext.getMonthFacet().size());
+        for (Map.Entry<String, Integer> entry : cacheContext.getMonthFacet().entrySet()) {
+            facetByMonth.add(new FacetByMonthVO(entry.getKey(), entry.getValue()));
+        }
 
         JSONObject data = new JSONObject();
         data.put("title", "生活有度, 人生添寿");

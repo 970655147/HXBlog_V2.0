@@ -12,6 +12,11 @@
 var pageSize = 10
 
 /**
+ * 如果 monthFacet 则部分隐藏
+ */
+var monthFacetHideIfOver = 5
+
+/**
  * 读取文件的编码
  * @type {string}
  */

@@ -5,11 +5,9 @@ import com.hx.blog_v2.domain.dto.StatisticsInfo;
 import com.hx.blog_v2.domain.form.BlogSenseForm;
 import com.hx.blog_v2.domain.form.BlogVisitLogForm;
 import com.hx.blog_v2.domain.po.*;
-import com.hx.blog_v2.util.BizUtils;
-import com.hx.blog_v2.util.BlogConstants;
-import com.hx.blog_v2.util.DateUtils;
-import com.hx.blog_v2.util.JSONTransferableCacheListener;
+import com.hx.blog_v2.util.*;
 import com.hx.common.interf.cache.Cache;
+import com.hx.common.interf.common.Result;
 import com.hx.json.JSONArray;
 import com.hx.json.JSONObject;
 import com.hx.log.alogrithm.tree.TreeUtils;
@@ -163,9 +161,9 @@ public class CacheContext {
      */
     private StatisticsInfo todaysStatistics = new StatisticsInfo();
     /**
-     * 缓存的 7 天的 数据
+     * 缓存的 7-1 天的 数据
      */
-    private Queue<StatisticsInfo> recentlyStatistics = new LinkedList<>();
+    private LinkedList<StatisticsInfo> recentlyStatistics = new LinkedList<>();
     /**
      * 缓存 今天之前7-1 天的 数据的总和[每天刷新一次]
      */
@@ -183,6 +181,11 @@ public class CacheContext {
      * 缓存的 7 个5s的实时 数据[保存的所有的统计信息]
      */
     private Queue<StatisticsInfo> all5SecStatistics = new LinkedList<>();
+    /**
+     * month -> 月博客的数量
+     */
+    private Map<String, Integer> monthFacet = new LinkedHashMap<>();
+
     /**
      * 上一次访问 all5SecStatistics 的时间戳
      */
@@ -259,6 +262,7 @@ public class CacheContext {
             sumStatistics = new StatisticsInfo();
             now5SecStatistics = new StatisticsInfo();
             all5SecStatistics.clear();
+            monthFacet.clear();
         }
 
         if (BizUtils.flagExists(clearFlag, REFRESH_OTHER_CACHED)) {
@@ -680,7 +684,7 @@ public class CacheContext {
      * @date 6/10/2017 9:03 PM
      * @since 1.0
      */
-    public Queue<StatisticsInfo> recentlyStatistics() {
+    public LinkedList<StatisticsInfo> recentlyStatistics() {
         return recentlyStatistics;
     }
 
@@ -733,6 +737,43 @@ public class CacheContext {
                     constantsContext.realTimeChartTimeInterval, TimeUnit.SECONDS);
         }
         return all5SecStatistics;
+    }
+
+    /**
+     * 获取 monthFacet
+     *
+     * @return void
+     * @author Jerry.X.He
+     * @date 6/24/2017 3:15 PM
+     * @since 1.0
+     */
+    public Map<String, Integer> getMonthFacet() {
+        return monthFacet;
+    }
+
+    /**
+     * 更新 monthFacet
+     *
+     * @return void
+     * @author Jerry.X.He
+     * @date 6/24/2017 3:15 PM
+     * @since 1.0
+     */
+    public Result updateBlogInMonthFacet(String month, boolean isAdd) {
+        Integer cnt = monthFacet.get(month);
+        if ((!isAdd) && (cnt == null)) {
+            return ResultUtils.failed(" 没有这个月份的数据 ! ");
+        }
+
+        if (isAdd) {
+            if (cnt == null) {
+                cnt = 0;
+            }
+            monthFacet.put(month, cnt + 1);
+        } else {
+            monthFacet.put(month, cnt - 1);
+        }
+        return ResultUtils.success(isAdd ? cnt + 1 : cnt - 1);
     }
 
     /**
@@ -1004,6 +1045,9 @@ public class CacheContext {
         }
         recentlyStatistics.addAll(allDayStatisInfo);
         sumStatistics = BizUtils.collectSumStatisticsInfo(jdbcTemplate);
+
+        Map<String, Integer> allMonthFacet = BizUtils.collectMonthFacet(jdbcTemplate);
+        monthFacet.putAll(allMonthFacet);
     }
 
     /**

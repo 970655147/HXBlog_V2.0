@@ -15,15 +15,5 @@ import com.hx.mongo.dao.interf.MysqlIBaseDao;
  */
 public interface BlogExDao extends BaseDao<BlogExPO> {
 
-    /**
-     * 根据给定的条件, 获取一个 po
-     *
-     * @return
-     * @author Jerry.X.He
-     * @date 6/9/2017 9:07 PM
-     * @since 1.0
-     */
-    Result get(BeanIdForm params);
-
 
 }

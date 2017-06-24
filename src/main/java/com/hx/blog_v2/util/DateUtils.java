@@ -48,6 +48,25 @@ public final class DateUtils {
     }
 
     /**
+     * 格式化给定的日期
+     *
+     * @param date    date
+     * @param pattern pattern
+     * @return java.lang.String
+     * @author Jerry.X.He
+     * @date 5/20/2017 9:52 AM
+     * @since 1.0
+     */
+    public static Date parse(String date, String pattern) {
+        try {
+            return getDateFormat(pattern).parse(date);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Date(0);
+        }
+    }
+
+    /**
      * 获取一个当前线程私有的 dateFormat
      *
      * @return java.text.DateFormat

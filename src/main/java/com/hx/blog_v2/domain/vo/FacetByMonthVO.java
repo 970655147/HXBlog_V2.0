@@ -10,7 +10,15 @@ package com.hx.blog_v2.domain.vo;
 public class FacetByMonthVO {
 
     private String month;
-    private String cnt;
+    private Integer cnt;
+
+    public FacetByMonthVO() {
+    }
+
+    public FacetByMonthVO(String month, Integer cnt) {
+        this.month = month;
+        this.cnt = cnt;
+    }
 
     public String getMonth() {
         return month;
@@ -20,11 +28,11 @@ public class FacetByMonthVO {
         this.month = month;
     }
 
-    public String getCnt() {
+    public Integer getCnt() {
         return cnt;
     }
 
-    public void setCnt(String cnt) {
+    public void setCnt(Integer cnt) {
         this.cnt = cnt;
     }
 }

@@ -2,9 +2,9 @@ package com.hx.blog_v2.domain.validator;
 
 import com.hx.blog_v2.domain.ErrorCode;
 import com.hx.blog_v2.domain.form.BlogSearchForm;
+import com.hx.blog_v2.util.ResultUtils;
 import com.hx.common.interf.common.Result;
 import com.hx.common.interf.validator.Validator;
-import com.hx.blog_v2.util.ResultUtils;
 import com.hx.log.util.Tools;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -39,6 +39,18 @@ public class BlogSearchValidator implements Validator<BlogSearchForm> {
         if (!Tools.isEmpty(form.getTagId())) {
             if (!beanIdStrValidator.validate(form.getTagId(), extra).isSuccess()) {
                 return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " getTagId 非数字 ! ");
+            }
+        }
+        if (!Tools.isEmpty(form.getCreatedAtMonth())) {
+            String[] splitted = form.getCreatedAtMonth().split("-");
+            if (splitted.length != 2) {
+                return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " 月份输入不合法 ! ");
+            }
+            for (String datePart : splitted) {
+                Result partResult = beanIdStrValidator.validate(datePart, extra);
+                if (! partResult.isSuccess()) {
+                    return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " 月份输入不合法 ! ");
+                }
             }
         }
         if (!Tools.isEmpty(form.getKeywords())) {
