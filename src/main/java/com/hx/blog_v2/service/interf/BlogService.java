@@ -36,7 +36,7 @@ public interface BlogService extends BaseService<BlogPO> {
      * @date 5/20/2017 6:21 PM
      * @since 1.0
      */
-    Result adminGet(BeanIdForm params);
+    Result get(BeanIdForm params);
 
     /**
      * 获取一个 Blog
@@ -46,7 +46,7 @@ public interface BlogService extends BaseService<BlogPO> {
      * @date 5/20/2017 6:21 PM
      * @since 1.0
      */
-    Result get(BeanIdForm params);
+    Result adminGet(BeanIdForm params);
 
     /**
      * 搜索符合的条件的博客列表

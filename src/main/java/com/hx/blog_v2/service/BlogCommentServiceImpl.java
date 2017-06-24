@@ -6,7 +6,7 @@ import com.hx.blog_v2.context.WebContext;
 import com.hx.blog_v2.dao.interf.BlogCommentDao;
 import com.hx.blog_v2.dao.interf.BlogDao;
 import com.hx.blog_v2.dao.interf.BlogExDao;
-import com.hx.blog_v2.domain.POVOTransferUtils;
+import com.hx.blog_v2.domain.ErrorCode;
 import com.hx.blog_v2.domain.dto.SessionUser;
 import com.hx.blog_v2.domain.form.AdminCommentSearchForm;
 import com.hx.blog_v2.domain.form.BeanIdForm;
@@ -16,19 +16,14 @@ import com.hx.blog_v2.domain.mapper.AdminCommentVOMapper;
 import com.hx.blog_v2.domain.mapper.CommentVOMapper;
 import com.hx.blog_v2.domain.mapper.OneIntMapper;
 import com.hx.blog_v2.domain.po.BlogCommentPO;
-import com.hx.blog_v2.domain.po.BlogExPO;
 import com.hx.blog_v2.domain.po.BlogPO;
 import com.hx.blog_v2.domain.vo.AdminCommentVO;
-import com.hx.blog_v2.domain.vo.BlogVO;
 import com.hx.blog_v2.domain.vo.CommentVO;
 import com.hx.blog_v2.service.interf.BaseServiceImpl;
 import com.hx.blog_v2.service.interf.BlogCommentService;
-import com.hx.blog_v2.util.BlogConstants;
-import com.hx.blog_v2.util.DateUtils;
-import com.hx.blog_v2.util.SqlUtils;
+import com.hx.blog_v2.util.*;
 import com.hx.common.interf.common.Page;
 import com.hx.common.interf.common.Result;
-import com.hx.blog_v2.util.ResultUtils;
 import com.hx.log.util.Tools;
 import com.hx.mongo.criteria.Criteria;
 import com.hx.mongo.criteria.interf.IQueryCriteria;
@@ -69,42 +64,16 @@ public class BlogCommentServiceImpl extends BaseServiceImpl<BlogCommentPO> imple
             return getBlogResult;
         }
 
-        BlogVO blog = POVOTransferUtils.blogPO2BlogVO((BlogPO) getBlogResult.getData());
+        BlogPO blog = (BlogPO) getBlogResult.getData();
         SessionUser user = (SessionUser) WebContext.getAttributeFromSession(BlogConstants.SESSION_USER);
         BlogCommentPO po = new BlogCommentPO(user.getName(), user.getEmail(), user.getHeadImgUrl(), params.getToUser(),
                 user.getTitle(), params.getComment());
         po.setBlogId(params.getBlogId());
-
-        int endOfReply = idxOfEndRe(params.getComment());
-        boolean isReply = ((!Tools.isEmpty(params.getFloorId())) && (endOfReply >= 0));
-        if (isReply) {
-            BlogCommentPO replyTo = get0(params.getBlogId(), params.getFloorId(), params.getCommentId());
-            if ((replyTo == null) || (!params.getToUser().equalsIgnoreCase(replyTo.getName()))) {
-                return ResultUtils.failed("没有对应的回复 !");
-            }
-
-            po.setFloorId(params.getFloorId());
-            po.setComment(po.getComment().substring(endOfReply).trim());
-            po.setParentCommentId(replyTo.getId());
-        } else {
-            po.setFloorId(cacheContext.nextFloorId(po.getBlogId()));
-            po.setToUser(blog.getAuthor());
-        }
-        po.setCommentId(cacheContext.nextCommentId(po.getBlogId(), po.getFloorId()));
+        encapCommentPO(blog, po, params);
 
         Result saveResult = commentDao.add(po);
         if (!saveResult.isSuccess()) {
             return saveResult;
-        }
-
-        if (!isReply) {
-            Result getExResult = blogExDao.get(new BeanIdForm(blog.getId()));
-            if (!getExResult.isSuccess()) {
-                return getExResult;
-            }
-            BlogExPO exPo = ((BlogExPO) getExResult.getData());
-            exPo.incCommentCnt(1);
-            cacheContext.putBlogEx(exPo);
         }
         return ResultUtils.success(po.getId());
     }
@@ -116,16 +85,20 @@ public class BlogCommentServiceImpl extends BaseServiceImpl<BlogCommentPO> imple
         String countSql = " select count(distinct(floor_id)) as totalRecord from blog_comment where blog_id = ? and deleted = 0 ";
 
         Object[] sqlParams = new Object[]{params.getId()};
-        // 1, 2 可以折叠, 可惜 我的 mysql 似乎 是不支持 limit 作为子查询
-        List<Integer> floorIds = jdbcTemplate.query(selectFloorSql, new Object[]{params.getId(), page.recordOffset(), page.getPageSize()}, new OneIntMapper("floor_id"));
         Integer totalRecord = jdbcTemplate.queryForObject(countSql, sqlParams, new OneIntMapper("totalRecord"));
-        List<CommentVO> comments = Collections.emptyList();
-        if (!Tools.isEmpty(floorIds)) {
-            comments = jdbcTemplate.query(String.format(selectSql, SqlUtils.wrapInSnippetForIds(floorIds)), sqlParams, new CommentVOMapper());
+        if (totalRecord <= 0) {
+            page.setList(Collections.<List<CommentVO>>emptyList());
+        } else {
+            // 1, 2 可以折叠, 可惜 我的 mysql 似乎 是不支持 limit 作为子查询
+            List<Integer> floorIds = jdbcTemplate.query(selectFloorSql, new Object[]{params.getId(), page.recordOffset(), page.getPageSize()}, new OneIntMapper("floor_id"));
+            List<CommentVO> comments = Collections.emptyList();
+            if (!Tools.isEmpty(floorIds)) {
+                comments = jdbcTemplate.query(String.format(selectSql, SqlUtils.wrapInSnippetForIds(floorIds)), sqlParams, new CommentVOMapper());
+            }
+            List<List<CommentVO>> result = generateCommentTree(comments);
+            page.setList(result);
         }
-        List<List<CommentVO>> result = generateCommentTree(comments);
 
-        page.setList(result);
         page.setTotalRecord(totalRecord);
         return ResultUtils.success(page);
     }
@@ -149,9 +122,14 @@ public class BlogCommentServiceImpl extends BaseServiceImpl<BlogCommentPO> imple
         selectParams.add(page.recordOffset());
         selectParams.add(page.getPageSize());
 
-        List<AdminCommentVO> list = jdbcTemplate.query(selectSql + condSql + selectSuffix, selectParams.toArray(), new AdminCommentVOMapper());
         Integer totalRecord = jdbcTemplate.queryForObject(countSql + condSql, countParams, new OneIntMapper("totalRecord"));
-        page.setList(list);
+        if (totalRecord <= 0) {
+            page.setList(Collections.<AdminCommentVO>emptyList());
+        } else {
+            List<AdminCommentVO> list = jdbcTemplate.query(selectSql + condSql + selectSuffix, selectParams.toArray(), new AdminCommentVOMapper());
+            page.setList(list);
+        }
+
         page.setTotalRecord(totalRecord);
         return ResultUtils.success(page);
     }
@@ -160,14 +138,8 @@ public class BlogCommentServiceImpl extends BaseServiceImpl<BlogCommentPO> imple
     public Result floorCommentList(FloorCommentListSearchForm params, Page<CommentVO> page) {
         StringBuilder sql = new StringBuilder(" select * from blog_comment as c where c.deleted = 0 ");
         List<Object> sqlParams = new ArrayList<>(4);
-        if (!Tools.isEmpty(params.getBlogId())) {
-            sql.append(" and c.blog_id = ? ");
-            sqlParams.add(params.getBlogId());
-        }
-        if (!Tools.isEmpty(params.getFloorId())) {
-            sql.append(" and c.floor_id = ? ");
-            sqlParams.add(params.getFloorId());
-        }
+        encapFloorCommentList(params, sql, sqlParams);
+
         sql.append(" order by c.comment_id limit ?, ? ");
         sqlParams.add(page.recordOffset());
         sqlParams.add(page.getPageSize());
@@ -195,7 +167,7 @@ public class BlogCommentServiceImpl extends BaseServiceImpl<BlogCommentPO> imple
     public Result remove(BeanIdForm params) {
         IQueryCriteria query = Criteria.eq("id", params.getId());
         Result getResult = commentDao.get(query);
-        if(! getResult.isSuccess()) {
+        if (!getResult.isSuccess()) {
             return getResult;
         }
 
@@ -207,58 +179,47 @@ public class BlogCommentServiceImpl extends BaseServiceImpl<BlogCommentPO> imple
         }
 
         BlogCommentPO po = (BlogCommentPO) getResult.getData();
-        if("1".equals(po.getCommentId())) {
-            Result getExResult = blogExDao.get(new BeanIdForm(po.getBlogId()));
-            if (!getExResult.isSuccess()) {
-                return getExResult;
-            }
-            BlogExPO exPo = ((BlogExPO) getExResult.getData());
-            exPo.incCommentCnt(1);
-            cacheContext.putBlogEx(exPo);
-        }
+        WebContext.setAttributeForRequest(BlogConstants.REQUEST_DATA, po);
         return ResultUtils.success(params.getId());
     }
 
     // -------------------- 辅助方法 --------------------------
 
     /**
-     * 如果给定的评论内容是回复的话, 获取回复的开始索引
+     * 封装给定的 blogPO 的信息, 封装 floorId, commentId 等等
      *
-     * @param comment comment
-     * @return int
+     * @param po     po
+     * @param params params
+     * @return com.hx.common.interf.common.Result
      * @author Jerry.X.He
-     * @date 6/4/2017 1:49 PM
+     * @date 6/24/2017 6:10 PM
      * @since 1.0
      */
-    private int idxOfEndRe(String comment) {
-        if (!comment.startsWith(constantsContext.replyCommentPrefix)) {
-            return -1;
-        }
+    private Result encapCommentPO(BlogPO blog, BlogCommentPO po, CommentSaveForm params) {
+        int endOfReply = BizUtils.idxOfEndRe(params.getComment(), constantsContext.replyCommentPrefix, constantsContext.replyCommentSuffix);
+        boolean isReply = ((!Tools.isEmpty(params.getFloorId())) && (endOfReply >= 0));
+        if (isReply) {
+            IQueryCriteria query = Criteria.and(Criteria.eq("deleted", "0")).add(Criteria.eq("blog_id", params.getBlogId()))
+                    .add(Criteria.eq("floor_id", params.getFloorId())).add(Criteria.eq("comment_id", params.getCommentId()));
+            Result getCommentResult = commentDao.get(query);
+            if (!getCommentResult.isSuccess()) {
+                return getCommentResult;
+            }
+            BlogCommentPO replyTo = (BlogCommentPO) getCommentResult.getData();
+            if (!params.getToUser().equalsIgnoreCase(replyTo.getName())) {
+                return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " 该楼层没有对应的回复 ! ");
+            }
 
-        return comment.indexOf(constantsContext.replyCommentSuffix) + constantsContext.replyCommentSuffix.length();
-    }
-
-    /**
-     * 获取 给定的博客, 给定的层数, 给定的评论索引的评论
-     *
-     * @param blogId    blogId
-     * @param floorId   floorId
-     * @param commentId commentId
-     * @return com.hx.blog_v2.domain.po.CommentVO
-     * @author Jerry.X.He
-     * @date 6/4/2017 3:18 PM
-     * @since 1.0
-     */
-    private BlogCommentPO get0(String blogId, String floorId, String commentId) {
-        try {
-            return commentDao.findOne(Criteria.and(Criteria.eq("deleted", "0"))
-                            .add(Criteria.eq("blog_id", blogId)).add(Criteria.eq("floor_id", floorId))
-                            .add(Criteria.eq("comment_id", commentId)),
-                    BlogConstants.LOAD_ALL_CONFIG);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+            po.setFloorId(params.getFloorId());
+            po.setComment(po.getComment().substring(endOfReply).trim());
+            po.setParentCommentId(replyTo.getId());
+        } else {
+            po.setFloorId(cacheContext.nextFloorId(po.getBlogId()));
+            po.setToUser(blog.getAuthor());
         }
+        po.setCommentId(cacheContext.nextCommentId(po.getBlogId(), po.getFloorId()));
+
+        return ResultUtils.success(po);
     }
 
     /**
@@ -306,6 +267,27 @@ public class BlogCommentServiceImpl extends BaseServiceImpl<BlogCommentPO> imple
         }
     }
 
+    /**
+     * 封装 查询 某个博客, 某一层的所有的评论
+     *
+     * @param params       params
+     * @param condSql      condSql
+     * @param selectParams selectParams
+     * @return void
+     * @author Jerry.X.He
+     * @date 6/24/2017 5:59 PM
+     * @since 1.0
+     */
+    private void encapFloorCommentList(FloorCommentListSearchForm params, StringBuilder condSql, List<Object> selectParams) {
+        if (!Tools.isEmpty(params.getBlogId())) {
+            condSql.append(" and c.blog_id = ? ");
+            selectParams.add(params.getBlogId());
+        }
+        if (!Tools.isEmpty(params.getFloorId())) {
+            condSql.append(" and c.floor_id = ? ");
+            selectParams.add(params.getFloorId());
+        }
+    }
 
     /**
      * 生成评论树

@@ -415,6 +415,25 @@ public final class BizUtils {
         resp.addCookie(cookie);
     }
 
+    /**
+     * 如果给定的评论内容是回复的话, 获取回复的开始索引
+     *
+     * @param comment            comment
+     * @param replyCommentPrefix replyCommentPrefix
+     * @param replyCommentSuffix replyCommentSuffix
+     * @return int
+     * @author Jerry.X.He
+     * @date 6/4/2017 1:49 PM
+     * @since 1.0
+     */
+    public static int idxOfEndRe(String comment, String replyCommentPrefix, String replyCommentSuffix) {
+        if (!comment.startsWith(replyCommentPrefix)) {
+            return -1;
+        }
+
+        return comment.indexOf(replyCommentSuffix) + replyCommentSuffix.length();
+    }
+
     // ----------------- 辅助方法 -----------------------
 
     /**

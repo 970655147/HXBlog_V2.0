@@ -4,6 +4,7 @@ import com.hx.blog_v2.context.CacheContext;
 import com.hx.blog_v2.context.ConstantsContext;
 import com.hx.blog_v2.context.WebContext;
 import com.hx.blog_v2.dao.interf.*;
+import com.hx.blog_v2.domain.ErrorCode;
 import com.hx.blog_v2.domain.POVOTransferUtils;
 import com.hx.blog_v2.domain.dto.SessionUser;
 import com.hx.blog_v2.domain.form.BeanIdForm;
@@ -18,10 +19,13 @@ import com.hx.blog_v2.domain.vo.AdminBlogVO;
 import com.hx.blog_v2.domain.vo.BlogVO;
 import com.hx.blog_v2.service.interf.BaseServiceImpl;
 import com.hx.blog_v2.service.interf.BlogService;
-import com.hx.blog_v2.util.*;
+import com.hx.blog_v2.util.BlogConstants;
+import com.hx.blog_v2.util.DateUtils;
+import com.hx.blog_v2.util.ResultUtils;
+import com.hx.blog_v2.util.SqlUtils;
 import com.hx.common.interf.common.Page;
 import com.hx.common.interf.common.Result;
-import com.hx.blog_v2.util.ResultUtils;
+import com.hx.json.JSONArray;
 import com.hx.log.collection.CollectionUtils;
 import com.hx.log.file.FileUtils;
 import com.hx.log.util.Log;
@@ -32,6 +36,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -78,46 +83,43 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
     }
 
     @Override
-    public Result adminGet(BeanIdForm params) {
-        String sql = " select b.*, GROUP_CONCAT(rlt.tag_id) as tagIds from blog as b " +
-                " inner join rlt_blog_tag as rlt on b.id = rlt.blog_id " +
-                " where b.deleted = 0 and b.id = ? group by b.id ";
-        Object[] sqlParams = new Object[]{params.getId()};
-
-        AdminBlogVO vo = null;
-        try {
-            // 如果 没有找到记录, 或者 找到多条记录, 都会抛出异常
-            vo = jdbcTemplate.queryForObject(sql, sqlParams, new AdminBlogVOMapper());
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResultUtils.failed("给定的博客[" + params.getId() + "]不存在 !");
-        }
-        encapTypeTagInfo(vo);
-        encapContent(vo);
-        return ResultUtils.success(vo);
-    }
-
-    @Override
     public Result get(BeanIdForm params) {
         String blogSql = " select b.*, GROUP_CONCAT(rlt.tag_id) as tagIds from blog as b " +
                 " inner join rlt_blog_tag as rlt on b.id = rlt.blog_id " +
                 " where b.deleted = 0 and b.id = ? group by b.id ";
         Object[] sqlParams = new Object[]{params.getId()};
-
-        BlogVO vo = null;
-        try {
-            // 如果 没有找到记录, 或者 找到多条记录, 都会抛出异常, ex.*, b.* 这个顺序, 避免 po.id 被 exPo.id 覆盖
-            vo = jdbcTemplate.queryForObject(blogSql, sqlParams, new BlogVOMapper());
-            Result result = encapSenseAndBlogEx(vo);
-            if (!result.isSuccess()) {
-                return result;
-            }
-            vo = (BlogVO) result.getData();
-        } catch (Exception e) {
-            e.printStackTrace();
+        // 如果 没有找到记录, 或者 找到多条记录, 都会抛出异常, ex.*, b.* 这个顺序, 避免 po.id 被 exPo.id 覆盖
+        List<BlogVO> vos = jdbcTemplate.query(blogSql, sqlParams, new BlogVOMapper());
+        if (Tools.isEmpty(vos)) {
             return ResultUtils.failed("给定的博客[" + params.getId() + "]不存在 !");
         }
 
+        BlogVO vo = vos.get(0);
+        Result result = encapSense(vo);
+        if (!result.isSuccess()) {
+            return result;
+        }
+        result = encapBlogVo(vo);
+        if (!result.isSuccess()) {
+            return result;
+        }
+
+        return ResultUtils.success(vo);
+    }
+
+    @Override
+    public Result adminGet(BeanIdForm params) {
+        String sql = " select b.*, GROUP_CONCAT(rlt.tag_id) as tagIds from blog as b " +
+                " inner join rlt_blog_tag as rlt on b.id = rlt.blog_id " +
+                " where b.deleted = 0 and b.id = ? group by b.id ";
+        Object[] sqlParams = new Object[]{params.getId()};
+        // 如果 没有找到记录, 或者 找到多条记录, 都会抛出异常
+        List<AdminBlogVO> vos = jdbcTemplate.query(sql, sqlParams, new AdminBlogVOMapper());
+        if (Tools.isEmpty(vos)) {
+            return ResultUtils.failed("给定的博客[" + params.getId() + "]不存在 !");
+        }
+
+        AdminBlogVO vo = vos.get(0);
         encapTypeTagInfo(vo);
         encapContent(vo);
         return ResultUtils.success(vo);
@@ -139,10 +141,14 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
         selectParams.add(page.recordOffset());
         selectParams.add(page.getPageSize());
 
-        List<BlogVO> list = jdbcTemplate.query(selectSql + condSql + selectSqlSuffix, selectParams.toArray(), new BlogVOMapper());
         Integer totalRecord = jdbcTemplate.queryForObject(countSql + condSql, countParams, new OneIntMapper("totalRecord"));
-        encapBlogVo(list);
-        page.setList(list);
+        if (totalRecord <= 0) {
+            page.setList(Collections.<BlogVO>emptyList());
+        } else {
+            List<BlogVO> list = jdbcTemplate.query(selectSql + condSql + selectSqlSuffix, selectParams.toArray(), new BlogVOMapper());
+            encapBlogVo(list);
+            page.setList(list);
+        }
         page.setTotalRecord(totalRecord);
         return ResultUtils.success(page);
     }
@@ -162,10 +168,15 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
         selectParamsList.add(page.recordOffset());
         selectParamsList.add(page.getPageSize());
 
-        List<AdminBlogVO> list = jdbcTemplate.query(selectSql + condSql + selectSqlSuffix, selectParamsList.toArray(), new AdminBlogVOMapper());
         Integer totalRecord = jdbcTemplate.queryForObject(countSql + condSql, countParams, new OneIntMapper("totalRecord"));
-        encapTypeTagInfo(list);
-        page.setList(list);
+        if (totalRecord <= 0) {
+            page.setList(Collections.<AdminBlogVO>emptyList());
+        } else {
+            List<AdminBlogVO> list = jdbcTemplate.query(selectSql + condSql + selectSqlSuffix, selectParamsList.toArray(), new AdminBlogVOMapper());
+            encapTypeTagInfo(list);
+            page.setList(list);
+        }
+
         page.setTotalRecord(totalRecord);
         return ResultUtils.success(page);
     }
@@ -208,56 +219,6 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
         String fileName = DateUtils.formate(new Date(), BlogConstants.FORMAT_FILENAME) + "-" + params.getTitle();
         int bucket = (fileName.hashCode() & 63);
         return bucket + "/" + fileName + Tools.HTML;
-    }
-
-    /**
-     * 封装 type, tag 的信息
-     *
-     * @param list adminTreeList
-     * @return void
-     * @author Jerry.X.He
-     * @date 5/21/2017 6:29 PM
-     * @since 1.0
-     */
-    private void encapTypeTagInfo(List<AdminBlogVO> list) {
-        for (AdminBlogVO vo : list) {
-            encapTypeTagInfo(vo);
-        }
-    }
-
-    private void encapTypeTagInfo(AdminBlogVO vo) {
-        BlogTypePO type = cacheContext.blogType(vo.getBlogTypeId());
-        if (type != null) {
-            vo.setBlogTypeName(type.getName());
-        }
-        if (vo.getBlogTagIds() != null) {
-            List<String> tagIds = vo.getBlogTagIds();
-            List<String> tagNames = new ArrayList<>(tagIds.size());
-            for (String tagId : tagIds) {
-                BlogTagPO tag = cacheContext.blogTag(tagId);
-                tagNames.add(tag == null ? Tools.NULL : tag.getName());
-            }
-            vo.setBlogTagNames(tagNames);
-        }
-    }
-
-    /**
-     * 封装给定的博客的内容信息
-     *
-     * @param vo vo
-     * @return void
-     * @author Jerry.X.He
-     * @date 5/21/2017 8:48 PM
-     * @since 1.0
-     */
-    private void encapContent(AdminBlogVO vo) {
-        if (!Tools.isEmpty(vo.getContentUrl())) {
-            try {
-                vo.setContent(Tools.getContent(Tools.getFilePath(constants.blogRootDir, vo.getContentUrl())));
-            } catch (Exception e) {
-                Log.err(Tools.errorMsg(e));
-            }
-        }
     }
 
     /**
@@ -322,7 +283,6 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
     private Result update0(BlogPO po, BlogSaveForm params) {
         po.setId(params.getId());
         po.setUpdatedAt(DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS));
-
         Result updateBlogResult = blogDao.update(po);
         if (!updateBlogResult.isSuccess()) {
             return updateBlogResult;
@@ -361,59 +321,6 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
     }
 
     /**
-     * 封装给定的博客列表的信息
-     *
-     * @param voes voes
-     * @return void
-     * @author Jerry.X.He
-     * @date 5/27/2017 11:26 PM
-     * @since 1.0
-     */
-    private void encapBlogVo(List<BlogVO> voes) {
-        for (BlogVO vo : voes) {
-            BlogExPO exPo = (BlogExPO) blogExDao.get(new BeanIdForm(vo.getId())).getData();
-            vo = POVOTransferUtils.blogExPO2BlogVO(exPo, vo);
-            encapTypeTagInfo(vo);
-            encapContent(vo);
-        }
-    }
-
-    private void encapTypeTagInfo(BlogVO vo) {
-        BlogTypePO type = cacheContext.blogType(vo.getBlogTypeId());
-        if (type != null) {
-            vo.setBlogTypeName(type.getName());
-        }
-        if (vo.getBlogTagIds() != null) {
-            List<String> tagIds = vo.getBlogTagIds();
-            List<String> tagNames = new ArrayList<>(tagIds.size());
-            for (String tagId : tagIds) {
-                BlogTagPO tag = cacheContext.blogTag(tagId);
-                tagNames.add(tag == null ? Tools.NULL : tag.getName());
-            }
-            vo.setBlogTagNames(tagNames);
-        }
-    }
-
-    /**
-     * 封装给定的博客的内容信息
-     *
-     * @param vo vo
-     * @return void
-     * @author Jerry.X.He
-     * @date 5/21/2017 8:48 PM
-     * @since 1.0
-     */
-    private void encapContent(BlogVO vo) {
-        if (!Tools.isEmpty(vo.getContentUrl())) {
-            try {
-                vo.setContent(Tools.getContent(Tools.getFilePath(constants.blogRootDir, vo.getContentUrl())));
-            } catch (Exception e) {
-                Log.err(Tools.errorMsg(e));
-            }
-        }
-    }
-
-    /**
      * 封装查询条件, 以及查询参数 [adminList]
      *
      * @param params        params
@@ -449,6 +356,216 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
         }
     }
 
+    // -------------------- BlogVO --------------------------
+
+    /**
+     * 封装给定的博客列表的信息
+     *
+     * @param list list
+     * @return void
+     * @author Jerry.X.He
+     * @date 5/27/2017 11:26 PM
+     * @since 1.0
+     */
+    private Result encapBlogVo(List<BlogVO> list) {
+        JSONArray errors = new JSONArray();
+        for (BlogVO vo : list) {
+            Result result = encapBlogVo(vo);
+            if (!result.isSuccess()) {
+                errors.add(result);
+            }
+        }
+
+        if (!errors.isEmpty()) {
+            return ResultUtils.failed(list, errors);
+        }
+        return ResultUtils.success(list);
+    }
+
+    /**
+     * 封装给定的 vo, 封装 exp, type, tags, content 等等
+     *
+     * @param vo vo
+     * @return void
+     * @author Jerry.X.He
+     * @date 6/24/2017 5:17 PM
+     * @since 1.0
+     */
+    private Result encapBlogVo(BlogVO vo) {
+        Result result = encapBlogEx(vo);
+        if (!result.isSuccess()) {
+            return result;
+        }
+
+        result = encapTypeTagInfo(vo);
+        if (!result.isSuccess()) {
+            return result;
+        }
+
+        result = encapContent(vo);
+        if (!result.isSuccess()) {
+            return result;
+        }
+        return ResultUtils.success(vo);
+    }
+
+    /**
+     * 封装 给定的 Blog 的 sense 以及 BlogEx
+     *
+     * @param vo vo
+     * @return com.hx.common.interf.common.Result
+     * @author Jerry.X.He
+     * @date 6/6/2017 10:24 PM
+     * @since 1.0
+     */
+    Result encapSenseAndBlogEx(BlogVO vo) {
+        Result result = encapSense(vo);
+        if (!result.isSuccess()) {
+            return result;
+        }
+
+        result = encapBlogEx(vo);
+        if (!result.isSuccess()) {
+            return result;
+        }
+        return ResultUtils.success(vo);
+    }
+
+    /**
+     * 封装 给定的 Blog 的 sense 以及 BlogEx
+     *
+     * @param vo vo
+     * @return com.hx.common.interf.common.Result
+     * @author Jerry.X.He
+     * @date 6/6/2017 10:24 PM
+     * @since 1.0
+     */
+    Result encapSense(BlogVO vo) {
+        Result result = goodSensed(vo.getId());
+        if (!result.isSuccess()) {
+            return result;
+        }
+
+        vo.setGoodSensed((Integer) result.getData());
+        return ResultUtils.success(vo);
+    }
+
+    /**
+     * 封装 给定的 Blog 的 sense 以及 BlogEx
+     *
+     * @param vo vo
+     * @return com.hx.common.interf.common.Result
+     * @author Jerry.X.He
+     * @date 6/6/2017 10:24 PM
+     * @since 1.0
+     */
+    Result encapBlogEx(BlogVO vo) {
+        Result getBlogExResult = blogExDao.get(new BeanIdForm(vo.getId()));
+        if (!getBlogExResult.isSuccess()) {
+            return getBlogExResult;
+        }
+
+        BlogExPO exPO = (BlogExPO) getBlogExResult.getData();
+        vo = POVOTransferUtils.blogExPO2BlogVO(exPO, vo);
+        return ResultUtils.success(vo);
+    }
+
+    /**
+     * 封装给定的 blog 的 type, tags 的相关信息
+     *
+     * @param vo vo
+     * @return void
+     * @author Jerry.X.He
+     * @date 6/24/2017 5:11 PM
+     * @since 1.0
+     */
+    private Result encapTypeTagInfo(BlogVO vo) {
+        BlogTypePO type = cacheContext.blogType(vo.getBlogTypeId());
+        if (type != null) {
+            vo.setBlogTypeName(type.getName());
+        }
+        if (vo.getBlogTagIds() != null) {
+            vo.setBlogTagNames(getTagNamesByIds(vo.getBlogTagIds()));
+        }
+
+        return ResultUtils.success(vo);
+    }
+
+    /**
+     * 封装给定的博客的内容信息
+     *
+     * @param vo vo
+     * @return void
+     * @author Jerry.X.He
+     * @date 5/21/2017 8:48 PM
+     * @since 1.0
+     */
+    private Result encapContent(BlogVO vo) {
+        if (!Tools.isEmpty(vo.getContentUrl())) {
+            return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " 该博客不合法, 没有 内容url ! ");
+        }
+
+        vo.setContent(getBlogContentByUrl(vo.getContentUrl()));
+        return ResultUtils.success(vo);
+    }
+
+    // -------------------- AdminBlogVO --------------------------
+
+    /**
+     * 封装 type, tag 的信息
+     *
+     * @param list adminTreeList
+     * @return void
+     * @author Jerry.X.He
+     * @date 5/21/2017 6:29 PM
+     * @since 1.0
+     */
+    private Result encapTypeTagInfo(List<AdminBlogVO> list) {
+        JSONArray errors = new JSONArray();
+        for (AdminBlogVO vo : list) {
+            Result result = encapTypeTagInfo(vo);
+            if (!result.isSuccess()) {
+                errors.add(result);
+            }
+        }
+
+        if (!errors.isEmpty()) {
+            return ResultUtils.failed(list, errors);
+        }
+        return ResultUtils.success(list);
+    }
+
+    private Result encapTypeTagInfo(AdminBlogVO vo) {
+        BlogTypePO type = cacheContext.blogType(vo.getBlogTypeId());
+        if (type != null) {
+            vo.setBlogTypeName(type.getName());
+        }
+        if (vo.getBlogTagIds() != null) {
+            vo.setBlogTagNames(getTagNamesByIds(vo.getBlogTagIds()));
+
+        }
+
+        return ResultUtils.success(vo);
+    }
+
+    /**
+     * 封装给定的博客的内容信息
+     *
+     * @param vo vo
+     * @return void
+     * @author Jerry.X.He
+     * @date 5/21/2017 8:48 PM
+     * @since 1.0
+     */
+    private Result encapContent(AdminBlogVO vo) {
+        if (!Tools.isEmpty(vo.getContentUrl())) {
+            return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " 该博客不合法, 没有 内容url ! ");
+        }
+
+        vo.setContent(getBlogContentByUrl(vo.getContentUrl()));
+        return ResultUtils.success(vo);
+    }
+
     /**
      * 获取当前用户是否点了当前博客的赞
      *
@@ -479,19 +596,40 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
     }
 
     /**
-     * 封装 给定的 Blog 的 sense 以及 BlogEx
+     * 根据给定的 tagId 列表, 获取 对应的 tagNames
      *
-     * @param vo vo
-     * @return com.hx.common.interf.common.Result
+     * @param tagIds tagIds
+     * @return java.util.List<java.lang.String>
      * @author Jerry.X.He
-     * @date 6/6/2017 10:24 PM
+     * @date 6/24/2017 5:42 PM
      * @since 1.0
      */
-    Result encapSenseAndBlogEx(BlogVO vo) {
-        vo.setGoodSensed((Integer) goodSensed(vo.getId()).getData());
-        BlogExPO exPO = (BlogExPO) blogExDao.get(new BeanIdForm(vo.getId())).getData();
-        vo = POVOTransferUtils.blogExPO2BlogVO(exPO, vo);
-        return ResultUtils.success(vo);
+    private List<String> getTagNamesByIds(List<String> tagIds) {
+        List<String> tagNames = new ArrayList<>(tagIds.size());
+        for (String tagId : tagIds) {
+            BlogTagPO tag = cacheContext.blogTag(tagId);
+            tagNames.add(tag == null ? Tools.NULL : tag.getName());
+        }
+
+        return tagNames;
+    }
+
+    /**
+     * 根据给定的 url, 获取对应的博客的内容
+     *
+     * @param contentUrl contentUrl
+     * @return java.lang.String
+     * @author Jerry.X.He
+     * @date 6/24/2017 5:44 PM
+     * @since 1.0
+     */
+    private String getBlogContentByUrl(String contentUrl) {
+        try {
+            return (Tools.getContent(Tools.getFilePath(constants.blogRootDir, contentUrl)));
+        } catch (Exception e) {
+            Log.err(Tools.errorMsg(e));
+            return " blog does not exists ! ";
+        }
     }
 
 }

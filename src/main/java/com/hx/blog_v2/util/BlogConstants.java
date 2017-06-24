@@ -164,6 +164,14 @@ public final class BlogConstants {
      */
     public static final String SESSION_TOKEN = "session:token";
     /**
+     * 暂存于 request 中的data的key
+     */
+    public static final String REQUEST_DATA = "request:data";
+    /**
+     * 暂存于 request 中的extra的key
+     */
+    public static final String REQUEST_EXTRA = "request:extra";
+    /**
      * 用户带过来token的请求头
      */
     public static final String COOKIE_TOKEN = "hx_blog_token";
