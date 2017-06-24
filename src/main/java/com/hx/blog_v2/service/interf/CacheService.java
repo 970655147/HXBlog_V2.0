@@ -13,6 +13,26 @@ public interface CacheService {
 
 
     /**
+     * 获取局部缓存的使用数据
+     *
+     * @return
+     * @author Jerry.X.He
+     * @date 6/11/2017 9:45 AM
+     * @since 1.0
+     */
+    Result localCacheSummary();
+
+    /**
+     * 获取缓存的使用数据的信息
+     *
+     * @return
+     * @author Jerry.X.He
+     * @date 6/11/2017 9:45 AM
+     * @since 1.0
+     */
+    Result cacheSummary();
+
+    /**
      * 刷新所有的配置
      *
      * @return
@@ -111,5 +131,6 @@ public interface CacheService {
      * @since 1.0
      */
     Result refreshFrontIdxConfig();
+
 
 }

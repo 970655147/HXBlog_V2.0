@@ -22,23 +22,13 @@ public interface SystemService extends BaseService<Object> {
     Result statsSummary();
 
     /**
-     * 获取局部缓存的使用数据
+     * 刷新权限, 该下线的下线, 清理权限相关的缓存
      *
      * @return
      * @author Jerry.X.He
      * @date 6/11/2017 9:45 AM
      * @since 1.0
      */
-    Result localCacheSummary();
-
-    /**
-     * 获取缓存的使用数据的信息
-     *
-     * @return
-     * @author Jerry.X.He
-     * @date 6/11/2017 9:45 AM
-     * @since 1.0
-     */
-    Result cacheSummary();
+    Result refreshAuthority();
 
 }

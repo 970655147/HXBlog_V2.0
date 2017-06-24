@@ -26,14 +26,10 @@ public class SystemController {
         return systemService.statsSummary();
     }
 
-    @RequestMapping(value = "/localCacheSummary", method = RequestMethod.GET)
-    public Result localCacheSummary() {
-        return systemService.localCacheSummary();
+    @RequestMapping(value = "/refreshAuthority", method = RequestMethod.GET)
+    public Result refreshAuthority() {
+        return systemService.refreshAuthority();
     }
 
-    @RequestMapping(value = "/cacheSummary", method = RequestMethod.GET)
-    public Result cacheSummary() {
-        return systemService.cacheSummary();
-    }
 
 }

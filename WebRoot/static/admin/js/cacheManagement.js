@@ -51,6 +51,13 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
         })
     }, function () {
     })
+    $("[name='refreshAuthority']").hover(function () {
+        layer.tips("刷新权限数据", "[name='refreshAuthority']", {
+            tips: [1, '#ff0000'],
+            time: 1000
+        })
+    }, function () {
+    })
 
     $("[name='allCached']").hover(function () {
         layer.tips("CacheContext [① + ② + ③ + ④]", "[name='allCached']", {
@@ -127,6 +134,19 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
                         layer.alert("刷新缓存配置成功 !")
                     } else {
                         layer.alert("刷新缓存配置出现了点问题[" + resp.data + "], 请联系管理员 !")
+                    }
+                }
+            })
+        },
+        refreshAuthority: function () {
+            ajax({
+                url: reqMap.system.refreshAuthority,
+                data: {},
+                success: function (resp) {
+                    if (resp.success) {
+                        layer.alert("刷新权限成功 !")
+                    } else {
+                        layer.alert("刷新权限出现了点问题[" + resp.data + "], 请联系管理员 !")
                     }
                 }
             })
@@ -260,7 +280,7 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
  */
 function initCacheTable() {
     ajax({
-        url: reqMap.system.cacheSummary,
+        url: reqMap.cache.cacheSummary,
         type: "GET",
         data: {},
         success: function (resp) {
@@ -320,7 +340,7 @@ function refreshCharts() {
 function encapStats() {
     var options = {};
     ajax({
-        url: reqMap.system.localCacheSummary,
+        url: reqMap.cache.localCacheSummary,
         data: {},
         async: false,
         success: function (resp) {

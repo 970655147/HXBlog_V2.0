@@ -131,6 +131,7 @@
                 评论
                 <span class="feed" style="float:right">
                     <el-rate
+                            name="rateSelect"
                             v-model="senseVal"
                             :disabled="((senseVal != 0) && (! userInfo.systemUser))"
                             :icon-classes="['icon-rate-face-1', 'icon-rate-face-2', 'icon-rate-face-3']"

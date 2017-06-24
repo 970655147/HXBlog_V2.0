@@ -3,18 +3,15 @@ package com.hx.blog_v2.biz_handler.handler;
 import com.hx.blog_v2.biz_handler.handler.common.BizHandlerAdapter;
 import com.hx.blog_v2.biz_handler.interf.BizContext;
 import com.hx.blog_v2.context.CacheContext;
-import com.hx.blog_v2.domain.form.ResourceInterfUpdateForm;
-import com.hx.blog_v2.domain.form.RoleResourceUpdateForm;
 import com.hx.blog_v2.domain.form.UserRoleUpdateForm;
-import com.hx.blog_v2.domain.mapper.OneStringMapper;
 import com.hx.common.interf.common.Result;
 import com.hx.log.util.Tools;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * BlogSaveHandler
@@ -38,33 +35,52 @@ public class AuthUpdatedHandler extends BizHandlerAdapter {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
+    /**
+     * 是否需要刷新缓存的权限
+     */
+    private boolean needClearCache = false;
+    /**
+     * 需要被强制下线的用户[更新了 role]
+     */
+    private Set<String> userNeedToForceOffline = new HashSet<>();
+
     @Override
     public void afterHandle(BizContext context) {
         Result result = (Result) context.result();
         if (result.isSuccess()) {
             String type = context.bizHandle().others()[0];
-            List<String> userIdsToOffline = Collections.emptyList();
             if (USER_ROLE.equals(type)) {
                 String userId = ((UserRoleUpdateForm) context.args()[0]).getUserId();
-                userIdsToOffline = Collections.singletonList(userId);
+                userNeedToForceOffline.add(userId);
             } else if (ROLE_RESOURCE.equals(type)) {
-                String roleId = ((RoleResourceUpdateForm) context.args()[0]).getRoleId();
-                String userByRole = " select user_id from rlt_user_role where role_id = ? ";
-                userIdsToOffline = jdbcTemplate.query(userByRole, new Object[]{roleId}, new OneStringMapper("user_id"));
             } else if (RESOURCE_INTERF.equals(type)) {
-                String resId = ((ResourceInterfUpdateForm) context.args()[0]).getResourceId();
-                String userByRole = " select user_id from rlt_user_role where " +
-                        " role_id in ( select role_id from rlt_role_resource where resource_id = ? ) ";
-                userIdsToOffline = jdbcTemplate.query(userByRole, new Object[]{resId}, new OneStringMapper("user_id"));
             }
 
-            if(!Tools.isEmpty(userIdsToOffline) && (! USER_ROLE.equals(type))) {
-                cacheContext.clearAuthorityCached();
-            }
-            for (String userId : userIdsToOffline) {
-                cacheContext.putForceOffLine(userId, " 您的权限发生了改变 ! ");
-            }
+            needClearCache = true;
         }
     }
+
+    /**
+     * 根据需要刷新权限, 如果更新了用户的 role, 强制用户下线
+     * 如果更新了 用户相关的 resource, interface, 刷新缓存
+     *
+     * @return void
+     * @author Jerry.X.He
+     * @date 6/24/2017 8:38 AM
+     * @since 1.0
+     */
+    public void refreshAuthority() {
+        if (needClearCache) {
+            cacheContext.clearAuthorityCached();
+            needClearCache = false;
+        }
+        if (!Tools.isEmpty(userNeedToForceOffline)) {
+            for (String userId : userNeedToForceOffline) {
+                cacheContext.putForceOffLine(userId, " 您的权限发生了改变 ! ");
+            }
+            userNeedToForceOffline.clear();
+        }
+    }
+
 
 }

@@ -27,7 +27,7 @@ public class BlogSenseHandler extends BizHandlerAdapter {
         if(result.isSuccess()) {
             if ((context.args().length > 0) && (context.args()[0] instanceof BlogSenseForm)) {
                 BlogSenseForm params = (BlogSenseForm) context.args()[0];
-                if (params.getScore() == 1) {
+                if (params.getScore() > 3) {
                     cacheContext.todaysStatistics().incGoodCnt(1);
                     cacheContext.now5SecStatistics().incGoodCnt(1);
 //                    cacheContext.todaysStatistics().incNotGoodCnt(-1);

@@ -24,9 +24,13 @@
 <fieldset id="dataList" class="layui-elem-field layui-field-title sys-list-field">
     <legend style="text-align:center;">缓存控制列表</legend>
     <div style="margin-top: 20px"></div>
-    <button class="layui-btn" name="refreshAll" style="margin-left: 800px" onclick="layui.funcs.refreshAll()">
+    <button class="layui-btn" name="refreshAll" style="margin-left: 720px" onclick="layui.funcs.refreshAll()">
         <i class="layui-icon">&#x1002;</i> 全部刷新
     </button>
+    <button class="layui-btn" name="refreshAuthority" onclick="layui.funcs.refreshAuthority()">
+        <i class="layui-icon">&#x1002;</i> 权限刷新
+    </button>
+
     <div style="margin-top: 20px"></div>
     <button class="layui-btn" name="allCached" style="margin-left: 500px" onclick="layui.funcs.refreshAllCached()">
         <i class="layui-icon">&#x1002;</i> 所有缓存 ⑴
@@ -43,6 +47,7 @@
     <button class="layui-btn" name="otherCached" onclick="layui.funcs.refreshOtherCached()">
         <i class="layui-icon">&#x1002;</i> 其他缓存 ④
     </button>
+
     <div style="margin-top: 20px"></div>
     <button class="layui-btn" name="allConfigured" style="margin-left: 500px"
             onclick="layui.funcs.refreshAllConfigured()">

@@ -30,18 +30,22 @@ public class CacheController {
     public Result refreshAllCached() {
         return cacheService.refreshAllCached();
     }
+
     @RequestMapping(value = "/refreshTableCached", method = RequestMethod.GET)
     public Result refreshTableCached() {
         return cacheService.refreshTableCached();
     }
+
     @RequestMapping(value = "/refreshLocalCached", method = RequestMethod.GET)
     public Result refreshLocalCached() {
         return cacheService.refreshLocalCached();
     }
+
     @RequestMapping(value = "/refreshStatisticsInfo", method = RequestMethod.GET)
     public Result refreshStatisticsInfo() {
         return cacheService.refreshStatisticsInfo();
     }
+
     @RequestMapping(value = "/refreshOtherCached", method = RequestMethod.GET)
     public Result refreshOtherCached() {
         return cacheService.refreshOtherCached();
@@ -51,17 +55,30 @@ public class CacheController {
     public Result refreshAllConfigured() {
         return cacheService.refreshAllConfigured();
     }
+
     @RequestMapping(value = "/refreshSystemConfig", method = RequestMethod.GET)
     public Result refreshSystemConfig() {
         return cacheService.refreshSystemConfig();
     }
+
     @RequestMapping(value = "/refreshRuleConfig", method = RequestMethod.GET)
     public Result refreshRuleConfig() {
         return cacheService.refreshRuleConfig();
     }
+
     @RequestMapping(value = "/refreshFrontIdxConfig", method = RequestMethod.GET)
     public Result refreshFrontIdxConfig() {
         return cacheService.refreshFrontIdxConfig();
+    }
+
+    @RequestMapping(value = "/localCacheSummary", method = RequestMethod.GET)
+    public Result localCacheSummary() {
+        return cacheService.localCacheSummary();
+    }
+
+    @RequestMapping(value = "/cacheSummary", method = RequestMethod.GET)
+    public Result cacheSummary() {
+        return cacheService.cacheSummary();
     }
 
 }

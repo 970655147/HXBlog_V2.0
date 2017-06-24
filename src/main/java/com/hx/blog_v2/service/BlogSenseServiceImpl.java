@@ -79,7 +79,9 @@ public class BlogSenseServiceImpl extends BaseServiceImpl<BlogSensePO> implement
         }
 
         BlogExPO po = (BlogExPO) getResult.getData();
-        po.decGoodCnt(oldPo.getScore(), -1);
+        if (oldPo != null) {
+            po.decGoodCnt(oldPo.getScore(), -1);
+        }
         if (params.getScore() > 0) {
             po.incGoodCnt(params.getScore(), 1);
         }

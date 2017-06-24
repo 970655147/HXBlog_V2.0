@@ -32,8 +32,12 @@ function contentInit() {
                 systemUser: false
             },
             senseVal : 0,
+            currentUserSenseFromServer : 0,
+            /**
+             * 防止 systemUser 的页面刷新的 第一次发送sense请求
+             */
             senseInitialized : false,
-            goodAvgScore : Number(0.00),
+            goodAvgScore : 0.00,
             comments: [],
             headImages: [],
             replyInfo: {
@@ -99,7 +103,8 @@ function contentInit() {
                         if (resp.success) {
                             that.blog = resp.data
                             that.senseVal = resp.data.goodSensed
-                            that.goodAvgScore = resp.data.goodAvgScore
+                            that.currentUserSenseFromServer = that.senseVal
+                            that.goodAvgScore = Number(resp.data.goodAvgScore)
 
                             $("#blogContent").html(that.blog.content)
                             that.replyInfo.blogId = that.blog.id
@@ -225,11 +230,15 @@ function contentInit() {
                 });
             },
             updateSense : function(newVal) {
-                if((this.senseVal > 0) && (! this.userInfo.systemUser)) {
-                    return
-                }
                 if(! this.senseInitialized) {
                     this.senseInitialized = true
+                    return
+                }
+                if((this.currentUserSenseFromServer > 0) && (! this.userInfo.systemUser)) {
+                    layer.tips("您已经点过了哦, 游客只能选择一次, 会员可以更新评分, 请联系管理员吧 !", "[name='rateSelect']", {
+                        tips: [1, '#00ff00'],
+                        time: 1000
+                    })
                     return
                 }
 
@@ -244,6 +253,10 @@ function contentInit() {
                     success: function (resp) {
 
                     }
+                })
+                layer.tips("感谢您的支持 !", "[name='rateSelect']", {
+                    tips: [1, '#00ff00'],
+                    time: 1000
                 })
             },
             locateFloorComment: function (comments, floorId) {

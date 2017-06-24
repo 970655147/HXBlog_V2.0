@@ -30,7 +30,7 @@ var tokenHeader = "hx_blog_token"
 var contextPath = "/"
 
 function formatContextUrl(requestUri) {
-    if(requestUri.startsWith("/")) {
+    if (requestUri.startsWith("/")) {
         requestUri = requestUri.substr(1)
     }
     return contextPath + requestUri
@@ -244,7 +244,7 @@ var reqMap = {
      */
     index: {
         index: formatContextUrl("/index/index"),
-        latest : formatContextUrl("/index/latest"),
+        latest: formatContextUrl("/index/latest"),
         adminMenu: formatContextUrl("/admin/index/menus"),
         adminStatistics: formatContextUrl("/admin/index/statistics")
     }
@@ -273,32 +273,33 @@ var reqMap = {
         refreshAllConfigured: formatContextUrl("/admin/cache/refreshAllConfigured"),
         refreshSystemConfig: formatContextUrl("/admin/cache/refreshSystemConfig"),
         refreshRuleConfig: formatContextUrl("/admin/cache/refreshRuleConfig"),
-        refreshFrontIdxConfig: formatContextUrl("/admin/cache/refreshFrontIdxConfig")
+        refreshFrontIdxConfig: formatContextUrl("/admin/cache/refreshFrontIdxConfig"),
+        cacheSummary: formatContextUrl("/admin/cache/cacheSummary"),
+        localCacheSummary: formatContextUrl("/admin/cache/localCacheSummary")
     },
 
     /**
      * 系统管理相关
      */
     system: {
-        cacheSummary: formatContextUrl("/admin/system/cacheSummary"),
-        localCacheSummary: formatContextUrl("/admin/system/localCacheSummary"),
-        statsSummary: formatContextUrl("/admin/system/statsSummary")
+        statsSummary: formatContextUrl("/admin/system/statsSummary"),
+        refreshAuthority: formatContextUrl("/admin/system/refreshAuthority")
     },
 
     /**
      * 校正数据相关
      */
-    correction : {
-        list : formatContextUrl("/admin/correction/list"),
-        doCorrection : formatContextUrl("/admin/correction/doCorrection")
+    correction: {
+        list: formatContextUrl("/admin/correction/list"),
+        doCorrection: formatContextUrl("/admin/correction/doCorrection")
     },
 
     /**
      * 日志相关
      */
-    log : {
-        requestLogList : formatContextUrl("/admin/log/request/list"),
-        exceptionLogList : formatContextUrl("/admin/log/exception/list")
+    log: {
+        requestLogList: formatContextUrl("/admin/log/request/list"),
+        exceptionLogList: formatContextUrl("/admin/log/exception/list")
     },
 
     /**
@@ -315,7 +316,7 @@ var reqMap = {
  * ajax() 方法需要过滤的请求, 直接使用 原生的 jq
  * @type {{}}
  */
-ajaxNeedFilter = [reqMap.other.templateUrl ]
+ajaxNeedFilter = [reqMap.other.templateUrl]
 
 
 
