@@ -42,6 +42,7 @@ layui.define(['element', 'laypage', 'layer', 'form', 'pagesize'], function (expo
                         var item = resp.data.list[i];
                         html += '<tr>';
                         html += '<td>' + item.id + '</td>';
+                        html += '<td><img src="' + item.blogCreateTypeImgUrl + '" /></td>';
                         html += '<td>' + item.title + '</td>';
                         html += '<td>' + item.author + '</td>';
                         html += '<td>' + item.summary + '</td>';
@@ -80,7 +81,7 @@ layui.define(['element', 'laypage', 'layer', 'form', 'pagesize'], function (expo
     //输出接口，主要是两个函数，一个删除一个编辑
     var funcs = {
         editData: function (id) {
-            parent.switchTab(parent.$, parent.element, '修改博客', '/static/admin/writeBlog.html?id=' + id, 'Blog' + id);
+            parent.switchTab(parent.$, parent.element, '修改博客', '/static/admin/addBlog.html?id=' + id, 'blog-' + id);
         },
         deleteData: function (id) {
             layer.confirm('同时会删除对应评论，确定删除？', {

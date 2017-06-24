@@ -133,6 +133,7 @@ public final class POVOTransferUtils {
         result.setCreatedAtMonth(src.getCreatedAtMonth());
         result.setUpdatedAt(src.getUpdatedAt());
         result.setCoverUrl(src.getCoverUrl());
+        result.setBlogCreateTypeId(src.getBlogCreateTypeId());
         result.setBlogTypeId(src.getBlogTypeId());
         result.setTitle(src.getTitle());
         result.setAuthor(src.getAuthor());
@@ -155,6 +156,7 @@ public final class POVOTransferUtils {
         result.setCreatedAt(src.getCreatedAt());
         result.setUpdatedAt(src.getUpdatedAt());
         result.setCoverUrl(src.getCoverUrl());
+        result.setBlogCreateTypeId(src.getBlogCreateTypeId());
         result.setBlogTypeId(src.getBlogTypeId());
         result.setTitle(src.getTitle());
         result.setAuthor(src.getAuthor());
@@ -440,6 +442,7 @@ public final class POVOTransferUtils {
         result.setCreatedAtMonth(src.getCreatedAtMonth());
         result.setAuthor(src.getAuthor());
         result.setUpdatedAt(src.getUpdatedAt());
+        result.setBlogCreateTypeId(src.getBlogCreateTypeId());
         result.setBlogTypeId(src.getBlogTypeId());
         result.setCreatedAt(src.getCreatedAt());
         result.setCoverUrl(src.getCoverUrl());
@@ -463,6 +466,7 @@ public final class POVOTransferUtils {
         result.setCreatedAtMonth(src.getCreatedAtMonth());
         result.setAuthor(src.getAuthor());
         result.setUpdatedAt(src.getUpdatedAt());
+        result.setBlogCreateTypeId(src.getBlogCreateTypeId());
         result.setBlogTypeId(src.getBlogTypeId());
         result.setCreatedAt(src.getCreatedAt());
         result.setCoverUrl(src.getCoverUrl());

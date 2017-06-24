@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html>
 <head>
     <meta charset="UTF-8">
     <title>写博客页面</title>
@@ -9,6 +9,7 @@
     <script type="text/javascript" src="../js/jquery-1.11.1.min.js" ></script>
     <script type="text/javascript" src="./js/commonImport.js"></script>
     <script type="text/javascript" src="./plugin/layui/layui.js"></script>
+    <script type="text/javascript" src="./plugin/layui/lay/modules/layer.js"></script>>
     <script type="text/javascript" src="../myJs/md5.js"></script>
     <script type="text/javascript" src="../myJs/constants.js" ></script>
     <script type="text/javascript" src="../myJs/utils.js" ></script>
@@ -24,6 +25,12 @@
         <label class="layui-form-label">博客标题</label>
         <div class="layui-input-inline">
             <input type="text" name="title" lay-verify="required" autocomplete="off" placeholder="请输入标题" class="layui-input" />
+        </div>
+        <label class="layui-form-label">创作类型</label>
+        <div class="layui-input-inline" style="z-index: 3003" >
+            <select name="blogCreateTypeId" lay-verify="required" >
+                <option value=""></option>
+            </select>
         </div>
     </div>
 
@@ -43,7 +50,7 @@
     <div class="layui-form-item">
         <label class="layui-form-label">所属类别</label>
         <div class="layui-input-inline" style="z-index: 3002" >
-            <select id="typeId" name="blogTypeId" lay-verify="required" >
+            <select name="blogTypeId" lay-verify="required" >
                 <option value=""></option>
             </select>
         </div>
@@ -61,7 +68,7 @@
         </div>
         <!-- ueditor 的样式配置中 最高的 z-index 为 3000 -->
         <div class="layui-input-inline" style="z-index: 3001">
-            <select id="tagIds" lay-filter="tagIds" lay-verify="required" >
+            <select id="tagIds" name="tagIds" lay-filter="tagIds" lay-verify="required" >
                 <option value="" ></option>
             </select>
         </div>

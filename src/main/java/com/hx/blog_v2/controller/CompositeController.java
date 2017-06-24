@@ -1,10 +1,10 @@
 package com.hx.blog_v2.controller;
 
+import com.hx.blog_v2.context.ConstantsContext;
 import com.hx.blog_v2.domain.form.ImageSearchForm;
 import com.hx.blog_v2.service.interf.*;
-import com.hx.blog_v2.context.ConstantsContext;
-import com.hx.common.interf.common.Result;
 import com.hx.blog_v2.util.ResultUtils;
+import com.hx.common.interf.common.Result;
 import com.hx.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +23,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class CompositeController {
 
     @Autowired
+    private BlogCreateTypeService blogCreateTypeService;
+    @Autowired
     private BlogTypeService blogTypeService;
     @Autowired
     private BlogTagService blogTagService;
@@ -40,6 +42,10 @@ public class CompositeController {
 
     @RequestMapping(value = "/typeAndTags", method = RequestMethod.GET)
     public Result typeAndTags() {
+        Result createTypeResult = blogCreateTypeService.adminList();
+        if (!createTypeResult.isSuccess()) {
+            return createTypeResult;
+        }
         Result typeResult = blogTypeService.list();
         if (!typeResult.isSuccess()) {
             return typeResult;
@@ -49,7 +55,7 @@ public class CompositeController {
             return tagResult;
         }
 
-        JSONObject data = new JSONObject()
+        JSONObject data = new JSONObject().element("createTypes", createTypeResult.getData())
                 .element("types", typeResult.getData()).element("tags", tagResult.getData());
         return ResultUtils.success(data);
     }

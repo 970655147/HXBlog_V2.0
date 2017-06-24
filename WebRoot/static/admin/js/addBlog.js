@@ -20,6 +20,7 @@ if (!isEmpty(currentBlogId)) {
         url: reqMap.blog.adminGet,
         type: "GET",
         data: {"id": currentBlogId},
+        async: false,
         success: function (resp) {
             if (resp.success) {
                 var blog = resp.data
@@ -28,7 +29,9 @@ if (!isEmpty(currentBlogId)) {
                 $("[name='author']").attr("value", blog.author)
                 $("[name='coverUrl']").attr("value", blog.coverUrl)
                 $("[id='coverShow']").attr("src", blog.coverUrl)
-                $("#typeId option[value='" + blog.blogTypeId + "']").attr("selected", "")
+                $("[name='blogTypeId'] option[value='" + blog.blogTypeId + "']").attr("selected", "")
+                $("[name='blogCreateTypeId'] option[value='" + blog.blogCreateTypeId + "']").attr("selected", "")
+
                 for (idx in blog.blogTagIds) {
                     var value = blog.blogTagIds[idx].trim()
                     var text = blog.blogTagNames[idx].trim()
@@ -36,9 +39,9 @@ if (!isEmpty(currentBlogId)) {
                         '<div value=' + value + ' class="layui-unselect layui-form-checkbox layui-form-checked" lay-skin="" onclick="layui.funcs.toggleCheckted(this)" >' +
                         '<span>' + text + '</span><i class="layui-icon"></i>' +
                         '</div>')
-                    $("#tagIds option[value='" + value + "']").remove()
+                    $("[name='tagIds'] option[value='" + value + "']").remove()
                 }
-                $("#tagIds option:eq(1)").attr("selected", "")
+                $("[name='tagIds'] option:eq(1)").attr("selected", "")
                 $("[name='summary']").val(blog.summary)
                 // Cannot read property 'getRange' of undefined
                 ue.ready(function () {
@@ -252,13 +255,19 @@ function initTypeAndTags() {
         async: false,
         success: function (resp) {
             if (resp.success) {
-                var typeIdEle = $("#typeId")
+                var typeIdEle = $("[name='blogTypeId']")
                 var types = resp.data.types
                 for (idx in types) {
                     typeIdEle.append("<option value='" + types[idx].id + "'> " + types[idx].name + " </option>")
                 }
 
-                var tagIdEle = $("#tagIds")
+                var createTypeIdEle = $("[name='blogCreateTypeId']")
+                var createTypes = resp.data.createTypes
+                for (idx in createTypes) {
+                    createTypeIdEle.append("<option value='" + createTypes[idx].id + "'> " + createTypes[idx].name + " </option>")
+                }
+
+                var tagIdEle = $("[name='tagIds']")
                 var tags = resp.data.tags
                 for (idx in tags) {
                     tagIdEle.append("<option value='" + tags[idx].id + "'> " + tags[idx].name + " </option>")

@@ -129,6 +129,7 @@
                         <div class="tc-ch" v-if="recommend != null" >
                             <h3>
                                 <a :href="'/static/main/blogDetail.html?id=' + recommend.id">推荐 :
+                                    <img :src="recommend.blogCreateTypeImgUrl" />
                                     <span>{{recommend.title}}</span>
                                 </a>
                             </h3>
@@ -159,11 +160,12 @@
                                         <div class="tc-ch">
                                             <div class="tch-img">
                                                 <a :href="'/static/main/blogDetail.html?id=' + blog.id">
-                                                    <img :src="blog.coverUrl" class="img-responsive" width="300px"
-                                                         height="300px">
+                                                    <img :src="blog.coverUrl" class="img-responsive" width="300px" height="300px">
                                                 </a>
                                             </div>
-                                            <h6><a :href="'/static/main/blogDetail.html?id=' + blog.id">{{blog.title}}</a>
+                                            <h6>
+                                                <img :src="blog.blogCreateTypeImgUrl" />
+                                                <a :href="'/static/main/blogDetail.html?id=' + blog.id">{{blog.title}}</a>
                                             </h6>
                                             <h6> by <a>{{blog.author}}</a>
                                                 <span>{{blog.createdAt}}</span>
@@ -201,14 +203,14 @@
                                      data-wow-delay=".2s" style="width: 250px;height: 250px;">
                                     <div class="tch-img">
                                         <a :href="'/static/main/blogDetail.html?id=' + blog.id" >
-                                            <img :src="blog.coverUrl" class="img-responsive" width="300px"
-                                                 height="300px">
+                                            <img :src="blog.coverUrl" class="img-responsive" width="300px" height="300px">
                                         </a>
                                     </div>
                                 </div>
                                 <div class="col-md-6 wthree-right wow fadeInDown" data-wow-duration=".8s"
                                      data-wow-delay=".2s">
                                     <h6>
+                                        <img :src="blog.blogCreateTypeImgUrl" />
                                         <a :href="'/static/main/blogDetail.html?id=' + blog.id">{{blog.title}}</a>
                                     </h6>
                                     <h6> by

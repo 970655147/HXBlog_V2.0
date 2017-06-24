@@ -3,9 +3,9 @@ package com.hx.blog_v2.domain.validator;
 import com.hx.blog_v2.domain.ErrorCode;
 import com.hx.blog_v2.domain.form.BeanIdsForm;
 import com.hx.blog_v2.domain.form.BlogSaveForm;
+import com.hx.blog_v2.util.ResultUtils;
 import com.hx.common.interf.common.Result;
 import com.hx.common.interf.validator.Validator;
-import com.hx.blog_v2.util.ResultUtils;
 import com.hx.log.util.Tools;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -48,6 +48,9 @@ public class BlogSaveValidator implements Validator<BlogSaveForm> {
         errResult = urlValidator.validate(form.getCoverUrl(), extra);
         if (!errResult.isSuccess()) {
             return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " coverUrl 格式不合法 ! ");
+        }
+        if (!beanIdStrValidator.validate(form.getBlogCreateTypeId(), extra).isSuccess()) {
+            return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " blogCreateType 格式不合法 ! ");
         }
         if (!beanIdStrValidator.validate(form.getBlogTypeId(), extra).isSuccess()) {
             return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " blogTypeId 格式不合法 ! ");

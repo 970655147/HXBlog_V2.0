@@ -137,7 +137,7 @@ public abstract class BaseDaoImpl<T extends JSONTransferable<T>> extends MysqlBa
     @Override
     public Result update(T po) {
         try {
-            long matched = updateById(po, BlogConstants.USER_UPDATE_BEAN_CONFIG)
+            long matched = updateById(po, BlogConstants.UPDATE_BEAN_CONFIG)
                     .getModifiedCount();
             if (matched == 0) {
                 return ResultUtils.failed("该记录不存在 !");

@@ -73,7 +73,12 @@ function headerFooterInit() {
                         "<img src='" + blog.coverUrl + "' class='img-responsive' width='40px' height='40px'>" +
                         "</a>" +
                         "</div>" +
-                        "<div class='blog-grid-right' name='hotBlogTitle' data-blog-title='" + blog.title + "' ><h5><a href='/static/main/blogDetail.html?id=" + blog.id + "'> " + trimIfExceed(blog.title, 20, "...") + " </a></h5></div>" +
+                        "<div class='blog-grid-right' name='hotBlogTitle' data-blog-title='" + blog.title + "' >" +
+                        "<h5>" +
+                        "<img src='" + blog.blogCreateTypeImgUrl + "' />" +
+                        "<a href='/static/main/blogDetail.html?id=" + blog.id + "'> " + trimIfExceed(blog.title, 20, "...") + " </a>" +
+                        "</h5>" +
+                        "</div>" +
                         "<div class='clearfix'></div>" +
                         "</div>")
                 }
@@ -81,15 +86,15 @@ function headerFooterInit() {
                 var facetByMonthEle = $("[name='facetByMonthEle']")
                 var lenOfFacetByMonth = data.facetByMonth.length
                 var hiddenIfOver = monthFacetHideIfOver
-                if(lenOfFacetByMonth < hiddenIfOver) {
-                    addMonthFacet(facetByMonthEle, data.facetByMonth, lenOfFacetByMonth-1, 0)
+                if (lenOfFacetByMonth < hiddenIfOver) {
+                    addMonthFacet(facetByMonthEle, data.facetByMonth, lenOfFacetByMonth - 1, 0)
                 } else {
-                    addMonthFacet(facetByMonthEle, data.facetByMonth, lenOfFacetByMonth-1, i-hiddenIfOver+1)
+                    addMonthFacet(facetByMonthEle, data.facetByMonth, lenOfFacetByMonth - 1, i - hiddenIfOver + 1)
                     facetByMonthEle.append("<a name='facetMore' > ( more ) </a>")
 
-                    $("[name='facetMore']").click(function(){
+                    $("[name='facetMore']").click(function () {
                         facetByMonthEle.html("")
-                        addMonthFacet(facetByMonthEle, data.facetByMonth, lenOfFacetByMonth-1, 0)
+                        addMonthFacet(facetByMonthEle, data.facetByMonth, lenOfFacetByMonth - 1, 0)
                     })
                 }
 
@@ -264,7 +269,7 @@ function selectHeader() {
  * @param monthFacet
  */
 function addMonthFacet(facetByMonthEle, monthFacet, start, min) {
-    for (var i=start; i>=min; i--) {
+    for (var i = start; i >= min; i--) {
         var facetByMonth = monthFacet[i]
         facetByMonthEle.append("<a href='/static/main/blogList.html?createdAtMonth=" + facetByMonth.month + "' >" + facetByMonth.month + " (" + facetByMonth.cnt + ")</a>")
     }

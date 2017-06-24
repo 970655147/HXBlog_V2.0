@@ -19,6 +19,12 @@ public class AdminBlogVO {
      */
     private String coverUrl;
     /**
+     * 创建类型
+     */
+    private String blogCreateTypeId;
+    private String blogCreateTypeName;
+    private String blogCreateTypeImgUrl;
+    /**
      * 所属的分类
      */
     private String blogTypeId;
@@ -76,6 +82,30 @@ public class AdminBlogVO {
 
     public void setCoverUrl(String coverUrl) {
         this.coverUrl = coverUrl;
+    }
+
+    public String getBlogCreateTypeId() {
+        return blogCreateTypeId;
+    }
+
+    public void setBlogCreateTypeId(String blogCreateTypeId) {
+        this.blogCreateTypeId = blogCreateTypeId;
+    }
+
+    public String getBlogCreateTypeName() {
+        return blogCreateTypeName;
+    }
+
+    public void setBlogCreateTypeName(String blogCreateTypeName) {
+        this.blogCreateTypeName = blogCreateTypeName;
+    }
+
+    public String getBlogCreateTypeImgUrl() {
+        return blogCreateTypeImgUrl;
+    }
+
+    public void setBlogCreateTypeImgUrl(String blogCreateTypeImgUrl) {
+        this.blogCreateTypeImgUrl = blogCreateTypeImgUrl;
     }
 
     public String getBlogTypeId() {

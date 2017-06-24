@@ -11,37 +11,12 @@ public class BlogSaveForm {
 
     private String id;
     private String title;
-    /**
-     * 封面的url
-     */
     private String coverUrl;
-    /**
-     * 所属的分类
-     */
+    private String blogCreateTypeId;
     private String blogTypeId;
-    /**
-     * 博客的标签列表
-     */
     private String blogTagIds;
-    /**
-     * 摘要
-     */
     private String summary;
-    /**
-     * 博客内容
-     */
     private String content;
-
-    public BlogSaveForm(String title, String author, String coverUrl, String blogTypeId, String blogTagIds,
-                        String summary, String content) {
-        this();
-        this.title = title;
-        this.coverUrl = coverUrl;
-        this.blogTypeId = blogTypeId;
-        this.blogTagIds = blogTagIds;
-        this.summary = summary;
-        this.content = content;
-    }
 
     public BlogSaveForm() {
     }
@@ -68,6 +43,14 @@ public class BlogSaveForm {
 
     public void setCoverUrl(String coverUrl) {
         this.coverUrl = coverUrl;
+    }
+
+    public String getBlogCreateTypeId() {
+        return blogCreateTypeId;
+    }
+
+    public void setBlogCreateTypeId(String blogCreateTypeId) {
+        this.blogCreateTypeId = blogCreateTypeId;
     }
 
     public String getBlogTypeId() {

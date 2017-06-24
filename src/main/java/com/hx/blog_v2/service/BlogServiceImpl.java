@@ -74,7 +74,7 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
         SessionUser user = (SessionUser) WebContext.getAttributeFromSession(BlogConstants.SESSION_USER);
         String contentUrl = generateBlogPath(params);
         BlogPO po = new BlogPO(params.getTitle(), user.getName(), params.getCoverUrl(),
-                params.getBlogTypeId(), params.getSummary(), contentUrl);
+                params.getBlogCreateTypeId(), params.getBlogTypeId(), params.getSummary(), contentUrl);
 
         if (!Tools.isEmpty(params.getId())) {
             return update0(po, params);
@@ -484,6 +484,11 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
         if (type != null) {
             vo.setBlogTypeName(type.getName());
         }
+        BlogCreateTypePO createType = cacheContext.blogCreateType(vo.getBlogCreateTypeId());
+        if (createType != null) {
+            vo.setBlogCreateTypeName(createType.getName());
+            vo.setBlogCreateTypeImgUrl(createType.getImgUrl());
+        }
         if (vo.getBlogTagIds() != null) {
             vo.setBlogTagNames(getTagNamesByIds(vo.getBlogTagIds()));
         }
@@ -540,6 +545,11 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
         if (type != null) {
             vo.setBlogTypeName(type.getName());
         }
+        BlogCreateTypePO createType = cacheContext.blogCreateType(vo.getBlogCreateTypeId());
+        if (createType != null) {
+            vo.setBlogCreateTypeName(createType.getName());
+            vo.setBlogCreateTypeImgUrl(createType.getImgUrl());
+        }
         if (vo.getBlogTagIds() != null) {
             vo.setBlogTagNames(getTagNamesByIds(vo.getBlogTagIds()));
 
@@ -558,7 +568,7 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
      * @since 1.0
      */
     private Result encapContent(AdminBlogVO vo) {
-        if (!Tools.isEmpty(vo.getContentUrl())) {
+        if (Tools.isEmpty(vo.getContentUrl())) {
             return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " 该博客不合法, 没有 内容url ! ");
         }
 

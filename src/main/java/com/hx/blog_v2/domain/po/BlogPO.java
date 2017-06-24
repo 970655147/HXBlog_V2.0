@@ -31,6 +31,8 @@ public class BlogPO implements JSONTransferable<BlogPO> {
     private String author;
     @JSONField({"coverUrl", "cover_url"})
     private String coverUrl;
+    @JSONField({"blogCreateTypeId", "blog_create_type_id"})
+    private String blogCreateTypeId;
     @JSONField({"blogTypeId", "blog_type_id"})
     private String blogTypeId;
     @JSONField({"summary", "summary"})
@@ -47,11 +49,13 @@ public class BlogPO implements JSONTransferable<BlogPO> {
     private int deleted;
 
 
-    public BlogPO(String title, String author, String coverUrl, String blogTypeId, String summary, String contentUrl) {
+    public BlogPO(String title, String author, String coverUrl, String blogCreateTypeId,
+                  String blogTypeId, String summary, String contentUrl) {
         this();
         this.title = title;
         this.author = author;
         this.coverUrl = coverUrl;
+        this.blogCreateTypeId = blogCreateTypeId;
         this.blogTypeId = blogTypeId;
         this.summary = summary;
         this.contentUrl = contentUrl;
@@ -95,6 +99,14 @@ public class BlogPO implements JSONTransferable<BlogPO> {
 
     public void setCoverUrl(String coverUrl) {
         this.coverUrl = coverUrl;
+    }
+
+    public String getBlogCreateTypeId() {
+        return blogCreateTypeId;
+    }
+
+    public void setBlogCreateTypeId(String blogCreateTypeId) {
+        this.blogCreateTypeId = blogCreateTypeId;
     }
 
     public String getBlogTypeId() {
@@ -145,7 +157,7 @@ public class BlogPO implements JSONTransferable<BlogPO> {
         this.updatedAt = updatedAt;
     }
 
-    public int isDeleted() {
+    public int getDeleted() {
         return deleted;
     }
 
