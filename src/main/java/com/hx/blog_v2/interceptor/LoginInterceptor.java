@@ -40,6 +40,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
             exceptionLogService.saveExceptionLog(null, result, null);
             return false;
         }
+
         /**
          * 强制下线相关业务
          */

@@ -4,6 +4,7 @@ import com.hx.attr_handler.attr_handler.interf.AttrHandler;
 import com.hx.blog_v2.context.ConstantsContext;
 import com.hx.blog_v2.context.WebContext;
 import com.hx.blog_v2.domain.ErrorCode;
+import com.hx.blog_v2.domain.dto.SessionUser;
 import com.hx.blog_v2.domain.dto.TokenInfo;
 import com.hx.blog_v2.service.interf.ExceptionLogService;
 import com.hx.blog_v2.util.BlogConstants;
@@ -43,6 +44,7 @@ public class TokenInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
                              Object handler) throws Exception {
+        addDummySessionIfNeed();
         String token = request.getHeader(BlogConstants.COOKIE_TOKEN);
         TokenInfo tokenInServer = (TokenInfo) WebContext.getAttributeFromSession(BlogConstants.SESSION_TOKEN);
 
@@ -82,7 +84,7 @@ public class TokenInterceptor extends HandlerInterceptorAdapter {
     private void updateTokenAndAddHeader(String oldToken, boolean valid, HttpServletResponse response) {
         TokenInfo tokenInServer = (TokenInfo) WebContext.getAttributeFromSession(BlogConstants.SESSION_TOKEN);
         long nowTs = System.currentTimeMillis();
-        if ((! valid) || (tokenInServer == null) ||
+        if ((!valid) || (tokenInServer == null) ||
                 ((nowTs - tokenInServer.getLastUpdated()) > constantsContext.tokenRefreshInterval)) {
             if (tokenInServer == null) {
                 tokenInServer = new TokenInfo(Tools.NULL, Tools.NULL);
@@ -95,6 +97,22 @@ public class TokenInterceptor extends HandlerInterceptorAdapter {
             tokenInServer.setLastUpdated(nowTs);
             WebContext.setAttributeForSession(BlogConstants.SESSION_TOKEN, tokenInServer);
             response.addHeader(BlogConstants.COOKIE_TOKEN, tokenInServer.getOriginalToken());
+        }
+    }
+
+    /**
+     * 如果 当前用户的 session:user 为空, 创建一个 空的
+     *
+     * @return void
+     * @author Jerry.X.He
+     * @date 6/24/2017 7:00 PM
+     * @since 1.0
+     */
+    private void addDummySessionIfNeed() {
+        SessionUser user = (SessionUser) WebContext.getAttributeFromSession(BlogConstants.SESSION_USER);
+        if (user == null) {
+            user = new SessionUser();
+            WebContext.setAttributeForSession(BlogConstants.SESSION_USER, user);
         }
     }
 

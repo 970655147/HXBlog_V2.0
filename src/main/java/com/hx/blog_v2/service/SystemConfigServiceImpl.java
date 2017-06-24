@@ -13,9 +13,9 @@ import com.hx.blog_v2.service.interf.BaseServiceImpl;
 import com.hx.blog_v2.service.interf.SystemConfigService;
 import com.hx.blog_v2.util.BlogConstants;
 import com.hx.blog_v2.util.DateUtils;
+import com.hx.blog_v2.util.ResultUtils;
 import com.hx.common.interf.common.Page;
 import com.hx.common.interf.common.Result;
-import com.hx.blog_v2.util.ResultUtils;
 import com.hx.mongo.criteria.Criteria;
 import com.hx.mongo.criteria.SortByCriteria;
 import com.hx.mongo.criteria.interf.IQueryCriteria;
@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -68,9 +69,13 @@ public class SystemConfigServiceImpl extends BaseServiceImpl<SystemConfigPO> imp
         String countSql = " select count(*) as totalRecord from system_config where deleted = 0 and type = '" + params.getType() + "' ";
         Object[] sqlParams = new Object[]{page.recordOffset(), page.getPageSize()};
 
-        List<SystemConfigVO> list = jdbcTemplate.query(selectSql, sqlParams, new SystemConfigVOMapper());
         Integer totalRecord = jdbcTemplate.queryForObject(countSql, new OneIntMapper("totalRecord"));
-        page.setList(list);
+        if (totalRecord <= 0) {
+            page.setList(Collections.<SystemConfigVO>emptyList());
+        } else {
+            List<SystemConfigVO> list = jdbcTemplate.query(selectSql, sqlParams, new SystemConfigVOMapper());
+            page.setList(list);
+        }
         page.setTotalRecord(totalRecord);
         return ResultUtils.success(page);
     }
@@ -98,11 +103,11 @@ public class SystemConfigServiceImpl extends BaseServiceImpl<SystemConfigPO> imp
     @Override
     public Result remove(BeanIdForm params) {
         Result getResult = systemConfigDao.get(params);
-        if(! getResult.isSuccess()) {
+        if (!getResult.isSuccess()) {
             return getResult;
         }
         SystemConfigPO po = (SystemConfigPO) getResult.getData();
-        if(! constantsContext.configByType(po.getType()).containsKey(po.getName())) {
+        if (!constantsContext.configByType(po.getType()).containsKey(po.getName())) {
             return ResultUtils.failed(" 缓存和数据库数据不一致 !");
         }
 

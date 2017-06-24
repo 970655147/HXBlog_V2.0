@@ -78,7 +78,7 @@ var reqMap = {
      */
     tag: {
         add: formatContextUrl("/admin/tag/add"),
-        list: formatContextUrl("/admin/type/list"),
+        list: formatContextUrl("/admin/tag/list"),
         update: formatContextUrl("/admin/tag/update"),
         reSort: formatContextUrl("/admin/tag/reSort"),
         remove: formatContextUrl("/admin/tag/remove")

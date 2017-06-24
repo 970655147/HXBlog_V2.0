@@ -171,6 +171,7 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourcePO> implements 
         po.setEnable(params.getEnable());
         po.setLevel(parentPo.getLevel() + 1);
         po.setUpdatedAt(DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS));
+
         Result result = resourceDao.update(po);
         if (!result.isSuccess()) {
             return result;

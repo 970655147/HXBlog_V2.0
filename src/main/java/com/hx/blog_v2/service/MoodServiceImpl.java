@@ -13,9 +13,9 @@ import com.hx.blog_v2.service.interf.BaseServiceImpl;
 import com.hx.blog_v2.service.interf.MoodService;
 import com.hx.blog_v2.util.BlogConstants;
 import com.hx.blog_v2.util.DateUtils;
+import com.hx.blog_v2.util.ResultUtils;
 import com.hx.common.interf.common.Page;
 import com.hx.common.interf.common.Result;
-import com.hx.blog_v2.util.ResultUtils;
 import com.hx.mongo.criteria.Criteria;
 import com.hx.mongo.criteria.interf.IQueryCriteria;
 import com.hx.mongo.criteria.interf.IUpdateCriteria;
@@ -55,7 +55,6 @@ public class MoodServiceImpl extends BaseServiceImpl<MoodPO> implements MoodServ
     @Override
     public Result list() {
         String sql = " select * from mood where deleted = 0 and enable = 1 order by created_at desc ";
-
         List<MoodVO> list = jdbcTemplate.query(sql, new MoodVOMapper());
         return ResultUtils.success(list);
     }
@@ -76,9 +75,9 @@ public class MoodServiceImpl extends BaseServiceImpl<MoodPO> implements MoodServ
     @Override
     public Result update(MoodSaveForm params) {
         MoodPO po = new MoodPO(params.getTitle(), params.getContent(), params.getEnable());
-
         po.setId(params.getId());
         po.setUpdatedAt(DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS));
+
         Result result = moodDao.update(po);
         if (!result.isSuccess()) {
             return result;

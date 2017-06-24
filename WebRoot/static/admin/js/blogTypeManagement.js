@@ -46,7 +46,7 @@ layui.define(['layer', 'form'], function (exports) {
 
     form.on('submit(addTypeSubmit)', function (data) {
         ajax({
-            url: reqMap.tag.add,
+            url: reqMap.type.add,
             type: "POST",
             data: $("#addTypeForm").serialize(),
             success: function (resp) {
@@ -68,7 +68,7 @@ layui.define(['layer', 'form'], function (exports) {
 
     form.on('submit(updateTypeSubmit)', function (data) {
         ajax({
-            url: reqMap.tag.update,
+            url: reqMap.type.update,
             type: "POST",
             data: $("#updateTypeForm").serialize(),
             success: function (resp) {

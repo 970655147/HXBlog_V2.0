@@ -21,12 +21,12 @@ public final class ResultUtils {
     }
 
     /**
-     * ¸ù¾İ¸ø¶¨µÄÊäÈë·â×°Ò»¸ö³É¹¦µÄ½á¹û
+     * æ ¹æ®ç»™å®šçš„è¾“å…¥å°è£…ä¸€ä¸ªæˆåŠŸçš„ç»“æœ
      *
-     * @param code  ÏìÓ¦Âë
-     * @param msg   ÏìÓ¦ÏûÏ¢
-     * @param data  ÏìÓ¦Êı¾İ
-     * @param extra ¶îÍâÊı¾İ
+     * @param code  å“åº”ç 
+     * @param msg   å“åº”æ¶ˆæ¯
+     * @param data  å“åº”æ•°æ®
+     * @param extra é¢å¤–æ•°æ®
      * @return com.hx.common.result.SimpleResult
      * @author Jerry.X.He
      * @date 5/3/2017 9:00 PM
@@ -61,12 +61,12 @@ public final class ResultUtils {
     }
 
     /**
-     * ¸ù¾İ¸ø¶¨µÄÊäÈë·â×°Ò»¸öÊ§°ÜµÄ½á¹û
+     * æ ¹æ®ç»™å®šçš„è¾“å…¥å°è£…ä¸€ä¸ªå¤±è´¥çš„ç»“æœ
      *
-     * @param code  ÏìÓ¦Âë
-     * @param msg   ÏìÓ¦ÏûÏ¢
-     * @param data  ÏìÓ¦Êı¾İ
-     * @param extra ¶îÍâÊı¾İ
+     * @param code  å“åº”ç 
+     * @param msg   å“åº”æ¶ˆæ¯
+     * @param data  å“åº”æ•°æ®
+     * @param extra é¢å¤–æ•°æ®
      * @return com.hx.common.result.SimpleResult
      * @author Jerry.X.He
      * @date 5/3/2017 9:00 PM

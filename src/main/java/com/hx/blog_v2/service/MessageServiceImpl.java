@@ -90,10 +90,14 @@ public class MessageServiceImpl extends BaseServiceImpl<MessagePO> implements Me
         selectParams.add(page.recordOffset());
         selectParams.add(page.getPageSize());
 
-        List<MessageVO> list = jdbcTemplate.query(selectSql + condSql + selectSqlSuffix, selectParams.toArray(), new MessageVOMapper());
         Integer totalRecord = jdbcTemplate.queryForObject(countSql + condSql, countParams, new OneIntMapper("totalRecord"));
-        encapNames(list);
-        page.setList(list);
+        if (totalRecord <= 0) {
+            page.setList(Collections.<MessageVO>emptyList());
+        } else {
+            List<MessageVO> list = jdbcTemplate.query(selectSql + condSql + selectSqlSuffix, selectParams.toArray(), new MessageVOMapper());
+            encapNames(list);
+            page.setList(list);
+        }
         page.setTotalRecord(totalRecord);
         return ResultUtils.success(page);
     }
@@ -141,10 +145,14 @@ public class MessageServiceImpl extends BaseServiceImpl<MessagePO> implements Me
         selectParams.add(page.recordOffset());
         selectParams.add(page.getPageSize());
 
-        List<MessageVO> list = jdbcTemplate.query(selectSql + condSql + selectSqlSuffix, selectParams.toArray(), new MessageVOMapper());
         Integer totalRecord = jdbcTemplate.queryForObject(countSql + condSql, countParams, new OneIntMapper("totalRecord"));
-        encapNames(list);
-        page.setList(list);
+        if (totalRecord <= 0) {
+            page.setList(Collections.<MessageVO>emptyList());
+        } else {
+            List<MessageVO> list = jdbcTemplate.query(selectSql + condSql + selectSqlSuffix, selectParams.toArray(), new MessageVOMapper());
+            encapNames(list);
+            page.setList(list);
+        }
         page.setTotalRecord(totalRecord);
         return ResultUtils.success(page);
     }

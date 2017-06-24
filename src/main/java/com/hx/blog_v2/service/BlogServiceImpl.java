@@ -367,7 +367,7 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
      * @date 5/27/2017 11:26 PM
      * @since 1.0
      */
-    private Result encapBlogVo(List<BlogVO> list) {
+    Result encapBlogVo(List<BlogVO> list) {
         JSONArray errors = new JSONArray();
         for (BlogVO vo : list) {
             Result result = encapBlogVo(vo);
@@ -391,7 +391,7 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
      * @date 6/24/2017 5:17 PM
      * @since 1.0
      */
-    private Result encapBlogVo(BlogVO vo) {
+    Result encapBlogVo(BlogVO vo) {
         Result result = encapBlogEx(vo);
         if (!result.isSuccess()) {
             return result;
@@ -479,7 +479,7 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
      * @date 6/24/2017 5:11 PM
      * @since 1.0
      */
-    private Result encapTypeTagInfo(BlogVO vo) {
+    Result encapTypeTagInfo(BlogVO vo) {
         BlogTypePO type = cacheContext.blogType(vo.getBlogTypeId());
         if (type != null) {
             vo.setBlogTypeName(type.getName());
@@ -500,7 +500,7 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
      * @date 5/21/2017 8:48 PM
      * @since 1.0
      */
-    private Result encapContent(BlogVO vo) {
+    Result encapContent(BlogVO vo) {
         if (!Tools.isEmpty(vo.getContentUrl())) {
             return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " 该博客不合法, 没有 内容url ! ");
         }

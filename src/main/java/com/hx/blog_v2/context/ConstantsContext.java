@@ -125,6 +125,12 @@ public class ConstantsContext {
     public long tokenRefreshInterval;
 
     /**
+     * 首页的标题配置
+     */
+    public String frontIdxPageTitle;
+    public String frontIdxPageSubTitle;
+
+    /**
      * 初始化 ConstantsContext
      *
      * @return void
@@ -489,6 +495,9 @@ public class ConstantsContext {
             maxRealTimeCacheStasticsTimes = Tools.optInt(systemConfig, BlogConstants.MAX_REAL_TIME_CACHE_STASTICS_TIMES, 12);
             requestLogUriToIgnore = Tools.optString(systemConfig, BlogConstants.REQUEST_LOG_URI_TO_IGNORE, "/index/index;/image/headImgList;/index/latest;");
             tokenRefreshInterval = Tools.optLong(systemConfig, BlogConstants.TOKEN_REFRESH_INTERVAL, 60 * 1000);
+
+            frontIdxPageTitle = Tools.optString(systemConfig, BlogConstants.FRONT_IDX_PAGE_TITLE, "生活有度, 人生添寿");
+            frontIdxPageSubTitle = Tools.optString(systemConfig, BlogConstants.FRONT_IDX_PAGE_SUB_TITLE, "如果你浪费了自己的年龄, 那是挺可悲的 因为你的青春只能持续一点儿时间 -- 很短的一点儿时间");
         }
 
     }

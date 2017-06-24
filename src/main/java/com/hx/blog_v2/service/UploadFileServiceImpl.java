@@ -14,14 +14,15 @@ import com.hx.blog_v2.service.interf.BaseServiceImpl;
 import com.hx.blog_v2.service.interf.UploadFileService;
 import com.hx.blog_v2.util.BlogConstants;
 import com.hx.blog_v2.util.DateUtils;
-import com.hx.common.interf.common.Result;
 import com.hx.blog_v2.util.ResultUtils;
+import com.hx.common.interf.common.Result;
 import com.hx.json.JSONObject;
 import com.hx.log.alogrithm.code.Codec;
 import com.hx.log.file.FileUtils;
 import com.hx.log.util.Log;
 import com.hx.log.util.Tools;
 import com.hx.mongo.criteria.Criteria;
+import com.hx.mongo.criteria.interf.IQueryCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -132,8 +133,9 @@ public class UploadFileServiceImpl extends BaseServiceImpl<UploadFilePO> impleme
         }
 
         String digest = (String) digestResult.getData();
-        UploadFilePO po = getUploadedImageFromExists(file, digest);
-        if (po != null) {
+        Result getCachedResult = getUploadedImageFromExists(file, digest);
+        if (getCachedResult.isSuccess()) {
+            UploadFilePO po = (UploadFilePO) getCachedResult.getData();
             JSONObject data = new JSONObject()
                     .element("originFileName", po.getOriginalFileName()).element("length", po.getSize())
                     .element("contentType", po.getContentType()).element("url", getImageVisitUrl(po.getUrl()));
@@ -150,7 +152,7 @@ public class UploadFileServiceImpl extends BaseServiceImpl<UploadFilePO> impleme
             return ResultUtils.failed("failed !");
         }
 
-        po = new UploadFilePO(file.getOriginalFilename(), file.getContentType(), relativePath, digest, String.valueOf(file.getSize()));
+        UploadFilePO po = new UploadFilePO(file.getOriginalFilename(), file.getContentType(), relativePath, digest, String.valueOf(file.getSize()));
         Result addResult = uploadFileDao.add(po);
         if (!addResult.isSuccess()) {
             return addResult;
@@ -220,32 +222,30 @@ public class UploadFileServiceImpl extends BaseServiceImpl<UploadFilePO> impleme
      * @date 5/29/2017 4:31 PM
      * @since 1.0
      */
-    private UploadFilePO getUploadedImageFromExists(MultipartFile file, String digest) {
+    private Result getUploadedImageFromExists(MultipartFile file, String digest) {
         UploadFilePO po = cacheContext.getUploadedFile(digest);
         if (po != null) {
             if (po.getSize().equals(String.valueOf(file.getSize()))
                     && po.getOriginalFileName().equals(file.getOriginalFilename())
                     && po.getContentType().equals(file.getContentType())
                     ) {
-                return po;
+                return ResultUtils.success(po);
             }
         }
 
-        try {
-            po = uploadFileDao.findOne(
-                    Criteria.and(Criteria.eq("digest", digest), Criteria.eq("original_file_name", file.getOriginalFilename()),
-                            Criteria.eq("size", file.getSize()), Criteria.eq("content_type", file.getContentType())),
-                    BlogConstants.LOAD_ALL_CONFIG);
-            cacheContext.putUploadedFile(digest, po);
-            if (po != null) {
-                return po;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+        IQueryCriteria query = Criteria.and(Criteria.eq("digest", digest),
+                Criteria.eq("original_file_name", file.getOriginalFilename()),
+                Criteria.eq("size", file.getSize()), Criteria.eq("content_type", file.getContentType()));
+        Result getFileResult = uploadFileDao.get(query);
+        if (!getFileResult.isSuccess()) {
+            return getFileResult;
         }
 
-        return null;
+        cacheContext.putUploadedFile(digest, po);
+        if (po != null) {
+            return ResultUtils.success(po);
+        }
+        return ResultUtils.failed(" 上传放行 ");
     }
 
 }

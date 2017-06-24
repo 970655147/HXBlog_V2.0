@@ -11,8 +11,8 @@ import com.hx.blog_v2.service.interf.BaseServiceImpl;
 import com.hx.blog_v2.service.interf.LinkService;
 import com.hx.blog_v2.util.BlogConstants;
 import com.hx.blog_v2.util.DateUtils;
-import com.hx.common.interf.common.Result;
 import com.hx.blog_v2.util.ResultUtils;
+import com.hx.common.interf.common.Result;
 import com.hx.mongo.criteria.Criteria;
 import com.hx.mongo.criteria.interf.IQueryCriteria;
 import com.hx.mongo.criteria.interf.IUpdateCriteria;
@@ -54,7 +54,6 @@ public class LinkServiceImpl extends BaseServiceImpl<LinkPO> implements LinkServ
     @Override
     public Result adminList() {
         Map<String, LinkPO> allLinks = cacheContext.allLinks();
-
         List<AdminLinkVO> list = new ArrayList<>(allLinks.size());
         for (Map.Entry<String, LinkPO> entry : allLinks.entrySet()) {
             LinkPO link = entry.getValue();
@@ -66,9 +65,9 @@ public class LinkServiceImpl extends BaseServiceImpl<LinkPO> implements LinkServ
     @Override
     public Result update(LinkSaveForm params) {
         LinkPO po = new LinkPO(params.getName(), params.getDesc(), params.getUrl(), params.getSort(), params.getEnable());
-
         po.setId(params.getId());
         po.setUpdatedAt(DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS));
+
         Result result = linkDao.update(po);
         if (!result.isSuccess()) {
             return result;

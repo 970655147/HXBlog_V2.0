@@ -315,6 +315,15 @@ public final class BlogConstants {
      */
     public static final String TOKEN_REFRESH_INTERVAL = "request.token.refresh.interval";
 
+    /**
+     * 首页的标题
+     */
+    public static final String FRONT_IDX_PAGE_TITLE = "front.idx_page.title";
+    /**
+     * 首页的子标题
+     */
+    public static final String FRONT_IDX_PAGE_SUB_TITLE = "front.idx_page.sub_title";
+
     // ----------------------------------------- configurable -------------------------------------------------
 
     @Value("${jdbc.driver_clazz}")

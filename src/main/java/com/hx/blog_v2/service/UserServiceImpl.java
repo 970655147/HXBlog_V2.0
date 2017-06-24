@@ -19,9 +19,9 @@ import com.hx.blog_v2.domain.vo.Id2NameVO;
 import com.hx.blog_v2.service.interf.UserService;
 import com.hx.blog_v2.util.BlogConstants;
 import com.hx.blog_v2.util.DateUtils;
+import com.hx.blog_v2.util.ResultUtils;
 import com.hx.common.interf.common.Page;
 import com.hx.common.interf.common.Result;
-import com.hx.blog_v2.util.ResultUtils;
 import com.hx.json.JSONArray;
 import com.hx.log.alogrithm.code.Codec;
 import com.hx.log.util.Tools;
@@ -32,6 +32,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -82,9 +83,13 @@ public class UserServiceImpl implements UserService {
         String countSql = " select count(*) as totalRecord from `user` where deleted = 0 ";
         Object[] params = new Object[]{page.recordOffset(), page.getPageSize()};
 
-        List<AdminUserVO> list = jdbcTemplate.query(selectSql, params, new AdminUserVOMapper());
         Integer totalRecord = jdbcTemplate.queryForObject(countSql, new OneIntMapper("totalRecord"));
-        page.setList(list);
+        if (totalRecord <= 0) {
+            page.setList(Collections.<AdminUserVO>emptyList());
+        } else {
+            List<AdminUserVO> list = jdbcTemplate.query(selectSql, params, new AdminUserVOMapper());
+            page.setList(list);
+        }
         page.setTotalRecord(totalRecord);
         return ResultUtils.success(page);
     }

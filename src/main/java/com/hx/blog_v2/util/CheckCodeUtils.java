@@ -23,28 +23,28 @@ public final class CheckCodeUtils {
     private ConstantsContext constantsContext;
 
     /**
-     * Ä¬ÈÏµÄ¿í¶È
+     * é»˜è®¤çš„å®½åº¦
      */
     public static int DEFAULT_WIDTH = 80;
     /**
-     * Ä¬ÈÏµÄ¸ß¶È
+     * é»˜è®¤çš„é«˜åº¦
      */
     public static int DEFAULT_HEIGHT = 30;
     /**
-     * Ä¬ÈÏµÄÑÕÉ«
+     * é»˜è®¤çš„é¢œè‰²
      */
     public static Color DEFAULT_COLOR = Color.BLACK;
     /**
-     * Ä¬ÈÏµÄ×ÖÌå
+     * é»˜è®¤çš„å­—ä½“
      */
     public static Font DEFAULT_FONT = new Font(null, Font.BOLD, 20);
     /**
-     * Ä¬ÈÏµÄÑéÖ¤ÂëµÄ×Ö·ûÊıÁ¿
+     * é»˜è®¤çš„éªŒè¯ç çš„å­—ç¬¦æ•°é‡
      */
     public static int DEFAULT_CHECK_CODE_LENGTH = 4;
 
     /**
-     * »ñÈ¡¼òµ¥µÄÑéÖ¤Âë
+     * è·å–ç®€å•çš„éªŒè¯ç 
      *
      * @return com.hx.blog.bean.CheckCode
      * @author Jerry.X.He
@@ -68,7 +68,7 @@ public final class CheckCodeUtils {
 
 
     /**
-     * Éú³ÉÑéÖ¤Âë
+     * ç”ŸæˆéªŒè¯ç 
      *
      * @return com.hx.blog.bean.CheckCode
      * @author Jerry.X.He
@@ -87,7 +87,7 @@ public final class CheckCodeUtils {
 
 
     /**
-     * Éú³ÉÑéÖ¤ÂëÍ¼Æ¬
+     * ç”ŸæˆéªŒè¯ç å›¾ç‰‡
      *
      * @return com.hx.blog.bean.CheckCode
      * @author Jerry.X.He
@@ -124,7 +124,7 @@ public final class CheckCodeUtils {
     }
 
     /**
-     * »ñÈ¡¸ø¶¨·¶Î§ÄÚµÄËæ»úÊı
+     * è·å–ç»™å®šèŒƒå›´å†…çš„éšæœºæ•°
      *
      * @return com.hx.blog.bean.CheckCode
      * @author Jerry.X.He
@@ -136,7 +136,7 @@ public final class CheckCodeUtils {
     }
 
     /**
-     * »ñÈ¡Ò»¸öËæ»úµÄÑÕÉ«
+     * è·å–ä¸€ä¸ªéšæœºçš„é¢œè‰²
      *
      * @return com.hx.blog.bean.CheckCode
      * @author Jerry.X.He

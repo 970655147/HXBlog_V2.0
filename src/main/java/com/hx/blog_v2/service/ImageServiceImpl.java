@@ -26,6 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -71,9 +72,13 @@ public class ImageServiceImpl extends BaseServiceImpl<ImagePO> implements ImageS
         String countSql = " select count(*) as totalRecord from images where deleted = 0 and type = '" + params.getType() + "' ";
         Object[] sqlParams = new Object[]{page.recordOffset(), page.getPageSize()};
 
-        List<AdminImageVO> list = jdbcTemplate.query(selectSql, sqlParams, new AdminImageVOMapper());
         Integer totalRecord = jdbcTemplate.queryForObject(countSql, new OneIntMapper("totalRecord"));
-        page.setList(list);
+        if(totalRecord <= 0) {
+            page.setList(Collections.<AdminImageVO>emptyList());
+        } else {
+            List<AdminImageVO> list = jdbcTemplate.query(selectSql, sqlParams, new AdminImageVOMapper());
+            page.setList(list);
+        }
         page.setTotalRecord(totalRecord);
         return ResultUtils.success(page);
     }

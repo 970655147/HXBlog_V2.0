@@ -113,7 +113,7 @@ public abstract class BaseDaoImpl<T extends JSONTransferable<T>> extends MysqlBa
     @Override
     public Result add(T po) {
         try {
-            save(po, BlogConstants.ADD_BEAN_CONFIG);
+            insertOne(po, BlogConstants.ADD_BEAN_CONFIG);
         } catch (Exception e) {
             e.printStackTrace();
             return ResultUtils.failed(Tools.errorMsg(e));

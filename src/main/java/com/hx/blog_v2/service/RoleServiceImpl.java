@@ -128,11 +128,11 @@ public class RoleServiceImpl extends BaseServiceImpl<RolePO> implements RoleServ
         po.setSort(params.getSort());
         po.setEnable(params.getEnable());
         po.setUpdatedAt(DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS));
+
         Result result = roleDao.update(po);
         if (!result.isSuccess()) {
             return result;
         }
-
         cacheContext.putRole(po);
         return ResultUtils.success(po.getId());
     }

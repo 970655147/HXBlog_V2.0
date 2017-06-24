@@ -19,6 +19,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -39,7 +40,7 @@ public class LogServiceImpl extends BaseServiceImpl<Object> implements LogServic
     @Override
     public Result requestLogList(LogSearchForm params, Page<RequestLogVO> page) {
         String selectSql = " select * from request_log where 1 = 1 ";
-        String selectSqlSuffix = " order by created_at desc limit ?, ?";
+        String selectSqlSuffix = " order by created_at desc limit ?, ? ";
         String countSql = " select count(*) as totalRecord from request_log where 1 = 1 ";
 
         StringBuilder condSqlSb = new StringBuilder();
@@ -50,9 +51,13 @@ public class LogServiceImpl extends BaseServiceImpl<Object> implements LogServic
         selectParams.add(page.recordOffset());
         selectParams.add(page.getPageSize());
 
-        List<RequestLogVO> list = jdbcTemplate.query(selectSql + condSql + selectSqlSuffix, selectParams.toArray(), new RequestLogVOMapper());
         Integer totalRecord = jdbcTemplate.queryForObject(countSql + condSql, countParams, new OneIntMapper("totalRecord"));
-        page.setList(list);
+        if (totalRecord <= 0) {
+            page.setList(Collections.<RequestLogVO>emptyList());
+        } else {
+            List<RequestLogVO> list = jdbcTemplate.query(selectSql + condSql + selectSqlSuffix, selectParams.toArray(), new RequestLogVOMapper());
+            page.setList(list);
+        }
         page.setTotalRecord(totalRecord);
         return ResultUtils.success(page);
     }
@@ -60,7 +65,7 @@ public class LogServiceImpl extends BaseServiceImpl<Object> implements LogServic
     @Override
     public Result exceptionLogList(LogSearchForm params, Page<ExceptionLogVO> page) {
         String selectSql = " select * from exception_log where 1 = 1 ";
-        String selectSqlSuffix = " order by created_at desc limit ?, ?";
+        String selectSqlSuffix = " order by created_at desc limit ?, ? ";
         String countSql = " select count(*) as totalRecord from exception_log where 1 = 1 ";
 
         StringBuilder condSqlSb = new StringBuilder();
@@ -75,9 +80,13 @@ public class LogServiceImpl extends BaseServiceImpl<Object> implements LogServic
         selectParams.add(page.recordOffset());
         selectParams.add(page.getPageSize());
 
-        List<ExceptionLogVO> list = jdbcTemplate.query(selectSql + condSql + selectSqlSuffix, selectParams.toArray(), new ExceptionLogVOMapper());
         Integer totalRecord = jdbcTemplate.queryForObject(countSql + condSql, countParams, new OneIntMapper("totalRecord"));
-        page.setList(list);
+        if (totalRecord <= 0) {
+            page.setList(Collections.<ExceptionLogVO>emptyList());
+        } else {
+            List<ExceptionLogVO> list = jdbcTemplate.query(selectSql + condSql + selectSqlSuffix, selectParams.toArray(), new ExceptionLogVOMapper());
+            page.setList(list);
+        }
         page.setTotalRecord(totalRecord);
         return ResultUtils.success(page);
     }

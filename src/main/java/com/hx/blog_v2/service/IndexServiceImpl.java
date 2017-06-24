@@ -3,7 +3,6 @@ package com.hx.blog_v2.service;
 import com.hx.blog_v2.context.CacheContext;
 import com.hx.blog_v2.context.ConstantsContext;
 import com.hx.blog_v2.context.WebContext;
-import com.hx.blog_v2.dao.interf.BlogExDao;
 import com.hx.blog_v2.dao.interf.RltRoleResourceDao;
 import com.hx.blog_v2.domain.POVOTransferUtils;
 import com.hx.blog_v2.domain.dto.SessionUser;
@@ -11,8 +10,6 @@ import com.hx.blog_v2.domain.extractor.ResourceTreeInfoExtractor;
 import com.hx.blog_v2.domain.form.BeanIdsForm;
 import com.hx.blog_v2.domain.mapper.BlogVOMapper;
 import com.hx.blog_v2.domain.mapper.CommentVOMapper;
-import com.hx.blog_v2.domain.po.BlogTagPO;
-import com.hx.blog_v2.domain.po.BlogTypePO;
 import com.hx.blog_v2.domain.po.ResourcePO;
 import com.hx.blog_v2.domain.vo.BlogVO;
 import com.hx.blog_v2.domain.vo.CommentVO;
@@ -24,9 +21,9 @@ import com.hx.blog_v2.service.interf.LinkService;
 import com.hx.blog_v2.util.BlogConstants;
 import com.hx.blog_v2.util.ResultUtils;
 import com.hx.common.interf.common.Result;
+import com.hx.json.JSONArray;
 import com.hx.json.JSONObject;
 import com.hx.log.alogrithm.tree.TreeUtils;
-import com.hx.log.util.Log;
 import com.hx.log.util.Tools;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -49,15 +46,11 @@ public class IndexServiceImpl extends BaseServiceImpl<Object> implements IndexSe
     @Autowired
     private BlogServiceImpl blogService;
     @Autowired
-    private BlogExDao blogExDao;
-    @Autowired
     private RltRoleResourceDao rltRoleResourceDao;
     @Autowired
     private CacheContext cacheContext;
     @Autowired
     private JdbcTemplate jdbcTemplate;
-    @Autowired
-    private BlogConstants constants;
     @Autowired
     private ConstantsContext constantsContext;
 
@@ -74,15 +67,16 @@ public class IndexServiceImpl extends BaseServiceImpl<Object> implements IndexSe
         BlogVO contextBlog = jdbcTemplate.queryForObject(contextBlogSql, new BlogVOMapper());
         Integer todayVisited = cacheContext.todaysStatistics().getViewCnt();
         encapBlogVo(hotBlogs);
-        encapBlogVo(Collections.singletonList(contextBlog));
+        blogService.encapSense(contextBlog);
+        encapBlogVo(contextBlog);
         List<FacetByMonthVO> facetByMonth = new ArrayList<>(cacheContext.getMonthFacet().size());
         for (Map.Entry<String, Integer> entry : cacheContext.getMonthFacet().entrySet()) {
             facetByMonth.add(new FacetByMonthVO(entry.getKey(), entry.getValue()));
         }
 
         JSONObject data = new JSONObject();
-        data.put("title", "生活有度, 人生添寿");
-        data.put("subTitle", "如果你浪费了自己的年龄, 那是挺可悲的 因为你的青春只能持续一点儿时间 -- 很短的一点儿时间 ");
+        data.put("title", constantsContext.frontIdxPageTitle);
+        data.put("subTitle", constantsContext.frontIdxPageSubTitle);
         data.put("tags", tags2List(cacheContext.allBlogTags()));
         data.put("types", tags2List(cacheContext.allBlogTypes()));
         data.put("links", linkService.adminList().getData());
@@ -112,7 +106,7 @@ public class IndexServiceImpl extends BaseServiceImpl<Object> implements IndexSe
         }
         List<BlogVO> latestBlogs = jdbcTemplate.query(latestBlogsSql, new BlogVOMapper());
         if (recommendBlog != null) {
-            encapBlogVo(Collections.singletonList(recommendBlog));
+            encapBlogVo(recommendBlog);
         }
         encapBlogVo(latestBlogs);
 
@@ -183,62 +177,47 @@ public class IndexServiceImpl extends BaseServiceImpl<Object> implements IndexSe
     /**
      * 封装给定的博客列表的信息
      *
-     * @param voes voes
+     * @param list list
      * @return void
      * @author Jerry.X.He
      * @date 5/27/2017 11:26 PM
      * @since 1.0
      */
-    private void encapBlogVo(List<BlogVO> voes) {
-        for (BlogVO vo : voes) {
-            blogService.encapSenseAndBlogEx(vo);
-            encapTypeTagInfo(vo);
-//            encapContent(vo);
+    Result encapBlogVo(List<BlogVO> list) {
+        JSONArray errors = new JSONArray();
+        for (BlogVO vo : list) {
+            Result result = encapBlogVo(vo);
+            if (!result.isSuccess()) {
+                errors.add(result);
+            }
         }
+
+        if (!errors.isEmpty()) {
+            return ResultUtils.failed(list, errors);
+        }
+        return ResultUtils.success(list);
     }
 
     /**
-     * 封装给定的 BlogVO 的 type, tag 的信息
+     * 封装给定的 vo, 封装 exp, type, tags, content 等等
      *
      * @param vo vo
      * @return void
      * @author Jerry.X.He
-     * @date 6/11/2017 8:56 PM
+     * @date 6/24/2017 5:17 PM
      * @since 1.0
      */
-    private void encapTypeTagInfo(BlogVO vo) {
-        BlogTypePO type = cacheContext.blogType(vo.getBlogTypeId());
-        if (type != null) {
-            vo.setBlogTypeName(type.getName());
+    Result encapBlogVo(BlogVO vo) {
+        Result result = blogService.encapBlogEx(vo);
+        if (!result.isSuccess()) {
+            return result;
         }
-        if (vo.getBlogTagIds() != null) {
-            List<String> tagIds = vo.getBlogTagIds();
-            List<String> tagNames = new ArrayList<>(tagIds.size());
-            for (String tagId : tagIds) {
-                BlogTagPO tag = cacheContext.blogTag(tagId);
-                tagNames.add(tag == null ? Tools.NULL : tag.getName());
-            }
-            vo.setBlogTagNames(tagNames);
-        }
-    }
 
-    /**
-     * 封装给定的博客的内容信息
-     *
-     * @param vo vo
-     * @return void
-     * @author Jerry.X.He
-     * @date 5/21/2017 8:48 PM
-     * @since 1.0
-     */
-    private void encapContent(BlogVO vo) {
-        if (!Tools.isEmpty(vo.getContentUrl())) {
-            try {
-                vo.setContent(Tools.getContent(Tools.getFilePath(constants.blogRootDir, vo.getContentUrl())));
-            } catch (Exception e) {
-                Log.err(Tools.errorMsg(e));
-            }
+        result = blogService.encapTypeTagInfo(vo);
+        if (!result.isSuccess()) {
+            return result;
         }
+        return ResultUtils.success(vo);
     }
 
     /**
