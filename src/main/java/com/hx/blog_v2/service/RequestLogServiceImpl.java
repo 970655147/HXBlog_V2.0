@@ -1,6 +1,8 @@
 package com.hx.blog_v2.service;
 
 import com.hx.blog_v2.context.CacheContext;
+import com.hx.blog_v2.context.ConstantsContext;
+import com.hx.blog_v2.context.WebContext;
 import com.hx.blog_v2.dao.interf.RequestLogDao;
 import com.hx.blog_v2.domain.dto.SessionUser;
 import com.hx.blog_v2.domain.po.RequestLogPO;
@@ -8,14 +10,13 @@ import com.hx.blog_v2.service.interf.BaseServiceImpl;
 import com.hx.blog_v2.service.interf.RequestLogService;
 import com.hx.blog_v2.util.BizUtils;
 import com.hx.blog_v2.util.BlogConstants;
-import com.hx.blog_v2.context.ConstantsContext;
-import com.hx.blog_v2.context.WebContext;
 import com.hx.json.JSONObject;
 import org.aspectj.lang.JoinPoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 
 /**
  * BlogServiceImpl
@@ -50,7 +51,9 @@ public class RequestLogServiceImpl extends BaseServiceImpl<RequestLogPO> impleme
             user = SessionUser.DUMMY;
         }
 
-        String paramStr = String.valueOf(JSONObject.fromObject(req.getParameterMap()));
+        JSONObject params = JSONObject.fromObject(req.getParameterMap());
+        cutParamsIfNeed(requestUri, params);
+        String paramStr = String.valueOf(params);
         RequestLogPO po = new RequestLogPO(requestUri, String.valueOf(point.getSignature()),
                 paramStr, cost, user.isSystemUser() ? 1 : 0);
         po.setUserInfo(user);
@@ -60,5 +63,24 @@ public class RequestLogServiceImpl extends BaseServiceImpl<RequestLogPO> impleme
         requestLogDao.add(po);
     }
 
+    /**
+     * 如果需要 cut 参数的话, 处理 cut 参数的逻辑
+     *
+     * @param params params
+     * @return void
+     * @author Jerry.X.He
+     * @date 6/25/2017 11:23 AM
+     * @since 1.0
+     */
+    private void cutParamsIfNeed(String requestUri, JSONObject params) {
+        if (constantsContext.paramsNeedToCut.contains(requestUri)) {
+            for (Map.Entry<String, Object> entry : params.entrySet()) {
+                String value = String.valueOf(entry.getValue());
+                if (value.length() > constantsContext.paramsToCutMaxLen) {
+                    params.put(entry.getKey(), value.substring(0, constantsContext.paramsToCutMaxLen) + "...");
+                }
+            }
+        }
+    }
 
 }

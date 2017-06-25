@@ -10,10 +10,17 @@ import com.hx.blog_v2.domain.form.interf.UserInfoExtractor;
 import com.hx.blog_v2.domain.mapper.StringIntPairMapper;
 import com.hx.blog_v2.domain.mapper.ToMapMapper;
 import com.hx.blog_v2.domain.po.interf.LogisticalId;
+import com.hx.common.str.AntPathMatcher;
+import com.hx.common.str.interf.PathMatcher;
 import com.hx.json.JSONArray;
 import com.hx.json.JSONObject;
 import com.hx.log.json.JSONUtils;
+import com.hx.log.util.Log;
 import com.hx.log.util.Tools;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Attribute;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
@@ -22,6 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.net.URL;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * 处理业务的相关通用的方法
@@ -31,6 +39,11 @@ import java.util.*;
  * @date 6/5/2017 8:44 PM
  */
 public final class BizUtils {
+
+    /**
+     * pathMatcher
+     */
+    private static final PathMatcher ANT_PATH_MATCHER = new AntPathMatcher();
 
     // disable constructor
     private BizUtils() {
@@ -427,6 +440,121 @@ public final class BizUtils {
         }
 
         return comment.indexOf(replyCommentSuffix) + replyCommentSuffix.length();
+    }
+
+    /**
+     * 预处理content
+     * 1. 去掉script
+     * 2. 去掉a.href, iframe.src
+     * 3. 去掉各个事件
+     * 因为html大小写不敏感, 因此这里统一以小写作为标准进行比较[toLowerCase]
+     *
+     * @param content content
+     * @return java.lang.String
+     * @author Jerry.X.He
+     * @date 6/25/2017 8:58 AM
+     * @since 1.0
+     */
+    public static String prepareContent(String id, String content, Collection<String> sensetiveTags,
+                                        Map<String, Map<String, List<String>>> sensetiveTag2Attr,
+                                        Collection<String> sensetiveAttrs) {
+        Document doc = Jsoup.parse(content);
+        AtomicLong updated = new AtomicLong(0);
+        prepareContent(doc, sensetiveTags, sensetiveTag2Attr, sensetiveAttrs, updated);
+        Log.logWithIdx(" deal [{0}], updated : {1} ", id, updated.get());
+        return doc.toString();
+    }
+
+    public static void prepareContent(Element ele, Collection<String> sensetiveTags,
+                                      Map<String, Map<String, List<String>>> sensetiveTag2Attr,
+                                      Collection<String> sensetiveAttrs, AtomicLong updated) {
+        String lowerTagName = ele.tagName().toLowerCase();
+        // remove if tag is forbidden
+        for (String sensetiveTag : sensetiveTags) {
+            if (ANT_PATH_MATCHER.match(sensetiveTag, lowerTagName)) {
+                ele.remove();
+                updated.addAndGet(1 + ele.attributes().size());
+                return;
+            }
+        }
+
+        // remove specified tag's specified attribute if that contains sensetiveWords
+        Map<String, List<String>> attr2SensetiveWords = null;
+        for (Map.Entry<String, Map<String, List<String>>> entry : sensetiveTag2Attr.entrySet()) {
+            if (ANT_PATH_MATCHER.match(entry.getKey(), lowerTagName)) {
+                attr2SensetiveWords = entry.getValue();
+                break;
+            }
+        }
+        if (!Tools.isEmpty(attr2SensetiveWords)) {
+            // remove all sensetiveAttrs
+            Iterator<Attribute> attrIts = ele.attributes().iterator();
+            while (attrIts.hasNext()) {
+                Attribute attr = attrIts.next();
+                String lowerAttrKey = attr.getKey().toLowerCase();
+                // href = "javascript:alert(1)"
+                if (attr2SensetiveWords.containsKey(lowerAttrKey)) {
+                    String lowerAttrValue = attr.getValue().toLowerCase();
+                    for (String sensetiveWord : attr2SensetiveWords.get(lowerAttrKey)) {
+                        if (lowerAttrValue.contains(sensetiveWord)) {
+                            ele.removeAttr(attr.getKey());
+                            updated.addAndGet(1);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        // remove all sensetiveAttrs
+        Iterator<Attribute> attrIts = ele.attributes().iterator();
+        while (attrIts.hasNext()) {
+            Attribute attr = attrIts.next();
+            String lowerAttrKey = attr.getKey().toLowerCase();
+            for (String sensetiveAttr : sensetiveAttrs) {
+                if (ANT_PATH_MATCHER.match(sensetiveAttr, lowerAttrKey)) {
+                    ele.removeAttr(attr.getKey());
+                    updated.addAndGet(1);
+                    break;
+                }
+            }
+        }
+
+        for (Element child : ele.children()) {
+            prepareContent(child, sensetiveTags, sensetiveTag2Attr, sensetiveAttrs, updated);
+        }
+    }
+
+    /**
+     * 在不允许标签的场景下面, 转义所有的标签
+     *
+     * @param body           body
+     * @param needToBeFormat needToBeFormat
+     * @return java.lang.String
+     * @author Jerry.X.He
+     * @date 6/25/2017 9:18 AM
+     * @since 1.0
+     */
+    public static String transferTags(String id, String body, Map<String, String> needToBeFormat) {
+        if (Tools.isEmpty(body)) {
+            return Tools.EMPTY_STR;
+        }
+
+        long updated = 0;
+        StringBuilder sb = new StringBuilder(body.length());
+        for (int i = 0; i < body.length(); i++) {
+            // 为了效率, 这里就仅仅写"替换key"长度为1的数据了, 以后再来更新吧
+            String nextCh = String.valueOf(body.charAt(i));
+            if (!needToBeFormat.containsKey(nextCh)) {
+                sb.append(nextCh);
+            } else {
+                sb.append(needToBeFormat.get(nextCh));
+                updated++;
+            }
+        }
+
+        Log.logWithIdx(" deal [{0}], updated : {1} ", id, updated);
+        return sb.toString();
     }
 
     // ----------------- 辅助方法 -----------------------

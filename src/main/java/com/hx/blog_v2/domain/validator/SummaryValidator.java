@@ -37,10 +37,10 @@ public class SummaryValidator extends ConfigRefreshableValidator<String> impleme
         if ((form.length() < minLen) || (form.length() > maxLen)) {
             return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " summary 长度不在范围内 !");
         }
-        Result result = visibleValidator.validate(form, extra);
-        if (!result.isSuccess()) {
-            return result;
-        }
+//        Result result = visibleValidator.validate(form, extra);
+//        if (!result.isSuccess()) {
+//            return result;
+//        }
 
         return ResultUtils.success();
     }

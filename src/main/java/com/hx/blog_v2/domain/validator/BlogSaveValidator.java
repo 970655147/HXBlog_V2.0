@@ -1,8 +1,10 @@
 package com.hx.blog_v2.domain.validator;
 
+import com.hx.blog_v2.context.ConstantsContext;
 import com.hx.blog_v2.domain.ErrorCode;
 import com.hx.blog_v2.domain.form.BeanIdsForm;
 import com.hx.blog_v2.domain.form.BlogSaveForm;
+import com.hx.blog_v2.util.BizUtils;
 import com.hx.blog_v2.util.ResultUtils;
 import com.hx.common.interf.common.Result;
 import com.hx.common.interf.validator.Validator;
@@ -32,6 +34,8 @@ public class BlogSaveValidator implements Validator<BlogSaveForm> {
     private BeanIdStrValidator beanIdStrValidator;
     @Autowired
     private BeanIdsValidator beanIdsValidator;
+    @Autowired
+    private ConstantsContext constantsContext;
 
     @Override
     public Result validate(BlogSaveForm form, Object extra) {
@@ -69,6 +73,13 @@ public class BlogSaveValidator implements Validator<BlogSaveForm> {
             return errResult;
         }
 
+        String summaryFormatted = BizUtils.transferTags(form.getTitle() + "-" + form.getBlogTagIds(),
+                form.getSummary(), constantsContext.forbiddenTagFormatMap);
+        form.setSummary(summaryFormatted);
+        String contentFormatted = BizUtils.prepareContent("[blog] " + form.getTitle() + "-" + form.getBlogTagIds(),
+                form.getContent(), constantsContext.allowTagSensetiveTags, constantsContext.allowTagSensetiveTag2Attr,
+                constantsContext.allowTagSensetiveAttrs);
+        form.setContent(contentFormatted);
         return ResultUtils.success();
 
     }

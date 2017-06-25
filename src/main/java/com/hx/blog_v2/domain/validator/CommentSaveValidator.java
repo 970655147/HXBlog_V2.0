@@ -1,10 +1,12 @@
 package com.hx.blog_v2.domain.validator;
 
+import com.hx.blog_v2.context.ConstantsContext;
 import com.hx.blog_v2.domain.ErrorCode;
 import com.hx.blog_v2.domain.form.CommentSaveForm;
+import com.hx.blog_v2.util.BizUtils;
+import com.hx.blog_v2.util.ResultUtils;
 import com.hx.common.interf.common.Result;
 import com.hx.common.interf.validator.Validator;
-import com.hx.blog_v2.util.ResultUtils;
 import com.hx.log.util.Tools;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -30,7 +32,7 @@ public class CommentSaveValidator implements Validator<CommentSaveForm> {
     @Autowired
     private BeanIdStrValidator beanIdStrValidator;
     @Autowired
-    private MysqlKeywordsValidator mysqlKeywordsValidator;
+    private ConstantsContext constantsContext;
 
     @Override
     public Result validate(CommentSaveForm form, Object extra) {
@@ -76,6 +78,10 @@ public class CommentSaveValidator implements Validator<CommentSaveForm> {
         }
 
         // comment 的处理
+        String contentFormatted = BizUtils.prepareContent("[comment] " + form.getBlogId() + "-" + form.getFloorId(),
+                form.getComment(), constantsContext.allowTagSensetiveTags, constantsContext.allowTagSensetiveTag2Attr,
+                constantsContext.allowTagSensetiveAttrs);
+        form.setComment(contentFormatted);
 
         return ResultUtils.success();
 

@@ -1,11 +1,12 @@
 package com.hx.blog_v2.domain.validator;
 
+import com.hx.blog_v2.context.ConstantsContext;
 import com.hx.blog_v2.domain.ErrorCode;
-import com.hx.blog_v2.domain.form.BeanIdsForm;
 import com.hx.blog_v2.domain.form.MessageSaveForm;
+import com.hx.blog_v2.util.BizUtils;
+import com.hx.blog_v2.util.ResultUtils;
 import com.hx.common.interf.common.Result;
 import com.hx.common.interf.validator.Validator;
-import com.hx.blog_v2.util.ResultUtils;
 import com.hx.log.util.Tools;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -28,6 +29,8 @@ public class MessageSaveValidator implements Validator<MessageSaveForm> {
     private BeanIdsStrValidator beanIdsStrValidator;
     @Autowired
     private BeanIdStrValidator beanIdStrValidator;
+    @Autowired
+    private ConstantsContext constantsContext;
 
     @Override
     public Result validate(MessageSaveForm form, Object extra) {
@@ -54,6 +57,9 @@ public class MessageSaveValidator implements Validator<MessageSaveForm> {
             return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " 消息内容不合法 ! ");
         }
 
+        String subjectFormatted = BizUtils.transferTags(form.getUserIds() + "-" + form.getRoleIds() + "," + form.getUserIds(),
+                form.getSubject(), constantsContext.forbiddenTagFormatMap);
+        form.setSubject(subjectFormatted);
         return ResultUtils.success();
 
     }

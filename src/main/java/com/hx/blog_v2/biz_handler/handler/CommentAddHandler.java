@@ -36,7 +36,8 @@ public class CommentAddHandler extends BizHandlerAdapter {
         Result result = (Result) context.result();
         if (result.isSuccess()) {
             CommentSaveForm params = (CommentSaveForm) context.args()[0];
-            int endOfReply = BizUtils.idxOfEndRe(params.getComment(), constantsContext.replyCommentPrefix, constantsContext.replyCommentSuffix);
+            int endOfReply = BizUtils.idxOfEndRe(params.getComment(),
+                    constantsContext.replyCommentPrefix, constantsContext.replyCommentSuffix);
             boolean isReply = ((!Tools.isEmpty(params.getFloorId())) && (endOfReply >= 0));
             if (!isReply) {
                 Result getExResult = blogExDao.get(new BeanIdForm(params.getBlogId()));

@@ -17,6 +17,7 @@
         <jackson.mapper.version>1.9.13</jackson.mapper.version>
         <common.version>2.4</common.version>
         <druid.version>1.0.31</druid.version>
+        <jsoup.version>1.10.2</jsoup.version>
         <HXLog.version>0.0.2</HXLog.version>
     </properties>
 
@@ -149,6 +150,11 @@
             <groupId>com.alibaba</groupId>
             <artifactId>druid</artifactId>
             <version>${druid.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>${jsoup.version}</version>
         </dependency>
 
         <!--<dependency>-->

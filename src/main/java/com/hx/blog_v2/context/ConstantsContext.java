@@ -7,6 +7,7 @@ import com.hx.blog_v2.domain.po.SystemConfigPO;
 import com.hx.blog_v2.util.BizUtils;
 import com.hx.blog_v2.util.BlogConstants;
 import com.hx.json.JSONArray;
+import com.hx.json.JSONObject;
 import com.hx.log.util.Constants;
 import com.hx.log.util.Log;
 import com.hx.log.util.Tools;
@@ -47,6 +48,31 @@ public class ConstantsContext {
      */
     public static final int REFRESH_ALL_CONFIG = REFRESH_SYSTEM_CACHED | REFRESH_RULE_CACHED
             | REFRESH_FRONT_IDX__CACHED;
+
+    /**
+     * 敏感标签的默认配置
+     */
+    public static final JSONArray DEFAULT_ALLOW_TAG_SENSETIVE_TAGS = new JSONArray().element("script").element("iframe").element("el-*");
+    /**
+     * 敏感属性 -> 关键字 的默认配置
+     */
+    public static final JSONObject DEFAULT_SENSETIVE_TAG_2_ATTR = new JSONObject()
+            .element("a", new JSONObject().element("href", new JSONArray().element("javascript")))
+            .element("iframe", new JSONObject().element("src", new JSONArray().element("")));
+    /**
+     * 敏感属性的默认配置
+     */
+    public static final JSONArray DEFAULT_ALLOW_TAG_SENSETIVE_ATTRS = new JSONArray().element("on*");
+    /**
+     * 标签转义配置
+     */
+    public static final JSONObject DEFAULT_TRANSFER_TAG_NEED_FORMAT = new JSONObject()
+            .element("<", "&lt;").element(">", "&gt;").element("&", "&amp;");
+    /**
+     * 标签转义配置
+     */
+    public static final JSONArray DEFAULT_PARAMS_NEED_TO_CUT = new JSONArray()
+            .element("/admin/blog/add").element("/comment/add");
 
     @Autowired
     private SystemConfigDao systemConfigDao;
@@ -134,6 +160,22 @@ public class ConstantsContext {
      */
     public String guestTitle;
     public String guestRoles;
+    /**
+     * 预处理 允许标签的场景
+     * 博客, 评论内容 需要的相关配置
+     */
+    public List<String> allowTagSensetiveTags;
+    public Map<String, Map<String, List<String>>> allowTagSensetiveTag2Attr;
+    public List<String> allowTagSensetiveAttrs;
+    /**
+     * 预处理 不允许标签的内容需要的相关配置
+     */
+    public Map<String, String> forbiddenTagFormatMap;
+    /**
+     * 需要处理 参数部分的请求
+     */
+    public List<String> paramsNeedToCut;
+    public int paramsToCutMaxLen;
 
     /**
      * 初始化 ConstantsContext
@@ -505,6 +547,36 @@ public class ConstantsContext {
             frontIdxPageSubTitle = Tools.optString(systemConfig, BlogConstants.FRONT_IDX_PAGE_SUB_TITLE, "如果你浪费了自己的年龄, 那是挺可悲的 因为你的青春只能持续一点儿时间 -- 很短的一点儿时间");
             guestTitle = Tools.optString(systemConfig, BlogConstants.DEFAULT_GUEST_TITLE, "guest");
             guestRoles = Tools.optString(systemConfig, BlogConstants.DEFAULT_GUEST_ROLES, "guest");
+
+            /**
+             * 标签处理相关
+             */
+            try {
+                allowTagSensetiveTags = Tools.optJSONArray(systemConfig, BlogConstants.ALLOW_TAG_SENSETIVE_TAGS, DEFAULT_ALLOW_TAG_SENSETIVE_TAGS);
+            } catch (Exception e) {
+                allowTagSensetiveTags = DEFAULT_ALLOW_TAG_SENSETIVE_TAGS;
+            }
+            try {
+                allowTagSensetiveTag2Attr = Tools.optJSONObject(systemConfig, BlogConstants.ALLOW_TAG_SENSETIVE_TAG_2_ATTR, DEFAULT_SENSETIVE_TAG_2_ATTR);
+            } catch (Exception e) {
+                allowTagSensetiveTag2Attr = DEFAULT_SENSETIVE_TAG_2_ATTR;
+            }
+            try {
+                allowTagSensetiveAttrs = Tools.optJSONArray(systemConfig, BlogConstants.ALLOW_TAG_SENSETIVE_ATTRS, DEFAULT_ALLOW_TAG_SENSETIVE_ATTRS);
+            } catch (Exception e) {
+                allowTagSensetiveAttrs = DEFAULT_ALLOW_TAG_SENSETIVE_ATTRS;
+            }
+            try {
+                forbiddenTagFormatMap = Tools.optJSONObject(systemConfig, BlogConstants.FORBIDDEN_TAG_FORMAT_MAP, DEFAULT_TRANSFER_TAG_NEED_FORMAT);
+            } catch (Exception e) {
+                forbiddenTagFormatMap = DEFAULT_TRANSFER_TAG_NEED_FORMAT;
+            }
+            try {
+                paramsNeedToCut = Tools.optJSONArray(systemConfig, BlogConstants.PARAMS_NEED_TO_CUT, DEFAULT_PARAMS_NEED_TO_CUT);
+            } catch (Exception e) {
+                paramsNeedToCut = DEFAULT_PARAMS_NEED_TO_CUT;
+            }
+            paramsToCutMaxLen = Tools.optInt(systemConfig, BlogConstants.PARAMS_TO_CUT_MAX_LEN, 200);
         }
 
     }

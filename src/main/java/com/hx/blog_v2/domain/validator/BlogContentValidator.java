@@ -20,16 +20,16 @@ public class BlogContentValidator extends ConfigRefreshableValidator<String> imp
      * 最小长度
      */
     private int minLen = -1;
+    private int maxLen = -1;
 
     @Override
     public Result doValidate(String form, Object extra) {
         if (Tools.isEmpty(form)) {
             return ResultUtils.failed(" content 为空 !");
         }
-        if (form.length() < minLen) {
+        if ((form.length() < minLen) || (form.length() > maxLen)) {
             return ResultUtils.failed(" content 长度不在范围内 !");
         }
-        // TODO: 6/16/2017 内容的校验
 
         return ResultUtils.success();
     }
@@ -42,5 +42,6 @@ public class BlogContentValidator extends ConfigRefreshableValidator<String> imp
     @Override
     public void refreshConfig() {
         minLen = Integer.parseInt(constantsContext.ruleConfig("content.blog.min.length", "3"));
+        maxLen = Integer.parseInt(constantsContext.ruleConfig("content.blog.max.length", "10000000"));
     }
 }

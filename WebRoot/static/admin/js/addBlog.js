@@ -48,7 +48,7 @@ if (!isEmpty(currentBlogId)) {
                     UE.getEditor('editor').execCommand('insertHtml', blog.content)
                 });
             } else {
-                layer.alert("拉取博客信息失败[" + resp.data + "] !", {icon: 5});
+                alert("拉取博客信息失败[" + resp.data + "] !", {icon: 5});
             }
         }
     });

@@ -332,6 +332,32 @@ public final class BlogConstants {
      */
     public static final String DEFAULT_GUEST_ROLES = "guest.roles";
 
+    /**
+     * 允许标签存在的情况下, 的敏感标签
+     */
+    public static final String ALLOW_TAG_SENSETIVE_TAGS = "allow.tag.sensetive.tags";
+    /**
+     * 允许标签存在的情况下, 的敏感标签
+     */
+    public static final String ALLOW_TAG_SENSETIVE_TAG_2_ATTR = "allow.tag.sensetive.tag_2_attr";
+    /**
+     * 允许标签存在的情况下, 的敏感标签
+     */
+    public static final String ALLOW_TAG_SENSETIVE_ATTRS = "allow.tag.sensetive.attrs";
+    /**
+     * 允许标签存在的情况下, 的敏感标签
+     */
+    public static final String FORBIDDEN_TAG_FORMAT_MAP = "forbidden.tag.format.map";
+    /**
+     * 需要砍掉参数的 请求列表
+     */
+    public static final String PARAMS_NEED_TO_CUT = "log.params.need.cut";
+    /**
+     * 需要砍掉参数的 请求保留的参数长度
+     */
+    public static final String PARAMS_TO_CUT_MAX_LEN = "log.params.cut.max_len";
+
+
     // ----------------------------------------- configurable -------------------------------------------------
 
     @Value("${jdbc.driver_clazz}")

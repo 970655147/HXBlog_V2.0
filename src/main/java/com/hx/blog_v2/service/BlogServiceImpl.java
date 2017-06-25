@@ -184,22 +184,18 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
     @Override
     public Result remove(BeanIdForm params) {
         String updatedAt = DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
-        try {
-            long deleted = blogDao.updateOne(Criteria.eq("id", params.getId()),
-                    Criteria.set("deleted", "1").add("updated_at", updatedAt)
-            ).getModifiedCount();
-            if (deleted == 0) {
-                return ResultUtils.failed("博客[" + params.getId() + "]不存在 !");
-            }
-
-            long commentDeleted = (Long) commentDao.update(Criteria.eq("blog_id", params.getId()),
-                    Criteria.set("deleted", "1").add("updated_at", updatedAt), true)
-                    .getData();
-            Log.log(" 删除了 blog[{}], 级联删除 {} 条评论 ! ", params.getId(), commentDeleted);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResultUtils.failed(Tools.errorMsg(e));
+        Result removeBlogResult = blogDao.update(Criteria.eq("id", params.getId()),
+                Criteria.set("deleted", "1").add("updated_at", updatedAt));
+        if (!removeBlogResult.isSuccess()) {
+            return removeBlogResult;
         }
+
+        Result removeCommentResult = commentDao.update(Criteria.eq("blog_id", params.getId()),
+                Criteria.set("deleted", "1").add("updated_at", updatedAt), true);
+//        if (!removeCommentResult.isSuccess()) {
+//            return removeCommentResult;
+//        }
+        Log.log(" 删除了 blog[{}], 级联删除 {} 条评论 ! ", params.getId(), removeCommentResult.getData());
         return ResultUtils.success(params.getId());
     }
 

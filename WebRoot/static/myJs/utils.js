@@ -290,18 +290,22 @@ function ajax(config) {
                 interceptorDialog = null
                 locateRoot(window).location.href = "/static/admin/index.html"
             })
+            return false
         } else if ((203 === resp.code) || (204 === resp.code) ) {
             alertIfException(resp.data, function () {
                 layer.close(interceptorDialog)
                 interceptorDialog = null
             })
+            return false
         } else if (500 === resp.code) {
             // alertIfException(resp.data, function () {
             //     layer.close(interceptorDialog)
             //     interceptorDialog = null
             // })
+            return false
+        } else {
+            return true;
         }
-        return false
     }
 
     ajax0(config, beforeSend, beforeSucc)
