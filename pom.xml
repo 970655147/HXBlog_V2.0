@@ -18,6 +18,7 @@
         <common.version>2.4</common.version>
         <druid.version>1.0.31</druid.version>
         <jsoup.version>1.10.2</jsoup.version>
+        <javax.mail.version>1.4.7</javax.mail.version>
         <HXLog.version>0.0.2</HXLog.version>
     </properties>
 
@@ -156,21 +157,26 @@
             <artifactId>jsoup</artifactId>
             <version>${jsoup.version}</version>
         </dependency>
+        <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>mail</artifactId>
+            <version>${javax.mail.version}</version>
+        </dependency>
 
         <!--<dependency>-->
-            <!--<groupId>org.apache.tomcat</groupId>-->
-            <!--<artifactId>tomcat-catalina</artifactId>-->
-            <!--<version>7.0.54</version>-->
+        <!--<groupId>org.apache.tomcat</groupId>-->
+        <!--<artifactId>tomcat-catalina</artifactId>-->
+        <!--<version>7.0.54</version>-->
         <!--</dependency>-->
         <!--<dependency>-->
-            <!--<groupId>org.apache.tomcat</groupId>-->
-            <!--<artifactId>tomcat-servlet-api</artifactId>-->
-            <!--<version>7.0.54</version>-->
+        <!--<groupId>org.apache.tomcat</groupId>-->
+        <!--<artifactId>tomcat-servlet-api</artifactId>-->
+        <!--<version>7.0.54</version>-->
         <!--</dependency>-->
         <!--<dependency>-->
-            <!--<groupId>org.apache.tomcat</groupId>-->
-            <!--<artifactId>tomcat-coyote</artifactId>-->
-            <!--<version>7.0.54</version>-->
+        <!--<groupId>org.apache.tomcat</groupId>-->
+        <!--<artifactId>tomcat-coyote</artifactId>-->
+        <!--<version>7.0.54</version>-->
         <!--</dependency>-->
 
     </dependencies>

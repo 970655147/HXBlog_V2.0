@@ -185,6 +185,12 @@ public class ConstantsContext {
      * 校验访问次数的周期
      */
     public int visitCntValidatePeriod;
+    /**
+     * 发送邮件的用户名密码, 以及邮件服务器
+     */
+    public String emailAuthUserName;
+    public String emailAuthPassword;
+    public String emailAuthSmtp;
 
     /**
      * 初始化 ConstantsContext
@@ -591,6 +597,10 @@ public class ConstantsContext {
         maxVisitCntPerPeriod = Tools.optInt(systemConfig, BlogConstants.MAX_VISIT_CNT_PER_PERIOD, 100);
         maxNotFormatCntPerPeriod = Tools.optInt(systemConfig, BlogConstants.MAX_NOT_FORMAT_CNT_PER_PERIOD, 20);
         visitCntValidatePeriod = Tools.optInt(systemConfig, BlogConstants.VISIT_CNT_VALIDATE_PERIOD, 60);
+
+        emailAuthUserName = Tools.optString(systemConfig, BlogConstants.EMAIL_AUTH_USERNAME, "");
+        emailAuthPassword = Tools.optString(systemConfig, BlogConstants.EMAIL_AUTH_PASSWORD, "");
+        emailAuthSmtp = Tools.optString(systemConfig, BlogConstants.EMAIL_AUTH_SMTP, "smtp.qq.com");
 
     }
 

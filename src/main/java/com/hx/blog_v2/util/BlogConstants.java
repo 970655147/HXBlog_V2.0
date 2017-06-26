@@ -68,7 +68,7 @@ public final class BlogConstants {
             BlogTypePO.class, ExceptionLogPO.class, ImagePO.class, LinkPO.class, MoodPO.class, RequestLogPO.class,
             UserPO.class, VisitorPO.class, RltBlogTagPO.class, UploadFilePO.class,
             RolePO.class, RltUserRoleRolePO.class, ResourcePO.class, RltRoleResourcePO.class, InterfPO.class, RltResourceInterfPO.class,
-            BlogVisitLogPO.class, MessagePO.class, BlogCreateTypePO.class, SystemConfigPO.class
+            BlogVisitLogPO.class, MessagePO.class, BlogCreateTypePO.class, SystemConfigPO.class, EmailPO.class
     };
     /**
      * 下划线的注册了各个PO 的 KeyNodeParser
@@ -373,6 +373,18 @@ public final class BlogConstants {
      * 校验访问次数的周期
      */
     public static final String VISIT_CNT_VALIDATE_PERIOD = "limit.visit_cnt.period";
+    /**
+     * 发送邮件的用户名
+     */
+    public static final String EMAIL_AUTH_USERNAME = "email.auth.user_name";
+    /**
+     * 发送邮件的密码
+     */
+    public static final String EMAIL_AUTH_PASSWORD = "email.auth.password";
+    /**
+     * 发送邮件的服务器
+     */
+    public static final String EMAIL_AUTH_SMTP = "email.auth.smtp";
 
     // ----------------------------------------- configurable -------------------------------------------------
 
@@ -441,6 +453,8 @@ public final class BlogConstants {
     public String tableBlogCreateType = "blog_create_type";
     @Value("${table.system_config}")
     public String tableSystemConfig = "system_config";
+    @Value("${table.email}")
+    public String tableEmail = "email";
     @Value("${table.id}")
     public String tableId = "id";
 
