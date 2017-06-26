@@ -49,6 +49,6 @@ public class EntityNameValidator extends ConfigRefreshableValidator<String> impl
     @Override
     public void refreshConfig() {
         minLen = Integer.parseInt(constantsContext.ruleConfig("entity.name.min.length", "1"));
-        maxLen = Integer.parseInt(constantsContext.ruleConfig("entity.name.max.length", "32"));
+        maxLen = Integer.parseInt(constantsContext.ruleConfig("entity.name.max.length", "64"));
     }
 }

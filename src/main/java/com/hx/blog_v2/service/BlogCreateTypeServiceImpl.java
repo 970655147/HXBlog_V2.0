@@ -6,6 +6,7 @@ import com.hx.blog_v2.dao.interf.BlogCreateTypeDao;
 import com.hx.blog_v2.domain.POVOTransferUtils;
 import com.hx.blog_v2.domain.form.BeanIdForm;
 import com.hx.blog_v2.domain.form.BlogCreateTypeSaveForm;
+import com.hx.blog_v2.domain.mapper.OneIntMapper;
 import com.hx.blog_v2.domain.po.BlogCreateTypePO;
 import com.hx.blog_v2.domain.vo.BlogCreateTypeVO;
 import com.hx.blog_v2.service.interf.BaseServiceImpl;
@@ -16,6 +17,7 @@ import com.hx.blog_v2.util.DateUtils;
 import com.hx.blog_v2.util.ResultUtils;
 import com.hx.common.interf.common.Result;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -35,6 +37,8 @@ public class BlogCreateTypeServiceImpl extends BaseServiceImpl<BlogCreateTypePO>
 
     @Autowired
     private BlogCreateTypeDao blogCreateTypeDao;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
     @Autowired
     private CacheContext cacheContext;
     @Autowired
@@ -96,13 +100,11 @@ public class BlogCreateTypeServiceImpl extends BaseServiceImpl<BlogCreateTypePO>
         if (po == null) {
             return ResultUtils.failed("该类型不存在 !");
         }
-
-        // TODO: 6/17/2017 检查下面的博客
-//        String countSql = " select count(*) as totalRecord from blog where deleted = 0 and blog_create_type = ? ";
-//        Integer totalRecord = jdbcTemplate.queryForObject(countSql, new Object[]{params.getId()}, new OneIntMapper("totalRecord"));
-//        if (totalRecord > 0) {
-//            return ResultUtils.failed("该创建类型下面还有 " + totalRecord + "篇博客, 请先迁移这部分博客 !");
-//        }
+        String countSql = " select count(*) as totalRecord from blog where deleted = 0 and blog_create_type = ? ";
+        Integer totalRecord = jdbcTemplate.queryForObject(countSql, new Object[]{params.getId()}, new OneIntMapper("totalRecord"));
+        if (totalRecord > 0) {
+            return ResultUtils.failed("该创建类型下面还有 " + totalRecord + "篇博客, 请先迁移这部分博客 !");
+        }
 
         po.setUpdatedAt(DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS));
         po.setDeleted(1);

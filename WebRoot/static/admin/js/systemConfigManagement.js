@@ -167,7 +167,7 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
             html += '<form id="updateConfigForm" class="layui-form layui-form-pane" action="/admin/config/update" method="post" >';
             html += '<input type="hidden" id="id" name="id" value="' + item.id + '">';
             html += '<label class="layui-form-label" style="border: none" >name:</label>';
-            html += '<input  style="width:87%;margin: auto;color: #000!important;" lay-verify="required" name="name" value="' + item.name + '" class="layui-input" >';
+            html += '<input  style="width:87%;margin: auto;color: #000!important;" lay-verify="required" name="name" value="' + item.name + '" class="layui-input" readonly >';
             html += '<label class="layui-form-label" style="border: none" >value:</label>';
             html += '<input  style="width:87%;margin: auto;color: #000!important;" lay-verify="required" name="value" value="' + item.value + '" class="layui-input" >';
             html += '<label class="layui-form-label" style="border: none" >描述信息:</label>';

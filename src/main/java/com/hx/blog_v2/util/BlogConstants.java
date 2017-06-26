@@ -164,6 +164,10 @@ public final class BlogConstants {
      */
     public static final String SESSION_TOKEN = "session:token";
     /**
+     * 暂存于 request 中的result的key
+     */
+    public static final String REQUEST_RESULT = "request:result";
+    /**
      * 暂存于 request 中的data的key
      */
     public static final String REQUEST_DATA = "request:data";
@@ -357,6 +361,18 @@ public final class BlogConstants {
      */
     public static final String PARAMS_TO_CUT_MAX_LEN = "log.params.cut.max_len";
 
+    /**
+     * 限制给定的周期内最大的访问次数
+     */
+    public static final String MAX_VISIT_CNT_PER_PERIOD = "limit.max.visit_cnt.per_period";
+    /**
+     * 限制给定的周期内最大的 允许不合法的输入次数
+     */
+    public static final String MAX_NOT_FORMAT_CNT_PER_PERIOD = "limit.max.not_format_cnt.per_period";
+    /**
+     * 校验访问次数的周期
+     */
+    public static final String VISIT_CNT_VALIDATE_PERIOD = "limit.visit_cnt.period";
 
     // ----------------------------------------- configurable -------------------------------------------------
 

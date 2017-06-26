@@ -30,7 +30,6 @@ public class CommentContentValidator extends ConfigRefreshableValidator<String> 
         if ((comment.length() < minLen) || (comment.length() > maxLen)) {
             return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " content 长度不在范围内 !");
         }
-        // TODO: 6/16/2017 内容的校验
 
         return ResultUtils.success();
     }

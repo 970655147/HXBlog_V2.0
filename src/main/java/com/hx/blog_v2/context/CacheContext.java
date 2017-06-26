@@ -26,6 +26,7 @@ import javax.annotation.PostConstruct;
 import java.util.*;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
@@ -187,6 +188,19 @@ public class CacheContext {
     private Map<String, Integer> monthFacet = new LinkedHashMap<>();
 
     /**
+     * 周期性的统计给定的 标志的访问的次数
+     */
+    private Map<String, AtomicInteger> visitPerPeroid = new HashMap<>();
+    /**
+     * 周期性的统计给定的 标志的访问的不合法次数
+     */
+    private Map<String, AtomicInteger> inputNotFormatPerPeroid = new HashMap<>();
+    /**
+     * 黑名单中的信息
+     */
+    private Map<String, String> blankList = new HashMap<>();
+
+    /**
      * 上一次访问 all5SecStatistics 的时间戳
      */
     private long fSecLastVisitDate;
@@ -269,6 +283,7 @@ public class CacheContext {
             blog2NextFloorId.clear();
             blogFloor2NextCommentId.clear();
             forceOffLineMap.clear();
+            blankList.clear();
         }
     }
 
@@ -777,6 +792,42 @@ public class CacheContext {
     }
 
     /**
+     * 获取周期统计 的访问信息
+     *
+     * @return java.util.Map<java.lang.String,java.lang.Integer>
+     * @author Jerry.X.He
+     * @date 6/25/2017 2:32 PM
+     * @since 1.0
+     */
+    public Map<String, AtomicInteger> visitPerPeroid() {
+        return visitPerPeroid;
+    }
+
+    /**
+     * 获取周期统计 的异常信息
+     *
+     * @return java.util.Map<java.lang.String,java.lang.Integer>
+     * @author Jerry.X.He
+     * @date 6/25/2017 2:32 PM
+     * @since 1.0
+     */
+    public Map<String, AtomicInteger> inputNotFormatPerPeroid() {
+        return inputNotFormatPerPeroid;
+    }
+
+    /**
+     * 获取黑名单的数据
+     *
+     * @return java.util.Map<java.lang.String,java.lang.Integer>
+     * @author Jerry.X.He
+     * @date 6/25/2017 2:32 PM
+     * @since 1.0
+     */
+    public Map<String, String> blankList() {
+        return blankList;
+    }
+
+    /**
      * 获取所有的 局部缓存的 容量信息
      *
      * @return com.hx.json.JSONArray
@@ -792,6 +843,7 @@ public class CacheContext {
         result.add(roles2ResourceIds.capacity());
         result.add(resource2Interfs.capacity());
         result.add(digest2UploadedFiles.capacity());
+        result.add(888);
         return result;
     }
 
@@ -811,6 +863,7 @@ public class CacheContext {
         result.add(roles2ResourceIds.size());
         result.add(resource2Interfs.size());
         result.add(digest2UploadedFiles.size());
+        result.add(blankList.size());
         return result;
     }
 
@@ -1062,7 +1115,9 @@ public class CacheContext {
     private void initSchedule() {
         long msOffToNextDawn = DateUtils.beginOfDay(DateUtils.addDay(new Date(), 1)).getTime() - System.currentTimeMillis();
         Tools.scheduleAtFixedRate(new SwitchStatisInfoRunnable(), msOffToNextDawn, 1, TimeUnit.DAYS);
-
+        Tools.scheduleAtFixedRate(new ClearBlankListRunnable(), msOffToNextDawn, 1, TimeUnit.DAYS);
+        Tools.scheduleAtFixedRate(new ClearVisitPeroidInfoRunnable(), constantsContext.visitCntValidatePeriod,
+                constantsContext.visitCntValidatePeriod, TimeUnit.SECONDS);
     }
 
     /**
@@ -1234,5 +1289,33 @@ public class CacheContext {
         }
     }
 
+    /**
+     * 清理 RobotInterceptor 周期统计的信息
+     *
+     * @author Jerry.X.He <970655147@qq.com>
+     * @version 1.0
+     * @date 6/25/2017 2:31 PM
+     */
+    private class ClearVisitPeroidInfoRunnable implements Runnable {
+        @Override
+        public void run() {
+            visitPerPeroid.clear();
+            inputNotFormatPerPeroid.clear();
+        }
+    }
+
+    /**
+     * 清理 黑名单中的信息
+     *
+     * @author Jerry.X.He <970655147@qq.com>
+     * @version 1.0
+     * @date 6/25/2017 2:31 PM
+     */
+    private class ClearBlankListRunnable implements Runnable {
+        @Override
+        public void run() {
+            blankList.clear();
+        }
+    }
 
 }

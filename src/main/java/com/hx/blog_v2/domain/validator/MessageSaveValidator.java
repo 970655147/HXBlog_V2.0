@@ -60,6 +60,10 @@ public class MessageSaveValidator implements Validator<MessageSaveForm> {
         String subjectFormatted = BizUtils.transferTags(form.getUserIds() + "-" + form.getRoleIds() + "," + form.getUserIds(),
                 form.getSubject(), constantsContext.forbiddenTagFormatMap);
         form.setSubject(subjectFormatted);
+        String contentFormatted = BizUtils.prepareContent(form.getUserIds() + "-" + form.getRoleIds() + "," + form.getUserIds(),
+                form.getContent(), constantsContext.allowTagSensetiveTags, constantsContext.allowTagSensetiveTag2Attr,
+                constantsContext.allowTagSensetiveAttrs);
+        form.setContent(contentFormatted);
         return ResultUtils.success();
 
     }

@@ -33,6 +33,10 @@ public enum ErrorCode implements Code2Msg<Integer, String> {
      */
     TOKEN_NOT_MATCH(204, " your token not match ! "),
     /**
+     * IN_BLANK_LIST
+     */
+    IN_BLANK_LIST(205, " your are in blank list now, please come early tomorrow ! "),
+    /**
      * NOT_FOUND
      */
     NOT_FOUND(404, "resource not found"),

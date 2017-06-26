@@ -81,7 +81,7 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
     }, function () {
     })
     $("[name='statisticsInfo']").hover(function () {
-        layer.tips("[allStatistics, all5SecStatistics]", "[name='statisticsInfo']", {
+        layer.tips("[allStatistics, all5SecStatistics, monthFacet]", "[name='statisticsInfo']", {
             tips: [1, '#ff0000'],
             time: 1000
         })
@@ -388,13 +388,13 @@ function encapOption(resp) {
         xAxis: [
             {
                 type: 'category',
-                data: ['id2blogEx', 'info2VisitLog', 'info2sense', 'roleIds2ResIds', 'res2Interfs', 'uploadFile']
+                data: ['id2blogEx', 'info2VisitLog', 'info2sense', 'roleIds2ResIds', 'res2Interfs', 'uploadFile', "blankList"]
             },
             {
                 type: 'category',
                 axisLine: {show: true}, axisTick: {show: false}, axisLabel: {show: false},
                 splitArea: {show: false}, splitLine: {show: false},
-                data: ['id2blogEx', 'info2VisitLog', 'info2sense', 'roleIds2ResIds', 'res2Interfs', 'uploadFile']
+                data: ['id2blogEx', 'info2VisitLog', 'info2sense', 'roleIds2ResIds', 'res2Interfs', 'uploadFile', "blankList"]
             }
         ],
         yAxis: [

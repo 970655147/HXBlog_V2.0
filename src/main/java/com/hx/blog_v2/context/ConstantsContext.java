@@ -176,6 +176,15 @@ public class ConstantsContext {
      */
     public List<String> paramsNeedToCut;
     public int paramsToCutMaxLen;
+    /**
+     * 校验访问次数, 不合法的输出次数
+     */
+    public int maxVisitCntPerPeriod;
+    public int maxNotFormatCntPerPeriod;
+    /**
+     * 校验访问次数的周期
+     */
+    public int visitCntValidatePeriod;
 
     /**
      * 初始化 ConstantsContext
@@ -578,6 +587,10 @@ public class ConstantsContext {
             }
             paramsToCutMaxLen = Tools.optInt(systemConfig, BlogConstants.PARAMS_TO_CUT_MAX_LEN, 200);
         }
+
+        maxVisitCntPerPeriod = Tools.optInt(systemConfig, BlogConstants.MAX_VISIT_CNT_PER_PERIOD, 100);
+        maxNotFormatCntPerPeriod = Tools.optInt(systemConfig, BlogConstants.MAX_NOT_FORMAT_CNT_PER_PERIOD, 20);
+        visitCntValidatePeriod = Tools.optInt(systemConfig, BlogConstants.VISIT_CNT_VALIDATE_PERIOD, 60);
 
     }
 

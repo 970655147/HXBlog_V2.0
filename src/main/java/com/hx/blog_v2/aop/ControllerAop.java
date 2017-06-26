@@ -1,7 +1,9 @@
 package com.hx.blog_v2.aop;
 
+import com.hx.blog_v2.context.WebContext;
 import com.hx.blog_v2.service.interf.ExceptionLogService;
 import com.hx.blog_v2.service.interf.RequestLogService;
+import com.hx.blog_v2.util.BlogConstants;
 import com.hx.common.interf.common.Result;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -55,6 +57,8 @@ public class ControllerAop {
                 exceptionLogService.saveExceptionLog(point, rResult, null);
             }
         }
+
+        WebContext.setAttributeForRequest(BlogConstants.REQUEST_RESULT, result);
         return result;
     }
 
