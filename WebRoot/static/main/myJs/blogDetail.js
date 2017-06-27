@@ -170,6 +170,9 @@ function contentInit() {
                     toUser: that.replyInfo.toUser,
                     comment: replyForm.find("[name='comment']").html(),
                 }
+                if(isEmpty(params.toUser)) {
+                    params.toUser = that.blog.author
+                }
                 if (isEmpty(params.name)) {
                     layer.tips('请输入用户名', "[name='name']");
                     return;

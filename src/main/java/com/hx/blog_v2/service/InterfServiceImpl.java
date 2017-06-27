@@ -144,14 +144,16 @@ public class InterfServiceImpl extends BaseServiceImpl<InterfPO> implements Inte
             }
         }
 
-        try {
-            rltResourceInterfDao.deleteMany(Criteria.eq("resource_id", params.getResourceId()));
-            if (!CollectionUtils.isEmpty(userRoles)) {
-                rltResourceInterfDao.insertMany(userRoles, BlogConstants.ADD_BEAN_CONFIG);
+
+        Result removeOldResult = rltResourceInterfDao.remove(Criteria.eq("resource_id", params.getResourceId()), true);
+        if (!removeOldResult.isSuccess()) {
+            Log.info(" init interfInfo for resource [" + params.getResourceId() + "]");
+        }
+        if (!CollectionUtils.isEmpty(userRoles)) {
+            Result addInterfResult = rltResourceInterfDao.add(userRoles);
+            if (!addInterfResult.isSuccess()) {
+                return addInterfResult;
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResultUtils.failed(Tools.errorMsg(e));
         }
         return ResultUtils.success(params.getResourceId());
     }

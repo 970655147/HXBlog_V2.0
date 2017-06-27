@@ -4,9 +4,16 @@ import com.hx.blog_v2.biz_handler.handler.common.BizHandlerAdapter;
 import com.hx.blog_v2.biz_handler.interf.BizContext;
 import com.hx.blog_v2.context.CacheContext;
 import com.hx.blog_v2.context.ConstantsContext;
+import com.hx.blog_v2.context.WebContext;
 import com.hx.blog_v2.dao.interf.BlogDao;
+import com.hx.blog_v2.domain.dto.MessageType;
+import com.hx.blog_v2.domain.dto.SessionUser;
 import com.hx.blog_v2.domain.form.BeanIdForm;
+import com.hx.blog_v2.domain.form.BlogSaveForm;
+import com.hx.blog_v2.domain.form.MessageSaveForm;
 import com.hx.blog_v2.domain.po.BlogPO;
+import com.hx.blog_v2.domain.po.RolePO;
+import com.hx.blog_v2.service.interf.MessageService;
 import com.hx.blog_v2.util.BlogConstants;
 import com.hx.blog_v2.util.DateUtils;
 import com.hx.common.interf.common.Result;
@@ -29,7 +36,11 @@ public class BlogRemoveHandler extends BizHandlerAdapter {
     @Autowired
     private BlogDao blogDao;
     @Autowired
+    private MessageService messageService;
+    @Autowired
     private CacheContext cacheContext;
+    @Autowired
+    private BlogConstants constants;
     @Autowired
     private ConstantsContext constantsContext;
     /**
@@ -82,6 +93,14 @@ public class BlogRemoveHandler extends BizHandlerAdapter {
                 cacheContext.sumStatistics().incBlogCnt(-1);
             }
             cacheContext.updateBlogInMonthFacet(po.getCreatedAtMonth(), false);
+
+            RolePO role = cacheContext.roleByName(constants.roleAdmin);
+            if (role != null) {
+                Result sendEmailResult = sendMessage(role, result, po);
+                if (!sendEmailResult.isSuccess()) {
+                    // ignore
+                }
+            }
         }
     }
 
@@ -94,12 +113,36 @@ public class BlogRemoveHandler extends BizHandlerAdapter {
      * @since 1.0
      */
     private void initIfNeed() {
-        if ((now5SecStatsMaxTsOff < 0) || (lastRefreshTs < constantsContext.systemConfigLastRefreshTs()) ) {
+        if ((now5SecStatsMaxTsOff < 0) || (lastRefreshTs < constantsContext.systemConfigLastRefreshTs())) {
             lastRefreshTs = constantsContext.systemConfigLastRefreshTs();
             now5SecStatsMaxTsOff = ((constantsContext.maxRealTimeCacheStasticsTimes
                     * constantsContext.realTimeChartTimeInterval) * 1000);
             recentlyStatsMaxTsOff = ((constantsContext.maxCacheStatisticsDays - 1) * oneDayTsOff);
         }
+    }
+
+    /**
+     * 向给定的 角色的用户发送邮件
+     *
+     * @param role role
+     * @return void
+     * @author Jerry.X.He
+     * @date 6/27/2017 8:16 PM
+     * @since 1.0
+     */
+    private Result sendMessage(RolePO role, Result result, BlogPO po) {
+        SessionUser user = (SessionUser) WebContext.getAttributeFromSession(BlogConstants.SESSION_USER);
+        MessageSaveForm msgForm = new MessageSaveForm();
+
+        msgForm.setSenderId(constantsContext.contextSystemUserId);
+        msgForm.setRoleIds(role.getId());
+        msgForm.setType(MessageType.SYSTEM.getType());
+        msgForm.setSubject("[HXBlog]博客提醒");
+        msgForm.setContent(" 用户 [" + user.getName() + "] 移除了一篇博客 : " +
+                " 原url : <a href='" + constantsContext.contextUrlPrefix + "static/main/blogDetail.html?id=" + result.getData() + "'" +
+                " color='red' > " +
+                po.getTitle() + "</a>, 请知晓 ! ");
+        return messageService.add(msgForm);
     }
 
 }

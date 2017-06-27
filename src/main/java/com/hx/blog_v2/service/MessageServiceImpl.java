@@ -1,24 +1,27 @@
 package com.hx.blog_v2.service;
 
+import com.hx.blog_v2.context.ConstantsContext;
 import com.hx.blog_v2.context.WebContext;
 import com.hx.blog_v2.dao.interf.MessageDao;
-import com.hx.blog_v2.dao.interf.UserDao;
-import com.hx.blog_v2.domain.dto.MessageType;
+import com.hx.blog_v2.domain.dto.EmailContentType;
 import com.hx.blog_v2.domain.dto.SessionUser;
 import com.hx.blog_v2.domain.dto.StringStringPair;
 import com.hx.blog_v2.domain.form.BeanIdForm;
 import com.hx.blog_v2.domain.form.MessageSaveForm;
 import com.hx.blog_v2.domain.form.MessageSearchForm;
 import com.hx.blog_v2.domain.mapper.*;
+import com.hx.blog_v2.domain.po.EmailPO;
 import com.hx.blog_v2.domain.po.MessagePO;
 import com.hx.blog_v2.domain.vo.MessageVO;
 import com.hx.blog_v2.service.interf.BaseServiceImpl;
+import com.hx.blog_v2.service.interf.EmailService;
 import com.hx.blog_v2.service.interf.MessageService;
 import com.hx.blog_v2.util.*;
 import com.hx.common.interf.common.Page;
 import com.hx.common.interf.common.Result;
 import com.hx.json.JSONArray;
 import com.hx.json.JSONObject;
+import com.hx.log.collection.CollectionUtils;
 import com.hx.log.log.LogPatternUtils;
 import com.hx.log.util.Tools;
 import com.hx.mongo.criteria.Criteria;
@@ -43,15 +46,24 @@ public class MessageServiceImpl extends BaseServiceImpl<MessagePO> implements Me
     @Autowired
     private MessageDao messageDao;
     @Autowired
-    private UserDao userDao;
+    private EmailService emailService;
     @Autowired
     private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private ConstantsContext constantsContext;
 
     @Override
     public Result add(MessageSaveForm params) {
         Set<String> userIds = new HashSet<>();
         if (!Tools.isEmpty(params.getUserIds())) {
             Collections.addAll(userIds, Tools.trimAllSpaces(params.getUserIds().split(",")));
+        }
+        if (!Tools.isEmpty(params.getUserNames())) {
+            String sql = " select id from user where user_name in ( %s ) ";
+            String[] roleIds = params.getUserNames().split(",");
+            String inSnippet = SqlUtils.wrapInSnippetForIds(Tools.asSet(roleIds));
+            List<String> userIdsByName = jdbcTemplate.query(String.format(sql, inSnippet), new OneStringMapper("id"));
+            userIds.addAll(userIdsByName);
         }
         if (!Tools.isEmpty(params.getRoleIds())) {
             String sql = " select user_id from rlt_user_role where role_id in ( %s ) ";
@@ -64,13 +76,20 @@ public class MessageServiceImpl extends BaseServiceImpl<MessagePO> implements Me
         SessionUser user = (SessionUser) WebContext.getAttributeFromSession(BlogConstants.SESSION_USER);
         List<MessagePO> allMsg = new ArrayList<>(userIds.size());
         for (String userId : userIds) {
-            allMsg.add(new MessagePO(user.getId(), userId, MessageType.SITE_INTERNAL.getType(), params.getSubject(), params.getContent()));
+            allMsg.add(new MessagePO(user.getId(), userId, params.getType(),
+                    params.getSubject(), params.getContent()));
         }
         Result result = messageDao.add(allMsg);
         if (!result.isSuccess()) {
             return result;
         }
 
+        if (constantsContext.sendEmailIfWithNotify && (!Tools.isEmpty(allMsg))) {
+            Result sendEmailResult = sendEmailNotify(userIds, allMsg);
+            if (!sendEmailResult.isSuccess()) {
+                return sendEmailResult;
+            }
+        }
         return ResultUtils.success(collectMessageIds(allMsg));
     }
 
@@ -100,35 +119,6 @@ public class MessageServiceImpl extends BaseServiceImpl<MessagePO> implements Me
         }
         page.setTotalRecord(totalRecord);
         return ResultUtils.success(page);
-    }
-
-    @Override
-    public Result unread() {
-        String userId = WebContext.getStrAttrFromSession(BlogConstants.SESSION_USER_ID);
-        String selectSql = " select type, sender_id, date_format(created_at, '%Y-%m-%d') as created_at, subject, content from message " +
-                " where deleted = 0 and receiver_id = '" + userId + "' and consumed = 0 order by created_at limit 0, 5 ";
-        String countSql = " select count(*) as totalRecord from message where deleted = 0 and receiver_id = '" + userId + "' and consumed = 0 ";
-        List<MessageVO> msgToRead = jdbcTemplate.query(selectSql, new MessageVOMapper());
-        String cnt = jdbcTemplate.queryForObject(countSql, new OneStringMapper("totalRecord"));
-        if (Tools.isEmpty(msgToRead)) {
-            return ResultUtils.success(new JSONObject().element("cnt", cnt)
-                    .element("list", Collections.emptyList()));
-        }
-
-        String selectUserSql = " select id, user_name from user where id in ( %s ) ";
-        List<StringStringPair> id2UserName = jdbcTemplate.query(String.format(selectUserSql, SqlUtils.wrapInSnippet(msgToRead)),
-                new StringStringPairMapper("id", "user_name"));
-        List<StringStringPair> list = new ArrayList<>(msgToRead.size());
-        for (MessageVO vo : msgToRead) {
-            StringStringPair pair = BizUtils.findByLogisticId(id2UserName, vo.getSenderId());
-            String userName = (pair == null) ? "unknown" : pair.getRight();
-            String left = LogPatternUtils.formatLogInfo(" [{}] [{}] at [{}] say ", vo.getType(), userName, vo.getCreatedAt());
-            list.add(new StringStringPair(left, vo.getContent()));
-        }
-
-        JSONObject data = new JSONObject().element("cnt", cnt)
-                .element("list", list);
-        return ResultUtils.success(data);
     }
 
     @Override
@@ -169,6 +159,35 @@ public class MessageServiceImpl extends BaseServiceImpl<MessagePO> implements Me
             return result;
         }
         return ResultUtils.success(params.getId());
+    }
+
+    @Override
+    public Result unread() {
+        String userId = WebContext.getStrAttrFromSession(BlogConstants.SESSION_USER_ID);
+        String selectSql = " select type, sender_id, date_format(created_at, '%Y-%m-%d') as created_at, subject, content from message " +
+                " where deleted = 0 and receiver_id = '" + userId + "' and consumed = 0 order by created_at limit 0, 5 ";
+        String countSql = " select count(*) as totalRecord from message where deleted = 0 and receiver_id = '" + userId + "' and consumed = 0 ";
+        List<MessageVO> msgToRead = jdbcTemplate.query(selectSql, new MessageVOMapper());
+        String cnt = jdbcTemplate.queryForObject(countSql, new OneStringMapper("totalRecord"));
+        if (Tools.isEmpty(msgToRead)) {
+            return ResultUtils.success(new JSONObject().element("cnt", cnt)
+                    .element("list", Collections.emptyList()));
+        }
+
+        String selectUserSql = " select id, user_name from user where id in ( %s ) ";
+        List<StringStringPair> id2UserName = jdbcTemplate.query(String.format(selectUserSql, SqlUtils.wrapInSnippet(msgToRead)),
+                new StringStringPairMapper("id", "user_name"));
+        List<StringStringPair> list = new ArrayList<>(msgToRead.size());
+        for (MessageVO vo : msgToRead) {
+            StringStringPair pair = BizUtils.findByLogisticId(id2UserName, vo.getSenderId());
+            String userName = (pair == null) ? "unknown" : pair.getRight();
+            String left = LogPatternUtils.formatLogInfo(" [{}] [{}] at [{}] say ", vo.getType(), userName, vo.getCreatedAt());
+            list.add(new StringStringPair(left, vo.getContent()));
+        }
+
+        JSONObject data = new JSONObject().element("cnt", cnt)
+                .element("list", list);
+        return ResultUtils.success(data);
     }
 
     @Override
@@ -304,5 +323,43 @@ public class MessageServiceImpl extends BaseServiceImpl<MessagePO> implements Me
 
         return "unknown";
     }
+
+    /**
+     * 给给定的用户列表 发送邮件
+     *
+     * @param userIds userIds
+     * @param allMsg  allMsg
+     * @return void
+     * @author Jerry.X.He
+     * @date 6/27/2017 7:28 PM
+     * @since 1.0
+     */
+    private Result sendEmailNotify(Collection<String> userIds, List<MessagePO> allMsg) {
+        String getEmailSqlTemplate = " select user_name, email from user where id in ( %s ) ";
+        String getEmailSql = String.format(getEmailSqlTemplate, SqlUtils.wrapInSnippetForIds(userIds));
+        List<StringStringPair> userName2Email = jdbcTemplate.query(getEmailSql,
+                new StringStringPairMapper("user_name", "email"));
+        List<String> to = new ArrayList<>(userName2Email.size());
+        for (StringStringPair pair : userName2Email) {
+            if (!Tools.isEmpty(pair.getRight())) {
+                to.add(pair.getRight());
+            }
+        }
+        if(CollectionUtils.isAnyNull(to)) {
+            return ResultUtils.success(" no receliver ! ");
+        }
+
+        MessagePO msg = allMsg.get(0);
+        EmailPO email = new EmailPO(constantsContext.emailAuthUserName,
+                to, (String) null, msg.getSubject(), msg.getContent(),
+                EmailContentType.TEXT_HTML.getType());
+        Result sendEmailResult = emailService.sendEmail(email);
+        if (!sendEmailResult.isSuccess()) {
+            return sendEmailResult;
+        }
+
+        return ResultUtils.success();
+    }
+
 
 }

@@ -270,6 +270,14 @@ public final class BlogConstants {
      */
     public static final String IMAGE_URL_PREFIX = "image.url.prefix";
     /**
+     * 当前服务上下文的 url 前缀
+     */
+    public static final String CONTEXT_URL_PREFIX = "context.url.prefix";
+    /**
+     * 当前服务上下文的 url 前缀
+     */
+    public static final String CONTEXT_SYSTEM_USER_ID = "context.system.user.id";
+    /**
      * 用户密码的salt的位数
      */
     public static final String PWD_SALT_NUMS = "user.pwd.salt_nums";
@@ -373,6 +381,10 @@ public final class BlogConstants {
      * 校验访问次数的周期
      */
     public static final String VISIT_CNT_VALIDATE_PERIOD = "limit.visit_cnt.period";
+    /**
+     * 发送邮件的用户名
+     */
+    public static final String SEND_EMAIL_IF_WITH_NOTIFY = "email.if.with.notify";
     /**
      * 发送邮件的用户名
      */
@@ -485,6 +497,21 @@ public final class BlogConstants {
      */
     @Value("${ip_addr.req.log_pattern}")
     public String ipAddrReqLogPattern = "map('http://ip.taobao.com//service/getIpInfo.php?ip=' + $this)";
+    /**
+     * role - admin
+     */
+    @Value("${role.admin}")
+    public String roleAdmin = "admin";
+    /**
+     * role - editor
+     */
+    @Value("${role.editor}")
+    public String roleEditor = "editor";
+    /**
+     * role - admin
+     */
+    @Value("${role.guest}")
+    public String roleGuest = "guest";
 
     // -------------------- 辅助方法 --------------------------
 

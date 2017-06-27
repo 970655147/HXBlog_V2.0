@@ -193,7 +193,7 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourcePO> implements 
 
         Result removeOldResult = rltRoleResourceDao.remove(Criteria.eq("role_id", params.getRoleId()), true);
         if (!removeOldResult.isSuccess()) {
-            return removeOldResult;
+            Log.info(" init resourceInfo for role [" + params.getRoleId() + "]");
         }
         if (!CollectionUtils.isEmpty(roleResources)) {
             Result addResourceResult = rltRoleResourceDao.add(roleResources);

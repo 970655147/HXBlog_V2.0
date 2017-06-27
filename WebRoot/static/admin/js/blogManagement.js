@@ -43,7 +43,7 @@ layui.define(['element', 'laypage', 'layer', 'form', 'pagesize'], function (expo
                         html += '<tr>';
                         html += '<td>' + item.id + '</td>';
                         html += '<td><img src="' + item.blogCreateTypeImgUrl + '" /></td>';
-                        html += '<td>' + item.title + '</td>';
+                        html += '<td> <a href="/static/main/blogDetail.html?id=' + item.id + '" target="_blank" >' + item.title + '</a></td>';
                         html += '<td>' + item.author + '</td>';
                         html += '<td>' + item.summary + '</td>';
                         html += '<td>' + item.createdAt + '</td>';

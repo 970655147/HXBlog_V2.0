@@ -275,7 +275,7 @@ function ajax(config) {
     }
     var beforeSucc = function (resp, status, xhr) {
         var tokenFromServer = xhr.getResponseHeader(tokenHeader)
-        if(! isEmpty(tokenFromServer)) {
+        if (!isEmpty(tokenFromServer)) {
             // hide this !!
             var tokenClientHandled = hex_md5(tokenFromServer)
             localStorage.setItem(tokenHeader, tokenClientHandled)
@@ -291,7 +291,7 @@ function ajax(config) {
                 locateRoot(window).location.href = "/static/admin/index.html"
             })
             return false
-        } else if ((203 === resp.code) || (204 === resp.code) || (205 === resp.code) ) {
+        } else if ((203 === resp.code) || (204 === resp.code) || (205 === resp.code)) {
             alertIfException(resp.data, function () {
                 layer.close(interceptorDialog)
                 interceptorDialog = null
@@ -329,7 +329,7 @@ function alertIfException(msg, callback) {
  * @returns {*}
  */
 function locateRoot(window) {
-    if(window.parent) {
+    if (window.parent) {
         return window.parent
     }
     return window
@@ -429,6 +429,64 @@ var prettyJson = function (json, options) {
         }
     );
     return formatted;
+}
+
+/**
+ * 转义给定的字符串
+ * @param str
+ * @param needToTransfer
+ * @param transferChar
+ */
+function transfer(str, needToTransfer, transferChar) {
+    var sb = new StringBuilder()
+    for (var i = 0, len = str.length; i < len; i++) {
+        var ch = str.charAt(i)
+        if (contains(needToTransfer, ch)) {
+            sb.append(transferChar)
+        }
+        sb.append(ch)
+    }
+
+    return sb.toString()
+}
+
+/**
+ * 反转义给定的字符
+ * @param str
+ * @param needToTransfer
+ * @param transferChar
+ */
+function detransfer(str, needToTransfer, transferChar) {
+    var sb = new StringBuilder()
+    for (var i = 0, len = str.length; i < len; i++) {
+        var ch = str.charAt(i)
+        if((ch === transferChar) && (contains(needToTransfer, str.charAt(i+1))) ) {
+            sb.append(str.charAt(i+1))
+            i ++;
+        } else {
+            sb.append(ch)
+        }
+    }
+
+    return sb.toString()
+}
+
+/**
+ * 转义', "
+ * @param str
+ * @returns {*}
+ */
+function transferQuote(str) {
+    return transfer(str, ['\'', '"'], "\\")
+}
+
+/**
+ * 转义', "
+ * @param str
+ * @returns {*}
+ */
+function detransferQuote(str) {
+    return detransfer(str, ['\'', '"'], "\\")
 }
 
 // -------------------------------------------------- to be continued ------------------------------------------------

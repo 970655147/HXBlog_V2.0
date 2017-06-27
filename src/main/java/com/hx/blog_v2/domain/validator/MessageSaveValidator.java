@@ -26,6 +26,8 @@ public class MessageSaveValidator implements Validator<MessageSaveForm> {
     @Autowired
     private CommentContentValidator commentContentValidator;
     @Autowired
+    private MessageTypeValidator messageTypeValidator;
+    @Autowired
     private BeanIdsStrValidator beanIdsStrValidator;
     @Autowired
     private BeanIdStrValidator beanIdStrValidator;
@@ -40,6 +42,12 @@ public class MessageSaveValidator implements Validator<MessageSaveForm> {
             }
         }
 
+        if (!Tools.isEmpty(form.getSenderId())) {
+            return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " ! ");
+        }
+        if (!Tools.isEmpty(form.getUserNames())) {
+            return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " ! ");
+        }
         Result errResult = beanIdsStrValidator.validate(form.getUserIds(), extra);
         if (!errResult.isSuccess()) {
             return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " 指定的 userId 列表格式不正确 ! ");
@@ -47,6 +55,10 @@ public class MessageSaveValidator implements Validator<MessageSaveForm> {
         errResult = beanIdsStrValidator.validate(form.getRoleIds(), extra);
         if (!errResult.isSuccess()) {
             return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " 指定的 roleIds 列表格式不正确 ! ");
+        }
+        errResult = messageTypeValidator.validate(form.getType(), extra);
+        if (!errResult.isSuccess()) {
+            return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " type 不合法 ! ");
         }
         errResult = summaryValidator.validate(form.getSubject(), extra);
         if (!errResult.isSuccess()) {

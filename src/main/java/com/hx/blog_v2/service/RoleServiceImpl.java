@@ -151,7 +151,7 @@ public class RoleServiceImpl extends BaseServiceImpl<RolePO> implements RoleServ
 
         Result removeOldRltRresult = rltUserRoleDao.remove(Criteria.eq("user_id", params.getUserId()), true);
         if (!removeOldRltRresult.isSuccess()) {
-            return removeOldRltRresult;
+            Log.info(" init roleInfo for user [" + params.getUserId() + "]");
         }
         if (!CollectionUtils.isEmpty(userRoles)) {
             Result addNewRoleResult = rltUserRoleDao.add(userRoles);

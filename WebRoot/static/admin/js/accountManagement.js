@@ -49,7 +49,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
                             html += '<td>' + item.lastLoginIp + '</td>';
                             html += '<td>' + item.lastLoginAt + '</td>';
                             html += '<td>' + item.createdAt + '</td>';
-                            html += '<td><button class="layui-btn layui-btn-small layui-btn-normal" onclick="layui.funcs.editData(' + item.id + ',\'' + item.userName + '\',\'' + item.nickName + '\',\'' + item.title + '\',\'' + item.email + '\',\'' + item.headImgUrl + '\',\'' + item.motto + '\')" ><i class="layui-icon">&#xe642;</i></button></td>';
+                            html += '<td><button class="layui-btn layui-btn-small layui-btn-normal" onclick="layui.funcs.editData(' + item.id + ',\'' + item.userName + '\',\'' + item.nickName + '\',\'' + item.title + '\',\'' + item.email + '\',\'' + item.headImgUrl + '\',\'' + transferQuote(encodeURI(item.motto)) + '\')" ><i class="layui-icon">&#xe642;</i></button></td>';
                             html += '<td><button class="layui-btn layui-btn-small layui-btn-danger" onclick="layui.funcs.deleteData(' + item.id + ')"><i class="layui-icon">&#xe640;</i></button></td>';
                             html += '</tr>';
                         }
@@ -175,7 +175,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
             html += '<img id="headImgShow" src="" width="40px" height="40px" />';
             html += '<input  style="width:87%;margin: auto;color: #000!important;" name="headImgUrl" value="' + headImgUrl + '" lay-verify="url"  class="layui-input" onblur="layui.datalist.headImgShow()" >';
             html += '<label class="layui-form-label" style="border: none;width: 180px;" >个性签名:</label>';
-            html += '<input  style="width:87%;margin: auto;color: #000!important;" name="motto" value="' + motto + '" lay-verify="required"  class="layui-input" >';
+            html += '<input  style="width:87%;margin: auto;color: #000!important;" name="motto" value="' + decodeURI(detransferQuote(motto)) + '" lay-verify="required"  class="layui-input" >';
             html += '<div class="layui-form-item">';
             html += '<div class="layui-input-inline" style="margin:10px auto 0 auto;display: block;float: none;">';
             html += '<button class="layui-btn" id="submit"  lay-submit="" lay-filter="updateAccountSubmit">立即修改</button>';

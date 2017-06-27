@@ -53,7 +53,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
                         var item = comments[idx];
                         html += '<tr>';
                         html += '<td>' + item.id + '</td>';
-                        html += '<td><a href="/static/main/blogDetail.html?id=' + item.blogId + '" >' + item.blogName + '</a></td>';
+                        html += '<td><a href="/static/main/blogDetail.html?id=' + item.blogId + '" target="_blank" >' + item.blogName + '</a></td>';
                         html += '<td>' + item.floorId + '</td>';
                         html += '<td>' + item.commentId + '</td>';
                         html += '<td>' + item.name + '</td>';
@@ -61,9 +61,9 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
                         html += '<td>' + item.toUser + '</td>';
                         html += '<td>' + item.comment + '</td>';
                         html += '<td>' + item.createdAt + '</td>';
-                        html += '<td><i class="layui-icon layui-btn-small" style="cursor:pointer;font-size: 30px; color: #FA4B2A;vertical-align: middle;" onclick="layui.funcs.addReply(' + item.id + ', ' + item.blogId + ', ' + item.floorId + ', ' + item.commentId + ',\'' + item.name + '\',\'' + encodeURI(item.comment) + '\')" >&#x1005;</i> </td>';
+                        html += '<td><i class="layui-icon layui-btn-small" style="cursor:pointer;font-size: 30px; color: #FA4B2A;vertical-align: middle;" onclick="layui.funcs.addReply(' + item.id + ', ' + item.blogId + ', ' + item.floorId + ', ' + item.commentId + ',\'' + item.name + '\',\'' + transferQuote(encodeURI(item.comment)) + '\')" >&#x1005;</i> </td>';
                         html += '<td><button class="layui-btn layui-btn-small" onclick=\'layui.funcs.showData("' + item.blogName + '", ' + item.blogId + ', ' + item.floorId + ')\'><i class="layui-icon">&#xe63a;</i></button></td>';
-                        html += '<td><button class="layui-btn layui-btn-small layui-btn-normal" onclick="layui.funcs.editData(' + item.id + ',\'' + item.toUser + '\',\'' + encodeURI(item.comment) + '\')"><i class="layui-icon">&#xe642;</i></button></td>';
+                        html += '<td><button class="layui-btn layui-btn-small layui-btn-normal" onclick="layui.funcs.editData(' + item.id + ',\'' + item.toUser + '\',\'' + transferQuote(encodeURI(item.comment)) + '\')"><i class="layui-icon">&#xe642;</i></button></td>';
                         html += '<td><button class="layui-btn layui-btn-small layui-btn-danger" onclick="layui.funcs.deleteData(' + item.id + ')"><i class="layui-icon">&#xe640;</i></button></td>';
                         html += '</tr>';
                     }
@@ -181,7 +181,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
             html += '<input type="hidden" name="commentId" value="' + commentId + '"/>';
             html += '<input type="hidden" name="toUser" value="' + toUser + '"/>';
             html += '<label class="layui-form-label" style="border: none" >评论内容:</label>';
-            html += '<div  style="width:87%;margin: auto;color: #000!important;"  readonly="true" class="layui-textarea layui-disabled" >' + decodeURI(comment) + '</div>';
+            html += '<div  style="width:87%;margin: auto;color: #000!important;"  readonly="true" class="layui-textarea layui-disabled" >' + decodeURI(detransferQuote(comment)) + '</div>';
             html += '<label class="layui-form-label" style="border: none">回复内容:</label>';
             html += '<textarea placeholder="请输入回复内容" name="comment" lay-verify="required" style="width:87%;margin: auto" class="layui-textarea " >[reply]' + toUser + '[/reply]</textarea>';
             html += '<div class="layui-form-item">';
@@ -207,7 +207,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
             html += '<label class="layui-form-label" style="border: none" >目标用户:</label>';
             html += '<input  style="width:87%;margin: auto;color: #000!important;" name="toUser" value="' + toUser + '" class="layui-input" lay-verify="required" >';
             html += '<label class="layui-form-label" style="border: none">回复内容:</label>';
-            html += '<textarea placeholder="请输入回复内容" name="comment" lay-verify="required" style="width:87%;margin: auto" class="layui-textarea " > ' + decodeURI(comment) + ' </textarea>';
+            html += '<textarea placeholder="请输入回复内容" name="comment" lay-verify="required" style="width:87%;margin: auto" class="layui-textarea " > ' + decodeURI(detransferQuote(comment)) + ' </textarea>';
             html += '<div class="layui-form-item">';
             html += '<div class="layui-input-inline" style="margin:10px auto 0 auto;display: block;float: none;">';
             html += '<button class="layui-btn" id="submit"  lay-submit="" lay-filter="editCommentSubmit">立即提交</button>';

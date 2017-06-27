@@ -1,5 +1,6 @@
 package com.hx.blog_v2.controller.admin;
 
+import com.hx.blog_v2.context.WebContext;
 import com.hx.blog_v2.domain.ErrorCode;
 import com.hx.blog_v2.domain.form.BeanIdForm;
 import com.hx.blog_v2.domain.form.MessageSaveForm;
@@ -10,6 +11,7 @@ import com.hx.blog_v2.domain.validator.MessageSearchValidator;
 import com.hx.blog_v2.domain.validator.PageValidator;
 import com.hx.blog_v2.domain.vo.MessageVO;
 import com.hx.blog_v2.service.interf.MessageService;
+import com.hx.blog_v2.util.BlogConstants;
 import com.hx.common.interf.common.Result;
 import com.hx.common.result.SimplePage;
 import com.hx.blog_v2.util.ResultUtils;
@@ -51,6 +53,7 @@ public class MessageController {
             return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " id 不为空 ! ");
         }
 
+        params.setSenderId(WebContext.getStrAttrFromSession(BlogConstants.SESSION_USER_ID));
         return messageService.add(params);
     }
 

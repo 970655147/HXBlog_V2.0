@@ -37,25 +37,39 @@ public class EmailPO implements JSONTransferable<EmailPO> {
     @JSONField({"createdAt", "createdAt"})
     private String createdAt;
 
-    public EmailPO(String from, String to, String subject, String content, String contentType) {
-        this(from, to, null, subject, content, contentType);
-    }
-
-    public EmailPO(String from, String to, String cc, String subject, String content, String contentType) {
+    public EmailPO(String from, List<String> to, List<String> cc, String subject, String content, String contentType) {
         this();
         Tools.assert0(to != null, "'to' can't be null !");
+        Tools.assert0(!Tools.isEmpty(to), "'to' can't be null !");
 
         this.to = new ArrayList<>();
         this.cc = new ArrayList<>();
 
         this.from = from;
-        this.to.add(to);
+        this.to.addAll(to);
         if (cc != null) {
-            this.to.add(cc);
+            for (String ccVal : cc) {
+                if (!Tools.isEmpty(ccVal)) {
+                    this.cc.add(ccVal);
+                }
+            }
         }
         this.subject = subject;
         this.content = content;
         this.contentType = contentType;
+    }
+
+    public EmailPO(String from, List<String> to, String cc, String subject, String content, String contentType) {
+        this(from, to, Collections.singletonList(cc), subject, content, contentType);
+    }
+
+    public EmailPO(String from, String to, String cc, String subject, String content, String contentType) {
+        this(from, Collections.singletonList(to), (cc == null) ? null : Collections.singletonList(cc),
+                subject, content, contentType);
+    }
+
+    public EmailPO(String from, String to, String subject, String content, String contentType) {
+        this(from, to, null, subject, content, contentType);
     }
 
     public EmailPO() {

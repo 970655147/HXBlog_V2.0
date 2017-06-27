@@ -1,5 +1,7 @@
 package com.hx.blog_v2.domain.form;
 
+import com.hx.blog_v2.domain.dto.MessageType;
+
 /**
  * 保存消息的接收实体
  *
@@ -13,8 +15,11 @@ public class MessageSaveForm {
      * msgId
      */
     private String id;
+    private String senderId;
     private String userIds;
+    private String userNames;
     private String roleIds;
+    private String type;
     private String subject;
     private String content;
 
@@ -29,6 +34,14 @@ public class MessageSaveForm {
         this.id = id;
     }
 
+    public String getSenderId() {
+        return senderId;
+    }
+
+    public void setSenderId(String senderId) {
+        this.senderId = senderId;
+    }
+
     public String getUserIds() {
         return userIds;
     }
@@ -37,12 +50,28 @@ public class MessageSaveForm {
         this.userIds = userIds;
     }
 
+    public String getUserNames() {
+        return userNames;
+    }
+
+    public void setUserNames(String userNames) {
+        this.userNames = userNames;
+    }
+
     public String getRoleIds() {
         return roleIds;
     }
 
     public void setRoleIds(String roleIds) {
         this.roleIds = roleIds;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getSubject() {

@@ -511,6 +511,19 @@ public class CacheContext {
         return rolesById.get(id);
     }
 
+    /**
+     * 根据 name 查询 role
+     *
+     * @param name name
+     * @return com.hx.blog_v2.domain.po.RolePO
+     * @author Jerry.X.He
+     * @date 6/27/2017 8:13 PM
+     * @since 1.0
+     */
+    public RolePO roleByName(String name) {
+        return BizUtils.findByLogisticId(rolesById, name);
+    }
+
     public void putRole(RolePO po) {
         rolesById.put(po.getId(), po);
     }

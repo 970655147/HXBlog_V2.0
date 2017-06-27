@@ -1,5 +1,6 @@
 package com.hx.blog_v2.dao.interf;
 
+import com.hx.blog_v2.domain.ErrorCode;
 import com.hx.blog_v2.domain.form.BeanIdForm;
 import com.hx.blog_v2.util.BlogConstants;
 import com.hx.common.interf.common.Result;
@@ -53,13 +54,13 @@ public abstract class BaseDaoImpl<T extends JSONTransferable<T>> extends MysqlBa
             result = findById(params.getId(), BlogConstants.LOAD_ALL_CONFIG);
         } catch (Exception e) {
             e.printStackTrace();
-            return ResultUtils.failed(Tools.errorMsg(e));
+            return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, Tools.errorMsg(e));
         }
 
         if (result != null) {
             return ResultUtils.success(result);
         }
-        return ResultUtils.failed("记录不存在 !");
+        return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, "记录不存在 !");
     }
 
     @Override
@@ -69,13 +70,13 @@ public abstract class BaseDaoImpl<T extends JSONTransferable<T>> extends MysqlBa
             result = findOne(query, BlogConstants.LOAD_ALL_CONFIG);
         } catch (Exception e) {
             e.printStackTrace();
-            return ResultUtils.failed(Tools.errorMsg(e));
+            return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, Tools.errorMsg(e));
         }
 
         if (result != null) {
             return ResultUtils.success(result);
         }
-        return ResultUtils.failed("记录不存在 !");
+        return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, "记录不存在 !");
     }
 
     @Override
@@ -85,13 +86,13 @@ public abstract class BaseDaoImpl<T extends JSONTransferable<T>> extends MysqlBa
             result = findMany(query, BlogConstants.LOAD_ALL_CONFIG);
         } catch (Exception e) {
             e.printStackTrace();
-            return ResultUtils.failed(Tools.errorMsg(e));
+            return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, Tools.errorMsg(e));
         }
 
         if (result != null) {
             return ResultUtils.success(result);
         }
-        return ResultUtils.failed(" ??? ");
+        return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " ??? ");
     }
 
     @Override
@@ -101,13 +102,13 @@ public abstract class BaseDaoImpl<T extends JSONTransferable<T>> extends MysqlBa
             result = findMany(query, limit, sortBy, BlogConstants.LOAD_ALL_CONFIG);
         } catch (Exception e) {
             e.printStackTrace();
-            return ResultUtils.failed(Tools.errorMsg(e));
+            return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, Tools.errorMsg(e));
         }
 
         if (result != null) {
             return ResultUtils.success(result);
         }
-        return ResultUtils.failed(" ??? ");
+        return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " ??? ");
     }
 
     @Override
@@ -116,7 +117,7 @@ public abstract class BaseDaoImpl<T extends JSONTransferable<T>> extends MysqlBa
             insertOne(po, BlogConstants.ADD_BEAN_CONFIG);
         } catch (Exception e) {
             e.printStackTrace();
-            return ResultUtils.failed(Tools.errorMsg(e));
+            return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, Tools.errorMsg(e));
         }
 
         return ResultUtils.success();
@@ -128,7 +129,7 @@ public abstract class BaseDaoImpl<T extends JSONTransferable<T>> extends MysqlBa
             insertMany(poes, BlogConstants.ADD_BEAN_CONFIG);
         } catch (Exception e) {
             e.printStackTrace();
-            return ResultUtils.failed(Tools.errorMsg(e));
+            return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, Tools.errorMsg(e));
         }
 
         return ResultUtils.success();
@@ -141,11 +142,11 @@ public abstract class BaseDaoImpl<T extends JSONTransferable<T>> extends MysqlBa
             modified = updateById(po, BlogConstants.UPDATE_BEAN_CONFIG)
                     .getModifiedCount();
             if (modified == 0) {
-                return ResultUtils.failed("该记录不存在 !");
+                return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, "该记录不存在 !");
             }
         } catch (Exception e) {
             e.printStackTrace();
-            return ResultUtils.failed(Tools.errorMsg(e));
+            return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, Tools.errorMsg(e));
         }
 
         return ResultUtils.success(modified);
@@ -162,11 +163,11 @@ public abstract class BaseDaoImpl<T extends JSONTransferable<T>> extends MysqlBa
             }
 
             if (modified == 0) {
-                return ResultUtils.failed("记录不存在 !");
+                return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, "记录不存在 !");
             }
         } catch (Exception e) {
             e.printStackTrace();
-            return ResultUtils.failed(Tools.errorMsg(e));
+            return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, Tools.errorMsg(e));
         }
 
         return ResultUtils.success(modified);
@@ -188,11 +189,11 @@ public abstract class BaseDaoImpl<T extends JSONTransferable<T>> extends MysqlBa
             }
 
             if (modified == 0) {
-                return ResultUtils.failed("记录不存在 !");
+                return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, "记录不存在 !");
             }
         } catch (Exception e) {
             e.printStackTrace();
-            return ResultUtils.failed(Tools.errorMsg(e));
+            return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, Tools.errorMsg(e));
         }
 
         return ResultUtils.success(modified);

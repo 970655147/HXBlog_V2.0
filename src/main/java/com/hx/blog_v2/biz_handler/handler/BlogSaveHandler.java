@@ -5,11 +5,12 @@ import com.hx.blog_v2.biz_handler.interf.BizContext;
 import com.hx.blog_v2.context.CacheContext;
 import com.hx.blog_v2.context.ConstantsContext;
 import com.hx.blog_v2.context.WebContext;
-import com.hx.blog_v2.domain.dto.EmailContentType;
+import com.hx.blog_v2.domain.dto.MessageType;
 import com.hx.blog_v2.domain.dto.SessionUser;
 import com.hx.blog_v2.domain.form.BlogSaveForm;
-import com.hx.blog_v2.domain.po.EmailPO;
-import com.hx.blog_v2.service.interf.EmailService;
+import com.hx.blog_v2.domain.form.MessageSaveForm;
+import com.hx.blog_v2.domain.po.RolePO;
+import com.hx.blog_v2.service.interf.MessageService;
 import com.hx.blog_v2.util.BlogConstants;
 import com.hx.blog_v2.util.DateUtils;
 import com.hx.common.interf.common.Result;
@@ -30,9 +31,11 @@ import java.util.Date;
 public class BlogSaveHandler extends BizHandlerAdapter {
 
     @Autowired
-    private EmailService emailService;
+    private MessageService messageService;
     @Autowired
     private CacheContext cacheContext;
+    @Autowired
+    private BlogConstants constants;
     @Autowired
     private ConstantsContext constantsContext;
 
@@ -53,19 +56,39 @@ public class BlogSaveHandler extends BizHandlerAdapter {
                     cacheContext.updateBlogInMonthFacet(createdAtMonth, true);
                 }
 
-                EmailPO email = new EmailPO(constantsContext.emailAuthUserName,
-                        "970655147@qq.com", "发表博客提醒",
-                        user.getName() + " 发表了一篇博客 : " + params.getTitle(),
-                        EmailContentType.TEXT_HTML.getType());
-                Result sendResult = emailService.sendEmail(email);
-                if (!sendResult.isSuccess()) {
-                    result.setSuccess(sendResult.isSuccess());
-                    result.setCode(sendResult.getCode());
-                    result.setMsg(sendResult.getMsg());
-                    result.setData(sendResult.getData());
+                RolePO role = cacheContext.roleByName(constants.roleAdmin);
+                if (role != null) {
+                    Result sendEmailResult = sendMessage(role, result, params);
+                    if (!sendEmailResult.isSuccess()) {
+                        // ignore
+                    }
                 }
             }
         }
+    }
+
+    /**
+     * 向给定的 角色的用户发送邮件
+     *
+     * @param role role
+     * @return void
+     * @author Jerry.X.He
+     * @date 6/27/2017 8:16 PM
+     * @since 1.0
+     */
+    private Result sendMessage(RolePO role, Result result, BlogSaveForm params) {
+        SessionUser user = (SessionUser) WebContext.getAttributeFromSession(BlogConstants.SESSION_USER);
+        MessageSaveForm msgForm = new MessageSaveForm();
+
+        msgForm.setSenderId(constantsContext.contextSystemUserId);
+        msgForm.setRoleIds(role.getId());
+        msgForm.setType(MessageType.SYSTEM.getType());
+        msgForm.setSubject("[HXBlog]博客提醒");
+        msgForm.setContent(" 用户 [" + user.getName() + "] 发表了一篇博客 : " +
+                " <a href='" + constantsContext.contextUrlPrefix + "static/main/blogDetail.html?id=" + result.getData() + "'" +
+                " color='red' > " +
+                params.getTitle() + "</a>, 请注意审核该内容 ! ");
+        return messageService.add(msgForm);
     }
 
 }

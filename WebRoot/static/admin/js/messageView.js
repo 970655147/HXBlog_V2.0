@@ -53,8 +53,8 @@ layui.define(['element', 'laypage', 'layer', 'form', 'pagesize'], function (expo
                         html += '<td>' + item.createdAt + '</td>';
                         html += '<td>' + item.subject + '</td>';
                         html += '<td>' + item.content + '</td>';
-                        html += '<td><button class="layui-btn layui-btn-small layui-btn-normal" onclick="layui.funcs.showData(' + item.id + ', \'' + item.senderName + '\', \'' + item.createdAt + '\', \'' + item.subject + '\', \'' + encodeURI(item.content) + '\')"><i class="layui-icon">&#x1005;</i></button></td>';
-                        html += '<td><button class="layui-btn layui-btn-small layui-btn-normal" onclick="layui.funcs.addReply(' + item.id + ', \'' + item.senderId + '\', \'' + item.senderName + '\', \'' + item.createdAt + '\', \'' + item.subject + '\', \'' + encodeURI(item.content) + '\')"><i class="layui-icon">&#xe63a;</i></button></td>';
+                        html += '<td><button class="layui-btn layui-btn-small layui-btn-normal" onclick="layui.funcs.showData(' + item.id + ', \'' + item.senderName + '\', \'' + item.createdAt + '\', \'' + item.subject + '\', \'' + transferQuote(encodeURI(item.content)) + '\')"><i class="layui-icon">&#x1005;</i></button></td>';
+                        html += '<td><button class="layui-btn layui-btn-small layui-btn-normal" onclick="layui.funcs.addReply(' + item.id + ', \'' + item.senderId + '\', \'' + item.senderName + '\', \'' + item.createdAt + '\', \'' + item.subject + '\', \'' + transferQuote(encodeURI(item.content)) + '\')"><i class="layui-icon">&#xe63a;</i></button></td>';
                         html += '</tr>';
                     }
                     $('#dataContent').html(html);
@@ -113,7 +113,7 @@ layui.define(['element', 'laypage', 'layer', 'form', 'pagesize'], function (expo
             html += '<div class="layui-field-box layui-form">';
             html += '<input style="width:87%;margin: auto;color: #000!important;" value="' + subject + '" lay-verify="required"  class="layui-input" readonly >';
             html += '<hr>'
-            html += '<div style="width:87%;margin-left:20px;color: #000!important; height:200px" lay-verify="required" name="content" class="layui-area" readonly >' + decodeURI(content) + '</div>';
+            html += '<div style="width:87%;margin-left:20px;color: #000!important; height:200px" lay-verify="required" name="content" class="layui-area" readonly >' + decodeURI(detransferQuote(content)) + '</div>';
             html += '<hr>';
             html += '</div>';
             html += '</fieldset>';
@@ -131,7 +131,7 @@ layui.define(['element', 'laypage', 'layer', 'form', 'pagesize'], function (expo
             html += '<form id="addReplyForm" class="layui-form layui-form-pane" action="/admin/message/add" method="post">';
             html += '<input type="hidden" name="userIds" value="' + senderId + '"/>';
             html += '<label class="layui-form-label" style="border: none" >消息内容:</label>';
-            html += '<div  style="width:87%;margin: auto;color: #000!important;"  readonly="true" class="layui-textarea layui-disabled" >' + decodeURI(content) + '</div>';
+            html += '<div  style="width:87%;margin: auto;color: #000!important;"  readonly="true" class="layui-textarea layui-disabled" >' + decodeURI(detransferQuote(content)) + '</div>';
             html += '<label class="layui-form-label" style="border: none">主题:</label>';
             html += '<input placeholder="请输入回复主题" name="subject" lay-verify="required" style="width:87%;margin: auto" class="layui-input " />';
             html += '<label class="layui-form-label" style="border: none">回复内容:</label>';
@@ -213,4 +213,3 @@ function mapMessageUrl(read) {
     return (read === 1) ? "/static/admin/images/message_readed.png" :
         "/static/admin/images/message_unread.png"
 }
-

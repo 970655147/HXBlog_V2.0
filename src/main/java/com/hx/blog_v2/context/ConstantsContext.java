@@ -133,6 +133,8 @@ public class ConstantsContext {
     public String imgTypeHeadImg = ImageType.HEAD_IMG.getType();
     public final Set<String> supportedImageTypes = Tools.asSet(imgTypeImgShow, imgTypeHeadImg);
     public String imageUrlPrefix;
+    public String contextUrlPrefix;
+    public String contextSystemUserId;
     public int pwdSaltNums;
     public int checkCodeLength;
     public int checkCodeImgWidth;
@@ -185,6 +187,10 @@ public class ConstantsContext {
      * 校验访问次数的周期
      */
     public int visitCntValidatePeriod;
+    /**
+     * 有消息是否发送邮件
+     */
+    public boolean sendEmailIfWithNotify;
     /**
      * 发送邮件的用户名密码, 以及邮件服务器
      */
@@ -541,6 +547,8 @@ public class ConstantsContext {
             maxRequestIp2BlogVisitLog = Tools.optInt(systemConfig, BlogConstants.MAX_REQUEST_IP_2_BLOG_VISIT_LOG, 1000);
 
             imageUrlPrefix = Tools.optString(systemConfig, BlogConstants.IMAGE_URL_PREFIX, "http://localhost/files/");
+            contextUrlPrefix = Tools.optString(systemConfig, BlogConstants.CONTEXT_URL_PREFIX, "http://localhost:8080/");
+            contextSystemUserId = Tools.optString(systemConfig, BlogConstants.CONTEXT_SYSTEM_USER_ID, "-1");
             pwdSaltNums = Tools.optInt(systemConfig, BlogConstants.PWD_SALT_NUMS, 8);
             checkCodeLength = Tools.optInt(systemConfig, BlogConstants.CHECK_CODE_LENGTH, 4);
             checkCodeImgWidth = Tools.optInt(systemConfig, BlogConstants.CHECK_CODE_IMG_WIDTH, 160);
@@ -598,6 +606,7 @@ public class ConstantsContext {
         maxNotFormatCntPerPeriod = Tools.optInt(systemConfig, BlogConstants.MAX_NOT_FORMAT_CNT_PER_PERIOD, 20);
         visitCntValidatePeriod = Tools.optInt(systemConfig, BlogConstants.VISIT_CNT_VALIDATE_PERIOD, 60);
 
+        sendEmailIfWithNotify = Tools.optBoolean(systemConfig, BlogConstants.SEND_EMAIL_IF_WITH_NOTIFY, true);
         emailAuthUserName = Tools.optString(systemConfig, BlogConstants.EMAIL_AUTH_USERNAME, "");
         emailAuthPassword = Tools.optString(systemConfig, BlogConstants.EMAIL_AUTH_PASSWORD, "");
         emailAuthSmtp = Tools.optString(systemConfig, BlogConstants.EMAIL_AUTH_SMTP, "smtp.qq.com");
