@@ -21,7 +21,7 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
      * @type {Object}
      */
     var params = getParamsFromUrl(location.href)
-    var imageCode = isEmpty(params.code) ? "dummy" : params.code
+    var imageType = isEmpty(params.code) ? "dummy" : params.code
 
     initilData(1);
     //页数据初始化
@@ -36,9 +36,9 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
                 url: reqMap.image.list,
                 type: "GET",
                 data: {
-                    code : imageCode,
+                    type: imageType,
                     pageNow: pageNow,
-                    pageSize : pageSize
+                    pageSize: pageSize
                 },
                 success: function (resp) {
                     if (resp.success) {
@@ -86,7 +86,7 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
 
     form.on('submit(addImageSubmit)', function (data) {
         var params = $("#addImageForm").serialize()
-        params += ("&code=" + imageCode)
+        params += ("&type=" + imageType)
         ajax({
             url: reqMap.image.add,
             type: "POST",
@@ -109,7 +109,7 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
 
     form.on('submit(updateImageSubmit)', function (data) {
         var params = $("#updateImageForm").serialize()
-        params += ("&code=" + imageCode)
+        params += ("&type=" + imageType)
         ajax({
             url: reqMap.image.update,
             type: "POST",
@@ -230,15 +230,15 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
 
             });
         },
-        fileUpload : function() {
+        fileUpload: function () {
             var formData = new FormData()
             formData.append("file", $("#uploadImgInput").get(0).files[0]);
             ajax({
                 url: reqMap.image.upload,
-                data : formData,
-                type : "POST",
-                processData : false,
-                contentType : false,
+                data: formData,
+                type: "POST",
+                processData: false,
+                contentType: false,
                 success: function (resp) { //上传成功后的回调
                     if (resp.success) {
                         var visitUrl = resp.data.url
@@ -250,17 +250,17 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
                 }
             });
         },
-        headImgShow : function() {
+        headImgShow: function () {
             $("#coverShow").attr("src", $("[name='url']").val());
         },
-        reSort : function() {
+        reSort: function () {
             ajax({
                 url: reqMap.image.reSort,
                 type: "POST",
                 data: params,
                 success: function (resp) {
                     if (resp.success) {
-                        layer.alert('刷新排序成功 !', function(){
+                        layer.alert('刷新排序成功 !', function () {
                             refresh()
                         });
                     } else {

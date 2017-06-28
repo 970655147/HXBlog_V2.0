@@ -28,7 +28,8 @@ public class Test01GenerateTable {
     @Test
     public void blog() throws Exception {
 
-        BlogPO blog = new BlogPO("xx", "hx", "url", "transfer", "1", "xx", "url");
+        BlogPO blog = new BlogPO("xx", "hx", "url",
+                "transfer", "1", "draft", "xx", "url");
         blog.setId("2");
 
         JSONObject blogObj = blog.encapJSON(new SimpleJSONConfig());

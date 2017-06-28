@@ -10,8 +10,10 @@ package com.hx.blog_v2.domain.form;
 public class BlogSearchForm {
 
     private String id;
+    private String author;
     private String typeId;
     private String tagId;
+    private String state;
     private String keywords;
     private String createdAtMonth;
 
@@ -24,6 +26,14 @@ public class BlogSearchForm {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
     }
 
     public String getTypeId() {
@@ -40,6 +50,14 @@ public class BlogSearchForm {
 
     public void setTagId(String tagId) {
         this.tagId = tagId;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
     }
 
     public String getKeywords() {

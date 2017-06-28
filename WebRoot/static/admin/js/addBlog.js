@@ -62,8 +62,9 @@ layui.define(['form', 'upload', 'layer'], function (exports) {
     var addTypeLayer, addTypeConfirm, addBlogLayer;
 
     form.on('submit(submitBlog)', function (data) {
-        $("[name='content']").attr("value", ue.getContent())
         $("[name='blogTagIds']").attr("value", collectAttrValues($("#tagSelected .layui-form-checked"), "value", ", ", false))
+        $("[name='state']").attr("value", "20")
+        $("[name='content']").attr("value", ue.getContent())
         var saveUrl = (isEmpty(currentBlogId)) ? reqMap.blog.add : reqMap.blog.update
 
         ajax({
@@ -80,6 +81,33 @@ layui.define(['form', 'upload', 'layer'], function (exports) {
                     });
                 } else {
                     layer.alert("保存博客失败[" + resp.data + "] !", {icon: 5});
+                }
+            }
+        });
+
+        return false;
+    });
+
+    form.on('submit(draftBlog)', function (data) {
+        $("[name='blogTagIds']").attr("value", collectAttrValues($("#tagSelected .layui-form-checked"), "value", ", ", false))
+        $("[name='state']").attr("value", "10")
+        $("[name='content']").attr("value", ue.getContent())
+        var saveUrl = (isEmpty(currentBlogId)) ? reqMap.blog.add : reqMap.blog.update
+
+        ajax({
+            url: saveUrl,
+            type: "POST",
+            data: $("#addBlogForm").serialize(),
+            success: function (resp) {
+                if (resp.success) {
+                    addBlogLayer = layer.alert('保存草稿成功!', {
+                        closeBtn: 0,
+                        icon: 1
+                    }, function () {
+                        layer.close(addBlogLayer)
+                    });
+                } else {
+                    layer.alert("保存草稿失败[" + resp.data + "] !", {icon: 5});
                 }
             }
         });

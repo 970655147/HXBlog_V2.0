@@ -1,19 +1,19 @@
 package com.hx.blog_v2.controller.admin;
 
 import com.hx.blog_v2.biz_handler.anno.BizHandle;
+import com.hx.blog_v2.context.WebContext;
 import com.hx.blog_v2.domain.ErrorCode;
+import com.hx.blog_v2.domain.dto.SessionUser;
 import com.hx.blog_v2.domain.form.BeanIdForm;
 import com.hx.blog_v2.domain.form.BlogSaveForm;
 import com.hx.blog_v2.domain.form.BlogSearchForm;
-import com.hx.blog_v2.domain.validator.BeanIdValidator;
-import com.hx.blog_v2.domain.validator.BlogSaveValidator;
-import com.hx.blog_v2.domain.validator.BlogSearchValidator;
-import com.hx.blog_v2.domain.validator.PageValidator;
+import com.hx.blog_v2.domain.validator.*;
 import com.hx.blog_v2.domain.vo.AdminBlogVO;
 import com.hx.blog_v2.service.interf.BlogService;
+import com.hx.blog_v2.util.BlogConstants;
+import com.hx.blog_v2.util.ResultUtils;
 import com.hx.common.interf.common.Result;
 import com.hx.common.result.SimplePage;
-import com.hx.blog_v2.util.ResultUtils;
 import com.hx.log.util.Tools;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,6 +40,8 @@ public class BlogController {
     @Autowired
     private BlogSearchValidator blogSearchValidator;
     @Autowired
+    private BlogAuditValidator auditValidator;
+    @Autowired
     private PageValidator pageValidator;
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
@@ -49,7 +51,7 @@ public class BlogController {
         if (!errResult.isSuccess()) {
             return errResult;
         }
-        if(! Tools.isEmpty(params.getId())) {
+        if (!Tools.isEmpty(params.getId())) {
             return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " id 不为空 ! ");
         }
 
@@ -67,8 +69,8 @@ public class BlogController {
     }
 
 
-    @RequestMapping(value = "/list", method = RequestMethod.GET)
-    public Result list(BlogSearchForm params, SimplePage<AdminBlogVO> page) {
+    @RequestMapping(value = "/adminList", method = RequestMethod.GET)
+    public Result adminList(BlogSearchForm params, SimplePage<AdminBlogVO> page) {
         Result errResult = blogSearchValidator.validate(params, null);
         if (!errResult.isSuccess()) {
             return errResult;
@@ -81,13 +83,29 @@ public class BlogController {
         return blogService.adminList(params, page);
     }
 
+    @RequestMapping(value = "/list", method = RequestMethod.GET)
+    public Result list(BlogSearchForm params, SimplePage<AdminBlogVO> page) {
+        Result errResult = blogSearchValidator.validate(params, null);
+        if (!errResult.isSuccess()) {
+            return errResult;
+        }
+        errResult = pageValidator.validate(page, null);
+        if (!errResult.isSuccess()) {
+            return errResult;
+        }
+
+        SessionUser user = (SessionUser) WebContext.getAttributeFromSession(BlogConstants.SESSION_USER);
+        params.setAuthor(user.getName());
+        return blogService.adminList(params, page);
+    }
+
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     public Result update(BlogSaveForm params) {
         Result errResult = blogSaveValidator.validate(params, null);
         if (!errResult.isSuccess()) {
             return errResult;
         }
-        if(Tools.isEmpty(params.getId())) {
+        if (Tools.isEmpty(params.getId())) {
             return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " id 为空 ! ");
         }
 
@@ -103,6 +121,16 @@ public class BlogController {
         }
 
         return blogService.remove(params);
+    }
+
+    @RequestMapping(value = "/audit", method = RequestMethod.POST)
+    public Result audit(BlogSaveForm params) {
+        Result errResult = auditValidator.validate(params, null);
+        if (!errResult.isSuccess()) {
+            return errResult;
+        }
+
+        return blogService.audit(params);
     }
 
 }

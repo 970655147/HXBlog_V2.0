@@ -95,16 +95,18 @@
 
     <div class="layui-form-item layui-form-text">
         <label class="layui-form-label">编辑博文</label>
-        <input type="hidden" name="blogTagIds">
-        <input type="hidden" name="content" >
         <input type="hidden" name="id" >
+        <input type="hidden" name="blogTagIds">
+        <input type="hidden" name="state">
+        <input type="hidden" name="content" >
 
         <div class="layui-input-block"><script id="editor" type="text/plain" style='width:99%;height:300px;'></script></div>
     </div>
     <div class="layui-form-item">
         <div class="layui-input-block">
             <input id="uploadEditorHtml" type="file" name="file" class="layui-upload-file" lay-type="file" lay-title="插入html" />
-            <button class="layui-btn" id="submit" lay-submit="" lay-filter="submitBlog" style="float:right; margin-right:40px" >立即提交</button>
+            <button class="layui-btn" id="submitBlog" lay-submit="" lay-filter="submitBlog" style="float:right; margin-right:40px" >立即提交</button>
+            <button class="layui-btn" id="draftBlog" lay-submit="" lay-filter="draftBlog" style="float:right; margin-right:40px" >保存草稿</button>
         </div>
     </div>
 </form>

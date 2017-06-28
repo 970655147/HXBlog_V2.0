@@ -35,6 +35,8 @@ public class BlogPO implements JSONTransferable<BlogPO> {
     private String blogCreateTypeId;
     @JSONField({"blogTypeId", "blog_type_id"})
     private String blogTypeId;
+    @JSONField({"state", "state"})
+    private String state;
     @JSONField({"summary", "summary"})
     private String summary;
     @JSONField({"contentUrl", "content_url"})
@@ -50,13 +52,14 @@ public class BlogPO implements JSONTransferable<BlogPO> {
 
 
     public BlogPO(String title, String author, String coverUrl, String blogCreateTypeId,
-                  String blogTypeId, String summary, String contentUrl) {
+                  String blogTypeId, String state, String summary, String contentUrl) {
         this();
         this.title = title;
         this.author = author;
         this.coverUrl = coverUrl;
         this.blogCreateTypeId = blogCreateTypeId;
         this.blogTypeId = blogTypeId;
+        this.state = state;
         this.summary = summary;
         this.contentUrl = contentUrl;
     }
@@ -115,6 +118,14 @@ public class BlogPO implements JSONTransferable<BlogPO> {
 
     public void setBlogTypeId(String blogTypeId) {
         this.blogTypeId = blogTypeId;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
     }
 
     public String getSummary() {

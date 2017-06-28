@@ -27,6 +27,8 @@ public class BlogSaveValidator implements Validator<BlogSaveForm> {
     @Autowired
     private UrlValidator urlValidator;
     @Autowired
+    private BlogStateValidator blogStateValidator;
+    @Autowired
     private SummaryValidator summaryValidator;
     @Autowired
     private BlogContentValidator blogContentValidator;
@@ -52,6 +54,10 @@ public class BlogSaveValidator implements Validator<BlogSaveForm> {
         errResult = urlValidator.validate(form.getCoverUrl(), extra);
         if (!errResult.isSuccess()) {
             return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " coverUrl 格式不合法 ! ");
+        }
+        errResult = blogStateValidator.validate(form.getState(), extra);
+        if (!errResult.isSuccess()) {
+            return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " state 格式不合法 ! ");
         }
         if (!beanIdStrValidator.validate(form.getBlogCreateTypeId(), extra).isSuccess()) {
             return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " blogCreateType 格式不合法 ! ");

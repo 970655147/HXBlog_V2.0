@@ -9,6 +9,7 @@ import com.hx.blog_v2.domain.dto.StringIntPair;
 import com.hx.blog_v2.domain.form.interf.UserInfoExtractor;
 import com.hx.blog_v2.domain.mapper.StringIntPairMapper;
 import com.hx.blog_v2.domain.mapper.ToMapMapper;
+import com.hx.blog_v2.domain.po.ResourcePO;
 import com.hx.blog_v2.domain.po.interf.LogisticalId;
 import com.hx.common.str.AntPathMatcher;
 import com.hx.common.str.interf.PathMatcher;
@@ -362,6 +363,32 @@ public final class BizUtils {
         for (Map.Entry<String, T> entry : map.entrySet()) {
             if (Objects.equals(id, entry.getValue().logisticalId())) {
                 return entry.getValue();
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * 通过 id, parentId, level 查询符合条件的节点
+     *
+     * @param map      map
+     * @param id       id
+     * @param parentId parentId
+     * @param level    level
+     * @return com.hx.blog_v2.domain.po.ResourcePO
+     * @author Jerry.X.He
+     * @date 6/28/2017 8:47 PM
+     * @since 1.0
+     */
+    public static ResourcePO findResourceByIdParentAndLevel(Map<String, ResourcePO> map,
+                                                            String id, String parentId, int level) {
+        for (Map.Entry<String, ResourcePO> entry : map.entrySet()) {
+            ResourcePO po = entry.getValue();
+            if (Objects.equals(id, po.logisticalId())
+                    && (Objects.equals(parentId, po.getParentId()))
+                    && (level == po.getLevel())) {
+                return po;
             }
         }
 

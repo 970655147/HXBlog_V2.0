@@ -6,6 +6,7 @@ import com.hx.blog_v2.context.WebContext;
 import com.hx.blog_v2.dao.interf.*;
 import com.hx.blog_v2.domain.ErrorCode;
 import com.hx.blog_v2.domain.POVOTransferUtils;
+import com.hx.blog_v2.domain.dto.BlogState;
 import com.hx.blog_v2.domain.dto.SessionUser;
 import com.hx.blog_v2.domain.form.BeanIdForm;
 import com.hx.blog_v2.domain.form.BlogSaveForm;
@@ -74,7 +75,8 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
         SessionUser user = (SessionUser) WebContext.getAttributeFromSession(BlogConstants.SESSION_USER);
         String contentUrl = generateBlogPath(params);
         BlogPO po = new BlogPO(params.getTitle(), user.getName(), params.getCoverUrl(),
-                params.getBlogCreateTypeId(), params.getBlogTypeId(), params.getSummary(), contentUrl);
+                params.getBlogCreateTypeId(), params.getBlogTypeId(), params.getState(),
+                params.getSummary(), contentUrl);
 
         if (!Tools.isEmpty(params.getId())) {
             return update0(po, params);
@@ -86,7 +88,7 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
     public Result get(BeanIdForm params) {
         String blogSql = " select b.*, GROUP_CONCAT(rlt.tag_id) as tagIds from blog as b " +
                 " inner join rlt_blog_tag as rlt on b.id = rlt.blog_id " +
-                " where b.deleted = 0 and b.id = ? group by b.id ";
+                " where b.deleted = 0 and b.id = ? and b.state='" + BlogState.SUCCESS.code() + "' group by b.id ";
         Object[] sqlParams = new Object[]{params.getId()};
         // 如果 没有找到记录, 或者 找到多条记录, 都会抛出异常, ex.*, b.* 这个顺序, 避免 po.id 被 exPo.id 覆盖
         List<BlogVO> vos = jdbcTemplate.query(blogSql, sqlParams, new BlogVOMapper());
@@ -129,7 +131,7 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
     public Result list(BlogSearchForm params, Page<BlogVO> page) {
         String selectSql = " select b.*, GROUP_CONCAT(rlt.tag_id) as tagIds from blog as b " +
                 " inner join rlt_blog_tag as rlt on b.id = rlt.blog_id " +
-                " where b.deleted = 0 and b.id >= 0 ";
+                " where b.deleted = 0 and b.id >= 0 and b.state='" + BlogState.SUCCESS.code() + "' ";
         String selectSqlSuffix = " group by b.id order by b.created_at desc limit ?, ?";
         String countSql = " select count(*) as totalRecord from blog as b where b.deleted = 0 and b.id >= 0 ";
 
@@ -199,6 +201,30 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
         return ResultUtils.success(params.getId());
     }
 
+    @Override
+    public Result audit(BlogSaveForm params) {
+        Result getBlogResult = blogDao.get(new BeanIdForm(params.getId()));
+        if (!getBlogResult.isSuccess()) {
+            return getBlogResult;
+        }
+        BlogPO poFromServer = (BlogPO) getBlogResult.getData();
+        BlogState state = BlogState.of(poFromServer.getState());
+        BlogState newState = BlogState.of(params.getState());
+        if (BlogState.AUDIT != state) {
+            return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " bad state ! ");
+        }
+        if ((BlogState.SUCCESS != newState) && (BlogState.FAILED == newState)) {
+            return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " bad state ! ");
+        }
+
+        String updatedAt = DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
+        Result auditBlogResult = blogDao.update(Criteria.eq("id", params.getId()),
+                Criteria.set("state", params.getState()).add("updated_at", updatedAt));
+        if (!auditBlogResult.isSuccess()) {
+            return auditBlogResult;
+        }
+        return ResultUtils.success(params.getId());
+    }
 
     // -------------------- 辅助方法 --------------------------
 
@@ -229,6 +255,11 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
      */
     private Result add0(BlogPO po, BlogSaveForm params) {
         boolean blogInserted = false, tagsInserted = false;
+        BlogState state = BlogState.of(po.getState());
+        if ((BlogState.DRAFT != state) && (BlogState.AUDIT != state)) {
+            return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " bad state ! ");
+        }
+
         try {
             blogDao.save(po, BlogConstants.ADD_BEAN_CONFIG);
             blogExDao.save(new BlogExPO(po.getId()), BlogConstants.ADD_BEAN_CONFIG);
@@ -277,6 +308,23 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
      * @since 1.0
      */
     private Result update0(BlogPO po, BlogSaveForm params) {
+        Result getBlogResult = blogDao.get(new BeanIdForm(params.getId()));
+        if (!getBlogResult.isSuccess()) {
+            return getBlogResult;
+        }
+        BlogPO poFromServer = (BlogPO) getBlogResult.getData();
+        BlogState state = BlogState.of(poFromServer.getState());
+        if ((BlogState.DRAFT == state) && (!po.getState().equals(BlogState.AUDIT.code()))) {
+            return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " bad state !");
+        }
+        if (BlogState.AUDIT == state) {
+            return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " bad state !");
+        }
+        if ((BlogState.SUCCESS == state) && (!po.getState().equals(BlogState.SUCCESS.code()))) {
+            return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " bad state !");
+        }
+
+
         po.setId(params.getId());
         po.setUpdatedAt(DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS));
         Result updateBlogResult = blogDao.update(po);
@@ -332,6 +380,10 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
             condSqlSb.append(" and b.id = ? ");
             sqlParamsList.add(params.getId());
         } else {
+            if (!Tools.isEmpty(params.getAuthor())) {
+                condSqlSb.append(" and b.author = ? ");
+                sqlParamsList.add(params.getAuthor());
+            }
             if (!Tools.isEmpty(params.getTypeId())) {
                 condSqlSb.append(" and b.blog_type_id = ? ");
                 sqlParamsList.add(params.getTypeId());
@@ -339,6 +391,10 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
             if (!Tools.isEmpty(params.getTagId())) {
                 condSqlSb.append(" and b.id in (select blog_id from rlt_blog_tag where tag_id = ?) ");
                 sqlParamsList.add(params.getTagId());
+            }
+            if (!Tools.isEmpty(params.getState())) {
+                condSqlSb.append(" and b.state = ? ");
+                sqlParamsList.add(params.getState());
             }
             if (!Tools.isEmpty(params.getKeywords())) {
                 condSqlSb.append(" and (b.title like ? or b.author like ?) ");

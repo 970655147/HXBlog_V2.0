@@ -12,31 +12,34 @@ import java.util.Map;
  * @version 1.0
  * @date 6/11/2017 2:30 PM
  */
-public enum ConfigType implements Code2Msg<String, String> {
+public enum BlogState implements Code2Msg<String, String> {
     /**
-     * 系统配置
+     * 草稿箱
      */
-    SYSTEM("1", "systemConfig"),
+    DRAFT("10", "draft"),
     /**
-     * 规则配置
+     * 审核中
      */
-    RULE("2", "ruleConfig"),
+    AUDIT("20", "audit"),
     /**
-     * 首页配置
+     * 发表成功
      */
-    FRONT_INDEX_CONFIG("3", "frontendIdxConfig");
+    SUCCESS("30", "success"),
+    /**
+     * 发表失败
+     */
+    FAILED("40", "failed");
 
     /**
      * type -> imageType
      */
-    public static final Map<String, ConfigType> TYPE_2_CONFIG_TYPE = new LinkedHashMap<>();
+    public static final Map<String, BlogState> TYPE_2_STATE = new LinkedHashMap<>();
 
     static {
-        for (ConfigType type : values()) {
-            TYPE_2_CONFIG_TYPE.put(type.code, type);
+        for (BlogState type : values()) {
+            TYPE_2_STATE.put(type.code, type);
         }
     }
-
 
 
     /**
@@ -48,7 +51,7 @@ public enum ConfigType implements Code2Msg<String, String> {
      */
     private String msg;
 
-    ConfigType(String code, String msg) {
+    BlogState(String code, String msg) {
         this.code = code;
         this.msg = msg;
     }
@@ -62,8 +65,8 @@ public enum ConfigType implements Code2Msg<String, String> {
      * @date 6/11/2017 2:36 PM
      * @since 1.0
      */
-    public static ConfigType of(String type) {
-        return TYPE_2_CONFIG_TYPE.get(type);
+    public static BlogState of(String type) {
+        return TYPE_2_STATE.get(type);
     }
 
 

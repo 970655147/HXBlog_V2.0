@@ -15,6 +15,7 @@ public class BlogSaveForm {
     private String blogCreateTypeId;
     private String blogTypeId;
     private String blogTagIds;
+    private String state;
     private String summary;
     private String content;
 
@@ -59,6 +60,14 @@ public class BlogSaveForm {
 
     public void setBlogTypeId(String blogTypeId) {
         this.blogTypeId = blogTypeId;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
     }
 
     public String getSummary() {

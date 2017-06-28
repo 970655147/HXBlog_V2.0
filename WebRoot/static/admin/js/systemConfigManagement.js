@@ -34,9 +34,9 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
                 url: reqMap.config.list,
                 type: "GET",
                 data: {
-                    "type": configType,
-                    "pageNow": pageNow,
-                    "pageSize": pageSize
+                    type: configType,
+                    pageNow: pageNow,
+                    pageSize: pageSize
                 },
                 success: function (resp) {
                     if (resp.success) {

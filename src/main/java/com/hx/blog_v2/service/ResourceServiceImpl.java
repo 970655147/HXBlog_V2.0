@@ -62,13 +62,14 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourcePO> implements 
     @Override
     public Result add(ResourceSaveForm params) {
         Map<String, ResourcePO> resourcesById = cacheContext.allResources();
-        ResourcePO poByName = BizUtils.findByLogisticId(resourcesById, params.getName());
-        if (poByName != null) {
-            return ResultUtils.failed("该资源已经存在 !");
-        }
         ResourcePO parentPo = resourcesById.get(params.getParentId());
         if (parentPo == null) {
             return ResultUtils.failed("该资源父节点不存在 !");
+        }
+        ResourcePO poByName = BizUtils.findResourceByIdParentAndLevel(cacheContext.allResources(), params.getName(),
+                parentPo.getId(), parentPo.getLevel()+1);
+        if ((poByName != null) && (Tools.equalsIgnoreCase(poByName.getParentId(), parentPo.getId()))) {
+            return ResultUtils.failed("该资源已经存在 !");
         }
 
         ResourcePO po = new ResourcePO(params.getName(), params.getIconClass(), params.getUrl(),
@@ -154,13 +155,15 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourcePO> implements 
         if (po == null) {
             return ResultUtils.failed("该资源不存在 !");
         }
-        ResourcePO poByName = BizUtils.findByLogisticId(cacheContext.allResources(), params.getName());
-        if ((poByName != null) && (!po.getId().equals(poByName.getId()))) {
-            return ResultUtils.failed("该资源已经存在 !");
-        }
         ResourcePO parentPo = cacheContext.resource(po.getParentId());
         if (parentPo == null) {
             return ResultUtils.failed("该资源父节点不存在 !");
+        }
+        ResourcePO poByName = BizUtils.findResourceByIdParentAndLevel(cacheContext.allResources(), params.getName(),
+                parentPo.getId(), parentPo.getLevel()+1);
+        if ((poByName != null) && (!po.getId().equals(poByName.getId()))
+                && (Tools.equalsIgnoreCase(poByName.getParentId(), parentPo.getId()))) {
+            return ResultUtils.failed("该资源已经存在 !");
         }
 
         po.setName(params.getName());

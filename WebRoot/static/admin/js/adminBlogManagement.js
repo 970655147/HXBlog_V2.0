@@ -32,7 +32,7 @@ layui.define(['element', 'laypage', 'layer', 'form', 'pagesize'], function (expo
         params += "&pageSize=" + pageSize
 
         ajax({
-            url: reqMap.blog.adminList,
+            url: reqMap.blog.adminAdminList,
             type: "GET",
             data: params,
             success: function (resp) {
