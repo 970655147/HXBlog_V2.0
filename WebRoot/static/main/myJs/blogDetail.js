@@ -251,7 +251,7 @@ function contentInit() {
 
                 var senseParams = copyOf(this.userInfo)
                 senseParams.blogId = params.id
-                senseParams.sense = "good"
+                senseParams.sense = "1"
                 senseParams.score = newVal
                 ajax({
                     url: reqMap.blog.sense,

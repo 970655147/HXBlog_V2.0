@@ -1,6 +1,5 @@
 package com.hx.blog_v2.domain.validator;
 
-import com.hx.blog_v2.domain.ErrorCode;
 import com.hx.blog_v2.domain.form.ImageSearchForm;
 import com.hx.common.interf.common.Result;
 import com.hx.common.interf.validator.Validator;

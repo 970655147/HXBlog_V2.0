@@ -1,5 +1,7 @@
 package com.hx.blog_v2.domain.dto;
 
+import com.hx.common.interf.common.Code2Msg;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -10,15 +12,15 @@ import java.util.Map;
  * @version 1.0
  * @date 6/11/2017 2:30 PM
  */
-public enum MessageType {
+public enum MessageType implements Code2Msg<String, String> {
     /**
      * 系统消息
      */
-    SYSTEM("system"),
+    SYSTEM("1", "system"),
     /**
      * 站内消息
      */
-    SITE_INTERNAL("siteInternal");
+    SITE_INTERNAL("2", "siteInternal");
 
     /**
      * type -> imageType
@@ -27,7 +29,7 @@ public enum MessageType {
 
     static {
         for (MessageType type : values()) {
-            TYPE_2_MSG_TYPE.put(type.type, type);
+            TYPE_2_MSG_TYPE.put(type.code, type);
         }
     }
 
@@ -35,14 +37,15 @@ public enum MessageType {
     /**
      * 类型的标志
      */
-    private String type;
+    private String code;
+    /**
+     * 类型的名称
+     */
+    private String msg;
 
-    MessageType(String type) {
-        this.type = type;
-    }
-
-    public String getType() {
-        return type;
+    MessageType(String code, String msg) {
+        this.code = code;
+        this.msg = msg;
     }
 
     /**
@@ -58,4 +61,14 @@ public enum MessageType {
         return TYPE_2_MSG_TYPE.get(type);
     }
 
+
+    @Override
+    public String code() {
+        return code;
+    }
+
+    @Override
+    public String msg() {
+        return msg;
+    }
 }

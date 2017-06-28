@@ -31,7 +31,7 @@ public class DoCorrectionValidator implements Validator<DoCorrectionForm> {
                 return ResultUtils.failed(" 给定的id 非数字 ! ");
             }
         }
-        Result errResult = correctionTypeValidator.validate(form.getType(), extra);
+        Result errResult = correctionTypeValidator.validate(form.getCode(), extra);
         if (!errResult.isSuccess()) {
             return errResult;
         }

@@ -1,5 +1,7 @@
 package com.hx.blog_v2.domain.dto;
 
+import com.hx.common.interf.common.Code2Msg;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -10,15 +12,15 @@ import java.util.Map;
  * @version 1.0
  * @date 6/11/2017 2:30 PM
  */
-public enum EmailContentType {
+public enum EmailContentType implements Code2Msg<String, String> {
     /**
      * text/html
      */
-    TEXT_HTML("text/html;charset=UTF-8"),
+    TEXT_HTML("1", "text/html;charset=UTF-8"),
     /**
      * 其他的 contentType
      */
-    OTHER("other");
+    OTHER("2", "other");
 
     /**
      * type -> imageType
@@ -27,7 +29,7 @@ public enum EmailContentType {
 
     static {
         for (EmailContentType type : values()) {
-            TYPE_2_CONTENT_TYPE.put(type.type, type);
+            TYPE_2_CONTENT_TYPE.put(type.code, type);
         }
     }
 
@@ -35,14 +37,15 @@ public enum EmailContentType {
     /**
      * 类型的标志
      */
-    private String type;
+    private String code;
+    /**
+     * 类型的名称
+     */
+    private String msg;
 
-    EmailContentType(String type) {
-        this.type = type;
-    }
-
-    public String getType() {
-        return type;
+    EmailContentType(String code, String msg) {
+        this.code = code;
+        this.msg = msg;
     }
 
     /**
@@ -58,4 +61,14 @@ public enum EmailContentType {
         return TYPE_2_CONTENT_TYPE.get(type);
     }
 
+
+    @Override
+    public String code() {
+        return code;
+    }
+
+    @Override
+    public String msg() {
+        return msg;
+    }
 }

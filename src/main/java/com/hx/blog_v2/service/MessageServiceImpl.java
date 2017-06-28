@@ -345,14 +345,14 @@ public class MessageServiceImpl extends BaseServiceImpl<MessagePO> implements Me
                 to.add(pair.getRight());
             }
         }
-        if(CollectionUtils.isAnyNull(to)) {
+        if (CollectionUtils.isAnyNull(to)) {
             return ResultUtils.success(" no receliver ! ");
         }
 
         MessagePO msg = allMsg.get(0);
         EmailPO email = new EmailPO(constantsContext.emailAuthUserName,
                 to, (String) null, msg.getSubject(), msg.getContent(),
-                EmailContentType.TEXT_HTML.getType());
+                EmailContentType.TEXT_HTML.msg());
         Result sendEmailResult = emailService.sendEmail(email);
         if (!sendEmailResult.isSuccess()) {
             return sendEmailResult;

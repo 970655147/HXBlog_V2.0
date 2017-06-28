@@ -7,18 +7,18 @@
  */
 
 var params = getParamsFromUrl(location.href)
-var typeNow = params.type
+var codeNow = params.code
 
 /**
  * 各个校验类型按钮的事件
  */
 $("[name='correctionItem']").click(function () {
     var baseUrl = "/static/admin/correctionManagement.html"
-    params.type = $(this).attr("correctionType")
+    params.code = $(this).attr("correctionCode")
     location.href = encapGetUrl(baseUrl, params)
 })
 
-$("[name='correctionItem'][correctionType='" + typeNow + "']").addClass("layui-btn-normal")
+$("[name='correctionItem'][correctionCode='" + codeNow + "']").addClass("layui-btn-normal")
 
 layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
     var $ = layui.jquery;
@@ -34,7 +34,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
      * 初始化校验列表
      */
     function initTable() {
-        if (isEmpty(typeNow)) {
+        if (isEmpty(codeNow)) {
             return
         }
 
@@ -44,7 +44,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
             ajax({
                 url: reqMap.correction.list,
                 type: "GET",
-                data: {type: typeNow},
+                data: {code: codeNow},
                 success: function (resp) {
                     if (resp.success) {
                         var html = '';
@@ -75,7 +75,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
         doCorrect : function(id) {
             ajax({
                 url: reqMap.correction.doCorrection,
-                data: {id : id, type : typeNow},
+                data: {id : id, code : codeNow},
                 type : "POST",
                 success: function (resp) {
                     if (resp.success) {
@@ -91,7 +91,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
         doCorrectAll : function() {
             ajax({
                 url: reqMap.correction.doCorrection,
-                data: {type : typeNow},
+                data: {code : codeNow},
                 type : "POST",
                 success: function (resp) {
                     if (resp.success) {

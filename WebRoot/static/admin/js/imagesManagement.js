@@ -21,7 +21,7 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
      * @type {Object}
      */
     var params = getParamsFromUrl(location.href)
-    var imageType = isEmpty(params.type) ? "dummy" : params.type
+    var imageCode = isEmpty(params.code) ? "dummy" : params.code
 
     initilData(1);
     //页数据初始化
@@ -36,9 +36,9 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
                 url: reqMap.image.list,
                 type: "GET",
                 data: {
-                    "type" : imageType,
-                    "pageNow": pageNow,
-                    "pageSize" : pageSize
+                    code : imageCode,
+                    pageNow: pageNow,
+                    pageSize : pageSize
                 },
                 success: function (resp) {
                     if (resp.success) {
@@ -86,7 +86,7 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
 
     form.on('submit(addImageSubmit)', function (data) {
         var params = $("#addImageForm").serialize()
-        params += ("&type=" + imageType)
+        params += ("&code=" + imageCode)
         ajax({
             url: reqMap.image.add,
             type: "POST",
@@ -109,7 +109,7 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
 
     form.on('submit(updateImageSubmit)', function (data) {
         var params = $("#updateImageForm").serialize()
-        params += ("&type=" + imageType)
+        params += ("&code=" + imageCode)
         ajax({
             url: reqMap.image.update,
             type: "POST",

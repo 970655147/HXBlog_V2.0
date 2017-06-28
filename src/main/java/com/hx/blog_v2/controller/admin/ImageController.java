@@ -74,7 +74,7 @@ public class ImageController {
         if (!errResult.isSuccess()) {
             return errResult;
         }
-        if (!Tools.isEmpty(params.getId())) {
+        if (Tools.isEmpty(params.getId())) {
             return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " id 不为空 ! ");
         }
 

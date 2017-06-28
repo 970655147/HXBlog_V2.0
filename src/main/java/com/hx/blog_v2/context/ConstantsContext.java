@@ -129,9 +129,8 @@ public class ConstantsContext {
     public int maxBlogId2BlogEx;
     public int maxRequestIp2BlogVisitLog;
 
-    public String imgTypeImgShow = ImageType.IMAGE_SHOW.getType();
-    public String imgTypeHeadImg = ImageType.HEAD_IMG.getType();
-    public final Set<String> supportedImageTypes = Tools.asSet(imgTypeImgShow, imgTypeHeadImg);
+    public String imgTypeImgShow = ImageType.IMAGE_SHOW.code();
+    public String imgTypeHeadImg = ImageType.HEAD_IMG.code();
     public String imageUrlPrefix;
     public String contextUrlPrefix;
     public String contextSystemUserId;

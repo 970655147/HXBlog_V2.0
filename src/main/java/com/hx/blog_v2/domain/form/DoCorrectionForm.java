@@ -13,7 +13,7 @@ public class DoCorrectionForm {
      * 需要处理的业务关联的 id
      */
     public String id;
-    public String type;
+    public String code;
 
     public DoCorrectionForm() {
     }
@@ -26,11 +26,11 @@ public class DoCorrectionForm {
         this.id = id;
     }
 
-    public String getType() {
-        return type;
+    public String getCode() {
+        return code;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setCode(String code) {
+        this.code = code;
     }
 }

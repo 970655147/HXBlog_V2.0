@@ -24,7 +24,7 @@ public class CorrectionSearchValidator implements Validator<CorrectionSearchForm
 
     @Override
     public Result validate(CorrectionSearchForm form, Object extra) {
-        Result errResult = correctionTypeValidator.validate(form.getType(), extra);
+        Result errResult = correctionTypeValidator.validate(form.getCode(), extra);
         if (!errResult.isSuccess()) {
             return errResult;
         }

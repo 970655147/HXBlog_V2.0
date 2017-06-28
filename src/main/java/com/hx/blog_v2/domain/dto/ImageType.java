@@ -1,5 +1,7 @@
 package com.hx.blog_v2.domain.dto;
 
+import com.hx.common.interf.common.Code2Msg;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -10,15 +12,15 @@ import java.util.Map;
  * @version 1.0
  * @date 6/11/2017 2:30 PM
  */
-public enum ImageType {
+public enum ImageType implements Code2Msg<String, String> {
     /**
      * 头像图片
      */
-    HEAD_IMG("headImg"),
+    HEAD_IMG("1", "headImg"),
     /**
      * 相册图片
      */
-    IMAGE_SHOW("imgShow");
+    IMAGE_SHOW("2", "imgShow");
 
     /**
      * type -> imageType
@@ -27,22 +29,23 @@ public enum ImageType {
 
     static {
         for (ImageType type : values()) {
-            TYPE_2_IMAGE_TYPE.put(type.type, type);
+            TYPE_2_IMAGE_TYPE.put(type.code, type);
         }
     }
 
 
     /**
-     * 图片的类型的标志
+     * 类型的标志
      */
-    private String type;
+    private String code;
+    /**
+     * 类型的名称
+     */
+    private String msg;
 
-    ImageType(String type) {
-        this.type = type;
-    }
-
-    public String getType() {
-        return type;
+    ImageType(String code, String msg) {
+        this.code = code;
+        this.msg = msg;
     }
 
     /**
@@ -58,4 +61,14 @@ public enum ImageType {
         return TYPE_2_IMAGE_TYPE.get(type);
     }
 
+
+    @Override
+    public String code() {
+        return code;
+    }
+
+    @Override
+    public String msg() {
+        return msg;
+    }
 }

@@ -53,7 +53,7 @@ public class CorrectionServiceImpl extends BaseServiceImpl<Object> implements Co
 
     @Override
     public Result list(CorrectionSearchForm params) {
-        CorrectionType type = CorrectionType.of(params.getType());
+        CorrectionType type = CorrectionType.of(params.getCode());
         if (CorrectionType.COMMENT_CNT == type) {
             return collectCommentCorrection();
         } else if (CorrectionType.SCORE_CNT == type) {
@@ -65,7 +65,7 @@ public class CorrectionServiceImpl extends BaseServiceImpl<Object> implements Co
 
     @Override
     public Result doCorrection(DoCorrectionForm params) {
-        CorrectionType type = CorrectionType.of(params.getType());
+        CorrectionType type = CorrectionType.of(params.getCode());
         if (CorrectionType.COMMENT_CNT == type) {
             return doCorrectionComment(params);
         } else if (CorrectionType.SCORE_CNT == type) {

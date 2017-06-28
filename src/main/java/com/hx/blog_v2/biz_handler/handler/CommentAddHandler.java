@@ -99,7 +99,7 @@ public class CommentAddHandler extends BizHandlerAdapter {
 
         msgForm.setSenderId(constantsContext.contextSystemUserId);
         msgForm.setUserNames(params.getToUser());
-        msgForm.setType(MessageType.SYSTEM.getType());
+        msgForm.setType(MessageType.SYSTEM.code());
         msgForm.setSubject("[HXBlog]评论提醒");
         msgForm.setContent(" 用户 [" + params.getName() + "] 评论了您的文章 : " + params.getComment() + ", " +
                 " <a href='" + constantsContext.contextUrlPrefix + "static/main/blogDetail.html?id=" + params.getBlogId() + "'" +

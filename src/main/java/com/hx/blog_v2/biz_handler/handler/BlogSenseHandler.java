@@ -82,7 +82,7 @@ public class BlogSenseHandler extends BizHandlerAdapter {
         BlogPO blog = (BlogPO) getBlogResult.getData();
         msgForm.setSenderId(constantsContext.contextSystemUserId);
         msgForm.setUserNames(blog.getAuthor());
-        msgForm.setType(MessageType.SYSTEM.getType());
+        msgForm.setType(MessageType.SYSTEM.code());
         msgForm.setSubject("[HXBlog]打分提醒");
         msgForm.setContent(" 用户 [" + params.getName() + "] 为您的文章打了 " + params.getScore() + "分 !,  " +
                 " <a href='" + constantsContext.contextUrlPrefix + "static/main/blogDetail.html?id=" + params.getBlogId() + "'" +

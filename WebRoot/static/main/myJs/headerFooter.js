@@ -120,7 +120,7 @@ function headerFooterInit() {
                     var senseParams = {
                         blogId: "-1",
                         score: isPrise ? 1 : 0,
-                        sense: "good"
+                        sense: "1"
                     }
 
                     ajax({

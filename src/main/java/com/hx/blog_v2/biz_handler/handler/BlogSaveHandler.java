@@ -82,7 +82,7 @@ public class BlogSaveHandler extends BizHandlerAdapter {
 
         msgForm.setSenderId(constantsContext.contextSystemUserId);
         msgForm.setRoleIds(role.getId());
-        msgForm.setType(MessageType.SYSTEM.getType());
+        msgForm.setType(MessageType.SYSTEM.code());
         msgForm.setSubject("[HXBlog]博客提醒");
         msgForm.setContent(" 用户 [" + user.getName() + "] 发表了一篇博客 : " +
                 " <a href='" + constantsContext.contextUrlPrefix + "static/main/blogDetail.html?id=" + result.getData() + "'" +

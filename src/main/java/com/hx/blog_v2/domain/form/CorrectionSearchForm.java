@@ -9,16 +9,16 @@ package com.hx.blog_v2.domain.form;
  */
 public class CorrectionSearchForm {
 
-    public String type;
+    public String code;
 
     public CorrectionSearchForm() {
     }
 
-    public String getType() {
-        return type;
+    public String getCode() {
+        return code;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setCode(String code) {
+        this.code = code;
     }
 }

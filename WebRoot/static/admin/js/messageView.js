@@ -130,6 +130,7 @@ layui.define(['element', 'laypage', 'layer', 'form', 'pagesize'], function (expo
             var html = '';
             html += '<form id="addReplyForm" class="layui-form layui-form-pane" action="/admin/message/add" method="post">';
             html += '<input type="hidden" name="userIds" value="' + senderId + '"/>';
+            html += '<input type="hidden" name="type" value="2"/>';
             html += '<label class="layui-form-label" style="border: none" >消息内容:</label>';
             html += '<div  style="width:87%;margin: auto;color: #000!important;"  readonly="true" class="layui-textarea layui-disabled" >' + decodeURI(detransferQuote(content)) + '</div>';
             html += '<label class="layui-form-label" style="border: none">主题:</label>';
