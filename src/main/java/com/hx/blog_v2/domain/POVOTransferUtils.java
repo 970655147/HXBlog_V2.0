@@ -135,6 +135,7 @@ public final class POVOTransferUtils {
         result.setCoverUrl(src.getCoverUrl());
         result.setBlogCreateTypeId(src.getBlogCreateTypeId());
         result.setBlogTypeId(src.getBlogTypeId());
+        result.setState(src.getState());
         result.setTitle(src.getTitle());
         result.setAuthor(src.getAuthor());
         result.setSummary(src.getSummary());
@@ -158,6 +159,7 @@ public final class POVOTransferUtils {
         result.setCoverUrl(src.getCoverUrl());
         result.setBlogCreateTypeId(src.getBlogCreateTypeId());
         result.setBlogTypeId(src.getBlogTypeId());
+        result.setState(src.getState());
         result.setTitle(src.getTitle());
         result.setAuthor(src.getAuthor());
         result.setSummary(src.getSummary());

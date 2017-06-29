@@ -1,5 +1,4 @@
-﻿
-// 加载类型, 标签, 同步加载, 否则 可能 layui 绑定不了事件
+﻿// 加载类型, 标签, 同步加载, 否则 可能 layui 绑定不了事件
 initTypeAndTags()
 
 layui.define(['element', 'laypage', 'layer', 'form', 'pagesize'], function (exports) {
@@ -42,13 +41,18 @@ layui.define(['element', 'laypage', 'layer', 'form', 'pagesize'], function (expo
                         var item = resp.data.list[i];
                         html += '<tr>';
                         html += '<td>' + item.id + '</td>';
-                        html += '<td><img src="' + item.blogCreateTypeImgUrl + '" /></td>';
-                        html += '<td> <a href="/static/main/blogDetail.html?id=' + item.id + '" target="_blank" >' + item.title + '</a></td>';
+                        html += '<td><img src="' + item.blogCreateTypeImgUrl + '" />' +
+                            '<img src="' + stateIconUrl(item.state) + '" width="20px" height="20px" style="margin-left: 20px" /></td>';
+                        html += '<td> <a href="' + previewUrl(item.id, item.state) + '" target="_blank" >' + item.title + '</a></td>';
                         html += '<td>' + item.author + '</td>';
                         html += '<td>' + item.summary + '</td>';
                         html += '<td>' + item.createdAt + '</td>';
                         html += '<td>' + item.blogTypeName + '</td>';
                         html += '<td>' + item.blogTagNames + '</td>';
+                        if ("20" === item.state) {
+                            html += '<td><button class="layui-btn layui-btn-small layui-btn-normal" onclick="layui.funcs.transferState(' + item.id + ', \'30\')"><i class="layui-icon">&#xe605;</i></button></td>';
+                            html += '<td><button class="layui-btn layui-btn-small layui-btn-normal" onclick="layui.funcs.transferState(' + item.id + ', \'40\')"><i class="layui-icon">&#x1006;</i></button></td>';
+                        }
                         html += '<td><button class="layui-btn layui-btn-small layui-btn-normal" onclick="layui.funcs.editData(' + item.id + ')"><i class="layui-icon">&#xe642;</i></button></td>';
                         html += '<td><button class="layui-btn layui-btn-small layui-btn-danger" onclick="layui.funcs.deleteData(' + item.id + ')"><i class="layui-icon">&#xe640;</i></button></td>';
                         html += '</tr>';
@@ -65,7 +69,7 @@ layui.define(['element', 'laypage', 'layer', 'form', 'pagesize'], function (expo
                         curr: pageNow,
                         jump: function (obj, first) {
                             var pageNow = obj.curr;
-                            if (! first) {
+                            if (!first) {
                                 initilData(pageNow);
                             }
                         }
@@ -81,14 +85,14 @@ layui.define(['element', 'laypage', 'layer', 'form', 'pagesize'], function (expo
     //输出接口，主要是两个函数，一个删除一个编辑
     var funcs = {
         editData: function (id) {
-            parent.switchTab(parent.$, parent.element, '修改博客', '/static/admin/addBlog.html?id=' + id, 'blog-' + id);
+            parent.switchTab(parent.$, parent.element, '修改博客', '/static/admin/addBlog.html?id=' + id + "&editType=admin", 'blog-' + id);
         },
         deleteData: function (id) {
             layer.confirm('同时会删除对应评论，确定删除？', {
                 btn: ['确定', '取消'] //按钮
             }, function () {
                 ajax({
-                    url: reqMap.blog.remove,
+                    url: reqMap.blog.adminRemove,
                     data: {"id": id},
                     type: 'POST',
                     success: function (resp) {
@@ -106,6 +110,25 @@ layui.define(['element', 'laypage', 'layer', 'form', 'pagesize'], function (expo
                 });
             }, function () {
 
+            });
+        },
+        transferState: function (id, newState) {
+            ajax({
+                url: reqMap.blog.transfer,
+                data: {
+                    id: id,
+                    state: newState
+                },
+                type: 'POST',
+                success: function (resp) {
+                    if (resp.success) {
+                        layer.alert('审核成功!', function () {
+                            refresh()
+                        });
+                    } else {
+                        layer.alert("审核博客失败[" + resp.data + "] !", {icon: 5});
+                    }
+                }
             });
         }
     };
@@ -137,5 +160,35 @@ function initTypeAndTags() {
             }
         }
     });
+}
+
+/**
+ * 获取给定的博客的 预览的url
+ * @param id
+ * @param state
+ */
+function previewUrl(id, state) {
+    if ("30" === state) {
+        return "/static/main/blogDetail.html?id=" + id
+    } else {
+        return "/static/admin/blogDetail.html?id=" + id
+    }
+}
+
+/**
+ * 获取状态对应的图标
+ * @param state
+ * @returns {*}
+ */
+function stateIconUrl(state) {
+    if ("10" === state) {
+        return "/static/admin/images/blog_draft.png"
+    } else if ("20" === state) {
+        return "/static/admin/images/blog_audit.png"
+    } else if ("30" === state) {
+        return "/static/admin/images/blog_success.png"
+    } else if ("40" === state) {
+        return "/static/admin/images/blog_failed.png"
+    }
 }
 

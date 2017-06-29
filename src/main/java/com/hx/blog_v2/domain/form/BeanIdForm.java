@@ -10,6 +10,10 @@ package com.hx.blog_v2.domain.form;
 public class BeanIdForm {
 
     private String id;
+    /**
+     * 是否需要校验给定的数据是当前用户的
+     */
+    private boolean checkSelf;
 
 
     public BeanIdForm(String id) {
@@ -20,12 +24,19 @@ public class BeanIdForm {
 
     }
 
-
     public String getId() {
         return id;
     }
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public boolean isCheckSelf() {
+        return checkSelf;
+    }
+
+    public void setCheckSelf(boolean checkSelf) {
+        this.checkSelf = checkSelf;
     }
 }

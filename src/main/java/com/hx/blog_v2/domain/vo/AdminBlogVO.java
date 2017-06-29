@@ -34,6 +34,7 @@ public class AdminBlogVO {
      */
     private List<String> blogTagIds;
     private List<String> blogTagNames;
+    private String state;
     /**
      * 摘要
      */
@@ -138,6 +139,14 @@ public class AdminBlogVO {
 
     public void setBlogTagNames(List<String> blogTagNames) {
         this.blogTagNames = blogTagNames;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
     }
 
     public String getSummary() {

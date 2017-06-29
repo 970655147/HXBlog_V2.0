@@ -6,7 +6,9 @@ import com.hx.blog_v2.context.WebContext;
 import com.hx.blog_v2.dao.interf.*;
 import com.hx.blog_v2.domain.ErrorCode;
 import com.hx.blog_v2.domain.POVOTransferUtils;
+import com.hx.blog_v2.domain.StateMachineUtils;
 import com.hx.blog_v2.domain.dto.BlogState;
+import com.hx.blog_v2.domain.dto.BlogStateAction;
 import com.hx.blog_v2.domain.dto.SessionUser;
 import com.hx.blog_v2.domain.form.BeanIdForm;
 import com.hx.blog_v2.domain.form.BlogSaveForm;
@@ -26,6 +28,7 @@ import com.hx.blog_v2.util.ResultUtils;
 import com.hx.blog_v2.util.SqlUtils;
 import com.hx.common.interf.common.Page;
 import com.hx.common.interf.common.Result;
+import com.hx.flow.flow.interf.StateMachine;
 import com.hx.json.JSONArray;
 import com.hx.log.collection.CollectionUtils;
 import com.hx.log.file.FileUtils;
@@ -69,6 +72,10 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
     private BlogConstants constants;
     @Autowired
     private ConstantsContext constantsContext;
+    /**
+     * 维护博客状态的状态机
+     */
+    private StateMachine<BlogState, BlogStateAction> stateMachine = StateMachineUtils.BLOG_STATE_MACHINE;
 
     @Override
     public Result save(BlogSaveForm params) {
@@ -185,6 +192,18 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
 
     @Override
     public Result remove(BeanIdForm params) {
+        Result getBlogResult = blogDao.get(new BeanIdForm(params.getId()));
+        if (!getBlogResult.isSuccess()) {
+            return getBlogResult;
+        }
+        BlogPO poFromServer = (BlogPO) getBlogResult.getData();
+        if (params.isCheckSelf()) {
+            SessionUser user = (SessionUser) WebContext.getAttributeFromSession(BlogConstants.SESSION_USER);
+            if (!poFromServer.getAuthor().equals(user.getName())) {
+                return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " bad operation !");
+            }
+        }
+
         String updatedAt = DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
         Result removeBlogResult = blogDao.update(Criteria.eq("id", params.getId()),
                 Criteria.set("deleted", "1").add("updated_at", updatedAt));
@@ -194,26 +213,21 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
 
         Result removeCommentResult = commentDao.update(Criteria.eq("blog_id", params.getId()),
                 Criteria.set("deleted", "1").add("updated_at", updatedAt), true);
-//        if (!removeCommentResult.isSuccess()) {
-//            return removeCommentResult;
-//        }
         Log.log(" 删除了 blog[{}], 级联删除 {} 条评论 ! ", params.getId(), removeCommentResult.getData());
         return ResultUtils.success(params.getId());
     }
 
     @Override
-    public Result audit(BlogSaveForm params) {
+    public Result transfer(BlogSaveForm params) {
         Result getBlogResult = blogDao.get(new BeanIdForm(params.getId()));
         if (!getBlogResult.isSuccess()) {
             return getBlogResult;
         }
+
         BlogPO poFromServer = (BlogPO) getBlogResult.getData();
         BlogState state = BlogState.of(poFromServer.getState());
-        BlogState newState = BlogState.of(params.getState());
-        if (BlogState.AUDIT != state) {
-            return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " bad state ! ");
-        }
-        if ((BlogState.SUCCESS != newState) && (BlogState.FAILED == newState)) {
+        List<BlogState> nextStates = stateMachine.nextStates(state);
+        if (!nextStates.contains(BlogState.of(params.getState()))) {
             return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " bad state ! ");
         }
 
@@ -254,43 +268,46 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
      * @since 1.0
      */
     private Result add0(BlogPO po, BlogSaveForm params) {
-        boolean blogInserted = false, tagsInserted = false;
         BlogState state = BlogState.of(po.getState());
-        if ((BlogState.DRAFT != state) && (BlogState.AUDIT != state)) {
+        List<BlogState> initNextStates = stateMachine.nextStates(stateMachine.initialState());
+        if (!initNextStates.contains(state)) {
             return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " bad state ! ");
         }
 
-        try {
-            blogDao.save(po, BlogConstants.ADD_BEAN_CONFIG);
-            blogExDao.save(new BlogExPO(po.getId()), BlogConstants.ADD_BEAN_CONFIG);
-            blogInserted = true;
+        Result addBlogResult = blogDao.add(po);
+        if (!addBlogResult.isSuccess()) {
+            return addBlogResult;
+        }
+        Result addExResult = blogExDao.add(new BlogExPO(po.getId()));
+        if (!addExResult.isSuccess()) {
+            blogDao.remove(Criteria.eq("id", po.getId()));
+            return addExResult;
+        }
 
-            String[] tagIds = params.getBlogTagIds().split(",");
-            if (!Tools.isEmpty(tagIds)) {
-                Tools.trimAllSpaces(tagIds);
-                List<RltBlogTagPO> blogTags = new ArrayList<>(tagIds.length);
-                for (String tagId : tagIds) {
-                    blogTags.add(new RltBlogTagPO(po.getId(), tagId));
-                }
-                rltBlogTagDao.save(blogTags, BlogConstants.ADD_BEAN_CONFIG);
-                tagsInserted = true;
+        String[] tagIds = params.getBlogTagIds().split(",");
+        if (!Tools.isEmpty(tagIds)) {
+            Tools.trimAllSpaces(tagIds);
+            List<RltBlogTagPO> blogTags = new ArrayList<>(tagIds.length);
+            for (String tagId : tagIds) {
+                blogTags.add(new RltBlogTagPO(po.getId(), tagId));
             }
+            Result addTagsResult = rltBlogTagDao.add(blogTags);
+            if (!addTagsResult.isSuccess()) {
+                blogDao.remove(Criteria.eq("id", po.getId()));
+                blogExDao.remove(Criteria.eq("blog_id", po.getId()), true);
+                return addTagsResult;
+            }
+        }
+
+        try {
             String blogFile = Tools.getFilePath(constants.blogRootDir, po.getContentUrl());
             FileUtils.createIfNotExists(blogFile, true);
             Tools.save(params.getContent(), blogFile);
         } catch (Exception e) {
             e.printStackTrace();
-            try {
-                if (blogInserted) {
-                    remove(new BeanIdForm(po.getId()));
-                    blogExDao.deleteOne(Criteria.eq("blog_id", po.getId()));
-                }
-                if (tagsInserted) {
-                    rltBlogTagDao.deleteMany(Criteria.eq("blog_id", po.getId()));
-                }
-            } catch (Exception e2) {
-                e.printStackTrace();
-            }
+            blogDao.remove(Criteria.eq("id", po.getId()));
+            blogExDao.remove(Criteria.eq("blog_id", po.getId()), true);
+            rltBlogTagDao.remove(Criteria.eq("blog_id", po.getId()), true);
             return ResultUtils.failed(Tools.errorMsg(e));
         }
 
@@ -313,14 +330,16 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
             return getBlogResult;
         }
         BlogPO poFromServer = (BlogPO) getBlogResult.getData();
+        if (params.isCheckSelf()) {
+            SessionUser user = (SessionUser) WebContext.getAttributeFromSession(BlogConstants.SESSION_USER);
+            if (!poFromServer.getAuthor().equals(user.getName())) {
+                return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " bad operation !");
+            }
+        }
         BlogState state = BlogState.of(poFromServer.getState());
-        if ((BlogState.DRAFT == state) && (!po.getState().equals(BlogState.AUDIT.code()))) {
-            return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " bad state !");
-        }
-        if (BlogState.AUDIT == state) {
-            return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " bad state !");
-        }
-        if ((BlogState.SUCCESS == state) && (!po.getState().equals(BlogState.SUCCESS.code()))) {
+        List<BlogState> nextAvailStates = stateMachine.nextStates(state);
+        // 简单起见, 具体的细节状态 这里就不校验了 !
+        if (!nextAvailStates.contains(BlogState.of(params.getState()))) {
             return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " bad state !");
         }
 

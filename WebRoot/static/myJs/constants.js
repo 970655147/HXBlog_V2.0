@@ -59,7 +59,10 @@ var reqMap = {
         adminAdminList: formatContextUrl("/admin/blog/adminList"),
         adminList: formatContextUrl("/admin/blog/list"),
         sense: formatContextUrl("/blog/sense/sense"),
+        adminUpdate: formatContextUrl("/admin/blog/adminUpdate"),
         update: formatContextUrl("/admin/blog/update"),
+        transfer: formatContextUrl("/admin/blog/transfer"),
+        adminRemove: formatContextUrl("/admin/blog/adminRemove"),
         remove: formatContextUrl("/admin/blog/remove")
     },
 

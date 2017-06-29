@@ -48,7 +48,7 @@ layui.define(['element', 'laypage', 'layer', 'form', 'pagesize'], function (expo
                         var item = resp.data.list[i];
                         id2Consumed[item.id] = item.consumed
                         html += '<tr>';
-                        html += '<td> <img src="' + mapMessageUrl(item.consumed) + '" name="imgOf' + item.id + '" width="40px" height="40px" /> </td>';
+                        html += '<td> <img src="' + mapMessageUrl(item.consumed) + '" name="imgOf' + item.id + '" width="50px" height="40px" /> </td>';
                         html += '<td>' + item.senderName + '</td>';
                         html += '<td>' + item.createdAt + '</td>';
                         html += '<td>' + item.subject + '</td>';

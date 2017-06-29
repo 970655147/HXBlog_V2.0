@@ -1,6 +1,7 @@
 package com.hx.blog_v2.domain.dto;
 
 import com.hx.common.interf.common.Code2Msg;
+import com.hx.flow.flow.interf.State;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -12,7 +13,11 @@ import java.util.Map;
  * @version 1.0
  * @date 6/11/2017 2:30 PM
  */
-public enum BlogState implements Code2Msg<String, String> {
+public enum BlogState implements Code2Msg<String, String>, State<BlogState> {
+    /**
+     * 初始状态
+     */
+    INIT("0", "init"),
     /**
      * 草稿箱
      */
@@ -78,5 +83,31 @@ public enum BlogState implements Code2Msg<String, String> {
     @Override
     public String msg() {
         return msg;
+    }
+
+
+    @Override
+    public String id() {
+        return code;
+    }
+
+    @Override
+    public BlogState create(String id, Object extra) {
+        return of(id);
+    }
+
+    @Override
+    public BlogState idOf(String id) {
+        return of(id);
+    }
+
+    @Override
+    public BlogState state() {
+        return this;
+    }
+
+    @Override
+    public Object extra() {
+        return null;
     }
 }

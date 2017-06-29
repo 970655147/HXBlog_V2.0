@@ -15,6 +15,9 @@ initTypeAndTags()
 // 如果是更新博客的话, 更新加载博客原有的内容
 queryParams = getParamsFromUrl(window.location.href)
 var currentBlogId = queryParams.id
+var editType = queryParams.editType
+var blog = null
+
 if (!isEmpty(currentBlogId)) {
     ajax({
         url: reqMap.blog.adminGet,
@@ -23,7 +26,7 @@ if (!isEmpty(currentBlogId)) {
         async: false,
         success: function (resp) {
             if (resp.success) {
-                var blog = resp.data
+                blog = resp.data
                 $("[name='id']").attr("value", currentBlogId)
                 $("[name='title']").attr("value", blog.title)
                 $("[name='author']").attr("value", blog.author)
@@ -47,6 +50,10 @@ if (!isEmpty(currentBlogId)) {
                 ue.ready(function () {
                     UE.getEditor('editor').execCommand('insertHtml', blog.content)
                 });
+
+                if("10" !== blog.state) {
+                    $("#draftBlog").css("display", "none")
+                }
             } else {
                 alert("拉取博客信息失败[" + resp.data + "] !", {icon: 5});
             }
@@ -64,8 +71,14 @@ layui.define(['form', 'upload', 'layer'], function (exports) {
     form.on('submit(submitBlog)', function (data) {
         $("[name='blogTagIds']").attr("value", collectAttrValues($("#tagSelected .layui-form-checked"), "value", ", ", false))
         $("[name='state']").attr("value", "20")
+        if("40" === blog.state) {
+            $("[name='state']").attr("value", "40")
+        }
         $("[name='content']").attr("value", ue.getContent())
         var saveUrl = (isEmpty(currentBlogId)) ? reqMap.blog.add : reqMap.blog.update
+        if((saveUrl === reqMap.blog.update) && ("admin"  === editType) ) {
+            saveUrl = reqMap.blog.adminUpdate
+        }
 
         ajax({
             url: saveUrl,
@@ -93,6 +106,9 @@ layui.define(['form', 'upload', 'layer'], function (exports) {
         $("[name='state']").attr("value", "10")
         $("[name='content']").attr("value", ue.getContent())
         var saveUrl = (isEmpty(currentBlogId)) ? reqMap.blog.add : reqMap.blog.update
+        if((saveUrl === reqMap.blog.update) && ("admin"  === editType) ) {
+            saveUrl = reqMap.blog.adminUpdate
+        }
 
         ajax({
             url: saveUrl,

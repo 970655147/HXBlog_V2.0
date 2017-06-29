@@ -33,6 +33,11 @@
             <artifactId>HXMongo</artifactId>
             <version>${HXLog.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.hx</groupId>
+            <artifactId>HXFlow</artifactId>
+            <version>${HXLog.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>javax.servlet</groupId>

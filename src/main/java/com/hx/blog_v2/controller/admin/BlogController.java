@@ -99,6 +99,20 @@ public class BlogController {
         return blogService.adminList(params, page);
     }
 
+    @RequestMapping(value = "/adminUpdate", method = RequestMethod.POST)
+    public Result adminUpdate(BlogSaveForm params) {
+        Result errResult = blogSaveValidator.validate(params, null);
+        if (!errResult.isSuccess()) {
+            return errResult;
+        }
+        if (Tools.isEmpty(params.getId())) {
+            return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " id 为空 ! ");
+        }
+
+        params.setCheckSelf(false);
+        return blogService.save(params);
+    }
+
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     public Result update(BlogSaveForm params) {
         Result errResult = blogSaveValidator.validate(params, null);
@@ -109,7 +123,20 @@ public class BlogController {
             return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " id 为空 ! ");
         }
 
+        params.setCheckSelf(true);
         return blogService.save(params);
+    }
+
+    @RequestMapping(value = "/adminRemove", method = RequestMethod.POST)
+    @BizHandle(handler = "blogRemoveHandler")
+    public Result adminRemove(BeanIdForm params) {
+        Result errResult = beanIdValidator.validate(params, null);
+        if (!errResult.isSuccess()) {
+            return errResult;
+        }
+
+        params.setCheckSelf(false);
+        return blogService.remove(params);
     }
 
     @RequestMapping(value = "/remove", method = RequestMethod.POST)
@@ -120,17 +147,18 @@ public class BlogController {
             return errResult;
         }
 
+        params.setCheckSelf(true);
         return blogService.remove(params);
     }
 
-    @RequestMapping(value = "/audit", method = RequestMethod.POST)
-    public Result audit(BlogSaveForm params) {
+    @RequestMapping(value = "/transfer", method = RequestMethod.POST)
+    public Result transfer(BlogSaveForm params) {
         Result errResult = auditValidator.validate(params, null);
         if (!errResult.isSuccess()) {
             return errResult;
         }
 
-        return blogService.audit(params);
+        return blogService.transfer(params);
     }
 
 }

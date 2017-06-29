@@ -18,6 +18,10 @@ public class BlogSaveForm {
     private String state;
     private String summary;
     private String content;
+    /**
+     * 是否需要校验给定的博客是当前用户的
+     */
+    private boolean checkSelf;
 
     public BlogSaveForm() {
     }
@@ -92,5 +96,13 @@ public class BlogSaveForm {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public boolean isCheckSelf() {
+        return checkSelf;
+    }
+
+    public void setCheckSelf(boolean checkSelf) {
+        this.checkSelf = checkSelf;
     }
 }

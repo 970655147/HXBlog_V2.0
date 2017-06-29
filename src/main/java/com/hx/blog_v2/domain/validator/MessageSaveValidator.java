@@ -48,15 +48,25 @@ public class MessageSaveValidator implements Validator<MessageSaveForm> {
         if (!Tools.isEmpty(form.getUserNames())) {
             return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " ! ");
         }
-        Result errResult = beanIdsStrValidator.validate(form.getUserIds(), extra);
-        if (!errResult.isSuccess()) {
-            return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " 指定的 userId 列表格式不正确 ! ");
+        boolean withTarget = false;
+        if (!Tools.isEmpty(form.getUserIds())) {
+            Result errResult = beanIdsStrValidator.validate(form.getUserIds(), extra);
+            if (!errResult.isSuccess()) {
+                return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " 指定的 userId 列表格式不正确 ! ");
+            }
+            withTarget = true;
         }
-        errResult = beanIdsStrValidator.validate(form.getRoleIds(), extra);
-        if (!errResult.isSuccess()) {
-            return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " 指定的 roleIds 列表格式不正确 ! ");
+        if (!Tools.isEmpty(form.getRoleIds())) {
+            Result errResult = beanIdsStrValidator.validate(form.getRoleIds(), extra);
+            if (!errResult.isSuccess()) {
+                return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " 指定的 roleIds 列表格式不正确 ! ");
+            }
+            withTarget = true;
         }
-        errResult = messageTypeValidator.validate(form.getType(), extra);
+        if (!withTarget) {
+            return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " 请指定发送消息的对象 ! ");
+        }
+        Result errResult = messageTypeValidator.validate(form.getType(), extra);
         if (!errResult.isSuccess()) {
             return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " type 不合法 ! ");
         }
