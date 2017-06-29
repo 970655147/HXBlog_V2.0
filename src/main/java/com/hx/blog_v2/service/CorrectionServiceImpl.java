@@ -5,6 +5,7 @@ import com.hx.blog_v2.context.ConstantsContext;
 import com.hx.blog_v2.dao.interf.BlogExDao;
 import com.hx.blog_v2.domain.ErrorCode;
 import com.hx.blog_v2.domain.dto.CorrectionType;
+import com.hx.blog_v2.domain.dto.SenseType;
 import com.hx.blog_v2.domain.dto.StringIntPair;
 import com.hx.blog_v2.domain.dto.StringStringPair;
 import com.hx.blog_v2.domain.form.CorrectionSearchForm;
@@ -125,7 +126,7 @@ public class CorrectionServiceImpl extends BaseServiceImpl<Object> implements Co
         cacheContext.clearScoreCached();
 
         String scoreByBlogIdSql = " select blog_id, score from blog_sense where sense = ? group by blog_id, score ";
-        List<StringIntPair> scoreByBlogId = jdbcTemplate.query(scoreByBlogIdSql, new Object[]{constantsContext.upPriseSense}, new StringIntPairMapper("blog_id", "score"));
+        List<StringIntPair> scoreByBlogId = jdbcTemplate.query(scoreByBlogIdSql, new Object[]{SenseType.GOOD.code()}, new StringIntPairMapper("blog_id", "score"));
         Set<String> blogIds = new HashSet<>();
         Map<String, Integer> blogScore2Cnt = new HashMap<>();
         for (StringIntPair pair : scoreByBlogId) {
@@ -276,7 +277,7 @@ public class CorrectionServiceImpl extends BaseServiceImpl<Object> implements Co
         cacheContext.clearScoreCached();
 
         String scoreByBlogIdSql = " select score from blog_sense where sense = ? and blog_id = ? group by blog_id, score ";
-        List<String> scores = jdbcTemplate.query(scoreByBlogIdSql, new Object[]{constantsContext.upPriseSense, blogId}, new OneStringMapper("score"));
+        List<String> scores = jdbcTemplate.query(scoreByBlogIdSql, new Object[]{SenseType.GOOD.code(), blogId}, new OneStringMapper("score"));
         String blogExSql = " select blog_id, good1_cnt, good2_cnt, good3_cnt, good4_cnt, good5_cnt, good_total_cnt, good_total_score from blog_ex where blog_id = ? ";
         List<BlogExPO> blogExes = jdbcTemplate.query(blogExSql, new Object[]{blogId}, new CommonPOMapper<>(BlogExPO.PROTO_BEAN));
         if (Tools.isEmpty(blogExes) || (blogExes.size() > 1)) {
@@ -300,7 +301,7 @@ public class CorrectionServiceImpl extends BaseServiceImpl<Object> implements Co
         cacheContext.clearScoreCached();
 
         String scoreByBlogIdSql = " select blog_id, score from blog_sense where sense = ? group by blog_id, score ";
-        List<StringIntPair> scoreByBlogId = jdbcTemplate.query(scoreByBlogIdSql, new Object[]{constantsContext.upPriseSense}, new StringIntPairMapper("blog_id", "score"));
+        List<StringIntPair> scoreByBlogId = jdbcTemplate.query(scoreByBlogIdSql, new Object[]{SenseType.GOOD.code()}, new StringIntPairMapper("blog_id", "score"));
         Set<String> blogIds = new HashSet<>();
         Map<String, Integer> blogScore2Cnt = new HashMap<>();
         for (StringIntPair pair : scoreByBlogId) {

@@ -212,14 +212,6 @@ public final class BlogConstants {
      */
     public static final String REPLY_COMMENT_SUFFIX = "comment.reply.suffix";
     /**
-     * 点赞的 sense
-     */
-    public static final String UP_PRISE_SENSE = "sense.up_prise";
-    /**
-     * 点赞的 sense
-     */
-    public static final String VIEW_SENSE = "sense.view";
-    /**
      * 资源重排 sort 的起始值
      */
     public static final String RE_SORT_START = "resort.start";

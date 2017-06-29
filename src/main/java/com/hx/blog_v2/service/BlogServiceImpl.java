@@ -9,6 +9,7 @@ import com.hx.blog_v2.domain.POVOTransferUtils;
 import com.hx.blog_v2.domain.StateMachineUtils;
 import com.hx.blog_v2.domain.dto.BlogState;
 import com.hx.blog_v2.domain.dto.BlogStateAction;
+import com.hx.blog_v2.domain.dto.SenseType;
 import com.hx.blog_v2.domain.dto.SessionUser;
 import com.hx.blog_v2.domain.form.BeanIdForm;
 import com.hx.blog_v2.domain.form.BlogSaveForm;
@@ -664,7 +665,7 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
 
         BlogSenseForm params = new BlogSenseForm();
         params.setBlogId(blogId);
-        params.setSense(constantsContext.upPriseSense);
+        params.setSense(SenseType.GOOD.code());
         params.setUserInfo(user);
 
         Result getSenseResult = senseDao.get(params);

@@ -3,6 +3,7 @@ package com.hx.blog_v2.context;
 import com.hx.blog_v2.dao.interf.SystemConfigDao;
 import com.hx.blog_v2.domain.dto.ConfigType;
 import com.hx.blog_v2.domain.dto.ImageType;
+import com.hx.blog_v2.domain.dto.SenseType;
 import com.hx.blog_v2.domain.po.SystemConfigPO;
 import com.hx.blog_v2.util.BizUtils;
 import com.hx.blog_v2.util.BlogConstants;
@@ -113,8 +114,6 @@ public class ConstantsContext {
     public int resourceLeaveLevel;
     public String replyCommentPrefix;
     public String replyCommentSuffix;
-    public String upPriseSense;
-    public String viewSense;
     public int reSortStart;
     public int reSortOffset;
 
@@ -530,8 +529,6 @@ public class ConstantsContext {
             resourceLeaveLevel = Tools.optInt(systemConfig, BlogConstants.RESOURCE_LEAVE_LEVEL, 2);
             replyCommentPrefix = Tools.optString(systemConfig, BlogConstants.REPLY_COMMENT_PREFIX, "[reply]");
             replyCommentSuffix = Tools.optString(systemConfig, BlogConstants.REPLY_COMMENT_SUFFIX, "[/reply]");
-            upPriseSense = Tools.optString(systemConfig, BlogConstants.UP_PRISE_SENSE, "good");
-            viewSense = Tools.optString(systemConfig, BlogConstants.VIEW_SENSE, "view");
             reSortStart = Tools.optInt(systemConfig, BlogConstants.RE_SORT_START, 0);
             reSortOffset = Tools.optInt(systemConfig, BlogConstants.RE_SORT_OFFSET, 10);
 

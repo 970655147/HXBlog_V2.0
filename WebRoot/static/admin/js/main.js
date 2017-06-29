@@ -162,7 +162,7 @@ layui.define(['element', 'layer', 'util', 'pagesize', 'form'], function (exports
                 var content = '<p>目前有<span>' + respInfo.cnt + '</span>条消息<a href="javascript:void(0)" onclick="layui.funcs.toViewMessage()" >点击查看</a></p>';
                 for (var idx in respInfo.list) {
                     var toRead = respInfo.list[idx]
-                    content += '<span>' + toRead.left + ' : <span style="display:inline;" >' + toRead.right + '</span></span>';
+                    content += '<span>' + toRead.left + ' : <span style="display:inline;" >' + toRead.right + '</span></span><br/>';
                 }
                 content += '<div class="notnotice" >不再提醒</div>';
                 layerSteward = layer.open({
@@ -170,8 +170,8 @@ layui.define(['element', 'layer', 'util', 'pagesize', 'form'], function (exports
                     title: '管家提醒',
                     shade: 0,
                     resize: false,
-                    area: ['340px', '215px'],
-                    // time: 10000, //10秒后自动关闭
+                    area: ['400px', '300px'],
+                    time: 10000, //10秒后自动关闭
                     skin: 'steward',
                     closeBtn: 1,
                     anim: 2,
