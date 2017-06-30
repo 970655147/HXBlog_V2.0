@@ -45,8 +45,14 @@ public class VisibleValidator implements Validator<String> {
      * @since 1.0
      */
     private boolean isCharLegal(char ch) {
-        for (int i = 0; i < START_POS.length; i++) {
-            if ((ch >= START_POS[i]) && (ch <= END_POS[i])) {
+        if(ch <= 128) {
+            for (int i = 0; i < START_POS.length; i++) {
+                if ((ch >= START_POS[i]) && (ch <= END_POS[i])) {
+                    return false;
+                }
+            }
+        } else {
+            if((ch < 0x4E00) || (ch > 0x9FA5) ) {
                 return false;
             }
         }

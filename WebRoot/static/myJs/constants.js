@@ -196,6 +196,7 @@ var reqMap = {
         add: formatContextUrl("/admin/link/add"),
         list: formatContextUrl("/admin/link/list"),
         update: formatContextUrl("/admin/link/update"),
+        reSort: formatContextUrl("/admin/link/reSort"),
         remove: formatContextUrl("/admin/link/remove")
     },
 

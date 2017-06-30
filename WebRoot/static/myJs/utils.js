@@ -302,7 +302,7 @@ function ajax(config) {
             //     layer.close(interceptorDialog)
             //     interceptorDialog = null
             // })
-            return false
+            return true
         } else {
             return true;
         }

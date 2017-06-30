@@ -3,10 +3,7 @@ package com.hx.blog_v2.service.interf;
 import com.hx.blog_v2.domain.form.BeanIdForm;
 import com.hx.blog_v2.domain.form.LinkSaveForm;
 import com.hx.blog_v2.domain.po.LinkPO;
-import com.hx.blog_v2.domain.vo.AdminLinkVO;
-import com.hx.common.interf.common.Page;
 import com.hx.common.interf.common.Result;
-import com.hx.common.result.SimplePage;
 
 /**
  * BlogService
@@ -18,7 +15,7 @@ import com.hx.common.result.SimplePage;
 public interface LinkService extends BaseService<LinkPO> {
 
     /**
-     * 增加一个 心情
+     * 增加一个 实体
      *
      * @return result
      * @author Jerry.X.He
@@ -28,7 +25,17 @@ public interface LinkService extends BaseService<LinkPO> {
     Result add(LinkSaveForm params);
 
     /**
-     * 搜索符合的条件的心情列表
+     * 获取客户可见的 友情链接列表
+     *
+     * @return result
+     * @author Jerry.X.He
+     * @date 5/20/2017 6:21 PM
+     * @since 1.0
+     */
+    Result list();
+
+    /**
+     * 获取友情链接列表
      *
      * @return result
      * @author Jerry.X.He
@@ -38,7 +45,7 @@ public interface LinkService extends BaseService<LinkPO> {
     Result adminList();
 
     /**
-     * 更新给定的心情
+     * 更新给定的实体
      *
      * @return result
      * @author Jerry.X.He
@@ -48,7 +55,7 @@ public interface LinkService extends BaseService<LinkPO> {
     Result update(LinkSaveForm params);
 
     /**
-     * 移除给定的心情
+     * 移除给定的实体
      *
      * @return result
      * @author Jerry.X.He
@@ -56,5 +63,16 @@ public interface LinkService extends BaseService<LinkPO> {
      * @since 1.0
      */
     Result remove(BeanIdForm params);
+
+
+    /**
+     * 重排给定的实体
+     *
+     * @return result
+     * @author Jerry.X.He
+     * @date 5/20/2017 6:21 PM
+     * @since 1.0
+     */
+    Result reSort();
 
 }

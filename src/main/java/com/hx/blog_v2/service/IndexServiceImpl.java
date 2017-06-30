@@ -65,7 +65,8 @@ public class IndexServiceImpl extends BaseServiceImpl<Object> implements IndexSe
         List<BlogVO> hotBlogs = jdbcTemplate.query(hotBlogsSql, new BlogVOMapper());
         List<CommentVO> latestComments = jdbcTemplate.query(latestCommentsSql, new CommentVOMapper());
         BlogVO contextBlog = jdbcTemplate.queryForObject(contextBlogSql, new BlogVOMapper());
-        Integer todayVisited = cacheContext.todaysStatistics().getViewCnt();
+        Integer todayVisited = cacheContext.todaysStatistics().getDayFlushViewCnt();
+        Integer totalVisited = cacheContext.sumStatistics().getDayFlushViewCnt();
         encapBlogVo(hotBlogs);
         blogService.encapSense(contextBlog);
         encapBlogVo(contextBlog);
@@ -79,7 +80,7 @@ public class IndexServiceImpl extends BaseServiceImpl<Object> implements IndexSe
         data.put("subTitle", constantsContext.frontIdxPageSubTitle);
         data.put("tags", tags2List(cacheContext.allBlogTags()));
         data.put("types", tags2List(cacheContext.allBlogTypes()));
-        data.put("links", linkService.adminList().getData());
+        data.put("links", linkService.list().getData());
 
         data.put("hotBlogs", hotBlogs);
         data.put("latestComments", latestComments);
@@ -87,6 +88,7 @@ public class IndexServiceImpl extends BaseServiceImpl<Object> implements IndexSe
         data.put("goodSensed", contextBlog.getGoodSensed() != 0);
         data.put("goodCnt", contextBlog.getGoodTotalCnt());
         data.put("todayVisited", todayVisited);
+        data.put("totalVisited", totalVisited);
         // 本周, 本月, 合计
 
         return ResultUtils.success(data);

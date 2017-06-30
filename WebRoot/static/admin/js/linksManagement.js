@@ -198,6 +198,22 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
             }, function () {
 
             });
+        },
+        reSort: function () {
+            ajax({
+                url: reqMap.link.reSort,
+                type: "POST",
+                data: {},
+                success: function (resp) {
+                    if (resp.success) {
+                        layer.alert('刷新排序成功 !', function () {
+                            refresh()
+                        });
+                    } else {
+                        layer.alert('刷新排序失败[' + resp.data + '], 请联系管理人员!');
+                    }
+                }
+            });
         }
     }
     exports('funcs', funcs);

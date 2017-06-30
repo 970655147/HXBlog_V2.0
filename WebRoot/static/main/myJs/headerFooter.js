@@ -112,6 +112,7 @@ function headerFooterInit() {
 
                 $("[name='projLikeCntEle']").text(data.goodSensed)
                 $("[name='todayVisitedEle']").text(data.todayVisited)
+                $("[name='totalVisitedEle']").text(data.totalVisited)
 
                 heartInit("[name='projHeartEle']", "[name='projLikeCntEle']", data.goodCnt, data.goodSensed)
                 heartClick("[name='projHeartEle']", "[name='projLikeCntEle']", function () {
@@ -139,6 +140,11 @@ function headerFooterInit() {
                         {tips: [3], time: 1000});
                 }, function () {
 
+                })
+
+                $("[name='searchBtn']").click(function() {
+                    location.href = "/static/main/blogList.html?keywords=" + $("[name='keywords']").val()
+                    return false
                 })
             }
         }

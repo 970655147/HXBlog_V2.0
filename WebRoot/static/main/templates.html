@@ -8,12 +8,13 @@
                 <div class="header-search">
                     <div class="search">
                         <input class="search_box" type="checkbox" id="search_box">
-                        <label class="icon-search" for="search_box"><span class="glyphicon glyphicon-search"
-                                                                          aria-hidden="true"></span></label>
+                        <label class="icon-search" for="search_box">
+                            <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                        </label>
                         <div class="search_form">
                             <form action="#" method="post">
-                                <input type="text" name="Search" placeholder="Search...">
-                                <input type="submit" value="Send">
+                                <input type="text" name="keywords" placeholder="search what you want ...">
+                                <input type="submit" name="searchBtn" value="Send">
                             </form>
                         </div>
                     </div>
@@ -81,8 +82,8 @@
 
                 <div class="search-1 wow fadeInDown" data-wow-duration=".8s" data-wow-delay=".2s">
                     <form action="#" method="post">
-                        <input type="search" name="Search" value="Search" required>
-                        <input type="submit" value=" ">
+                        <input type="search" name="keywords" required />
+                        <input type="submit" name="searchBtn" value="" />
                     </form>
                 </div><!--搜索结束-->
 
@@ -273,8 +274,9 @@
             <div class="col-md-4 footer-left wow fadeInDown" data-wow-duration=".8s" data-wow-delay=".2s">
                 <h4>关于本站</h4>
                 <p name="siteTime"></p>
-                <p>网站总访问量: <span name="todayVisitedEle"> </span></p>
-                <img src="http://op93pqovl.bkt.clouddn.com/images/t4.jpg" class="img-responsive" alt="">
+                <p>今日访问量: <span name="todayVisitedEle"> </span></p>
+                <p>网站总访问量: <span name="totalVisitedEle"> </span></p>
+                <img src="http://localhost/files/2017/06/30/DDAC6BB2AFEAA3EC2E5748BD1EF6A2C7.gif" class="img-responsive" alt="">
                 <div class="bht1">
                     <a href="/">Read More</a>
                 </div>

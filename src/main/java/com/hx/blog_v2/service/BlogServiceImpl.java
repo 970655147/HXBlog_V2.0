@@ -141,7 +141,8 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
                 " inner join rlt_blog_tag as rlt on b.id = rlt.blog_id " +
                 " where b.deleted = 0 and b.id >= 0 and b.state='" + BlogState.SUCCESS.code() + "' ";
         String selectSqlSuffix = " group by b.id order by b.created_at desc limit ?, ?";
-        String countSql = " select count(*) as totalRecord from blog as b where b.deleted = 0 and b.id >= 0 ";
+        String countSql = " select count(*) as totalRecord from blog as b where b.deleted = 0 and b.id >= 0 " +
+                " and b.state='" + BlogState.SUCCESS.code() + "' ";
 
         StringBuilder condSqlSb = new StringBuilder();
         List<Object> selectParams = new ArrayList<>(3);

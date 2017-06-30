@@ -1,6 +1,7 @@
 package com.hx.blog_v2.service;
 
 import com.hx.blog_v2.context.CacheContext;
+import com.hx.blog_v2.context.ConstantsContext;
 import com.hx.blog_v2.dao.interf.LinkDao;
 import com.hx.blog_v2.domain.POVOTransferUtils;
 import com.hx.blog_v2.domain.form.BeanIdForm;
@@ -9,6 +10,7 @@ import com.hx.blog_v2.domain.po.LinkPO;
 import com.hx.blog_v2.domain.vo.AdminLinkVO;
 import com.hx.blog_v2.service.interf.BaseServiceImpl;
 import com.hx.blog_v2.service.interf.LinkService;
+import com.hx.blog_v2.util.BizUtils;
 import com.hx.blog_v2.util.BlogConstants;
 import com.hx.blog_v2.util.DateUtils;
 import com.hx.blog_v2.util.ResultUtils;
@@ -38,6 +40,8 @@ public class LinkServiceImpl extends BaseServiceImpl<LinkPO> implements LinkServ
     private LinkDao linkDao;
     @Autowired
     private CacheContext cacheContext;
+    @Autowired
+    private ConstantsContext constantsContext;
 
     @Override
     public Result add(LinkSaveForm params) {
@@ -49,6 +53,19 @@ public class LinkServiceImpl extends BaseServiceImpl<LinkPO> implements LinkServ
         }
         cacheContext.putLink(po);
         return ResultUtils.success(po.getId());
+    }
+
+    @Override
+    public Result list() {
+        Map<String, LinkPO> allLinks = cacheContext.allLinks();
+        List<AdminLinkVO> list = new ArrayList<>(allLinks.size());
+        for (Map.Entry<String, LinkPO> entry : allLinks.entrySet()) {
+            LinkPO link = entry.getValue();
+            if (link.getEnable() == 1) {
+                list.add(POVOTransferUtils.linkPO2AdminLinkVO(link));
+            }
+        }
+        return ResultUtils.success(list);
     }
 
     @Override
@@ -94,5 +111,23 @@ public class LinkServiceImpl extends BaseServiceImpl<LinkPO> implements LinkServ
 
         return ResultUtils.success(params.getId());
     }
+
+    @Override
+    public Result reSort() {
+        Map<String, LinkPO> links = cacheContext.allLinks();
+        List<LinkPO> sortedLinks = BizUtils.resort(links);
+        int sort = constantsContext.reSortStart;
+        for (LinkPO link : sortedLinks) {
+            boolean isSortChanged = sort != link.getSort();
+            if (isSortChanged) {
+                link.setSort(sort);
+                linkDao.update(link);
+            }
+            sort += constantsContext.reSortOffset;
+        }
+
+        return ResultUtils.success("success");
+    }
+
 
 }
