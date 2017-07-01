@@ -87,12 +87,13 @@ public class MessageServiceImpl extends BaseServiceImpl<MessagePO> implements Me
             return result;
         }
 
-        if (constantsContext.sendEmailIfWithNotify && (!Tools.isEmpty(allMsg))) {
-            Result sendEmailResult = sendEmailNotify(userIds, allMsg);
-            if (!sendEmailResult.isSuccess()) {
-                return sendEmailResult;
-            }
-        }
+        // TODO: 7/1/2017 上线注释部分代码
+//        if (constantsContext.sendEmailIfWithNotify && (!Tools.isEmpty(allMsg))) {
+//            Result sendEmailResult = sendEmailNotify(userIds, allMsg);
+//            if (!sendEmailResult.isSuccess()) {
+//                return sendEmailResult;
+//            }
+//        }
         return ResultUtils.success(collectMessageIds(allMsg));
     }
 

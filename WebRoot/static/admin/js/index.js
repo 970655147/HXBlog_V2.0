@@ -5,9 +5,9 @@ layui.define([ 'layer', 'form'], function (exports) {
 
     //自定义验证
     form.verify({
-        password: [/^[\S]{6,12}$/, '密码必须6到12位'],
+        password: [/^[\S]{3,32}$/, '密码必须3到32位'],
         userName: function (value) {
-            if (value.length <= 0 || value.length > 10) {
+            if (value.length <= 3 || value.length > 32) {
                 return "账号必须1到10位"
             }
             var reg = /^[a-zA-Z0-9]*$/;
@@ -94,16 +94,17 @@ layui.define([ 'layer', 'form'], function (exports) {
         loginHtml += '</div>';
         loginHtml += '</div>';
         loginHtml += '<div class="layui-form-item">';
-        loginHtml += '<label class="layui-form-label">人机验证</label>';
-        loginHtml += '<div class="layui-input-inline pm-login-input">';
-        loginHtml += '<div class="l-captcha" lay-verify="result_response" data-site-key="0c5f2ddcf3eb0f58a678e0c50e0d736e"></div>';
-        loginHtml += '</div>';
-        loginHtml += '</div>';
-        loginHtml += '<div class="layui-form-item" style="margin-top:25px;margin-bottom:0;">';
+        // TODO: 7/1/2017 上线注释部分代码
+        // loginHtml += '<label class="layui-form-label">人机验证</label>';
+        // loginHtml += '<div class="layui-input-inline pm-login-input">';
+        // loginHtml += '<div class="l-captcha" lay-verify="result_response" data-site-key="0c5f2ddcf3eb0f58a678e0c50e0d736e"></div>';
+        // loginHtml += '</div>';
+        // loginHtml += '</div>';
+        // loginHtml += '<div class="layui-form-item" style="margin-top:25px;margin-bottom:0;">';
         loginHtml += '<div class="layui-input-block">';
         loginHtml += ' <button class="layui-btn" style="width:230px;" lay-submit="" lay-filter="login">立即登录</button>';
-        loginHtml += ' </div>';
-        loginHtml += ' </div>';
+        loginHtml += '</div>';
+        loginHtml += '</div>';
         loginHtml += '</form>';
         loginHtml +='<script src="//captcha.luosimao.com/static/dist/api.js"></script>';
 

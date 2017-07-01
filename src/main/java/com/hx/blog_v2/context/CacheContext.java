@@ -273,6 +273,7 @@ public class CacheContext {
         if (BizUtils.flagExists(clearFlag, REFRESH_STATISTICS_CACHED)) {
             todaysStatistics = new StatisticsInfo();
             recentlyStatistics.clear();
+            recentlySumStatistics = null;
             sumStatistics = new StatisticsInfo();
             now5SecStatistics = new StatisticsInfo();
             all5SecStatistics.clear();

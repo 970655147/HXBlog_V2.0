@@ -71,7 +71,7 @@ layui.define(['form', 'upload', 'layer'], function (exports) {
     form.on('submit(submitBlog)', function (data) {
         $("[name='blogTagIds']").attr("value", collectAttrValues($("#tagSelected .layui-form-checked"), "value", ", ", false))
         $("[name='state']").attr("value", "20")
-        if("40" === blog.state) {
+        if((blog !== null) && (blog !== undefined) && ("40" === blog.state)) {
             $("[name='state']").attr("value", "40")
         }
         $("[name='content']").attr("value", ue.getContent())

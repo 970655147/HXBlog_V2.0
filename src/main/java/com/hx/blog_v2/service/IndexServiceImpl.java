@@ -88,7 +88,7 @@ public class IndexServiceImpl extends BaseServiceImpl<Object> implements IndexSe
         data.put("goodSensed", contextBlog.getGoodSensed() != 0);
         data.put("goodCnt", contextBlog.getGoodTotalCnt());
         data.put("todayVisited", todayVisited);
-        data.put("totalVisited", totalVisited);
+        data.put("totalVisited", todayVisited + totalVisited);
         // 本周, 本月, 合计
 
         return ResultUtils.success(data);

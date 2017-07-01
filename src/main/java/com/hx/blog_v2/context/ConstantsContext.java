@@ -73,7 +73,8 @@ public class ConstantsContext {
      * 标签转义配置
      */
     public static final JSONArray DEFAULT_PARAMS_NEED_TO_CUT = new JSONArray()
-            .element("/admin/blog/add").element("/admin/blog/update").element("/comment/add");
+            .element("/admin/blog/add").element("/admin/blog/adminUpdate").element("/admin/blog/update")
+            .element("/comment/add");
 
     @Autowired
     private SystemConfigDao systemConfigDao;

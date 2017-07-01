@@ -276,6 +276,8 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
             return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " bad state ! ");
         }
 
+        // TODO: 7/1/2017 上线注释部分代码
+        po.setState(BlogState.SUCCESS.code());
         Result addBlogResult = blogDao.add(po);
         if (!addBlogResult.isSuccess()) {
             return addBlogResult;
@@ -346,6 +348,8 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
         }
 
 
+        // TODO: 7/1/2017 上线注释部分代码
+        po.setState(BlogState.SUCCESS.code());
         po.setId(params.getId());
         po.setUpdatedAt(DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS));
         Result updateBlogResult = blogDao.update(po);
