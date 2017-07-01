@@ -12,6 +12,7 @@ import com.hx.blog_v2.domain.form.MessageSearchForm;
 import com.hx.blog_v2.domain.mapper.*;
 import com.hx.blog_v2.domain.po.EmailPO;
 import com.hx.blog_v2.domain.po.MessagePO;
+import com.hx.blog_v2.domain.validator.EmailValidator;
 import com.hx.blog_v2.domain.vo.MessageVO;
 import com.hx.blog_v2.service.interf.BaseServiceImpl;
 import com.hx.blog_v2.service.interf.EmailService;
@@ -51,6 +52,8 @@ public class MessageServiceImpl extends BaseServiceImpl<MessagePO> implements Me
     private JdbcTemplate jdbcTemplate;
     @Autowired
     private ConstantsContext constantsContext;
+    @Autowired
+    private EmailValidator emailValidator;
 
     @Override
     public Result add(MessageSaveForm params) {
@@ -341,7 +344,8 @@ public class MessageServiceImpl extends BaseServiceImpl<MessagePO> implements Me
                 new StringStringPairMapper("user_name", "email"));
         List<String> to = new ArrayList<>(userName2Email.size());
         for (StringStringPair pair : userName2Email) {
-            if (!Tools.isEmpty(pair.getRight())) {
+            Result emailValidateResult = emailValidator.validate(pair.getRight(), null);
+            if (emailValidateResult.isSuccess()) {
                 to.add(pair.getRight());
             }
         }

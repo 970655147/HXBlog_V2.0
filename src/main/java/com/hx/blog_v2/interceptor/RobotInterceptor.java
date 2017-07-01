@@ -108,6 +108,7 @@ public class RobotInterceptor extends HandlerInterceptorAdapter {
         SessionUser user = (SessionUser) WebContext.getAttributeFromSession(BlogConstants.SESSION_USER);
         if (user == null) {
             user = new SessionUser();
+            user.setId(constantsContext.guestDummyId);
             user.setTitle(constantsContext.guestTitle);
             user.setRoleIds(constantsContext.guestRoles);
             user.setSystemUser(false);

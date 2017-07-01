@@ -26,7 +26,10 @@ public class RegexWValidator extends ConfigRefreshableValidator<String> implemen
      */
     private int minLen = -1;
     private int maxLen = -1;
-
+    /**
+     * 特殊的排除在外的字符
+     */
+    private String specialExceptedChars;
 
     @Override
     public Result doValidate(String form, Object extra) {
@@ -56,6 +59,7 @@ public class RegexWValidator extends ConfigRefreshableValidator<String> implemen
     public void refreshConfig() {
         minLen = Integer.parseInt(constantsContext.ruleConfig("regex.w.min.length", "3"));
         maxLen = Integer.parseInt(constantsContext.ruleConfig("regex.w.max.length", "1024"));
+        specialExceptedChars = constantsContext.ruleConfig("regex.w.include.chars", ".$#&@[]{}_*");
     }
 
     /**
@@ -69,8 +73,17 @@ public class RegexWValidator extends ConfigRefreshableValidator<String> implemen
      * @since 1.0
      */
     private boolean isCharLegal(char ch) {
-        for (int i = 0; i < START_POS.length; i++) {
-            if ((ch >= START_POS[i]) && (ch <= END_POS[i])) {
+        if(ch <= 128) {
+            if(specialExceptedChars.indexOf(ch) >= 0) {
+                return true;
+            }
+            for (int i = 0; i < START_POS.length; i++) {
+                if ((ch >= START_POS[i]) && (ch <= END_POS[i])) {
+                    return false;
+                }
+            }
+        } else {
+            if((ch < 0x4E00) || (ch > 0x9FA5) ) {
                 return false;
             }
         }

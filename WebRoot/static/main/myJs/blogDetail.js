@@ -135,7 +135,7 @@ function contentInit() {
                     success: function (resp) {
                         if (resp.success) {
                             that.headImages = resp.data
-                            if (that.userInfo.headImgUrl === "") {
+                            if (isEmpty(that.userInfo.headImgUrl)) {
                                 that.userInfo.headImgUrl = that.headImages[0].url
                             }
                         } else {
@@ -230,7 +230,7 @@ function contentInit() {
                             replyForm.find("[name='comment']").html("")
                             layer.msg("添加评论成功 !")
                         } else {
-                            layer.msg("添加评论失败 !")
+                            layer.msg("添加评论失败[" + resp.data + "] !")
                         }
                     }
                 });

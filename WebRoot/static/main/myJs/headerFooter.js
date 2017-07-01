@@ -143,7 +143,8 @@ function headerFooterInit() {
                 })
 
                 $("[name='searchBtn']").click(function() {
-                    location.href = "/static/main/blogList.html?keywords=" + $("[name='keywords']").val()
+                    var keywords = $(this).parent().find("[name='keywords']").val()
+                    location.href = "/static/main/blogList.html?keywords=" + keywords
                     return false
                 })
             }

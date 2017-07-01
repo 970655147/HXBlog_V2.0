@@ -328,6 +328,10 @@ public final class BlogConstants {
      */
     public static final String FRONT_IDX_PAGE_SUB_TITLE = "front.idx_page.sub_title";
     /**
+     * 游客的 id
+     */
+    public static final String DEFAULT_GUEST_DUMMY_ID = "guest.dummy.id";
+    /**
      * 游客的 title
      */
     public static final String DEFAULT_GUEST_TITLE = "guest.title";
