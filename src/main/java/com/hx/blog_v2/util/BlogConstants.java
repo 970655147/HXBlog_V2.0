@@ -89,7 +89,7 @@ public final class BlogConstants {
     /**
      * 向数据库中 增加bean 是需要过滤掉 "created_at", "deleted"
      */
-    public static final JSONBeanProcessor UPDATE_BEAN_BEAN_PROCESSOR = regFilterBeanProcessor(Tools.asSet("created_at", "created_at_day"));
+    public static final JSONBeanProcessor UPDATE_BEAN_BEAN_PROCESSOR = regFilterBeanProcessor(Tools.asSet("created_at", "created_at_month"));
     /**
      * 向数据库中 增加bean 是需要过滤掉 "created_at", "deleted", "password"
      */

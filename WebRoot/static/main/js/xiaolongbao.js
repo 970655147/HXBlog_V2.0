@@ -6,6 +6,17 @@ $(document).ready(function() {
     })
 
 	var oImg = document.getElementById('xiaolongbao');
+    /**
+	 * 初始化 xiaolongbao 的位置
+     */
+    var xiaolongbaoPos = sessionStorage.getItem(xiaolongbaoPosKey)
+	if((xiaolongbaoPos !== null) && (xiaolongbaoPos !== undefined)) {
+        xiaolongbaoPos = JSON.parse(xiaolongbaoPos)
+		oImg.style.left = xiaolongbaoPos.offLeft
+		oImg.style.top = xiaolongbaoPos.offTop
+	}
+
+
 	/*拖拽功能*/
 	(function() {
 		addEvent(
@@ -22,6 +33,12 @@ $(document).ready(function() {
 								- disX, t = oEvent.clientY - disY;
 						oImg.style.left = l + 'px';
 						oImg.style.top = t + 'px';
+
+						var xiaolongbaoPos = {}
+                        xiaolongbaoPos.offLeft = oImg.style.left
+                        xiaolongbaoPos.offTop = oImg.style.top
+						sessionStorage.setItem(xiaolongbaoPosKey, JSON.stringify(xiaolongbaoPos))
+
 						oParent.onselectstart = function() {
 							return false;
 						}

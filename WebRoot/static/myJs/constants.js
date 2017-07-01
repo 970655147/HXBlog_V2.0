@@ -23,16 +23,16 @@ var monthFacetHideIfOver = 5
 var encoding = "gbk"
 
 /**
- * token的头的名称
- * @type {string}
- */
-var tokenHeader = "hx_blog_token"
-
-/**
  * 项目的 contextPath
  * @type {string}
  */
 var contextPath = "/"
+
+/**
+ * 存放小笼包位置的key
+ * @type {string}
+ */
+var xiaolongbaoPosKey = "xiaolongbaoPos"
 
 function formatContextUrl(requestUri) {
     if (requestUri.startsWith("/")) {
@@ -125,6 +125,7 @@ var reqMap = {
         unread: formatContextUrl("/admin/message/unread"),
         update: formatContextUrl("/admin/message/update"),
         markConsumed: formatContextUrl("/admin/message/markConsumed"),
+        markAllConsumed: formatContextUrl("/admin/message/markAllConsumed"),
         remove: formatContextUrl("/admin/message/remove")
     }
     ,

@@ -79,6 +79,7 @@ layui.define(['element', 'laypage', 'layer', 'form', 'pagesize'], function (expo
     }
 
     var addReplyDialog, addReplyConfirmDialog
+    var showMsgDialog
     form.on('submit(addReplySubmit)', function(data){
         ajax({
             url : reqMap.message.add,
@@ -119,20 +120,33 @@ layui.define(['element', 'laypage', 'layer', 'form', 'pagesize'], function (expo
         return false
     })
 
+    form.on('submit(showMsgFormSubmit)', function (data) {
+        layer.close(showMsgDialog)
+        return false
+    })
+
     //输出接口，主要是两个函数，一个删除一个编辑
     var funcs = {
         showData: function (id, senderName, createdAt, subject, content) {
             var html = '';
+            html += '<div id="showMsgForm" class="layui-form layui-form-pane" action="#" method="post">'
             html += '<fieldset  class="layui-elem-field layui-field-title sys-list-field" >';
             html += '<legend style="text-align:center;"><span> 发送者 : ' + senderName + ' 时间 : ' + createdAt + '</span></legend>';
             html += '<div class="layui-field-box layui-form">';
-            html += '<input style="width:87%;margin: auto;color: #000!important;" value="' + subject + '" lay-verify="required"  class="layui-input" readonly >';
+            html += '<input style="width:87%;margin: auto;color: #000!important;" value="' + subject + '" class="layui-input" readonly >';
             html += '<hr>'
-            html += '<div style="width:87%;margin: auto;color: #000!important; height:200px" lay-verify="required" name="content" class="layui-area" readonly >' + decodeURI(detransferQuote(content)) + '</div>';
+            html += '<div style="width:87%;margin: auto;color: #000!important; height:200px" name="content" class="layui-area" readonly >' + decodeURI(detransferQuote(content)) + '</div>';
             html += '<hr>';
             html += '</div>';
             html += '</fieldset>';
-            layer.open({
+            html += '<div class="layui-form-item">';
+            html += '<div class="layui-input-inline" style="margin:10px auto 0 auto;display: block;float: none;">';
+            html += '<button class="layui-btn" id="submit"  lay-submit="" lay-filter="showMsgFormSubmit">确认</button>';
+            html += '</div>';
+            html += '</div>';
+            html += '</div>';
+
+            showMsgDialog = layer.open({
                 type: 1,
                 skin: 'layui-layer-rim', //加上边框
                 area: ['800px', '600px'], //宽高

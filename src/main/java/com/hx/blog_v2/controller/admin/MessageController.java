@@ -113,6 +113,11 @@ public class MessageController {
         return messageService.markConsumed(params);
     }
 
+    @RequestMapping(value = "/markAllConsumed", method = RequestMethod.POST)
+    public Result markAllConsumed() {
+        return messageService.markAllConsumed();
+    }
+
     @RequestMapping(value = "/remove", method = RequestMethod.POST)
     public Result remove(BeanIdForm params) {
         Result errResult = beanIdValidator.validate(params, null);

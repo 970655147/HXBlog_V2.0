@@ -78,6 +78,16 @@ public interface MessageService extends BaseService<MessagePO> {
     Result markConsumed(BeanIdForm params);
 
     /**
+     * 将给定所有的的消息 标记为 已读
+     *
+     * @return result
+     * @author Jerry.X.He
+     * @date 5/20/2017 6:21 PM
+     * @since 1.0
+     */
+    Result markAllConsumed();
+
+    /**
      * 移除给定的消息
      *
      * @return result

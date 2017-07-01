@@ -208,6 +208,20 @@ public class MessageServiceImpl extends BaseServiceImpl<MessagePO> implements Me
     }
 
     @Override
+    public Result markAllConsumed() {
+        String userId = WebContext.getStrAttrFromSession(BlogConstants.SESSION_USER_ID);
+        String updateAt = DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
+        IQueryCriteria query = Criteria.eq("receiver_id", userId);
+        IUpdateCriteria update = Criteria.set("consumed", "1").add("updated_at", updateAt);
+
+        Result result = messageDao.update(query, update);
+        if (!result.isSuccess()) {
+            return result;
+        }
+        return ResultUtils.success();
+    }
+
+    @Override
     public Result remove(BeanIdForm params) {
         String updatedAt = DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
         IQueryCriteria query = Criteria.eq("id", params.getId());
