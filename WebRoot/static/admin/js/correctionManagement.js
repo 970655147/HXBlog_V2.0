@@ -52,22 +52,22 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
                 data: {code: codeNow},
                 success: function (resp) {
                     if (resp.success) {
-                        var html = '';
+                        var html = new StringBuilder()
                         var tags = resp.data
                         for (var i in tags) {
                             var item = tags[i];
                             correctionItemIds.append(item.id)
 
-                            html += '<tr>';
-                            html += '<td>' + item.id + '</td>';
-                            html += '<td>' + item.contextInfo + '</td>';
-                            html += '<td>' + item.expect + '</td>';
-                            html += '<td>' + item.value + '</td>';
-                            html += '<td>' + item.desc + '</td>';
-                            html += '<td><button class="layui-btn layui-btn-small layui-btn" onclick="layui.funcs.doCorrect(' + item.id + ')"><i class="layui-icon">&#xe604;</i></button></td>';
-                            html += '</tr>';
+                            html.append('<tr>')
+                            html.append('<td>' + item.id + '</td>')
+                            html.append('<td>' + item.contextInfo + '</td>')
+                            html.append('<td>' + item.expect + '</td>')
+                            html.append('<td>' + item.value + '</td>')
+                            html.append('<td>' + item.desc + '</td>')
+                            html.append('<td><button class="layui-btn layui-btn-small layui-btn" onclick="layui.funcs.doCorrect(' + item.id + ')"><i class="layui-icon">&#xe604;</i></button></td>')
+                            html.append('</tr>')
                         }
-                        $('#dataContent').html(html);
+                        $('#dataContent').html(html.toString());
                         element.init();
                     } else {
                         layer.alert("拉取校正列表失败[" + resp.data + "] !", {icon: 5});

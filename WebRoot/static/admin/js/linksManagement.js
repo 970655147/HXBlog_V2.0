@@ -32,27 +32,27 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
                 success: function (resp) {
                     if (resp.success) {
                         var links = resp.data
-                        var html = '';
+                        var html = new StringBuilder();
                         for (var i in links) {
                             var item = links[i];
-                            html += '<tr>';
-                            html += '<td>' + item.id + '</td>';
-                            html += '<td>' + item.name + '</td>';
-                            html += '<td>' + item.desc + '</td>';
-                            html += '<td>' + item.url + '</td>';
-                            html += '<td>' + item.sort + '</td>';
+                            html.append('<tr>')
+                            html.append('<td>' + item.id + '</td>')
+                            html.append('<td>' + item.name + '</td>')
+                            html.append('<td>' + item.desc + '</td>')
+                            html.append('<td>' + item.url + '</td>')
+                            html.append('<td>' + item.sort + '</td>')
                             if (item.enable) {
-                                html += '<td><i class="layui-icon" style="font-size: 30px; color: #009688;vertical-align: middle;">&#xe609;</i> </td>';
+                                html.append('<td><i class="layui-icon" style="font-size: 30px; color: #009688;vertical-align: middle;">&#xe609;</i> </td>')
                             } else {
-                                html += '<td><i class="layui-icon" style="font-size: 30px; color:#d2d2d2; vertical-align: middle;">&#xe60f;</i> </td>';
+                                html.append('<td><i class="layui-icon" style="font-size: 30px; color:#d2d2d2; vertical-align: middle;">&#xe60f;</i> </td>')
                             }
-                            html += '<td>' + item.createdAt + '</td>';
-                            html += '<td>' + item.updatedAt + '</td>';
-                            html += '<td><button class="layui-btn layui-btn-small layui-btn-normal" onclick="layui.funcs.editData(' + item.id + ',\'' + item.name + '\',\'' + item.desc + '\',\'' + item.url + '\',\'' + item.sort + '\',' + item.enable + ')"><i class="layui-icon">&#xe642;</i></button></td>';
-                            html += '<td><button class="layui-btn layui-btn-small layui-btn-danger" onclick="layui.funcs.deleteData(' + item.id + ')"><i class="layui-icon">&#xe640;</i></button></td>';
-                            html += '</tr>';
+                            html.append('<td>' + item.createdAt + '</td>')
+                            html.append('<td>' + item.updatedAt + '</td>')
+                            html.append('<td><button class="layui-btn layui-btn-small layui-btn-normal" onclick="layui.funcs.editData(' + item.id + ',\'' + item.name + '\',\'' + item.desc + '\',\'' + item.url + '\',\'' + item.sort + '\',' + item.enable + ')"><i class="layui-icon">&#xe642;</i></button></td>')
+                            html.append('<td><button class="layui-btn layui-btn-small layui-btn-danger" onclick="layui.funcs.deleteData(' + item.id + ')"><i class="layui-icon">&#xe640;</i></button></td>')
+                            html.append('</tr>')
                         }
-                        $('#dataContent').html(html);
+                        $('#dataContent').html(html.toString());
                         element.init();
                     } else {
                         layer.alert("拉取友情链接列表失败[" + resp.data + "] !", {icon: 5});
@@ -107,70 +107,70 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
     //输出接口，主要是两个函数，一个删除一个编辑
     var funcs = {
         addData: function () {
-            var html = '';
-            html += '<form id="addLinkForm" class="layui-form layui-form-pane" action="/admin/link/add" method="post">';
-            html += '<label class="layui-form-label" style="border: none;width: 180px;" >友情链接名称:</label>';
-            html += '<input  style="width:87%;margin: auto;color: #000!important;" name="name" lay-verify="required"  class="layui-input" >';
-            html += '<label class="layui-form-label" style="border: none;width: 180px;" >友情链接描述:</label>';
-            html += '<input  style="width:87%;margin: auto;color: #000!important;" name="desc" lay-verify="required"  class="layui-input" >';
-            html += '<label class="layui-form-label" style="border: none;width: 180px;" >友情链接地址:</label>';
-            html += '<input  style="width:87%;margin: auto;color: #000!important;" name="url" lay-verify="url"  class="layui-input" >';
-            html += '<label class="layui-form-label" style="border: none;" >顺序:</label>';
-            html += '<input  style="width:87%;margin: auto;color: #000!important;" name="sort" lay-verify="number" class="layui-input" >';
-            html += '<label class="layui-form-label" style="border: none" >是否可用:</label>';
-            html += '<input type="radio" name="enable" value="1" title="是" checked />';
-            html += '<input type="radio" name="enable" value="0" title="否" />';
-            html += '<div class="layui-form-item">';
-            html += '<div class="layui-input-inline" style="margin:10px auto 0 auto;display: block;float: none;">';
-            html += '<button class="layui-btn" id="submit"  lay-submit="" lay-filter="addLinkSubmit">添加</button>';
-            html += '<button type="reset" class="layui-btn layui-btn-primary">重置</button>';
-            html += '</div>';
-            html += '</div>';
-            html += '</form>';
+            var html = new StringBuilder();
+            html.append('<form id="addLinkForm" class="layui-form layui-form-pane" action="/admin/link/add" method="post">')
+            html.append('<label class="layui-form-label" style="border: none;width: 180px;" >友情链接名称:</label>')
+            html.append('<input  style="width:87%;margin: auto;color: #000!important;" name="name" lay-verify="required"  class="layui-input" >')
+            html.append('<label class="layui-form-label" style="border: none;width: 180px;" >友情链接描述:</label>')
+            html.append('<input  style="width:87%;margin: auto;color: #000!important;" name="desc" lay-verify="required"  class="layui-input" >')
+            html.append('<label class="layui-form-label" style="border: none;width: 180px;" >友情链接地址:</label>')
+            html.append('<input  style="width:87%;margin: auto;color: #000!important;" name="url" lay-verify="url"  class="layui-input" >')
+            html.append('<label class="layui-form-label" style="border: none;" >顺序:</label>')
+            html.append('<input  style="width:87%;margin: auto;color: #000!important;" name="sort" lay-verify="number" class="layui-input" >')
+            html.append('<label class="layui-form-label" style="border: none" >是否可用:</label>')
+            html.append('<input type="radio" name="enable" value="1" title="是" checked />')
+            html.append('<input type="radio" name="enable" value="0" title="否" />')
+            html.append('<div class="layui-form-item">')
+            html.append('<div class="layui-input-inline" style="margin:10px auto 0 auto;display: block;float: none;">')
+            html.append('<button class="layui-btn" id="submit"  lay-submit="" lay-filter="addLinkSubmit">添加</button>')
+            html.append('<button type="reset" class="layui-btn layui-btn-primary">重置</button>')
+            html.append('</div>')
+            html.append('</div>')
+            html.append('</form>')
 
             layer.open({
                 type: 1,
                 skin: 'layui-layer-rim', //加上边框
                 area: '620px', //宽高
                 title: '添加友情链接',
-                content: html
+                content: html.toString()
             });
             form.render()
         },
         editData: function (id, name, desc, url, sort, enable) {
-            var html = '';
-            html += '<form id="updateLinkForm" class="layui-form layui-form-pane" action="/admin/link/update" method="post">';
-            html += '<input type="hidden" name="id" value="' + id + '"/>';
-            html += '<label class="layui-form-label" style="border: none;width: 180px;"  >友情链接名称:</label>';
-            html += '<input  style="width:87%;margin: auto;color: #000!important;" name="name" lay-verify="required" class="layui-input" value="' + name + '">';
-            html += '<label class="layui-form-label" style="border: none;width: 180px;"  >友情链接描述:</label>';
-            html += '<input  style="width:87%;margin: auto;color: #000!important;" name="desc" lay-verify="required" class="layui-input" value="' + desc + '">';
-            html += '<label class="layui-form-label" style="border: none;width: 180px;" >友情链接地址:</label>';
-            html += '<input  style="width:87%;margin: auto;color: #000!important;" name="url"  class="layui-input" lay-verify="url" value="' + url + '">';
-            html += '<label class="layui-form-label" style="border: none;" >顺序:</label>';
-            html += '<input  style="width:87%;margin: auto;color: #000!important;" name="sort"  class="layui-input" lay-verify="number" value="' + sort + '">';
-            html += '<label class="layui-form-label" style="border: none" >是否可用:</label>';
+            var html = new StringBuilder();
+            html.append('<form id="updateLinkForm" class="layui-form layui-form-pane" action="/admin/link/update" method="post">')
+            html.append('<input type="hidden" name="id" value="' + id + '"/>')
+            html.append('<label class="layui-form-label" style="border: none;width: 180px;"  >友情链接名称:</label>')
+            html.append('<input  style="width:87%;margin: auto;color: #000!important;" name="name" lay-verify="required" class="layui-input" value="' + name + '">')
+            html.append('<label class="layui-form-label" style="border: none;width: 180px;"  >友情链接描述:</label>')
+            html.append('<input  style="width:87%;margin: auto;color: #000!important;" name="desc" lay-verify="required" class="layui-input" value="' + desc + '">')
+            html.append('<label class="layui-form-label" style="border: none;width: 180px;" >友情链接地址:</label>')
+            html.append('<input  style="width:87%;margin: auto;color: #000!important;" name="url"  class="layui-input" lay-verify="url" value="' + url + '">')
+            html.append('<label class="layui-form-label" style="border: none;" >顺序:</label>')
+            html.append('<input  style="width:87%;margin: auto;color: #000!important;" name="sort"  class="layui-input" lay-verify="number" value="' + sort + '">')
+            html.append('<label class="layui-form-label" style="border: none" >是否可用:</label>')
             if(enable) {
-                html += '<input type="radio" name="enable" value="1" title="是" checked />';
-                html += '<input type="radio" name="enable" value="0" title="否" />';
+                html.append('<input type="radio" name="enable" value="1" title="是" checked />')
+                html.append('<input type="radio" name="enable" value="0" title="否" />')
             } else {
-                html += '<input type="radio" name="enable" value="1" title="是" />';
-                html += '<input type="radio" name="enable" value="0" title="否" checked />';
+                html.append('<input type="radio" name="enable" value="1" title="是" />')
+                html.append('<input type="radio" name="enable" value="0" title="否" checked />')
             }
-            html += '<div class="layui-form-item">';
-            html += '<div class="layui-input-inline" style="margin:10px auto 0 auto;display: block;float: none;">';
-            html += '<button class="layui-btn" id="submit"  lay-submit="" lay-filter="updateLinkSubmit">立即修改</button>';
-            html += '<button type="reset" class="layui-btn layui-btn-primary">重置</button>';
-            html += '</div>';
-            html += '</div>';
-            html += '</form>';
+            html.append('<div class="layui-form-item">')
+            html.append('<div class="layui-input-inline" style="margin:10px auto 0 auto;display: block;float: none;">')
+            html.append('<button class="layui-btn" id="submit"  lay-submit="" lay-filter="updateLinkSubmit">立即修改</button>')
+            html.append('<button type="reset" class="layui-btn layui-btn-primary">重置</button>')
+            html.append('</div>')
+            html.append('</div>')
+            html.append('</form>')
 
             layer.open({
                 type: 1,
                 skin: 'layui-layer-rim', //加上边框
                 area: '620px', //宽高
                 title: '修改友情链接',
-                content: html
+                content: html.toString()
             });
             form.render()
         },

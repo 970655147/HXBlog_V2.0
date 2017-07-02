@@ -43,21 +43,21 @@ layui.define(['element', 'laypage', 'layer', 'form', 'pagesize'], function (expo
             data: params,
             success: function (resp) {
                 if (resp.success) {
-                    var html = '';
+                    var html = new StringBuilder();
                     for (var i in resp.data.list) {
                         var item = resp.data.list[i];
                         id2Consumed[item.id] = item.consumed
-                        html += '<tr>';
-                        html += '<td> <img src="' + mapMessageUrl(item.consumed) + '" name="imgOf' + item.id + '" width="50px" height="40px" /> </td>';
-                        html += '<td>' + item.senderName + '</td>';
-                        html += '<td>' + item.createdAt + '</td>';
-                        html += '<td>' + item.subject + '</td>';
-                        html += '<td>' + item.content + '</td>';
-                        html += '<td><button class="layui-btn layui-btn-small layui-btn-normal" onclick="layui.funcs.showData(' + item.id + ', \'' + item.senderName + '\', \'' + item.createdAt + '\', \'' + item.subject + '\', \'' + transferQuote(encodeURI(item.content)) + '\')"><i class="layui-icon">&#x1005;</i></button></td>';
-                        html += '<td><button class="layui-btn layui-btn-small layui-btn-normal" onclick="layui.funcs.addReply(' + item.id + ', \'' + item.senderId + '\', \'' + item.senderName + '\', \'' + item.createdAt + '\', \'' + item.subject + '\', \'' + transferQuote(encodeURI(item.content)) + '\')"><i class="layui-icon">&#xe63a;</i></button></td>';
-                        html += '</tr>';
+                        html.append('<tr>')
+                        html.append('<td> <img src="' + mapMessageUrl(item.consumed) + '" name="imgOf' + item.id + '" width="50px" height="40px" /> </td>')
+                        html.append('<td>' + item.senderName + '</td>')
+                        html.append('<td>' + item.createdAt + '</td>')
+                        html.append('<td>' + item.subject + '</td>')
+                        html.append('<td>' + item.content + '</td>')
+                        html.append('<td><button class="layui-btn layui-btn-small layui-btn-normal" onclick="layui.funcs.showData(' + item.id + ', \'' + item.senderName + '\', \'' + item.createdAt + '\', \'' + item.subject + '\', \'' + transferQuote(encodeURI(item.content)) + '\')"><i class="layui-icon">&#x1005;</i></button></td>')
+                        html.append('<td><button class="layui-btn layui-btn-small layui-btn-normal" onclick="layui.funcs.addReply(' + item.id + ', \'' + item.senderId + '\', \'' + item.senderName + '\', \'' + item.createdAt + '\', \'' + item.subject + '\', \'' + transferQuote(encodeURI(item.content)) + '\')"><i class="layui-icon">&#xe63a;</i></button></td>')
+                        html.append('</tr>')
                     }
-                    $('#dataContent').html(html);
+                    $('#dataContent').html(html.toString());
                     element.init();
 
                     form.render('checkbox');  //重新渲染CheckBox，编辑和添加的时候
@@ -113,58 +113,58 @@ layui.define(['element', 'laypage', 'layer', 'form', 'pagesize'], function (expo
     //输出接口，主要是两个函数，一个删除一个编辑
     var funcs = {
         showData: function (id, senderName, createdAt, subject, content) {
-            var html = '';
+            var html = new StringBuilder();
             html += '<div id="showMsgForm" class="layui-form layui-form-pane" action="#" method="post">'
-            html += '<fieldset  class="layui-elem-field layui-field-title sys-list-field" >';
-            html += '<legend style="text-align:center;"><span> 发送者 : ' + senderName + ' 时间 : ' + createdAt + '</span></legend>';
-            html += '<div class="layui-field-box layui-form">';
-            html += '<input style="width:87%;margin: auto;color: #000!important;" value="' + subject + '" class="layui-input" readonly >';
+            html.append('<fieldset  class="layui-elem-field layui-field-title sys-list-field" >')
+            html.append('<legend style="text-align:center;"><span> 发送者 : ' + senderName + ' 时间 : ' + createdAt + '</span></legend>')
+            html.append('<div class="layui-field-box layui-form">')
+            html.append('<input style="width:87%;margin: auto;color: #000!important;" value="' + subject + '" class="layui-input" readonly >')
             html += '<hr>'
-            html += '<div style="width:87%;margin-left:20px;color: #000!important; height:200px" name="content" class="layui-area" readonly >' + decodeURI(detransferQuote(content)) + '</div>';
-            html += '<hr>';
-            html += '</div>';
-            html += '</fieldset>';
-            html += '<div class="layui-form-item">';
-            html += '<div class="layui-input-inline" style="margin:10px auto 0 auto;display: block;float: none;">';
-            html += '<button class="layui-btn" id="submit"  lay-submit="" lay-filter="showMsgFormSubmit">确认</button>';
-            html += '</div>';
-            html += '</div>';
-            html += '</div>';
+            html.append('<div style="width:87%;margin-left:20px;color: #000!important; height:200px" name="content" class="layui-area" readonly >' + decodeURI(detransferQuote(content)) + '</div>')
+            html.append('<hr>')
+            html.append('</div>')
+            html.append('</fieldset>')
+            html.append('<div class="layui-form-item">')
+            html.append('<div class="layui-input-inline" style="margin:10px auto 0 auto;display: block;float: none;">')
+            html.append('<button class="layui-btn" id="submit"  lay-submit="" lay-filter="showMsgFormSubmit">确认</button>')
+            html.append('</div>')
+            html.append('</div>')
+            html.append('</div>')
 
             showMsgDialog = layer.open({
                 type: 1,
                 skin: 'layui-layer-rim', //加上边框
                 area: ['800px', '600px'], //宽高
                 title: '查看回复',
-                content: html
+                content: html.toString()
             });
             consumeMessage(id)
         },
         addReply: function (id, senderId, senderName, createdAt, subject, content) {
-            var html = '';
-            html += '<form id="addReplyForm" class="layui-form layui-form-pane" action="/admin/message/add" method="post">';
-            html += '<input type="hidden" name="userIds" value="' + senderId + '"/>';
-            html += '<input type="hidden" name="type" value="2"/>';
-            html += '<label class="layui-form-label" style="border: none" >消息内容:</label>';
-            html += '<div  style="width:87%;margin: auto;color: #000!important;"  readonly="true" class="layui-textarea layui-disabled" >' + decodeURI(detransferQuote(content)) + '</div>';
-            html += '<label class="layui-form-label" style="border: none">主题:</label>';
-            html += '<input placeholder="请输入回复主题" name="subject" lay-verify="required" style="width:87%;margin: auto" class="layui-input " />';
-            html += '<label class="layui-form-label" style="border: none">回复内容:</label>';
-            html += '<textarea placeholder="请输入回复内容" name="content" lay-verify="required" style="width:87%;margin: auto" class="layui-textarea " ></textarea>';
-            html += '<div class="layui-form-item">';
-            html += '<div class="layui-input-inline" style="margin:10px auto 0 auto;display: block;float: none;">';
-            html += '<button class="layui-btn" id="submit"  lay-submit="" lay-filter="addReplySubmit">立即提交</button>';
-            html += '<button type="reset" class="layui-btn layui-btn-primary">重置</button>';
-            html += '</div>';
-            html += '</div>';
-            html += '</form>';
+            var html = new StringBuilder();
+            html.append('<form id="addReplyForm" class="layui-form layui-form-pane" action="/admin/message/add" method="post">')
+            html.append('<input type="hidden" name="userIds" value="' + senderId + '"/>')
+            html.append('<input type="hidden" name="type" value="2"/>')
+            html.append('<label class="layui-form-label" style="border: none" >消息内容:</label>')
+            html.append('<div  style="width:87%;margin: auto;color: #000!important;"  readonly="true" class="layui-textarea layui-disabled" >' + decodeURI(detransferQuote(content)) + '</div>')
+            html.append('<label class="layui-form-label" style="border: none">主题:</label>')
+            html.append('<input placeholder="请输入回复主题" name="subject" lay-verify="required" style="width:87%;margin: auto" class="layui-input " />')
+            html.append('<label class="layui-form-label" style="border: none">回复内容:</label>')
+            html.append('<textarea placeholder="请输入回复内容" name="content" lay-verify="required" style="width:87%;margin: auto" class="layui-textarea " ></textarea>')
+            html.append('<div class="layui-form-item">')
+            html.append('<div class="layui-input-inline" style="margin:10px auto 0 auto;display: block;float: none;">')
+            html.append('<button class="layui-btn" id="submit"  lay-submit="" lay-filter="addReplySubmit">立即提交</button>')
+            html.append('<button type="reset" class="layui-btn layui-btn-primary">重置</button>')
+            html.append('</div>')
+            html.append('</div>')
+            html.append('</form>')
 
             addReplyDialog = layer.open({
                 type: 1,
                 skin: 'layui-layer-rim', //加上边框
                 area: ['800px', '600px'], //宽高
                 title: '回复消息',
-                content: html
+                content: html.toString()
             })
             consumeMessage(id)
         }

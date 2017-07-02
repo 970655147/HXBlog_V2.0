@@ -286,13 +286,13 @@ function initCacheTable() {
         success: function (resp) {
             if (resp.success) {
                 var capacities = resp.data.capacities
-                var html = '';
-                html += '<tr>';
+                var html = new StringBuilder();
+                html.append('<tr>')
                 for (var i in capacities) {
-                    html += '<td>' + capacities[i] + '</td>';
+                    html.append('<td>' + capacities[i] + '</td>')
                 }
-                html += '</tr>';
-                $('#dataContent').html(html);
+                html.append('</tr>')
+                $('#dataContent').html(html.toString());
             } else {
                 layer.alert("拉取缓存统计列表失败[" + resp.data + "] !", {icon: 5});
             }

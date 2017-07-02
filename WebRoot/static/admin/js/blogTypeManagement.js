@@ -23,22 +23,22 @@ layui.define(['layer', 'form'], function (exports) {
                 type: "GET",
                 data: {},
                 success: function (resp) {
-                    var html = '';
+                    var html = new StringBuilder();
                     if (resp.success) {
                         for (var i in resp.data) {
                             var item = resp.data[i];
-                            html += '<tr>';
-                            html += '<td>' + item.id + '</td>';
-                            html += '<td>' + item.name + '</td>';
-                            html += '<td>' + item.sort + '</td>';
-                            html += '<td><button class="layui-btn layui-btn-small layui-btn-normal" onclick="layui.funcs.editData(' + item.id + ',\'' + item.name + '\', ' + item.sort + ')"><i class="layui-icon">&#xe642;</i></button></td>';
-                            html += '<td><button class="layui-btn layui-btn-small layui-btn-danger" onclick="layui.funcs.deleteData(' + item.id + ')"><i class="layui-icon">&#xe640;</i></button></td>';
-                            html += '</tr>';
+                            html.append('<tr>')
+                            html.append('<td>' + item.id + '</td>')
+                            html.append('<td>' + item.name + '</td>')
+                            html.append('<td>' + item.sort + '</td>')
+                            html.append('<td><button class="layui-btn layui-btn-small layui-btn-normal" onclick="layui.funcs.editData(' + item.id + ',\'' + item.name + '\', ' + item.sort + ')"><i class="layui-icon">&#xe642;</i></button></td>')
+                            html.append('<td><button class="layui-btn layui-btn-small layui-btn-danger" onclick="layui.funcs.deleteData(' + item.id + ')"><i class="layui-icon">&#xe640;</i></button></td>')
+                            html.append('</tr>')
                         }
                     } else {
                         layer.alert("拉取类型列表失败[" + resp.data + "] !", {icon: 5});
                     }
-                    $('#dataContent').html(html);
+                    $('#dataContent').html(html.toString());
                 }
             });
         }, 500);
@@ -91,50 +91,50 @@ layui.define(['layer', 'form'], function (exports) {
     //输出接口，主要是两个函数，一个删除一个编辑
     var funcs = {
         addData: function () {
-            var html = '';
-            html += '<form id="addTypeForm" action="/admin/type/add" class="layui-form layui-form-pane" >';
-            html += '<label class="layui-form-label" style="border: none" name="content" >名称:</label>';
-            html += '<input style="width:87%;margin: auto;color: #000!important;" name="name" lay-verify="required" class="layui-input" >';
-            html += '<label class="layui-form-label" style="border: none" name="content" >排序:</label>';
-            html += '<input style="width:87%;margin: auto;color: #000!important;" name="sort" lay-verify="required" class="layui-input" >';
-            html += '<div class="layui-form-item">';
-            html += '<div class="layui-input-inline" style="margin:10px auto 0 auto;display: block;float: none;">';
-            html += '<button class="layui-btn" id="submit"  lay-submit="" lay-filter="addTypeSubmit">添加</button>';
-            html += '<button type="reset" class="layui-btn layui-btn-primary">重置</button>';
-            html += '</div>';
-            html += '</div>';
-            html += '</form>';
+            var html = new StringBuilder();
+            html.append('<form id="addTypeForm" action="/admin/type/add" class="layui-form layui-form-pane" >')
+            html.append('<label class="layui-form-label" style="border: none" name="content" >名称:</label>')
+            html.append('<input style="width:87%;margin: auto;color: #000!important;" name="name" lay-verify="required" class="layui-input" >')
+            html.append('<label class="layui-form-label" style="border: none" name="content" >排序:</label>')
+            html.append('<input style="width:87%;margin: auto;color: #000!important;" name="sort" lay-verify="required" class="layui-input" >')
+            html.append('<div class="layui-form-item">')
+            html.append('<div class="layui-input-inline" style="margin:10px auto 0 auto;display: block;float: none;">')
+            html.append('<button class="layui-btn" id="submit"  lay-submit="" lay-filter="addTypeSubmit">添加</button>')
+            html.append('<button type="reset" class="layui-btn layui-btn-primary">重置</button>')
+            html.append('</div>')
+            html.append('</div>')
+            html.append('</form>')
 
             layer.open({
                 type: 1,
                 skin: 'layui-layer-rim', //加上边框
                 area: '420px', //宽高
                 title: '添加类别',
-                content: html
+                content: html.toString()
             });
         },
         editData: function (id, typeName, sort) {
-            var html = '';
-            html += '<form id="updateTypeForm" action="/admin/type/update" class="layui-form layui-form-pane" >';
-            html += '<input type="hidden" name="id" value="' + id + '"/>';
-            html += '<label class="layui-form-label" style="border: none" >名称:</label>';
-            html += '<textarea style="width:87%;margin: auto;color: #000!important;" name="name" class="layui-textarea" lay-verify="required" >' + typeName + '</textarea>';
-            html += '<label class="layui-form-label" style="border: none" name="content" >排序:</label>';
-            html += '<input style="width:87%;margin: auto;color: #000!important;" name="sort" value="' + sort + '" lay-verify="required" class="layui-input" >';
-            html += '<div class="layui-form-item">';
-            html += '<div class="layui-input-inline" style="margin:10px auto 0 auto;display: block;float: none;">';
-            html += '<button class="layui-btn" id="editSubmit" lay-submit="" lay-filter="updateTypeSubmit">立即提交</button>';
-            html += '<button type="reset" class="layui-btn layui-btn-primary">重置</button>';
-            html += '</div>';
-            html += '</div>';
-            html += '</form>';
+            var html = new StringBuilder();
+            html.append('<form id="updateTypeForm" action="/admin/type/update" class="layui-form layui-form-pane" >')
+            html.append('<input type="hidden" name="id" value="' + id + '"/>')
+            html.append('<label class="layui-form-label" style="border: none" >名称:</label>')
+            html.append('<textarea style="width:87%;margin: auto;color: #000!important;" name="name" class="layui-textarea" lay-verify="required" >' + typeName + '</textarea>')
+            html.append('<label class="layui-form-label" style="border: none" name="content" >排序:</label>')
+            html.append('<input style="width:87%;margin: auto;color: #000!important;" name="sort" value="' + sort + '" lay-verify="required" class="layui-input" >')
+            html.append('<div class="layui-form-item">')
+            html.append('<div class="layui-input-inline" style="margin:10px auto 0 auto;display: block;float: none;">')
+            html.append('<button class="layui-btn" id="editSubmit" lay-submit="" lay-filter="updateTypeSubmit">立即提交</button>')
+            html.append('<button type="reset" class="layui-btn layui-btn-primary">重置</button>')
+            html.append('</div>')
+            html.append('</div>')
+            html.append('</form>')
 
             layer.open({
                 type: 1,
                 skin: 'layui-layer-rim', //加上边框
                 area: '420px', //宽高
                 title: '修改类别',
-                content: html
+                content: html.toString()
             });
         },
         deleteData: function (id) {

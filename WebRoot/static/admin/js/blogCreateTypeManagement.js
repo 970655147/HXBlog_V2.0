@@ -29,22 +29,22 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
                 data: {},
                 success: function (resp) {
                     if (resp.success) {
-                        var html = '';
+                        var html = new StringBuilder();
                         var createTypes = resp.data
                         for (var idx in createTypes) {
                             var item = createTypes[idx];
-                            html += '<tr>';
-                            html += '<td>' + item.id + '</td>';
-                            html += '<td>' + item.name + '</td>';
-                            html += '<td>' + item.desc + '</td>';
-                            html += '<td><img src="' + item.imgUrl + '" width="60px" height="60px" /> </td>';
-                            html += '<td>' + item.sort + '</td>';
-                            html += '<td>' + item.createdAt + '</td>';
-                            html += '<td><button class="layui-btn layui-btn-small layui-btn-normal" onclick=\'layui.funcs.editData(' + JSON.stringify(item) + ')\'><i class="layui-icon">&#xe642;</i></button></td>';
-                            html += '<td><button class="layui-btn layui-btn-small layui-btn-danger" onclick="layui.funcs.deleteData(' + item.id + ')"><i class="layui-icon">&#xe640;</i></button></td>';
-                            html += '</tr>';
+                            html.append('<tr>')
+                            html.append('<td>' + item.id + '</td>')
+                            html.append('<td>' + item.name + '</td>')
+                            html.append('<td>' + item.desc + '</td>')
+                            html.append('<td><img src="' + item.imgUrl + '" width="60px" height="60px" /> </td>')
+                            html.append('<td>' + item.sort + '</td>')
+                            html.append('<td>' + item.createdAt + '</td>')
+                            html.append('<td><button class="layui-btn layui-btn-small layui-btn-normal" onclick=\'layui.funcs.editData(' + JSON.stringify(item) + ')\'><i class="layui-icon">&#xe642;</i></button></td>')
+                            html.append('<td><button class="layui-btn layui-btn-small layui-btn-danger" onclick="layui.funcs.deleteData(' + item.id + ')"><i class="layui-icon">&#xe640;</i></button></td>')
+                            html.append('</tr>')
                         }
-                        $('#dataContent').html(html);
+                        $('#dataContent').html(html.toString());
                     } else {
                         layer.alert("拉取创建类型列表失败[" + resp.data + "] !", {icon: 5});
                     }
@@ -100,67 +100,67 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
     //输出接口，主要是两个函数，一个删除一个编辑
     var funcs = {
         addData: function () {
-            var html = '';
-            html += '<form id="addCreateTypeForm" class="layui-form layui-form-pane" action="/admin/blog/createType/add" method="post">';
-            html += '<label class="layui-form-label" style="border: none" >名称:</label>';
-            html += '<input  style="width:87%;margin: auto;color: #000!important;" name="name" lay-verify="required"  class="layui-input" >';
-            html += '<label class="layui-form-label" style="border: none" >描述:</label>';
-            html += '<input  style="width:87%;margin: auto;color: #000!important;" name="desc" lay-verify="required"  class="layui-input" >';
-            html += '<div>';
-            html += '<label class="layui-form-label" style="border: none" >上传图片:</label>';
-            html += '<input  style="width:87%;margin: auto;color: #000!important;" lay-verify="required" name="imgUrl"  class="layui-input" onblur="layui.funcs.headImgShow()" >';
-            html += '<input id="uploadImgInput" type="file" name="file" onchange="layui.funcs.fileUpload()" style="margin-left: 50px" />';
-            html += '<img id="coverShow" width="60px" height="60px" />'
-            html += '</div>';
-            html += '<label class="layui-form-label" style="border: none" >排序:</label>';
-            html += '<input  style="width:87%;margin: auto;color: #000!important;" lay-verify="required" name="sort"  class="layui-input" >';
-            html += '<div class="layui-form-item">';
-            html += '<div class="layui-input-inline" style="margin:10px auto 0 auto;display: block;float: none;">';
-            html += '<button class="layui-btn" id="submit"  lay-submit="" lay-filter="addCreateTypeSubmit" >添加</button>';
-            html += '<button type="reset" class="layui-btn layui-btn-primary">重置</button>';
-            html += '</div>';
-            html += '</div>';
-            html += '</form>';
+            var html = new StringBuilder();
+            html.append('<form id="addCreateTypeForm" class="layui-form layui-form-pane" action="/admin/blog/createType/add" method="post">')
+            html.append('<label class="layui-form-label" style="border: none" >名称:</label>')
+            html.append('<input  style="width:87%;margin: auto;color: #000!important;" name="name" lay-verify="required"  class="layui-input" >')
+            html.append('<label class="layui-form-label" style="border: none" >描述:</label>')
+            html.append('<input  style="width:87%;margin: auto;color: #000!important;" name="desc" lay-verify="required"  class="layui-input" >')
+            html.append('<div>')
+            html.append('<label class="layui-form-label" style="border: none" >上传图片:</label>')
+            html.append('<input  style="width:87%;margin: auto;color: #000!important;" lay-verify="required" name="imgUrl"  class="layui-input" onblur="layui.funcs.headImgShow()" >')
+            html.append('<input id="uploadImgInput" type="file" name="file" onchange="layui.funcs.fileUpload()" style="margin-left: 50px" />')
+            html.append('<img id="coverShow" width="60px" height="60px" />')
+            html.append('</div>')
+            html.append('<label class="layui-form-label" style="border: none" >排序:</label>')
+            html.append('<input  style="width:87%;margin: auto;color: #000!important;" lay-verify="required" name="sort"  class="layui-input" >')
+            html.append('<div class="layui-form-item">')
+            html.append('<div class="layui-input-inline" style="margin:10px auto 0 auto;display: block;float: none;">')
+            html.append('<button class="layui-btn" id="submit"  lay-submit="" lay-filter="addCreateTypeSubmit" >添加</button>')
+            html.append('<button type="reset" class="layui-btn layui-btn-primary">重置</button>')
+            html.append('</div>')
+            html.append('</div>')
+            html.append('</form>')
 
             layer.open({
                 type: 1,
                 skin: 'layui-layer-rim', //加上边框
                 area: '620px', //宽高
                 title: '添加心情',
-                content: html
+                content: html.toString()
             });
             form.render('radio');  //radio，编辑和添加的时候
         },
         editData: function (item) {
-            var html = '';
-            html += '<form id="updateCreateTypeForm" class="layui-form layui-form-pane" action="/admin/blog/createType/update" method="post" >';
-            html += '<input type="hidden" id="id" name="id" value="' + item.id + '">';
-            html += '<label class="layui-form-label" style="border: none" >名称:</label>';
-            html += '<input  style="width:87%;margin: auto;color: #000!important;" name="name" lay-verify="required"  class="layui-input" value="' + item.name + '" >';
-            html += '<label class="layui-form-label" style="border: none" >描述:</label>';
-            html += '<input  style="width:87%;margin: auto;color: #000!important;" name="desc" lay-verify="required"  class="layui-input" value="' + item.desc + '" >';
-            html += '<div>';
-            html += '<label class="layui-form-label" style="border: none" >上传图片:</label>';
-            html += '<input  style="width:87%;margin: auto;color: #000!important;" lay-verify="required" name="imgUrl"  class="layui-input" value="' + item.imgUrl + '" onblur="layui.funcs.headImgShow()" >';
-            html += '<input id="uploadImgInput" type="file" name="file" onchange="layui.funcs.fileUpload()" style="margin-left: 50px" />';
-            html += '<img id="coverShow" width="60px" height="60px" />'
-            html += '</div>';
-            html += '<label class="layui-form-label" style="border: none" >排序:</label>';
-            html += '<input  style="width:87%;margin: auto;color: #000!important;" lay-verify="required" name="sort" value="' + item.sort + '" class="layui-input" >';
-            html += '<div class="layui-form-item">';
-            html += '<div class="layui-input-inline" style="margin:10px auto 0 auto;display: block;float: none;">';
-            html += '<button class="layui-btn" id="submit"  lay-submit="" lay-filter="updateCreateTypeSubmit" >立即修改</button>';
-            html += '<button type="reset" class="layui-btn layui-btn-primary">重置</button>';
-            html += '</div>';
-            html += '</div>';
-            html += '</form>';
+            var html = new StringBuilder();
+            html.append('<form id="updateCreateTypeForm" class="layui-form layui-form-pane" action="/admin/blog/createType/update" method="post" >')
+            html.append('<input type="hidden" id="id" name="id" value="' + item.id + '">')
+            html.append('<label class="layui-form-label" style="border: none" >名称:</label>')
+            html.append('<input  style="width:87%;margin: auto;color: #000!important;" name="name" lay-verify="required"  class="layui-input" value="' + item.name + '" >')
+            html.append('<label class="layui-form-label" style="border: none" >描述:</label>')
+            html.append('<input  style="width:87%;margin: auto;color: #000!important;" name="desc" lay-verify="required"  class="layui-input" value="' + item.desc + '" >')
+            html.append('<div>')
+            html.append('<label class="layui-form-label" style="border: none" >上传图片:</label>')
+            html.append('<input  style="width:87%;margin: auto;color: #000!important;" lay-verify="required" name="imgUrl"  class="layui-input" value="' + item.imgUrl + '" onblur="layui.funcs.headImgShow()" >')
+            html.append('<input id="uploadImgInput" type="file" name="file" onchange="layui.funcs.fileUpload()" style="margin-left: 50px" />')
+            html.append('<img id="coverShow" width="60px" height="60px" />')
+            html.append('</div>')
+            html.append('<label class="layui-form-label" style="border: none" >排序:</label>')
+            html.append('<input  style="width:87%;margin: auto;color: #000!important;" lay-verify="required" name="sort" value="' + item.sort + '" class="layui-input" >')
+            html.append('<div class="layui-form-item">')
+            html.append('<div class="layui-input-inline" style="margin:10px auto 0 auto;display: block;float: none;">')
+            html.append('<button class="layui-btn" id="submit"  lay-submit="" lay-filter="updateCreateTypeSubmit" >立即修改</button>')
+            html.append('<button type="reset" class="layui-btn layui-btn-primary">重置</button>')
+            html.append('</div>')
+            html.append('</div>')
+            html.append('</form>')
 
             layer.open({
                 type: 1,
                 skin: 'layui-layer-rim', //加上边框
                 area: '620px', //宽高
                 title: '修改创建类型',
-                content: html
+                content: html.toString()
             });
             form.render('radio');  //radio，编辑和添加的时候
             layui.funcs.headImgShow()

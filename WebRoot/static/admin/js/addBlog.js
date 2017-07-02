@@ -215,48 +215,48 @@ layui.define(['form', 'upload', 'layer'], function (exports) {
     //输出接口，主要是两个函数，一个删除一个编辑
     var funcs = {
         addTypeData: function () {
-            var html = '';
-            html += '<form id="addTypeForm" class="layui-form layui-form-pane" action="/admin/type/add" method="post" >';
-            html += '<label class="layui-form-label" style="border: none" name="content" >类别名称:</label>';
-            html += '<input style="width:87%;margin: auto;color: #000!important;" name="name"  class="layui-input" >';
-            html += '<label class="layui-form-label" style="border: none" name="content" >排序:</label>';
-            html += '<input style="width:87%;margin: auto;color: #000!important;" name="sort"  class="layui-input" >';
-            html += '<div class="layui-form-item">';
-            html += '<div class="layui-input-inline" style="margin:10px auto 0 auto;display: block;float: none;">';
-            html += '<button class="layui-btn" id="submit" lay-submit="" lay-filter="addTypeSubmit">添加</button>';
-            html += '<button type="reset" class="layui-btn layui-btn-primary">重置</button>';
-            html += '</div>';
-            html += '</div>';
-            html += '</form>';
+            var html = new StringBuilder();
+            html.append('<form id="addTypeForm" class="layui-form layui-form-pane" action="/admin/type/add" method="post" >')
+            html.append('<label class="layui-form-label" style="border: none" name="content" >类别名称:</label>')
+            html.append('<input style="width:87%;margin: auto;color: #000!important;" name="name"  class="layui-input" >')
+            html.append('<label class="layui-form-label" style="border: none" name="content" >排序:</label>')
+            html.append('<input style="width:87%;margin: auto;color: #000!important;" name="sort"  class="layui-input" >')
+            html.append('<div class="layui-form-item">')
+            html.append('<div class="layui-input-inline" style="margin:10px auto 0 auto;display: block;float: none;">')
+            html.append('<button class="layui-btn" id="submit" lay-submit="" lay-filter="addTypeSubmit">添加</button>')
+            html.append('<button type="reset" class="layui-btn layui-btn-primary">重置</button>')
+            html.append('</div>')
+            html.append('</div>')
+            html.append('</form>')
             addTypeLayer = layer.open({
                 type: 1,
                 skin: 'layui-layer-rim', //加上边框
                 area: '420px', //宽高
                 title: '添加类别',
-                content: html
+                content: html.toString()
             });
         },
         addTagData: function () {
-            var html = '';
-            html += '<form id="addTagForm" class="layui-form layui-form-pane" action="/admin/tag/add" method="post >';
-            html += '<label class="layui-form-label" style="border: none" name="content" >标签名称:</label>';
-            html += '<input style="width:87%;margin: auto;color: #000!important;" name="name"  class="layui-input" >';
-            html += '<label class="layui-form-label" style="border: none" name="content" >排序:</label>';
-            html += '<input style="width:87%;margin: auto;color: #000!important;" name="sort"  class="layui-input" >';
-            html += '<div class="layui-form-item">';
-            html += '<div class="layui-input-inline" style="margin:10px auto 0 auto;display: block;float: none;">';
-            html += '<button class="layui-btn" id="submit" lay-submit="" lay-filter="addTagSubmit">添加</button>';
-            html += '<button type="reset" class="layui-btn layui-btn-primary">重置</button>';
-            html += '</div>';
-            html += '</div>';
-            html += '</form>';
+            var html = new StringBuilder();
+            html.append('<form id="addTagForm" class="layui-form layui-form-pane" action="/admin/tag/add" method="post >')
+            html.append('<label class="layui-form-label" style="border: none" name="content" >标签名称:</label>')
+            html.append('<input style="width:87%;margin: auto;color: #000!important;" name="name"  class="layui-input" >')
+            html.append('<label class="layui-form-label" style="border: none" name="content" >排序:</label>')
+            html.append('<input style="width:87%;margin: auto;color: #000!important;" name="sort"  class="layui-input" >')
+            html.append('<div class="layui-form-item">')
+            html.append('<div class="layui-input-inline" style="margin:10px auto 0 auto;display: block;float: none;">')
+            html.append('<button class="layui-btn" id="submit" lay-submit="" lay-filter="addTagSubmit">添加</button>')
+            html.append('<button type="reset" class="layui-btn layui-btn-primary">重置</button>')
+            html.append('</div>')
+            html.append('</div>')
+            html.append('</form>')
 
             addTypeLayer = layer.open({
                 type: 1,
                 skin: 'layui-layer-rim', //加上边框
                 area: '420px', //宽高
                 title: '添加类别',
-                content: html
+                content: html.toString()
             });
         },
         toggleCheckted: function (input) {

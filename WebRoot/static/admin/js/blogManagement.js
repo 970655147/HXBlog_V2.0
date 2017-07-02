@@ -36,29 +36,29 @@ layui.define(['element', 'laypage', 'layer', 'form', 'pagesize'], function (expo
             data: params,
             success: function (resp) {
                 if (resp.success) {
-                    var html = '';
+                    var html = new StringBuilder();
                     for (var i in resp.data.list) {
                         var item = resp.data.list[i];
-                        html += '<tr>';
-                        html += '<td>' + item.id + '</td>';
-                        html += '<td><img src="' + item.blogCreateTypeImgUrl + '" />' +
-                            '<img src="' + stateIconUrl(item.state) + '" width="20px" height="20px" style="margin-left: 20px" /></td>';
-                        html += '<td> <a href="' + previewUrl(item.id, item.state) + '" target="_blank" >' + item.title + '</a></td>';
-                        html += '<td>' + item.author + '</td>';
-                        html += '<td>' + item.summary + '</td>';
-                        html += '<td>' + item.createdAt + '</td>';
-                        html += '<td>' + item.blogTypeName + '</td>';
-                        html += '<td>' + item.blogTagNames + '</td>';
+                        html.append('<tr>')
+                        html.append('<td>' + item.id + '</td>')
+                        html.append('<td><img src="' + item.blogCreateTypeImgUrl + '" />' +
+                            '<img src="' + stateIconUrl(item.state) + '" width="20px" height="20px" style="margin-left: 20px" /></td>');
+                        html.append('<td> <a href="' + previewUrl(item.id, item.state) + '" target="_blank" >' + item.title + '</a></td>')
+                        html.append('<td>' + item.author + '</td>')
+                        html.append('<td>' + item.summary + '</td>')
+                        html.append('<td>' + item.createdAt + '</td>')
+                        html.append('<td>' + item.blogTypeName + '</td>')
+                        html.append('<td>' + item.blogTagNames + '</td>')
                         if (("10" === item.state) || ("40" === item.state)) {
-                            html += '<td><button class="layui-btn layui-btn-small layui-btn-normal" onclick="layui.funcs.transferState(' + item.id + ', \'20\')"><i class="layui-icon">&#xe628;</i></button></td>';
+                            html.append('<td><button class="layui-btn layui-btn-small layui-btn-normal" onclick="layui.funcs.transferState(' + item.id + ', \'20\')"><i class="layui-icon">&#xe628;</i></button></td>')
                         }
                         if("20" !== item.state) {
-                            html += '<td><button class="layui-btn layui-btn-small layui-btn-normal" onclick="layui.funcs.editData(' + item.id + ')"><i class="layui-icon">&#xe642;</i></button></td>';
-                            html += '<td><button class="layui-btn layui-btn-small layui-btn-danger" onclick="layui.funcs.deleteData(' + item.id + ')"><i class="layui-icon">&#xe640;</i></button></td>';
+                            html.append('<td><button class="layui-btn layui-btn-small layui-btn-normal" onclick="layui.funcs.editData(' + item.id + ')"><i class="layui-icon">&#xe642;</i></button></td>')
+                            html.append('<td><button class="layui-btn layui-btn-small layui-btn-danger" onclick="layui.funcs.deleteData(' + item.id + ')"><i class="layui-icon">&#xe640;</i></button></td>')
                         }
-                        html += '</tr>';
+                        html.append('</tr>')
                     }
-                    $('#dataContent').html(html);
+                    $('#dataContent').html(html.toString());
                     element.init();
 
                     form.render('checkbox');  //重新渲染CheckBox，编辑和添加的时候

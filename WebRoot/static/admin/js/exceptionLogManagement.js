@@ -35,25 +35,25 @@ layui.define(['element', 'laypage', 'layer', 'form', 'pagesize'], function (expo
             data: params,
             success: function (resp) {
                 if (resp.success) {
-                    var html = '';
+                    var html = new StringBuilder();
                     for (var i in resp.data.list) {
                         var item = resp.data.list[i];
-                        html += '<tr>';
-                        html += '<td>' + item.id + '</td>';
-                        html += '<td>' + item.url + '</td>';
-                        html += '<td>' + item.handler + '</td>';
-                        html += '<td>' + item.params + '</td>';
-                        html += '<td>' + item.msg + '</td>';
-                        html += '<td>' + item.cost + '</td>';
-                        html += '<td>' + item.name + '</td>';
-                        html += '<td>' + item.email + '</td>';
-                        html += '<td>' + item.requestIp + '</td>';
-                        html += '<td>' + item.isSystemUser + '</td>';
-                        html += '<td>' + item.createdAt + '</td>';
-                        html += '<td><button class="layui-btn layui-btn-small layui-btn-normal" onclick=\'layui.funcs.viewData(' + JSON.stringify(item) + ')\'><i class="layui-icon">&#xe642;</i></button></td>';
-                        html += '</tr>';
+                        html.append('<tr>')
+                        html.append('<td>' + item.id + '</td>')
+                        html.append('<td>' + item.url + '</td>')
+                        html.append('<td>' + item.handler + '</td>')
+                        html.append('<td>' + item.params + '</td>')
+                        html.append('<td>' + item.msg + '</td>')
+                        html.append('<td>' + item.cost + '</td>')
+                        html.append('<td>' + item.name + '</td>')
+                        html.append('<td>' + item.email + '</td>')
+                        html.append('<td>' + item.requestIp + '</td>')
+                        html.append('<td>' + item.isSystemUser + '</td>')
+                        html.append('<td>' + item.createdAt + '</td>')
+                        html.append('<td><button class="layui-btn layui-btn-small layui-btn-normal" onclick=\'layui.funcs.viewData(' + JSON.stringify(item) + ')\'><i class="layui-icon">&#xe642;</i></button></td>')
+                        html.append('</tr>')
                     }
-                    $('#dataContent').html(html);
+                    $('#dataContent').html(html.toString());
                     element.init();
 
                     form.render('checkbox');  //重新渲染CheckBox，编辑和添加的时候
@@ -90,43 +90,43 @@ layui.define(['element', 'laypage', 'layer', 'form', 'pagesize'], function (expo
 
     var funcs = {
         viewData: function (item) {
-            var html = '';
-            html += '<form id="viewLogForm" action="#" class="layui-form layui-form-pane" >';
-            html += '<label class="layui-form-label" style="border: none" name="id" >id:</label>';
-            html += '<input style="width:87%;margin: auto;color: #000!important;" name="id" value="' + item.id + '" class="layui-input" readonly >';
-            html += '<label class="layui-form-label" style="border: none" name="url" >url:</label>';
-            html += '<input style="width:87%;margin: auto;color: #000!important;" name="url" value="' + item.url + '" class="layui-input" readonly >';
-            html += '<label class="layui-form-label" style="border: none" name="handler" >handler:</label>';
-            html += '<input style="width:87%;margin: auto;color: #000!important;" name="handler" value="' + item.handler + '" class="layui-input" readonly >';
-            html += '<label class="layui-form-label" style="border: none" name="id" >参数列表:</label>';
-            html += '<textarea style="width:87%;margin-left:60px; color: #000!important; height:200px" name="params" class="layui-area" readonly > ' + prettyJson(item.params) + '</textarea>';
-            html += '<label class="layui-form-label" style="border: none" name="id" >异常信息:</label>';
-            html += '<textarea style="width:87%;margin-left:60px; color: #000!important; height:200px" name="msg" class="layui-area" readonly > ' + item.msg + '</textarea>';
-            html += '<label class="layui-form-label" style="border: none" name="id" >开销时间:</label>';
-            html += '<input style="width:87%;margin: auto;color: #000!important;" name="cost" value="' + item.cost + '" class="layui-input" readonly >';
-            html += '<label class="layui-form-label" style="border: none" name="id" >用户:</label>';
-            html += '<input style="width:87%;margin: auto;color: #000!important;" name="name" value="' + item.name + '" class="layui-input" readonly >';
-            html += '<label class="layui-form-label" style="border: none" name="id" >邮箱:</label>';
-            html += '<input style="width:87%;margin: auto;color: #000!important;" name="email" value="' + item.email + '" class="layui-input" readonly >';
-            html += '<label class="layui-form-label" style="border: none" name="id" >ip:</label>';
-            html += '<input style="width:87%;margin: auto;color: #000!important;" name="ip" value="' + item.ip + '" class="layui-input" readonly >';
-            html += '<label class="layui-form-label" style="border: none" name="id" >是否是系统用户:</label>';
-            html += '<input style="width:87%;margin: auto;color: #000!important;" name="isSystemUser" value="' + item.isSystemUser + '" class="layui-input" readonly >';
-            html += '<label class="layui-form-label" style="border: none" name="id" >创建时间:</label>';
-            html += '<input style="width:87%;margin: auto;color: #000!important;" name="createdAt" value="' + item.createdAt + '" class="layui-input" readonly >';
-            html += '<div class="layui-form-item">';
-            html += '<div class="layui-input-inline" style="margin:10px auto 0 auto;display: block;float: none;">';
-            html += '<button class="layui-btn" id="viewSubmit" lay-submit="" lay-filter="viewDialogSubmit" >确定</button>';
-            html += '</div>';
-            html += '</div>';
-            html += '</form>';
+            var html = new StringBuilder();
+            html.append('<form id="viewLogForm" action="#" class="layui-form layui-form-pane" >')
+            html.append('<label class="layui-form-label" style="border: none" name="id" >id:</label>')
+            html.append('<input style="width:87%;margin: auto;color: #000!important;" name="id" value="' + item.id + '" class="layui-input" readonly >')
+            html.append('<label class="layui-form-label" style="border: none" name="url" >url:</label>')
+            html.append('<input style="width:87%;margin: auto;color: #000!important;" name="url" value="' + item.url + '" class="layui-input" readonly >')
+            html.append('<label class="layui-form-label" style="border: none" name="handler" >handler:</label>')
+            html.append('<input style="width:87%;margin: auto;color: #000!important;" name="handler" value="' + item.handler + '" class="layui-input" readonly >')
+            html.append('<label class="layui-form-label" style="border: none" name="id" >参数列表:</label>')
+            html.append('<textarea style="width:87%;margin-left:60px; color: #000!important; height:200px" name="params" class="layui-area" readonly > ' + prettyJson(item.params) + '</textarea>')
+            html.append('<label class="layui-form-label" style="border: none" name="id" >异常信息:</label>')
+            html.append('<textarea style="width:87%;margin-left:60px; color: #000!important; height:200px" name="msg" class="layui-area" readonly > ' + item.msg + '</textarea>')
+            html.append('<label class="layui-form-label" style="border: none" name="id" >开销时间:</label>')
+            html.append('<input style="width:87%;margin: auto;color: #000!important;" name="cost" value="' + item.cost + '" class="layui-input" readonly >')
+            html.append('<label class="layui-form-label" style="border: none" name="id" >用户:</label>')
+            html.append('<input style="width:87%;margin: auto;color: #000!important;" name="name" value="' + item.name + '" class="layui-input" readonly >')
+            html.append('<label class="layui-form-label" style="border: none" name="id" >邮箱:</label>')
+            html.append('<input style="width:87%;margin: auto;color: #000!important;" name="email" value="' + item.email + '" class="layui-input" readonly >')
+            html.append('<label class="layui-form-label" style="border: none" name="id" >ip:</label>')
+            html.append('<input style="width:87%;margin: auto;color: #000!important;" name="ip" value="' + item.ip + '" class="layui-input" readonly >')
+            html.append('<label class="layui-form-label" style="border: none" name="id" >是否是系统用户:</label>')
+            html.append('<input style="width:87%;margin: auto;color: #000!important;" name="isSystemUser" value="' + item.isSystemUser + '" class="layui-input" readonly >')
+            html.append('<label class="layui-form-label" style="border: none" name="id" >创建时间:</label>')
+            html.append('<input style="width:87%;margin: auto;color: #000!important;" name="createdAt" value="' + item.createdAt + '" class="layui-input" readonly >')
+            html.append('<div class="layui-form-item">')
+            html.append('<div class="layui-input-inline" style="margin:10px auto 0 auto;display: block;float: none;">')
+            html.append('<button class="layui-btn" id="viewSubmit" lay-submit="" lay-filter="viewDialogSubmit" >确定</button>')
+            html.append('</div>')
+            html.append('</div>')
+            html.append('</form>')
 
             viewDialog = layer.open({
                 type: 1,
                 skin: 'layui-layer-rim', //加上边框
                 area: ['800px', '600px'], //宽高
                 title: '查看详情',
-                content: html
+                content: html.toString()
             });
         }
     };

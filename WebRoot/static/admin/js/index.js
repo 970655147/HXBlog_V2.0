@@ -71,41 +71,41 @@ layui.define([ 'layer', 'form'], function (exports) {
     $('.enter').on('click', login);
 
     function login() {
-        var loginHtml = '';
-        loginHtml += '<form class="layui-form" action="">';
-        loginHtml += '<div class="layui-form-item">';
-        loginHtml += '<label class="layui-form-label">账号</label>';
-        loginHtml += '<div class="layui-input-inline pm-login-input">';
-        loginHtml += '<input type="text" name="userName" lay-verify="userName" placeholder="请输入账号"  autocomplete="off" class="layui-input">';
-        loginHtml += '</div>';
-        loginHtml += '</div>';
-        loginHtml += '<div class="layui-form-item">';
-        loginHtml += '<label class="layui-form-label">密码</label>';
-        loginHtml += '<div class="layui-input-inline pm-login-input">';
-        loginHtml += '<input type="password" name="password" lay-verify="password" placeholder="请输入密码"  autocomplete="off" class="layui-input">';
-        loginHtml += '</div>';
-        loginHtml += '</div>';
-        loginHtml += '<div class="layui-form-item">';
-        loginHtml += '<label class="layui-form-label">验证码</label>';
-        loginHtml += '<div class="layui-input-inline pm-login-input">';
-        loginHtml += '<input type="text" name="checkCode" placeholder="请输入验证码"  autocomplete="off" class="layui-input">';
-        loginHtml += '<br />';
-        loginHtml += '<img name="checkCodeImg" width="160px" height="80px" onclick="refreshCheckCode()" />';
-        loginHtml += '</div>';
-        loginHtml += '</div>';
-        loginHtml += '<div class="layui-form-item">';
+        var loginHtml = new StringBuilder();
+        loginHtml.append('<form class="layui-form" action="">')
+        loginHtml.append('<div class="layui-form-item">')
+        loginHtml.append('<label class="layui-form-label">账号</label>')
+        loginHtml.append('<div class="layui-input-inline pm-login-input">')
+        loginHtml.append('<input type="text" name="userName" lay-verify="userName" placeholder="请输入账号"  autocomplete="off" class="layui-input">')
+        loginHtml.append('</div>')
+        loginHtml.append('</div>')
+        loginHtml.append('<div class="layui-form-item">')
+        loginHtml.append('<label class="layui-form-label">密码</label>')
+        loginHtml.append('<div class="layui-input-inline pm-login-input">')
+        loginHtml.append('<input type="password" name="password" lay-verify="password" placeholder="请输入密码"  autocomplete="off" class="layui-input">')
+        loginHtml.append('</div>')
+        loginHtml.append('</div>')
+        loginHtml.append('<div class="layui-form-item">')
+        loginHtml.append('<label class="layui-form-label">验证码</label>')
+        loginHtml.append('<div class="layui-input-inline pm-login-input">')
+        loginHtml.append('<input type="text" name="checkCode" placeholder="请输入验证码"  autocomplete="off" class="layui-input">')
+        loginHtml.append('<br />')
+        loginHtml.append('<img name="checkCodeImg" width="160px" height="80px" onclick="refreshCheckCode()" />')
+        loginHtml.append('</div>')
+        loginHtml.append('</div>')
+        loginHtml.append('<div class="layui-form-item">')
         // TODO: 7/1/2017 上线注释部分代码
-        // loginHtml += '<label class="layui-form-label">人机验证</label>';
-        // loginHtml += '<div class="layui-input-inline pm-login-input">';
-        // loginHtml += '<div class="l-captcha" lay-verify="result_response" data-site-key="0c5f2ddcf3eb0f58a678e0c50e0d736e"></div>';
-        // loginHtml += '</div>';
-        // loginHtml += '</div>';
-        // loginHtml += '<div class="layui-form-item" style="margin-top:25px;margin-bottom:0;">';
-        loginHtml += '<div class="layui-input-block">';
-        loginHtml += ' <button class="layui-btn" style="width:230px;" lay-submit="" lay-filter="login">立即登录</button>';
-        loginHtml += '</div>';
-        loginHtml += '</div>';
-        loginHtml += '</form>';
+        // loginHtml.append('<label class="layui-form-label">人机验证</label>')
+        // loginHtml.append('<div class="layui-input-inline pm-login-input">')
+        // loginHtml.append('<div class="l-captcha" lay-verify="result_response" data-site-key="0c5f2ddcf3eb0f58a678e0c50e0d736e"></div>')
+        // loginHtml.append('</div>')
+        // loginHtml.append('</div>')
+        // loginHtml.append('<div class="layui-form-item" style="margin-top:25px;margin-bottom:0;">')
+        loginHtml.append('<div class="layui-input-block">')
+        loginHtml.append(' <button class="layui-btn" style="width:230px;" lay-submit="" lay-filter="login">立即登录</button>')
+        loginHtml.append('</div>')
+        loginHtml.append('</div>')
+        loginHtml.append('</form>')
         loginHtml +='<script src="//captcha.luosimao.com/static/dist/api.js"></script>';
 
         layer.open({
@@ -118,7 +118,7 @@ layui.define([ 'layer', 'form'], function (exports) {
             closeBtn: 0,
             anim: 1,
             skin: 'pm-layer-login',
-            content: loginHtml
+            content: loginHtml.toString()
         });
         layui.form().render('checkbox');
         refreshCheckCode()

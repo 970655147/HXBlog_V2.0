@@ -1,6 +1,8 @@
 package com.hx.blog_v2.controller.admin;
 
+import com.hx.blog_v2.context.WebContext;
 import com.hx.blog_v2.service.interf.IndexService;
+import com.hx.blog_v2.util.BlogConstants;
 import com.hx.common.interf.common.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,7 +30,9 @@ public class IndexController {
 
     @RequestMapping("/statistics")
     public Result statistics() {
-        return indexService.adminStatistics();
+        Result result = indexService.adminStatistics();
+        result.setExtra(WebContext.getAttributeFromSession(BlogConstants.SESSION_USER));
+        return result;
     }
 
 }

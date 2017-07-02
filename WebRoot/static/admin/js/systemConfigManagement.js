@@ -40,27 +40,27 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
                 },
                 success: function (resp) {
                     if (resp.success) {
-                        var html = '';
+                        var html = new StringBuilder();
                         var images = resp.data.list
                         for (var i in images) {
                             var item = images[i];
-                            html += '<tr>';
-                            html += '<td>' + item.id + '</td>';
-                            html += '<td>' + item.name + '</td>';
-                            html += '<td>' + item.value + '</td>';
-                            html += '<td>' + item.desc + '</td>';
-                            html += '<td>' + item.sort + '</td>';
-                            html += '<td>' + item.createdAt + '</td>';
+                            html.append('<tr>')
+                            html.append('<td>' + item.id + '</td>')
+                            html.append('<td>' + item.name + '</td>')
+                            html.append('<td>' + item.value + '</td>')
+                            html.append('<td>' + item.desc + '</td>')
+                            html.append('<td>' + item.sort + '</td>')
+                            html.append('<td>' + item.createdAt + '</td>')
                             if (item.enable) {
-                                html += '<td><i class="layui-icon" style="font-size: 30px; color: #009688;vertical-align: middle;">&#xe609;</i> </td>';
+                                html.append('<td><i class="layui-icon" style="font-size: 30px; color: #009688;vertical-align: middle;">&#xe609;</i> </td>')
                             } else {
-                                html += '<td><i class="layui-icon" style="font-size: 30px; color:#d2d2d2; vertical-align: middle;">&#xe60f;</i> </td>';
+                                html.append('<td><i class="layui-icon" style="font-size: 30px; color:#d2d2d2; vertical-align: middle;">&#xe60f;</i> </td>')
                             }
-                            html += '<td><button class="layui-btn layui-btn-small layui-btn-normal" onclick=\'layui.funcs.editData(' + JSON.stringify(item) + ')\'><i class="layui-icon">&#xe642;</i></button></td>';
-                            html += '<td><button class="layui-btn layui-btn-small layui-btn-danger" onclick="layui.funcs.deleteData(' + item.id + ')"><i class="layui-icon">&#xe640;</i></button></td>';
-                            html += '</tr>';
+                            html.append('<td><button class="layui-btn layui-btn-small layui-btn-normal" onclick=\'layui.funcs.editData(' + JSON.stringify(item) + ')\'><i class="layui-icon">&#xe642;</i></button></td>')
+                            html.append('<td><button class="layui-btn layui-btn-small layui-btn-danger" onclick="layui.funcs.deleteData(' + item.id + ')"><i class="layui-icon">&#xe640;</i></button></td>')
+                            html.append('</tr>')
                         }
-                        $('#dataContent').html(html);
+                        $('#dataContent').html(html.toString());
 
                         laypage({
                             cont: laypageId,
@@ -132,70 +132,70 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
     // exports
     var funcs = {
         addData: function () {
-            var html = '';
-            html += '<form id="addConfigForm" class="layui-form layui-form-pane" action="/admin/config/add" method="post">';
-            html += '<label class="layui-form-label" style="border: none" >name:</label>';
-            html += '<input  style="width:87%;margin: auto;color: #000!important;" lay-verify="required" name="name"  class="layui-input" >';
-            html += '<label class="layui-form-label" style="border: none" >value:</label>';
-            html += '<input  style="width:87%;margin: auto;color: #000!important;" lay-verify="required" name="value"  class="layui-input" >';
-            html += '<label class="layui-form-label" style="border: none" >描述信息:</label>';
-            html += '<input  style="width:87%;margin: auto;color: #000!important;" lay-verify="required" name="desc"  class="layui-input" >';
-            html += '<label class="layui-form-label" style="border: none" >排序:</label>';
-            html += '<input  style="width:87%;margin: auto;color: #000!important;" lay-verify="required" name="sort"  class="layui-input" >';
-            html += '<label class="layui-form-label" style="border: none" >是否显示:</label>';
-            html += '<input type="radio" name="enable" value="1" title="是" checked />';
-            html += '<input type="radio" name="enable" value="0" title="否" />';
-            html += '<div class="layui-form-item">';
-            html += '<div class="layui-input-inline" style="margin:10px auto 0 auto;display: block;float: none;">';
-            html += '<button class="layui-btn" id="submit"  lay-submit="" lay-filter="addConfigSubmit" >添加</button>';
-            html += '<button type="reset" class="layui-btn layui-btn-primary">重置</button>';
-            html += '</div>';
-            html += '</div>';
-            html += '</form>';
+            var html = new StringBuilder();
+            html.append('<form id="addConfigForm" class="layui-form layui-form-pane" action="/admin/config/add" method="post">')
+            html.append('<label class="layui-form-label" style="border: none" >name:</label>')
+            html.append('<input  style="width:87%;margin: auto;color: #000!important;" lay-verify="required" name="name"  class="layui-input" >')
+            html.append('<label class="layui-form-label" style="border: none" >value:</label>')
+            html.append('<input  style="width:87%;margin: auto;color: #000!important;" lay-verify="required" name="value"  class="layui-input" >')
+            html.append('<label class="layui-form-label" style="border: none" >描述信息:</label>')
+            html.append('<input  style="width:87%;margin: auto;color: #000!important;" lay-verify="required" name="desc"  class="layui-input" >')
+            html.append('<label class="layui-form-label" style="border: none" >排序:</label>')
+            html.append('<input  style="width:87%;margin: auto;color: #000!important;" lay-verify="required" name="sort"  class="layui-input" >')
+            html.append('<label class="layui-form-label" style="border: none" >是否显示:</label>')
+            html.append('<input type="radio" name="enable" value="1" title="是" checked />')
+            html.append('<input type="radio" name="enable" value="0" title="否" />')
+            html.append('<div class="layui-form-item">')
+            html.append('<div class="layui-input-inline" style="margin:10px auto 0 auto;display: block;float: none;">')
+            html.append('<button class="layui-btn" id="submit"  lay-submit="" lay-filter="addConfigSubmit" >添加</button>')
+            html.append('<button type="reset" class="layui-btn layui-btn-primary">重置</button>')
+            html.append('</div>')
+            html.append('</div>')
+            html.append('</form>')
 
             layer.open({
                 type: 1,
                 skin: 'layui-layer-rim', //加上边框
                 area: '620px', //宽高
                 title: '添加心情',
-                content: html
+                content: html.toString()
             });
             form.render('radio');  //radio，编辑和添加的时候
         },
         editData: function (item) {
-            var html = '';
-            html += '<form id="updateConfigForm" class="layui-form layui-form-pane" action="/admin/config/update" method="post" >';
-            html += '<input type="hidden" id="id" name="id" value="' + item.id + '">';
-            html += '<label class="layui-form-label" style="border: none" >name:</label>';
-            html += '<input  style="width:87%;margin: auto;color: #000!important;" lay-verify="required" name="name" value="' + item.name + '" class="layui-input" readonly >';
-            html += '<label class="layui-form-label" style="border: none" >value:</label>';
-            html += '<input  style="width:87%;margin: auto;color: #000!important;" lay-verify="required" name="value" value="' + item.value + '" class="layui-input" >';
-            html += '<label class="layui-form-label" style="border: none" >描述信息:</label>';
-            html += '<input  style="width:87%;margin: auto;color: #000!important;" lay-verify="required" name="desc" value="' + item.desc + '" class="layui-input" >';
-            html += '<label class="layui-form-label" style="border: none" >排序:</label>';
-            html += '<input  style="width:87%;margin: auto;color: #000!important;" lay-verify="required" name="sort" value="' + item.sort + '" class="layui-input" >';
-            html += '<label class="layui-form-label" style="border: none" >是否显示:</label>';
+            var html = new StringBuilder();
+            html.append('<form id="updateConfigForm" class="layui-form layui-form-pane" action="/admin/config/update" method="post" >')
+            html.append('<input type="hidden" id="id" name="id" value="' + item.id + '">')
+            html.append('<label class="layui-form-label" style="border: none" >name:</label>')
+            html.append('<input  style="width:87%;margin: auto;color: #000!important;" lay-verify="required" name="name" value="' + item.name + '" class="layui-input" readonly >')
+            html.append('<label class="layui-form-label" style="border: none" >value:</label>')
+            html.append('<input  style="width:87%;margin: auto;color: #000!important;" lay-verify="required" name="value" value="' + item.value + '" class="layui-input" >')
+            html.append('<label class="layui-form-label" style="border: none" >描述信息:</label>')
+            html.append('<input  style="width:87%;margin: auto;color: #000!important;" lay-verify="required" name="desc" value="' + item.desc + '" class="layui-input" >')
+            html.append('<label class="layui-form-label" style="border: none" >排序:</label>')
+            html.append('<input  style="width:87%;margin: auto;color: #000!important;" lay-verify="required" name="sort" value="' + item.sort + '" class="layui-input" >')
+            html.append('<label class="layui-form-label" style="border: none" >是否显示:</label>')
             if (item.enable) {
-                html += '<input type="radio" name="enable" value="1" title="是" checked />';
-                html += '<input type="radio" name="enable" value="0" title="否" />';
+                html.append('<input type="radio" name="enable" value="1" title="是" checked />')
+                html.append('<input type="radio" name="enable" value="0" title="否" />')
             } else {
-                html += '<input type="radio" name="enable" value="1" title="是" />';
-                html += '<input type="radio" name="enable" value="0" title="否" checked />';
+                html.append('<input type="radio" name="enable" value="1" title="是" />')
+                html.append('<input type="radio" name="enable" value="0" title="否" checked />')
             }
-            html += '<div class="layui-form-item">';
-            html += '<div class="layui-input-inline" style="margin:10px auto 0 auto;display: block;float: none;">';
-            html += '<button class="layui-btn" id="submit"  lay-submit="" lay-filter="updateConfigSubmit" >立即修改</button>';
-            html += '<button type="reset" class="layui-btn layui-btn-primary">重置</button>';
-            html += '</div>';
-            html += '</div>';
-            html += '</form>';
+            html.append('<div class="layui-form-item">')
+            html.append('<div class="layui-input-inline" style="margin:10px auto 0 auto;display: block;float: none;">')
+            html.append('<button class="layui-btn" id="submit"  lay-submit="" lay-filter="updateConfigSubmit" >立即修改</button>')
+            html.append('<button type="reset" class="layui-btn layui-btn-primary">重置</button>')
+            html.append('</div>')
+            html.append('</div>')
+            html.append('</form>')
 
             layer.open({
                 type: 1,
                 skin: 'layui-layer-rim', //加上边框
                 area: '620px', //宽高
                 title: '修改系统配置',
-                content: html
+                content: html.toString()
             });
             form.render('radio');  //radio，编辑和添加的时候
             layui.funcs.headImgShow()

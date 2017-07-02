@@ -32,21 +32,21 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
                 success: function (resp) {
                     if (resp.success) {
                         var users = resp.data
-                        var html = '';
+                        var html = new StringBuilder();
                         for (var i in users) {
                             var item = users[i];
                             var resourceIds = collectResourceIdList(item)
                             var resourceNames = collectResourceList(item)
-                            html += '<tr>';
-                            html += '<td>' + item.id + '</td>';
-                            html += '<td>' + item.name + '</td>';
-                            html += '<td>' + item.desc + '</td>';
-                            html += '<td>' + resourceNames + '</td>';
-                            html += '<td>' + item.createdAt + '</td>';
-                            html += '<td><button class="layui-btn layui-btn-small layui-btn-normal" onclick="layui.funcs.editData(' + item.id + ',\'' + item.name + '\',\'' + resourceIds + '\')" ><i class="layui-icon">&#xe642;</i></button></td>';
-                            html += '</tr>';
+                            html.append('<tr>')
+                            html.append('<td>' + item.id + '</td>')
+                            html.append('<td>' + item.name + '</td>')
+                            html.append('<td>' + item.desc + '</td>')
+                            html.append('<td>' + resourceNames + '</td>')
+                            html.append('<td>' + item.createdAt + '</td>')
+                            html.append('<td><button class="layui-btn layui-btn-small layui-btn-normal" onclick="layui.funcs.editData(' + item.id + ',\'' + item.name + '\',\'' + resourceIds + '\')" ><i class="layui-icon">&#xe642;</i></button></td>')
+                            html.append('</tr>')
                         }
-                        $('#dataContent').html(html);
+                        $('#dataContent').html(html.toString());
                         element.init();
                     } else {
                         layer.alert("拉取角色资源列表失败[" + resp.data + "] !", {icon: 5});
@@ -81,30 +81,30 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
     //输出接口，主要是两个函数，一个删除一个编辑
     var funcs = {
         editData: function (roleId, roleName, resourceIds) {
-            var html = '';
-            html += '<div>'
-            html += '<form id="updateRoleResourceForm" class="layui-form layui-form-pane" action="/admin/role/userRole/update" method="post">';
-            html += '<input type="hidden" name="roleId" value="' + roleId + '" />'
-            html += '<input type="hidden" name="resourceIds" />'
-            html += '<label class="layui-form-label" style="border: none;width: 180px;" >角色名 :</label>';
-            html += '<input style="width:50%;margin: auto;color: #000!important;" name="roleName"  class="layui-input" value="' + roleName + '" readonly />';
-            html += '<label class="layui-form-label" style="border: none;width: 180px;" >资源列表:</label>';
-            html += '<div class="layui-input-block" id="resourceSelected" >'
-            html += '</div>'
-            html += '<div class="layui-form-item">';
-            html += '<div class="layui-input-inline" style="margin:10px auto 0 auto;display: block;float: none;">';
-            html += '<button class="layui-btn" id="submit"  lay-submit="" lay-filter="updateRoleResourceSubmit">提交</button>';
-            html += '<button type="reset" class="layui-btn layui-btn-primary">重置</button>';
-            html += '</div>';
-            html += '</div>';
-            html += '</form>';
-            html += '</div>'
+            var html = new StringBuilder();
+            html.append('<div>')
+            html.append('<form id="updateRoleResourceForm" class="layui-form layui-form-pane" action="/admin/role/userRole/update" method="post">')
+            html.append('<input type="hidden" name="roleId" value="' + roleId + '" />')
+            html.append('<input type="hidden" name="resourceIds" />')
+            html.append('<label class="layui-form-label" style="border: none;width: 180px;" >角色名 :</label>')
+            html.append('<input style="width:50%;margin: auto;color: #000!important;" name="roleName"  class="layui-input" value="' + roleName + '" readonly />')
+            html.append('<label class="layui-form-label" style="border: none;width: 180px;" >资源列表:</label>')
+            html.append('<div class="layui-input-block" id="resourceSelected" >')
+            html.append('</div>')
+            html.append('<div class="layui-form-item">')
+            html.append('<div class="layui-input-inline" style="margin:10px auto 0 auto;display: block;float: none;">')
+            html.append('<button class="layui-btn" id="submit"  lay-submit="" lay-filter="updateRoleResourceSubmit">提交</button>')
+            html.append('<button type="reset" class="layui-btn layui-btn-primary">重置</button>')
+            html.append('</div>')
+            html.append('</div>')
+            html.append('</form>')
+            html.append('</div>')
 
             /**
              * 增加角色, 并选中需要选中的角色
              * @type {*}
              */
-            $htmlDoc = $(html)
+            $htmlDoc = $(html.toString())
             for(idx in resources) {
                 var value = resources[idx].id
                 var text = resources[idx].name

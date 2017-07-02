@@ -49,15 +49,15 @@ layui.define(['element', 'laypage', 'layer', 'form', 'tree'], function (exports)
                                     resourceInfoForm.find("[name='sort']").val(node.sort)
                                     resourceInfoForm.find("[name='parentId']").val(node.parentId)
                                     if (node.enable) {
-                                        var html = ''
-                                        html += '<input type="radio" name="enable" value="1" title="是" checked />'
-                                        html += '<input type="radio" name="enable" value="0" title="否" />'
-                                        $("[name='enableRatioGroup']").html(html)
+                                        var html = new StringBuilder()
+                                        html.append('<input type="radio" name="enable" value="1" title="是" checked />')
+                                        html.append('<input type="radio" name="enable" value="0" title="否" />')
+                                        $("[name='enableRatioGroup']").html(html.toString())
                                     } else {
-                                        var html = ''
-                                        html += '<input type="radio" name="enable" value="1" title="是" />'
-                                        html += '<input type="radio" name="enable" value="0" title="否" checked />'
-                                        $("[name='enableRatioGroup']").html(html)
+                                        var html = new StringBuilder()
+                                        html.append('<input type="radio" name="enable" value="1" title="是" />')
+                                        html.append('<input type="radio" name="enable" value="0" title="否" checked />')
+                                        $("[name='enableRatioGroup']").html(html.toString())
                                     }
                                     form.render('radio');  //radio，编辑和添加的时候
                                 }
@@ -143,28 +143,28 @@ layui.define(['element', 'laypage', 'layer', 'form', 'tree'], function (exports)
     //输出接口，主要是两个函数，一个删除一个编辑
     var funcs = {
         addData: function () {
-            var html = '';
-            html += '<form id="addResourceForm" class="layui-form layui-form-pane" action="/admin/resource/add" method="post">';
-            html += '<label class="layui-form-label" style="border: none;width: 180px;" >名称:</label>';
-            html += '<input  style="width:87%;margin: auto;color: #000!important;" name="name" lay-verify="required"  class="layui-input" >';
-            html += '<label class="layui-form-label" style="border: none;width: 180px;" >样式:</label>';
-            html += '<input  style="width:87%;margin: auto;color: #000!important;" name="iconClass" lay-verify="required"  class="layui-input" >';
-            html += '<label class="layui-form-label" style="border: none;width: 180px;" >url:</label>';
-            html += '<input  style="width:87%;margin: auto;color: #000!important;" name="url" lay-verify="required"  class="layui-input" >';
-            html += '<label class="layui-form-label" style="border: none;width: 180px;" >排序:</label>';
-            html += '<input  style="width:87%;margin: auto;color: #000!important;" name="sort" lay-verify="required"  class="layui-input" >';
-            html += '<label class="layui-form-label" style="border: none;width: 120px;" >父节点:</label>';
-            html += '<input  style="width:87%;margin: auto;color: #000!important;" name="parentId" lay-verify="required"  class="layui-input" >';
-            html += '<label class="layui-form-label" style="border: none" >是否显示:</label>';
-            html += '<input type="radio" name="enable" value="1" title="是" checked />';
-            html += '<input type="radio" name="enable" value="0" title="否" />';
-            html += '<div class="layui-form-item">';
-            html += '<div class="layui-input-inline" style="margin:10px auto 0 auto;display: block;float: none;">';
-            html += '<button class="layui-btn" id="submit"  lay-submit="" lay-filter="addResourceSubmit">添加</button>';
-            html += '<button type="reset" class="layui-btn layui-btn-primary">重置</button>';
-            html += '</div>';
-            html += '</div>';
-            html += '</form>';
+            var html = new StringBuilder();
+            html.append('<form id="addResourceForm" class="layui-form layui-form-pane" action="/admin/resource/add" method="post">')
+            html.append('<label class="layui-form-label" style="border: none;width: 180px;" >名称:</label>')
+            html.append('<input  style="width:87%;margin: auto;color: #000!important;" name="name" lay-verify="required"  class="layui-input" >')
+            html.append('<label class="layui-form-label" style="border: none;width: 180px;" >样式:</label>')
+            html.append('<input  style="width:87%;margin: auto;color: #000!important;" name="iconClass" lay-verify="required"  class="layui-input" >')
+            html.append('<label class="layui-form-label" style="border: none;width: 180px;" >url:</label>')
+            html.append('<input  style="width:87%;margin: auto;color: #000!important;" name="url" lay-verify="required"  class="layui-input" >')
+            html.append('<label class="layui-form-label" style="border: none;width: 180px;" >排序:</label>')
+            html.append('<input  style="width:87%;margin: auto;color: #000!important;" name="sort" lay-verify="required"  class="layui-input" >')
+            html.append('<label class="layui-form-label" style="border: none;width: 120px;" >父节点:</label>')
+            html.append('<input  style="width:87%;margin: auto;color: #000!important;" name="parentId" lay-verify="required"  class="layui-input" >')
+            html.append('<label class="layui-form-label" style="border: none" >是否显示:</label>')
+            html.append('<input type="radio" name="enable" value="1" title="是" checked />')
+            html.append('<input type="radio" name="enable" value="0" title="否" />')
+            html.append('<div class="layui-form-item">')
+            html.append('<div class="layui-input-inline" style="margin:10px auto 0 auto;display: block;float: none;">')
+            html.append('<button class="layui-btn" id="submit"  lay-submit="" lay-filter="addResourceSubmit">添加</button>')
+            html.append('<button type="reset" class="layui-btn layui-btn-primary">重置</button>')
+            html.append('</div>')
+            html.append('</div>')
+            html.append('</form>')
 
             layer.open({
                 type: 1,

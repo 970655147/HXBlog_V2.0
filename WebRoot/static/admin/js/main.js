@@ -264,24 +264,24 @@ function initMenu() {
                 var root = resp.data
                 if ("#root" === root.name) {
                     var topLevel = root.childs
-                    var html = ''
+                    var html = new StringBuilder()
                     for (idx in topLevel) {
                         var menu = topLevel[idx]
                         var subMenus = menu.childs
-                        html += '<li class="layui-nav-item ">'
-                        html += '<a href="javascript:void(0);">'
-                        html += '<i class="' + menu.iconClass + '"></i>&nbsp;&nbsp;' + menu.name + ''
-                        html += '<span class="layui-nav-more"></span>'
-                        html += '</a>'
-                        html += '<dl class="layui-nav-child">'
+                        html.append('<li class="layui-nav-item ">')
+                        html.append('<a href="javascript:void(0);">')
+                        html.append('<i class="' + menu.iconClass + '"></i>&nbsp;&nbsp;' + menu.name + '')
+                        html.append('<span class="layui-nav-more"></span>')
+                        html.append('</a>')
+                        html.append('<dl class="layui-nav-child">')
                         for (idxOfSub in subMenus) {
                             var subMenu = subMenus[idxOfSub]
-                            html += '<dd><a href="javascript:void(0);" class="' + subMenu.iconClass + '" data-url="' + subMenu.url + '" data-id="' + subMenu.id + '">&nbsp;&nbsp;' + subMenu.name + '</a></dd>'
+                            html.append('<dd><a href="javascript:void(0);" class="' + subMenu.iconClass + '" data-url="' + subMenu.url + '" data-id="' + subMenu.id + '">&nbsp;&nbsp;' + subMenu.name + '</a></dd>')
                         }
-                        html += '</dl>'
-                        html += '</li>'
+                        html.append('</dl>')
+                        html.append('</li>')
                     }
-                    $("#leftNav").append(html)
+                    $("#leftNav").append(html.toString())
                 }
             }
         }
@@ -298,6 +298,11 @@ function refreshStatistics() {
         type: "GET",
         success: function (resp) {
             if (resp.success) {
+                var userInfo = resp.extra
+                $("[name='headImg']").attr("src", userInfo.headImgUrl)
+                $("[name='userName']").text(userInfo.name)
+                $("[name='title']").text("[" + userInfo.title + "]")
+
                 var loginInfo = resp.data.loginInfo
                 $("[name='loginIp']").text(loginInfo.loginIp)
                 $("[name='loginAddr']").text(loginInfo.loginAddr)
