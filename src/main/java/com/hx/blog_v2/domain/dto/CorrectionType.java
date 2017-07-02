@@ -20,7 +20,15 @@ public enum CorrectionType implements Code2Msg<String, String> {
     /**
      * 评分数量校正
      */
-    SCORE_CNT("2", "scoreCnt");
+    SCORE_CNT("2", "scoreCnt"),
+    /**
+     * 上传文件校正
+     */
+    UPLOAD_FILE("3", "uploadFile"),
+    /**
+     * 上传文件的文件夹的文件校正
+     */
+    UPLOAD_FOLDER("4", "uploadedFile");
 
     /**
      * type -> imageType
@@ -32,7 +40,7 @@ public enum CorrectionType implements Code2Msg<String, String> {
             TYPE_2_CORRECTION_TYPE.put(type.code, type);
         }
     }
-    
+
     /**
      * 类型的标志
      */

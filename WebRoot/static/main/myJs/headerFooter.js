@@ -37,6 +37,7 @@ function importHeaderFooter() {
 function headerFooterInit() {
     ajax({
         url: reqMap.index.index,
+        async : false,
         success: function (resp) {
             if (resp.success) {
                 var data = resp.data

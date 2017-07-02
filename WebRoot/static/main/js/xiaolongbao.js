@@ -9,7 +9,7 @@ $(document).ready(function() {
     /**
 	 * 初始化 xiaolongbao 的位置
      */
-    var xiaolongbaoPos = sessionStorage.getItem(xiaolongbaoPosKey)
+    var xiaolongbaoPos = localStorage.getItem(xiaolongbaoPosKey)
 	if((xiaolongbaoPos !== null) && (xiaolongbaoPos !== undefined)) {
         xiaolongbaoPos = JSON.parse(xiaolongbaoPos)
 		oImg.style.left = xiaolongbaoPos.offLeft
@@ -37,7 +37,7 @@ $(document).ready(function() {
 						var xiaolongbaoPos = {}
                         xiaolongbaoPos.offLeft = oImg.style.left
                         xiaolongbaoPos.offTop = oImg.style.top
-						sessionStorage.setItem(xiaolongbaoPosKey, JSON.stringify(xiaolongbaoPos))
+                        localStorage.setItem(xiaolongbaoPosKey, JSON.stringify(xiaolongbaoPos))
 
 						oParent.onselectstart = function() {
 							return false;

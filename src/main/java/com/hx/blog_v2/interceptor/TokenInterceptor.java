@@ -43,7 +43,7 @@ public class TokenInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
                              Object handler) throws Exception {
-        String token = request.getHeader(BlogConstants.COOKIE_TOKEN);
+        String token = request.getHeader(BlogConstants.HEADER_TOKEN);
         TokenInfo tokenInServer = (TokenInfo) WebContext.getAttributeFromSession(BlogConstants.SESSION_TOKEN);
 
         boolean valid = false;
@@ -94,7 +94,7 @@ public class TokenInterceptor extends HandlerInterceptorAdapter {
             tokenInServer.setTokenNow(serverTokenHandler.handle(clientTokenHandler.handle(newToken)));
             tokenInServer.setLastUpdated(nowTs);
             WebContext.setAttributeForSession(BlogConstants.SESSION_TOKEN, tokenInServer);
-            response.addHeader(BlogConstants.COOKIE_TOKEN, tokenInServer.getOriginalToken());
+            response.addHeader(BlogConstants.HEADER_TOKEN, tokenInServer.getOriginalToken());
         }
     }
 

@@ -178,7 +178,7 @@ public final class BlogConstants {
     /**
      * 用户带过来token的请求头
      */
-    public static final String COOKIE_TOKEN = "hx_blog_token";
+    public static final String HEADER_TOKEN = "hx_blog_token";
 
     /**
      * 相关常量的 key

@@ -26,11 +26,13 @@ var saveBlogInfoInterval = 5 * 1000
  * @type {string}
  */
 var saveBlogInfoKey = "staged.blog.info"
+var saveBlogContentKey = "staged.blog.info.content"
 /**
  * 暂存的博客信息的备份
  * @type {string}
  */
 var saveBlogInfoBakKey = "staged.blog.info.bak"
+var saveBlogContentBakKey = "staged.blog.info.content"
 
 /**
  * 读取文件的编码

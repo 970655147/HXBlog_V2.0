@@ -8,6 +8,11 @@
 
 var params = getParamsFromUrl(location.href)
 var codeNow = params.code
+/**
+ * 所有的需要校正的记录的id
+ * @type {StringBuilder}
+ */
+var correctionItemIds = new StringBuilder()
 
 /**
  * 各个校验类型按钮的事件
@@ -51,6 +56,8 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
                         var tags = resp.data
                         for (var i in tags) {
                             var item = tags[i];
+                            correctionItemIds.append(item.id)
+
                             html += '<tr>';
                             html += '<td>' + item.id + '</td>';
                             html += '<td>' + item.contextInfo + '</td>';
@@ -72,11 +79,11 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
 
     //输出接口，主要是两个函数，一个删除一个编辑
     var funcs = {
-        doCorrect : function(id) {
+        doCorrect: function (id) {
             ajax({
                 url: reqMap.correction.doCorrection,
-                data: {id : id, code : codeNow},
-                type : "POST",
+                data: {id: id, code: codeNow},
+                type: "POST",
                 success: function (resp) {
                     if (resp.success) {
                         layer.alert("校正记录成功 !", function () {
@@ -88,11 +95,17 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
                 }
             })
         },
-        doCorrectAll : function() {
+        doCorrectAll: function () {
+            var correctionAllParams = {code : codeNow}
+            // 文件校验特殊处理 !
+            if(codeNow === "3") {
+                correctionAllParams.ids = correctionItemIds.join(",")
+            }
+
             ajax({
                 url: reqMap.correction.doCorrection,
-                data: {code : codeNow},
-                type : "POST",
+                data: correctionAllParams,
+                type: "POST",
                 success: function (resp) {
                     if (resp.success) {
                         layer.alert("校正记录成功[" + resp.data + "] !", function () {

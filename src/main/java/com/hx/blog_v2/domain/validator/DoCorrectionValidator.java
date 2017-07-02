@@ -21,6 +21,8 @@ public class DoCorrectionValidator implements Validator<DoCorrectionForm> {
     @Autowired
     private BeanIdStrValidator beanIdStrValidator;
     @Autowired
+    private BeanIdsStrValidator beanIdsStrValidator;
+    @Autowired
     private CorrectionTypeValidator correctionTypeValidator;
 
     @Override
@@ -29,6 +31,12 @@ public class DoCorrectionValidator implements Validator<DoCorrectionForm> {
             Result errResult = beanIdStrValidator.validate(form.getId(), extra);
             if (!errResult.isSuccess()) {
                 return ResultUtils.failed(" 给定的id 非数字 ! ");
+            }
+        }
+        if (!Tools.isEmpty(form.getIds())) {
+            Result errResult = beanIdsStrValidator.validate(form.getIds(), extra);
+            if (!errResult.isSuccess()) {
+                return ResultUtils.failed(" 给定的ids 格式不正确 ! ");
             }
         }
         Result errResult = correctionTypeValidator.validate(form.getCode(), extra);

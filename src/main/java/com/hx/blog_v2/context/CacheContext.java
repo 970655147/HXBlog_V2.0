@@ -327,6 +327,18 @@ public class CacheContext {
     }
 
     /**
+     * 清理上传文件相关的缓存的相关的数据
+     *
+     * @return void
+     * @author Jerry.X.He
+     * @date 6/17/2017 8:18 PM
+     * @since 1.0
+     */
+    public void clearUploadedFiles() {
+        digest2UploadedFiles.clear();
+    }
+
+    /**
      * 刷新当前系统的配置
      *
      * @return void

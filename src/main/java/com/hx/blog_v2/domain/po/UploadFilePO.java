@@ -1,5 +1,6 @@
 package com.hx.blog_v2.domain.po;
 
+import com.hx.blog_v2.domain.po.interf.LogisticalId;
 import com.hx.blog_v2.util.BlogConstants;
 import com.hx.blog_v2.util.DateUtils;
 import com.hx.json.JSONObject;
@@ -21,7 +22,7 @@ import java.util.Map;
  * @version 1.0
  * @date 5/29/2017 4:11 PM
  */
-public class UploadFilePO implements JSONTransferable<UploadFilePO> {
+public class UploadFilePO implements JSONTransferable<UploadFilePO>, LogisticalId<String> {
 
     @JSONField({"id", "id"})
     private String id;
@@ -156,4 +157,8 @@ public class UploadFilePO implements JSONTransferable<UploadFilePO> {
         this.id = id;
     }
 
+    @Override
+    public String logisticalId() {
+        return url;
+    }
 }

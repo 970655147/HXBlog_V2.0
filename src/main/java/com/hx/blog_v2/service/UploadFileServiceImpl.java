@@ -97,7 +97,7 @@ public class UploadFileServiceImpl extends BaseServiceImpl<UploadFilePO> impleme
 
         tmpFile = new File(tmpFile.getAbsolutePath() + suffix);
         FileItem tmpFileItem = new SimpleFileItem("uploadFile", true,
-                WebContext.getRequest().getContentType(), file.getOriginalFilename(), tmpFile, null);
+                file.getContentType(), file.getOriginalFilename(), tmpFile, null);
         Result result = add0(new CommonsMultipartFile(tmpFileItem));
         if(result.isSuccess()) {
             tmpFile.delete();
@@ -197,7 +197,8 @@ public class UploadFileServiceImpl extends BaseServiceImpl<UploadFilePO> impleme
             return ResultUtils.failed("failed !");
         }
 
-        UploadFilePO po = new UploadFilePO(file.getOriginalFilename(), file.getContentType(), relativePath, digest, String.valueOf(file.getSize()));
+        UploadFilePO po = new UploadFilePO(file.getOriginalFilename(), file.getContentType(),
+                relativePath, digest, String.valueOf(file.getSize()));
         Result addResult = uploadFileDao.add(po);
         if (!addResult.isSuccess()) {
             return addResult;

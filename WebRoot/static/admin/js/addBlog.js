@@ -44,7 +44,7 @@ if (!isEmpty(currentBlogId)) {
 }
 
 /**
- * 周期保存博客信息到 sessionStorage
+ * 周期保存博客信息到 localStorage
  */
 saveBlogInfoTask = setInterval(saveBlogInfoFunc, saveBlogInfoInterval)
 
@@ -353,14 +353,15 @@ function loadBlogInfo(blog) {
  */
 function clearSaveBlogInfo() {
     layer.confirm('确认清理暂存? 不可恢复哦 !', {icon: 3, title:'确认'}, function() {
-        sessionStorage.setItem(saveBlogInfoBakKey, sessionStorage.getItem(saveBlogInfoKey))
-        sessionStorage.setItem(saveBlogInfoKey, "")
+        localStorage.setItem(saveBlogInfoBakKey, localStorage.getItem(saveBlogInfoKey))
+        localStorage.setItem(saveBlogContentBakKey, localStorage.getItem(saveBlogContentKey))
+        localStorage.setItem(saveBlogInfoKey, "")
         refresh()
     });
 }
 
 /**
- * 将内容保存到 sessionStorage 中
+ * 将内容保存到 localStorage 中
  */
 function saveBlogInfoFunc() {
     var formSerialized = "dummyPrefix?" + $("#addBlogForm").serialize()
@@ -374,19 +375,22 @@ function saveBlogInfoFunc() {
         state = 40
     }
     params.state = state
-    params.content = params.editorValue
-    params.editorValue = ""
+
+    var content = ue.getContent()
+    params.editorValue = null
     var saveBlogInfoStr = transferQuote(encodeURI(JSON.stringify(params)))
-    sessionStorage.setItem(saveBlogInfoKey, saveBlogInfoStr)
+    localStorage.setItem(saveBlogInfoKey, saveBlogInfoStr)
+    localStorage.setItem(saveBlogContentKey, encodeURI(content))
 }
 
 /**
  * 如果暂存了博客信息的话, 加载博客信息
  */
 function loadBlogInfoIfWith() {
-    var blogInfoStr = sessionStorage.getItem(saveBlogInfoKey)
+    var blogInfoStr = localStorage.getItem(saveBlogInfoKey)
     if (!isEmpty(blogInfoStr)) {
-        var blogInfo = JSON.parse(decodeURI(detransferQuote(blogInfoStr)))
+        var blogInfo = JSON.parse(decodeURI(transferQuote(blogInfoStr)))
+        blogInfo.content = decodeURI(localStorage.getItem(saveBlogContentKey))
         loadBlogInfo(blogInfo)
     }
 }

@@ -3,6 +3,7 @@ package com.hx.blog_v2.service;
 import com.hx.blog_v2.context.CacheContext;
 import com.hx.blog_v2.context.ConstantsContext;
 import com.hx.blog_v2.dao.interf.BlogExDao;
+import com.hx.blog_v2.dao.interf.UploadFileDao;
 import com.hx.blog_v2.domain.ErrorCode;
 import com.hx.blog_v2.domain.dto.CorrectionType;
 import com.hx.blog_v2.domain.dto.SenseType;
@@ -15,22 +16,29 @@ import com.hx.blog_v2.domain.mapper.OneStringMapper;
 import com.hx.blog_v2.domain.mapper.StringIntPairMapper;
 import com.hx.blog_v2.domain.mapper.StringStringPairMapper;
 import com.hx.blog_v2.domain.po.BlogExPO;
+import com.hx.blog_v2.domain.po.UploadFilePO;
 import com.hx.blog_v2.domain.vo.CorrectionVO;
 import com.hx.blog_v2.service.interf.BaseServiceImpl;
 import com.hx.blog_v2.service.interf.CorrectionService;
 import com.hx.blog_v2.util.BizUtils;
+import com.hx.blog_v2.util.BlogConstants;
 import com.hx.blog_v2.util.ResultUtils;
 import com.hx.blog_v2.util.SqlUtils;
 import com.hx.common.interf.common.Result;
 import com.hx.json.JSONArray;
+import com.hx.log.file.FileUtils;
 import com.hx.log.util.Tools;
 import com.hx.mongo.criteria.Criteria;
 import com.hx.mongo.criteria.interf.IQueryCriteria;
 import com.hx.mongo.criteria.interf.IUpdateCriteria;
+import org.apache.commons.io.filefilter.DirectoryFileFilter;
+import org.apache.commons.io.filefilter.FileFileFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
+import java.io.FileFilter;
 import java.util.*;
 
 /**
@@ -46,9 +54,13 @@ public class CorrectionServiceImpl extends BaseServiceImpl<Object> implements Co
     @Autowired
     private JdbcTemplate jdbcTemplate;
     @Autowired
+    private UploadFileDao uploadFileDao;
+    @Autowired
     private BlogExDao blogExDao;
     @Autowired
     private CacheContext cacheContext;
+    @Autowired
+    private BlogConstants constants;
     @Autowired
     private ConstantsContext constantsContext;
 
@@ -59,6 +71,10 @@ public class CorrectionServiceImpl extends BaseServiceImpl<Object> implements Co
             return collectCommentCorrection();
         } else if (CorrectionType.SCORE_CNT == type) {
             return collectScoreCorrection();
+        } else if (CorrectionType.UPLOAD_FILE == type) {
+            return collectUploadFile();
+        } else if (CorrectionType.UPLOAD_FOLDER == type) {
+            return collectUploadFolder();
         } else {
             return ResultUtils.failed(" 没有这个类型 ! ");
         }
@@ -71,8 +87,12 @@ public class CorrectionServiceImpl extends BaseServiceImpl<Object> implements Co
             return doCorrectionComment(params);
         } else if (CorrectionType.SCORE_CNT == type) {
             return doCorrectionScore(params);
+        } else if (CorrectionType.UPLOAD_FILE == type) {
+            return doCorrectionUploadFile(params);
+        } else if (CorrectionType.UPLOAD_FOLDER == type) {
+            return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " 当前不支持此操作, 请手动删除改文件 ! ");
         } else {
-            return ResultUtils.failed(" 没有这个类型 ! ");
+            return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " 没有这个类型 ! ");
         }
     }
 
@@ -145,6 +165,49 @@ public class CorrectionServiceImpl extends BaseServiceImpl<Object> implements Co
     }
 
     /**
+     * 收集需要校正[数据库中存在, 文件系统中不存在]的 上传的文件信息
+     *
+     * @return com.hx.common.interf.common.Result
+     * @author Jerry.X.He
+     * @date 7/2/2017 12:14 PM
+     * @since 1.0
+     */
+    private Result collectUploadFile() {
+        Result getFileResult = uploadFileDao.list(Criteria.allMatch());
+        if (!getFileResult.isSuccess()) {
+            return getFileResult;
+        }
+
+        List<UploadFilePO> allFiles = (List<UploadFilePO>) getFileResult.getData();
+        List<CorrectionVO> result = new ArrayList<>(allFiles.size());
+        for (UploadFilePO po : allFiles) {
+            String filePath = Tools.getFilePath(constants.fileRootDir, po.getUrl());
+            if (!FileUtils.exists(filePath)) {
+                CorrectionVO vo = new CorrectionVO(po.getId(), "exists", "file not found");
+                vo.setContextInfo(" 文件[" + po.getId() + "][" + po.getOriginalFileName() + "][" + po.getUrl() + "] ");
+                vo.setDesc(" 该文件在数据库中存在, 在文件系统中不存在 ! ");
+                result.add(vo);
+            }
+        }
+        return ResultUtils.success(result);
+    }
+
+    /**
+     * 查询上传文件夹, 文件系统中存在, 而数据库中不存在的记录
+     *
+     * @return com.hx.common.interf.common.Result
+     * @author Jerry.X.He
+     * @date 7/2/2017 7:58 PM
+     * @since 1.0
+     */
+    private Result collectUploadFolder() {
+        File rootFolder = new File(constants.fileRootDir);
+        List<CorrectionVO> result = new ArrayList<>();
+        collectUploadFolder0(rootFolder, "", result);
+        return ResultUtils.success(result);
+    }
+
+    /**
      * 处理校正评论的相关业务
      *
      * @param params params
@@ -155,9 +218,31 @@ public class CorrectionServiceImpl extends BaseServiceImpl<Object> implements Co
      */
     private Result doCorrectionComment(DoCorrectionForm params) {
         if (!Tools.isEmpty(params.getId())) {
-            StringStringPair pair = collectCommentCntPair(params.getId());
             cacheContext.removeBlogEx(params.getId());
+            StringStringPair pair = collectCommentCntPair(params.getId());
+            if (pair.getLeft().equals(pair.getRight())) {
+                return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " already equals ");
+            }
             return doCorrectionComment0(params.getId(), pair.getLeft());
+        }
+
+        // 将缓存的数据, 持久化到 db
+        cacheContext.clearBlogExCached();
+        if (!Tools.isEmpty(params.getIds())) {
+            String[] ids = params.getIds().split(",");
+            JSONArray errorIds = new JSONArray();
+            for (String id : ids) {
+                StringStringPair pair = collectCommentCntPair(params.getId());
+                if (pair.getLeft().equals(pair.getRight())) {
+                    return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " already equals ");
+                }
+                Result result = doCorrectionComment0(id, pair.getLeft());
+                if (!result.isSuccess()) {
+                    errorIds.add(id);
+                }
+            }
+            String statsInfo = " 总共 : " + ids.length + ", 失败 : " + errorIds.size() + ", 失败记录 : " + String.valueOf(errorIds);
+            return ResultUtils.success(statsInfo);
         } else {
             cacheContext.clearBlogExCached();
             JSONArray errorIds = new JSONArray();
@@ -183,10 +268,55 @@ public class CorrectionServiceImpl extends BaseServiceImpl<Object> implements Co
      * @since 1.0
      */
     private Result doCorrectionScore(DoCorrectionForm params) {
+        // 将缓存的数据, 持久化到 db
+        cacheContext.clearScoreCached();
+
         if (!Tools.isEmpty(params.getId())) {
             return doCorrectionScore0(params.getId());
+        } else if (!Tools.isEmpty(params.getIds())) {
+            String[] ids = params.getIds().split(",");
+            JSONArray errorIds = new JSONArray();
+            for (String id : ids) {
+                Result result = doCorrectionScore0(id);
+                if (!result.isSuccess()) {
+                    errorIds.add(id);
+                }
+            }
+            String statsInfo = " 总共 : " + ids.length + ", 失败 : " + errorIds.size() + ", 失败记录 : " + String.valueOf(errorIds);
+            return ResultUtils.success(statsInfo);
         } else {
             return doCorrectionAllScore0();
+        }
+    }
+
+    /**
+     * 校验博客的评分
+     *
+     * @param params params
+     * @return com.hx.common.interf.common.Result
+     * @author Jerry.X.He
+     * @date 6/24/2017 11:06 AM
+     * @since 1.0
+     */
+    private Result doCorrectionUploadFile(DoCorrectionForm params) {
+        // 清理局部缓存
+        cacheContext.clearUploadedFiles();
+
+        if (!Tools.isEmpty(params.getId())) {
+            return doCorrectionUploadFile0(params.getId());
+        } else if (!Tools.isEmpty(params.getIds())) {
+            String[] ids = params.getIds().split(",");
+            JSONArray errorIds = new JSONArray();
+            for (String id : ids) {
+                Result result = doCorrectionUploadFile0(id);
+                if (!result.isSuccess()) {
+                    errorIds.add(id);
+                }
+            }
+            String statsInfo = " 总共 : " + ids.length + ", 失败 : " + errorIds.size() + ", 失败记录 : " + String.valueOf(errorIds);
+            return ResultUtils.success(statsInfo);
+        } else {
+            return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " not supported ! ");
         }
     }
 
@@ -273,9 +403,6 @@ public class CorrectionServiceImpl extends BaseServiceImpl<Object> implements Co
      * @since 1.0
      */
     private Result doCorrectionScore0(String blogId) {
-        // 将缓存的数据, 持久化到 db
-        cacheContext.clearScoreCached();
-
         String scoreByBlogIdSql = " select score from blog_sense where sense = ? and blog_id = ? group by blog_id, score ";
         List<String> scores = jdbcTemplate.query(scoreByBlogIdSql, new Object[]{SenseType.GOOD.code(), blogId}, new OneStringMapper("score"));
         String blogExSql = " select blog_id, good1_cnt, good2_cnt, good3_cnt, good4_cnt, good5_cnt, good_total_cnt, good_total_score from blog_ex where blog_id = ? ";
@@ -296,10 +423,32 @@ public class CorrectionServiceImpl extends BaseServiceImpl<Object> implements Co
         return doCorrectionScore0(cntByScore, ex);
     }
 
-    private Result doCorrectionAllScore0() {
-        // 将缓存的数据, 持久化到 db
-        cacheContext.clearScoreCached();
+    /**
+     * 校正给定的文件的评分
+     *
+     * @param fileId fileId
+     * @return com.hx.common.interf.common.Result
+     * @author Jerry.X.He
+     * @date 6/24/2017 11:08 AM
+     * @since 1.0
+     */
+    private Result doCorrectionUploadFile0(String fileId) {
+        Result removeResult = uploadFileDao.remove(Criteria.eq("id", fileId));
+        if (!removeResult.isSuccess()) {
+            return removeResult;
+        }
+        return ResultUtils.success();
+    }
 
+    /**
+     * 校正所有的评分有问题的博客
+     *
+     * @return com.hx.common.interf.common.Result
+     * @author Jerry.X.He
+     * @date 7/2/2017 1:22 PM
+     * @since 1.0
+     */
+    private Result doCorrectionAllScore0() {
         String scoreByBlogIdSql = " select blog_id, score from blog_sense where sense = ? group by blog_id, score ";
         List<StringIntPair> scoreByBlogId = jdbcTemplate.query(scoreByBlogIdSql, new Object[]{SenseType.GOOD.code()}, new StringIntPairMapper("blog_id", "score"));
         Set<String> blogIds = new HashSet<>();
@@ -478,6 +627,45 @@ public class CorrectionServiceImpl extends BaseServiceImpl<Object> implements Co
 
         String statsInfo = " 总共 : " + blogExes.size() + ", 失败 : " + errorIds.size() + ", 失败记录 : " + errorIds.toString();
         return ResultUtils.success(statsInfo);
+    }
+
+    /**
+     * 收集给定的文件夹下面 文件系统存在, 数据库中不存在的文件信息
+     *
+     * @param folder folder
+     * @param result result
+     * @return void
+     * @author Jerry.X.He
+     * @date 7/2/2017 8:00 PM
+     * @since 1.0
+     */
+    private void collectUploadFolder0(File folder, String prefix, List<CorrectionVO> result) {
+        File[] childFiles = folder.listFiles((FileFilter) FileFileFilter.FILE);
+        JSONArray childFileNames = new JSONArray();
+        for (File file : childFiles) {
+            childFileNames.add(prefix + file.getName());
+        }
+        if (!Tools.isEmpty(childFileNames)) {
+            Result currentLvFilesResult = uploadFileDao.list(Criteria.in("url", childFileNames));
+            if (currentLvFilesResult.isSuccess()) {
+                List<UploadFilePO> currentLvFiles = (List<UploadFilePO>) currentLvFilesResult.getData();
+                for (File file : childFiles) {
+                    String urlInServer = prefix + file.getName();
+                    UploadFilePO po = BizUtils.findByLogisticId(currentLvFiles, urlInServer);
+                    if (po == null) {
+                        CorrectionVO vo = new CorrectionVO("-1", " exists ", " not exists in db ");
+                        vo.setContextInfo(" 上传文件夹校验[" + urlInServer + "] ");
+                        vo.setDesc(" 该文件在文件系统中存在, 而在数据库中不存在 ! ");
+                        result.add(vo);
+                    }
+                }
+            }
+        }
+
+        File[] childFolders = folder.listFiles((FileFilter) DirectoryFileFilter.INSTANCE);
+        for (File childFolder : childFolders) {
+            collectUploadFolder0(childFolder, prefix + childFolder.getName() + "/", result);
+        }
     }
 
     /**
