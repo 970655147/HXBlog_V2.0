@@ -52,7 +52,7 @@ layui.define([ 'layer', 'form'], function (exports) {
                     }, 1000);
                 }else{
                     refreshCheckCode()
-                    layer.msg(resp.data, { icon: 5 })
+                    layer.msg(resp.data, { icon: 5, time : 200 })
                 }
             }
         });

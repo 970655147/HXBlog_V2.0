@@ -17,6 +17,22 @@ var pageSize = 10
 var monthFacetHideIfOver = 5
 
 /**
+ * 周期保存博客信息的周期
+ */
+var saveBlogInfoInterval = 5 * 1000
+
+/**
+ * 存放暂存的博客信息的key
+ * @type {string}
+ */
+var saveBlogInfoKey = "staged.blog.info"
+/**
+ * 暂存的博客信息的备份
+ * @type {string}
+ */
+var saveBlogInfoBakKey = "staged.blog.info.bak"
+
+/**
  * 读取文件的编码
  * @type {string}
  */

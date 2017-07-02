@@ -17,6 +17,10 @@ queryParams = getParamsFromUrl(window.location.href)
 var currentBlogId = queryParams.id
 var editType = queryParams.editType
 var blog = null
+/**
+ * 周期保存博客信息的任务
+ */
+var saveBlogInfoTask = null
 
 if (!isEmpty(currentBlogId)) {
     ajax({
@@ -28,38 +32,21 @@ if (!isEmpty(currentBlogId)) {
             if (resp.success) {
                 blog = resp.data
                 $("[name='id']").attr("value", currentBlogId)
-                $("[name='title']").attr("value", blog.title)
-                $("[name='author']").attr("value", blog.author)
-                $("[name='coverUrl']").attr("value", blog.coverUrl)
-                $("[id='coverShow']").attr("src", blog.coverUrl)
-                $("[name='blogTypeId'] option[value='" + blog.blogTypeId + "']").attr("selected", "")
-                $("[name='blogCreateTypeId'] option[value='" + blog.blogCreateTypeId + "']").attr("selected", "")
-
-                for (idx in blog.blogTagIds) {
-                    var value = blog.blogTagIds[idx].trim()
-                    var text = blog.blogTagNames[idx].trim()
-                    $("#tagSelected").append(
-                        '<div value=' + value + ' class="layui-unselect layui-form-checkbox layui-form-checked" lay-skin="" onclick="layui.funcs.toggleCheckted(this)" >' +
-                        '<span>' + text + '</span><i class="layui-icon"></i>' +
-                        '</div>')
-                    $("[name='tagIds'] option[value='" + value + "']").remove()
-                }
-                $("[name='tagIds'] option:eq(1)").attr("selected", "")
-                $("[name='summary']").val(blog.summary)
-                // Cannot read property 'getRange' of undefined
-                ue.ready(function () {
-                    UE.getEditor('editor').execCommand('insertHtml', blog.content)
-                });
-
-                if("10" !== blog.state) {
-                    $("#draftBlog").css("display", "none")
-                }
+                loadBlogInfo(blog)
             } else {
                 alert("拉取博客信息失败[" + resp.data + "] !", {icon: 5});
             }
         }
     });
+} else {
+    // 如果是新增文章, 首先从暂存区加载之前存储的数据
+    loadBlogInfoIfWith()
 }
+
+/**
+ * 周期保存博客信息到 sessionStorage
+ */
+saveBlogInfoTask = setInterval(saveBlogInfoFunc, saveBlogInfoInterval)
 
 layui.define(['form', 'upload', 'layer'], function (exports) {
     var $ = layui.jquery;
@@ -71,12 +58,12 @@ layui.define(['form', 'upload', 'layer'], function (exports) {
     form.on('submit(submitBlog)', function (data) {
         $("[name='blogTagIds']").attr("value", collectAttrValues($("#tagSelected .layui-form-checked"), "value", ", ", false))
         $("[name='state']").attr("value", "20")
-        if((blog !== null) && (blog !== undefined) && ("40" === blog.state)) {
+        if ((blog !== null) && (blog !== undefined) && ("40" === blog.state)) {
             $("[name='state']").attr("value", "40")
         }
         $("[name='content']").attr("value", ue.getContent())
         var saveUrl = (isEmpty(currentBlogId)) ? reqMap.blog.add : reqMap.blog.update
-        if((saveUrl === reqMap.blog.update) && ("admin"  === editType) ) {
+        if ((saveUrl === reqMap.blog.update) && ("admin" === editType)) {
             saveUrl = reqMap.blog.adminUpdate
         }
 
@@ -106,7 +93,7 @@ layui.define(['form', 'upload', 'layer'], function (exports) {
         $("[name='state']").attr("value", "10")
         $("[name='content']").attr("value", ue.getContent())
         var saveUrl = (isEmpty(currentBlogId)) ? reqMap.blog.add : reqMap.blog.update
-        if((saveUrl === reqMap.blog.update) && ("admin"  === editType) ) {
+        if ((saveUrl === reqMap.blog.update) && ("admin" === editType)) {
             saveUrl = reqMap.blog.adminUpdate
         }
 
@@ -217,7 +204,7 @@ layui.define(['form', 'upload', 'layer'], function (exports) {
 
         var text = select.find("option[value=" + value + "]").text()
         $("#tagSelected").append(
-            '<div value=' + value + ' class="layui-unselect layui-form-checkbox layui-form-checked" lay-skin="" onclick="layui.funcs.toggleCheckted(this)" >' +
+            '<div value=' + value + ' text=' + text + ' class="layui-unselect layui-form-checkbox layui-form-checked" lay-skin="" onclick="layui.funcs.toggleCheckted(this)" >' +
             '<span>' + text + '</span><i class="layui-icon"></i>' +
             '</div>')
         selectAfter.find("dd[lay-value=" + value + "]").remove()
@@ -321,4 +308,85 @@ function initTypeAndTags() {
             }
         }
     });
+}
+
+/**
+ * 加载给定的博客的信息 到dom
+ */
+function loadBlogInfo(blog) {
+    $("[name='title']").attr("value", blog.title)
+    $("[name='author']").attr("value", blog.author)
+    $("[name='coverUrl']").attr("value", blog.coverUrl)
+    $("[id='coverShow']").attr("src", blog.coverUrl)
+    $("[name='blogTypeId'] option[value='" + blog.blogTypeId + "']").attr("selected", "")
+    $("[name='blogCreateTypeId'] option[value='" + blog.blogCreateTypeId + "']").attr("selected", "")
+
+    if(blog.blogTagIds !== null) {
+        for (idx in blog.blogTagIds) {
+            var value = blog.blogTagIds[idx].trim()
+            var text = blog.blogTagNames[idx].trim()
+
+            if(isEmpty(value)) {
+                continue ;
+            }
+            $("#tagSelected").append(
+                '<div value=' + value + ' text=' + text + ' class="layui-unselect layui-form-checkbox layui-form-checked" lay-skin="" onclick="layui.funcs.toggleCheckted(this)" >' +
+                '<span>' + text + '</span><i class="layui-icon"></i>' +
+                '</div>')
+            $("[name='tagIds'] option[value='" + value + "']").remove()
+        }
+    }
+    $("[name='tagIds'] option:eq(1)").attr("selected", "")
+    $("[name='summary']").val(blog.summary)
+    // Cannot read property 'getRange' of undefined
+    ue.ready(function () {
+        UE.getEditor('editor').execCommand('insertHtml', blog.content)
+    });
+
+    if ("10" !== blog.state) {
+        $("#draftBlog").css("display", "none")
+    }
+}
+
+/**
+ * 清理暂存的博客信息, 并刷新
+ */
+function clearSaveBlogInfo() {
+    layer.confirm('确认清理暂存? 不可恢复哦 !', {icon: 3, title:'确认'}, function() {
+        sessionStorage.setItem(saveBlogInfoBakKey, sessionStorage.getItem(saveBlogInfoKey))
+        sessionStorage.setItem(saveBlogInfoKey, "")
+        refresh()
+    });
+}
+
+/**
+ * 将内容保存到 sessionStorage 中
+ */
+function saveBlogInfoFunc() {
+    var formSerialized = "dummyPrefix?" + $("#addBlogForm").serialize()
+    var params = getParamsFromUrl(formSerialized)
+
+    params.coverUrl = $("[name='coverUrl']").val()
+    params.blogTagIds = collectAttrValues($("#tagSelected .layui-form-checked"), "value", ", ", false).split(",")
+    params.blogTagNames = collectAttrValues($("#tagSelected .layui-form-checked"), "text", ", ", false).split(",")
+    var state = 20
+    if ((blog !== null) && (blog !== undefined) && ("40" === state)) {
+        state = 40
+    }
+    params.state = state
+    params.content = params.editorValue
+    params.editorValue = ""
+    var saveBlogInfoStr = transferQuote(encodeURI(JSON.stringify(params)))
+    sessionStorage.setItem(saveBlogInfoKey, saveBlogInfoStr)
+}
+
+/**
+ * 如果暂存了博客信息的话, 加载博客信息
+ */
+function loadBlogInfoIfWith() {
+    var blogInfoStr = sessionStorage.getItem(saveBlogInfoKey)
+    if (!isEmpty(blogInfoStr)) {
+        var blogInfo = JSON.parse(decodeURI(detransferQuote(blogInfoStr)))
+        loadBlogInfo(blogInfo)
+    }
 }
