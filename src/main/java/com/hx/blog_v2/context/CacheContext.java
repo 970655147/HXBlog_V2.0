@@ -198,7 +198,7 @@ public class CacheContext {
     /**
      * 黑名单中的信息
      */
-    private Map<String, String> blankList = new HashMap<>();
+    private Map<String, String> blackList = new HashMap<>();
 
     /**
      * 上一次访问 all5SecStatistics 的时间戳
@@ -284,7 +284,7 @@ public class CacheContext {
             blog2NextFloorId.clear();
             blogFloor2NextCommentId.clear();
             forceOffLineMap.clear();
-            blankList.clear();
+            blackList.clear();
         }
     }
 
@@ -850,7 +850,7 @@ public class CacheContext {
      * @since 1.0
      */
     public Map<String, String> blankList() {
-        return blankList;
+        return blackList;
     }
 
     /**
@@ -889,7 +889,7 @@ public class CacheContext {
         result.add(roles2ResourceIds.size());
         result.add(resource2Interfs.size());
         result.add(digest2UploadedFiles.size());
-        result.add(blankList.size());
+        result.add(blackList.size());
         return result;
     }
 
@@ -1340,7 +1340,7 @@ public class CacheContext {
     private class ClearBlankListRunnable implements Runnable {
         @Override
         public void run() {
-            blankList.clear();
+            blackList.clear();
         }
     }
 

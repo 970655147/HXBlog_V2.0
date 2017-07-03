@@ -388,13 +388,13 @@ function encapOption(resp) {
         xAxis: [
             {
                 type: 'category',
-                data: ['id2blogEx', 'info2VisitLog', 'info2sense', 'roleIds2ResIds', 'res2Interfs', 'uploadFile', "blankList"]
+                data: ['id2blogEx', 'info2VisitLog', 'info2sense', 'roleIds2ResIds', 'res2Interfs', 'uploadFile', "blackList"]
             },
             {
                 type: 'category',
                 axisLine: {show: true}, axisTick: {show: false}, axisLabel: {show: false},
                 splitArea: {show: false}, splitLine: {show: false},
-                data: ['id2blogEx', 'info2VisitLog', 'info2sense', 'roleIds2ResIds', 'res2Interfs', 'uploadFile', "blankList"]
+                data: ['id2blogEx', 'info2VisitLog', 'info2sense', 'roleIds2ResIds', 'res2Interfs', 'uploadFile', "blackList"]
             }
         ],
         yAxis: [
