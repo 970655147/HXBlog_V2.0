@@ -601,9 +601,9 @@ public class ConstantsContext {
             paramsToCutMaxLen = Tools.optInt(systemConfig, BlogConstants.PARAMS_TO_CUT_MAX_LEN, 200);
         }
 
-        maxVisitCntPerPeriod = Tools.optInt(systemConfig, BlogConstants.MAX_VISIT_CNT_PER_PERIOD, 100);
-        maxNotFormatCntPerPeriod = Tools.optInt(systemConfig, BlogConstants.MAX_NOT_FORMAT_CNT_PER_PERIOD, 20);
-        visitCntValidatePeriod = Tools.optInt(systemConfig, BlogConstants.VISIT_CNT_VALIDATE_PERIOD, 60);
+        maxVisitCntPerPeriod = Tools.optInt(systemConfig, BlogConstants.MAX_VISIT_CNT_PER_PERIOD, 20);
+        maxNotFormatCntPerPeriod = Tools.optInt(systemConfig, BlogConstants.MAX_NOT_FORMAT_CNT_PER_PERIOD, 5);
+        visitCntValidatePeriod = Tools.optInt(systemConfig, BlogConstants.VISIT_CNT_VALIDATE_PERIOD, 5);
 
         sendEmailIfWithNotify = Tools.optBoolean(systemConfig, BlogConstants.SEND_EMAIL_IF_WITH_NOTIFY, true);
         emailAuthUserName = Tools.optString(systemConfig, BlogConstants.EMAIL_AUTH_USERNAME, "");

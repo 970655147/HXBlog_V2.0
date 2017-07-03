@@ -214,7 +214,7 @@ public class MessageServiceImpl extends BaseServiceImpl<MessagePO> implements Me
         IQueryCriteria query = Criteria.eq("receiver_id", userId);
         IUpdateCriteria update = Criteria.set("consumed", "1").add("updated_at", updateAt);
 
-        Result result = messageDao.update(query, update);
+        Result result = messageDao.update(query, update, true);
         if (!result.isSuccess()) {
             return result;
         }

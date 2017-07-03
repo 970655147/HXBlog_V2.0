@@ -196,8 +196,8 @@ public class BlogCommentServiceImpl extends BaseServiceImpl<BlogCommentPO> imple
      * @since 1.0
      */
     private Result encapCommentPO(BlogPO blog, BlogCommentPO po, CommentSaveForm params) {
-        int endOfReply = BizUtils.idxOfEndRe(params.getComment(), constantsContext.replyCommentPrefix, constantsContext.replyCommentSuffix);
-        boolean isReply = ((!Tools.isEmpty(params.getFloorId())) && (endOfReply >= 0));
+        String replyExtracted = BizUtils.extractReplyFrom(params.getComment(), constantsContext.replyCommentPrefix, constantsContext.replyCommentSuffix);
+        boolean isReply = ((!Tools.isEmpty(params.getFloorId())) && (replyExtracted != null));
         if (isReply) {
             IQueryCriteria query = Criteria.and(Criteria.eq("deleted", "0")).add(Criteria.eq("blog_id", params.getBlogId()))
                     .add(Criteria.eq("floor_id", params.getFloorId())).add(Criteria.eq("comment_id", params.getCommentId()));
@@ -211,7 +211,7 @@ public class BlogCommentServiceImpl extends BaseServiceImpl<BlogCommentPO> imple
             }
 
             po.setFloorId(params.getFloorId());
-            po.setComment(po.getComment().substring(endOfReply).trim());
+            po.setComment(replyExtracted);
             po.setParentCommentId(replyTo.getId());
         } else {
             po.setFloorId(cacheContext.nextFloorId(po.getBlogId()));

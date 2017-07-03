@@ -461,12 +461,17 @@ public final class BizUtils {
      * @date 6/4/2017 1:49 PM
      * @since 1.0
      */
-    public static int idxOfEndRe(String comment, String replyCommentPrefix, String replyCommentSuffix) {
-        if (!comment.startsWith(replyCommentPrefix)) {
-            return -1;
+    public static String extractReplyFrom(String comment, String replyCommentPrefix, String replyCommentSuffix) {
+        int replyPrefixIdx = comment.indexOf(replyCommentPrefix);
+        if(replyPrefixIdx < 0) {
+            return null;
+        }
+        int replySuffixIdx = comment.indexOf(replyCommentSuffix);
+        if(replySuffixIdx < 0) {
+            return null;
         }
 
-        return comment.indexOf(replyCommentSuffix) + replyCommentSuffix.length();
+        return comment.substring(0, replyPrefixIdx) + comment.substring(replySuffixIdx + replyCommentSuffix.length());
     }
 
     /**

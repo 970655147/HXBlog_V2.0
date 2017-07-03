@@ -4,11 +4,9 @@ import com.hx.blog_v2.biz_handler.handler.common.BizHandlerAdapter;
 import com.hx.blog_v2.biz_handler.interf.BizContext;
 import com.hx.blog_v2.context.CacheContext;
 import com.hx.blog_v2.context.ConstantsContext;
-import com.hx.blog_v2.context.WebContext;
 import com.hx.blog_v2.dao.interf.BlogDao;
 import com.hx.blog_v2.dao.interf.BlogExDao;
 import com.hx.blog_v2.domain.dto.MessageType;
-import com.hx.blog_v2.domain.dto.SessionUser;
 import com.hx.blog_v2.domain.form.BeanIdForm;
 import com.hx.blog_v2.domain.form.CommentSaveForm;
 import com.hx.blog_v2.domain.form.MessageSaveForm;
@@ -51,9 +49,9 @@ public class CommentAddHandler extends BizHandlerAdapter {
         Result result = (Result) context.result();
         if (result.isSuccess()) {
             CommentSaveForm params = (CommentSaveForm) context.args()[0];
-            int endOfReply = BizUtils.idxOfEndRe(params.getComment(),
+            String replyExtracted = BizUtils.extractReplyFrom(params.getComment(),
                     constantsContext.replyCommentPrefix, constantsContext.replyCommentSuffix);
-            boolean isReply = ((!Tools.isEmpty(params.getFloorId())) && (endOfReply >= 0));
+            boolean isReply = ((!Tools.isEmpty(params.getFloorId())) && (replyExtracted != null));
             if (!isReply) {
                 Result getExResult = blogExDao.get(new BeanIdForm(params.getBlogId()));
                 if (!getExResult.isSuccess()) {
