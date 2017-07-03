@@ -58,6 +58,23 @@ public final class BlogConstants {
     public static final String FORMAT_FILENAME = "yyyy-MM-dd_HH-mm-ss";
 
     /**
+     * 一秒的毫秒数
+     */
+    public static final long ONE_SECOND = 1000;
+    /**
+     * 一分钟的毫秒数
+     */
+    public static final long ONE_MINUTE = 60 * ONE_SECOND;
+    /**
+     * 一小时的毫秒数
+     */
+    public static final long ONE_HOUR = 60 * ONE_MINUTE;
+    /**
+     * 一天的毫秒数
+     */
+    public static final long ONE_DAY = 24 * ONE_HOUR;
+
+    /**
      * JSONTransferable
      */
     /**

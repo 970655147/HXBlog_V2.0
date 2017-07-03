@@ -1140,8 +1140,8 @@ public class CacheContext {
      */
     private void initSchedule() {
         long msOffToNextDawn = DateUtils.beginOfDay(DateUtils.addDay(new Date(), 1)).getTime() - System.currentTimeMillis();
-        Tools.scheduleAtFixedRate(new SwitchStatisInfoRunnable(), msOffToNextDawn, 1, TimeUnit.DAYS);
-        Tools.scheduleAtFixedRate(new ClearBlankListRunnable(), msOffToNextDawn, 1, TimeUnit.DAYS);
+        Tools.scheduleAtFixedRate(new SwitchStatisInfoRunnable(), msOffToNextDawn, BlogConstants.ONE_DAY, TimeUnit.MILLISECONDS);
+        Tools.scheduleAtFixedRate(new ClearBlankListRunnable(), msOffToNextDawn, BlogConstants.ONE_DAY, TimeUnit.MILLISECONDS);
         Tools.scheduleAtFixedRate(new ClearVisitPeroidInfoRunnable(), constantsContext.visitCntValidatePeriod,
                 constantsContext.visitCntValidatePeriod, TimeUnit.SECONDS);
     }
