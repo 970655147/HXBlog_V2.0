@@ -182,6 +182,11 @@ function markAllConsumed() {
         data: {},
         success: function (resp) {
             if (resp.success) {
+                for(var id in id2Consumed) {
+                    id2Consumed[id] = true
+                    $("[name=\"imgOf" + id + "\"]").attr("src", mapMessageUrl(1))
+                }
+
                 layer.alert("标记消息成功 !");
             } else {
                 layer.alert("标记消息失败[" + resp.data + "] !", {icon: 5});
@@ -224,14 +229,13 @@ function initUserAndRoles() {
  */
 function consumeMessage(id) {
     if (!id2Consumed[id]) {
-        id2Consumed[id] = true
-        $("[name=\"imgOf" + id + "\"]").attr("src", mapMessageUrl(1))
         ajax({
             url: reqMap.message.markConsumed,
             type: "POST",
             data: {id: id},
             success: function (resp) {
-
+                id2Consumed[id] = true
+                $("[name=\"imgOf" + id + "\"]").attr("src", mapMessageUrl(1))
             }
         });
     }

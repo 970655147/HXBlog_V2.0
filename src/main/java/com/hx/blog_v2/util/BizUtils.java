@@ -279,11 +279,11 @@ public final class BizUtils {
     public static StatisticsInfo collectSumStatisticsInfo(JdbcTemplate jdbcTemplate) {
         String yesterday = DateUtils.formate(DateUtils.addDay(new Date(), -1), BlogConstants.FORMAT_YYYY_MM_DD);
         String statsViewCntSql = " select created_at_day as date, count(request_ip) as viewCount, count(distinct(request_ip)) as uniqueViewCount from blog_visit_log where created_at_day <= ? ";
-        String statsSenseCntSql = " select count(if (score > 3, true, null)) as goodCnt, count(if (score <= 3, true, null)) as notGoodCnt from blog_sense where sense = '1' and date_format(created_at, '%y-%m-%d') <= ? ";
-        String statsBlogCntSql = " select count(*) as blogCnt from blog where deleted = 0 and date_format(created_at, '%y-%m-%d') <= ? ";
-        String statsCommentCntSql = " select count(*) as commentCnt from blog_comment where deleted = 0 and date_format(created_at, '%y-%m-%d') <= ? ";
-        String requestLogCntSql = " select count(*) as requestCnt from request_log where date_format(created_at, '%y-%m-%d') <= ? ";
-        String exceptionLogCntSql = " select count(*) as exceptionCnt from exception_log where date_format(created_at, '%y-%m-%d') <= ? ";
+        String statsSenseCntSql = " select count(if (score > 3, true, null)) as goodCnt, count(if (score <= 3, true, null)) as notGoodCnt from blog_sense where sense = '1' and date_format(created_at, '%Y-%m-%d') <= ? ";
+        String statsBlogCntSql = " select count(*) as blogCnt from blog where deleted = 0 and date_format(created_at, '%Y-%m-%d') <= ? ";
+        String statsCommentCntSql = " select count(*) as commentCnt from blog_comment where deleted = 0 and date_format(created_at, '%Y-%m-%d') <= ? ";
+        String requestLogCntSql = " select count(*) as requestCnt from request_log where date_format(created_at, '%Y-%m-%d') <= ? ";
+        String exceptionLogCntSql = " select count(*) as exceptionCnt from exception_log where date_format(created_at, '%Y-%m-%d') <= ? ";
 
         Object[] params = new Object[]{yesterday};
         Map<String, Object> viewCntMap = jdbcTemplate.queryForMap(statsViewCntSql, params);
@@ -472,6 +472,7 @@ public final class BizUtils {
         }
 
         return comment.substring(0, replyPrefixIdx) + comment.substring(replySuffixIdx + replyCommentSuffix.length());
+
     }
 
     /**
