@@ -12,7 +12,9 @@ import com.hx.blog_v2.domain.form.BeanIdForm;
 import com.hx.blog_v2.domain.form.BlogVisitLogForm;
 import com.hx.blog_v2.domain.po.BlogExPO;
 import com.hx.blog_v2.domain.po.BlogVisitLogPO;
-import com.hx.blog_v2.util.*;
+import com.hx.blog_v2.util.BizUtils;
+import com.hx.blog_v2.util.BlogConstants;
+import com.hx.blog_v2.util.DateUtils;
 import com.hx.common.interf.common.Result;
 import com.hx.log.util.Tools;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,8 +47,9 @@ public class BlogVisitLogHandler extends BizHandlerAdapter {
     @Override
     public void afterHandle(BizContext context) {
         Result result = (Result) context.result();
+        SessionUser user = (SessionUser) WebContext.getAttributeFromSession(BlogConstants.SESSION_USER);
         if (result.isSuccess()) {
-            Tools.execute(new DoBizRunnable(context));
+            Tools.execute(new DoBizRunnable(context, user));
         }
     }
 
@@ -62,8 +65,7 @@ public class BlogVisitLogHandler extends BizHandlerAdapter {
      * @date 6/9/2017 9:34 PM
      * @since 1.0
      */
-    private BlogVisitLogPO encapBlogVisitLog(BlogVisitLogForm params) {
-        SessionUser user = (SessionUser) WebContext.getAttributeFromSession(BlogConstants.SESSION_USER);
+    private BlogVisitLogPO encapBlogVisitLog(SessionUser user, BlogVisitLogForm params) {
         String userName = "unknown", email = "unknown";
         int isSystemUser = 0;
         if (user != null) {
@@ -85,9 +87,13 @@ public class BlogVisitLogHandler extends BizHandlerAdapter {
      */
     private class DoBizRunnable implements Runnable {
         private BizContext context;
-        public DoBizRunnable(BizContext context) {
+        private SessionUser user;
+
+        public DoBizRunnable(BizContext context, SessionUser user) {
             this.context = context;
+            this.user = user;
         }
+
         @Override
         public void run() {
             List<String> blogIdCandidate = new ArrayList<>();
@@ -114,7 +120,7 @@ public class BlogVisitLogHandler extends BizHandlerAdapter {
                     blogEx.incDayFlushViewCnt(1);
                     cacheContext.todaysStatistics().incDayFlushViewCnt(1);
                     cacheContext.now5SecStatistics().incDayFlushViewCnt(1);
-                    po = encapBlogVisitLog(params);
+                    po = encapBlogVisitLog(user, params);
 
                     BlogVisitLogForm ipVisitLogParam = new BlogVisitLogForm(params.getBlogId(), params.getRequestIp());
                     ipVisitLogParam.setCreatedAtDay(null);
@@ -129,7 +135,7 @@ public class BlogVisitLogHandler extends BizHandlerAdapter {
                     }
                 }
 
-                po = encapBlogVisitLog(params);
+                po = encapBlogVisitLog(user, params);
                 visitLogDao.add(po);
                 cacheContext.putBlogEx(blogEx);
             }

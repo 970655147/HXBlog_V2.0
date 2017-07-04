@@ -40,8 +40,9 @@ public class CommentRemoveHandler extends BizHandlerAdapter {
     @Override
     public void afterHandle(BizContext context) {
         Result result = (Result) context.result();
+        BlogCommentPO po = (BlogCommentPO) WebContext.getAttributeFromRequest(BlogConstants.REQUEST_DATA);
         if (result.isSuccess()) {
-            Tools.execute(new DoBizRunnable(context));
+            Tools.execute(new DoBizRunnable(context, po));
         }
     }
 
@@ -54,15 +55,16 @@ public class CommentRemoveHandler extends BizHandlerAdapter {
      */
     private class DoBizRunnable implements Runnable {
         private BizContext context;
+        private BlogCommentPO po;
 
-        public DoBizRunnable(BizContext context) {
+        public DoBizRunnable(BizContext context, BlogCommentPO po) {
             this.context = context;
+            this.po = po;
         }
 
         @Override
         public void run() {
             Result result = (Result) context.result();
-            BlogCommentPO po = (BlogCommentPO) WebContext.getAttributeFromRequest(BlogConstants.REQUEST_DATA);
             if ("1".equals(po.getCommentId())) {
                 Result getExResult = blogExDao.get(new BeanIdForm(po.getBlogId()));
                 if (!getExResult.isSuccess()) {

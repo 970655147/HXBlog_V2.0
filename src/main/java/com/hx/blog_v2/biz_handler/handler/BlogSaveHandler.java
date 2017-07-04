@@ -42,8 +42,9 @@ public class BlogSaveHandler extends BizHandlerAdapter {
     @Override
     public void afterHandle(BizContext context) {
         Result result = (Result) context.result();
+        SessionUser user = (SessionUser) WebContext.getAttributeFromSession(BlogConstants.SESSION_USER);
         if (result.isSuccess()) {
-            Tools.execute(new DoBizRunnable(context));
+            Tools.execute(new DoBizRunnable(context, user));
         }
     }
 
@@ -56,8 +57,7 @@ public class BlogSaveHandler extends BizHandlerAdapter {
      * @date 6/27/2017 8:16 PM
      * @since 1.0
      */
-    private Result sendMessage(RolePO role, Result result, BlogSaveForm params) {
-        SessionUser user = (SessionUser) WebContext.getAttributeFromSession(BlogConstants.SESSION_USER);
+    private Result sendMessage(SessionUser user, RolePO role, Result result, BlogSaveForm params) {
         MessageSaveForm msgForm = new MessageSaveForm();
 
         msgForm.setSenderId(constantsContext.contextSystemUserId);
@@ -80,9 +80,11 @@ public class BlogSaveHandler extends BizHandlerAdapter {
      */
     private class DoBizRunnable implements Runnable {
         private BizContext context;
+        private SessionUser user;
 
-        public DoBizRunnable(BizContext context) {
+        public DoBizRunnable(BizContext context, SessionUser user) {
             this.context = context;
+            this.user = user;
         }
 
         @Override
@@ -90,7 +92,6 @@ public class BlogSaveHandler extends BizHandlerAdapter {
             if ((context.args().length > 0) && (context.args()[0] instanceof BlogSaveForm)) {
                 Result result = (Result) context.result();
                 BlogSaveForm params = (BlogSaveForm) context.args()[0];
-                SessionUser user = (SessionUser) WebContext.getAttributeFromSession(BlogConstants.SESSION_USER);
 
                 // add
                 if (Tools.isEmpty(params.getId())) {
@@ -103,7 +104,7 @@ public class BlogSaveHandler extends BizHandlerAdapter {
 
                 RolePO role = cacheContext.roleByName(constants.roleAdmin);
                 if (role != null) {
-                    Result sendEmailResult = sendMessage(role, result, params);
+                    Result sendEmailResult = sendMessage(user, role, result, params);
                     if (!sendEmailResult.isSuccess()) {
                         // ignore
                     }

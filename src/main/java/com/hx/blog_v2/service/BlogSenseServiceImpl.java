@@ -47,10 +47,8 @@ public class BlogSenseServiceImpl extends BaseServiceImpl<BlogSensePO> implement
         BlogSensePO oldPo = exists ? (BlogSensePO) getSenseResult.getData() : null;
         BlogSensePO po = new BlogSensePO(params.getBlogId(), params.getName(), params.getEmail(), params.getRequestIp(),
                 params.getSense(), params.getScore());
-        Result updateExResult = updateBlogEx(oldPo, params);
-        if (!updateExResult.isSuccess()) {
-            return updateExResult;
-        }
+        WebContext.setAttributeForRequest(BlogConstants.REQUEST_DATA, po);
+        WebContext.setAttributeForRequest(BlogConstants.REQUEST_EXTRA, oldPo);
 
         if (!exists) {
             Result saveResult = senseDao.add(po);
@@ -59,33 +57,6 @@ public class BlogSenseServiceImpl extends BaseServiceImpl<BlogSensePO> implement
             }
         }
         cacheContext.putBlogSense(params, po);
-        return ResultUtils.success("success");
-    }
-
-
-    /**
-     * 更新博客维护的额外的点赞信息
-     *
-     * @param params params
-     * @return void
-     * @author Jerry.X.He
-     * @date 6/6/2017 8:53 PM
-     * @since 1.0
-     */
-    private Result updateBlogEx(BlogSensePO oldPo, BlogSenseForm params) {
-        Result getResult = blogExDao.get(new BeanIdForm(params.getBlogId()));
-        if (!getResult.isSuccess()) {
-            return getResult;
-        }
-
-        BlogExPO po = (BlogExPO) getResult.getData();
-        if (oldPo != null) {
-            po.decGoodCnt(oldPo.getScore(), -1);
-        }
-        if (params.getScore() > 0) {
-            po.incGoodCnt(params.getScore(), 1);
-        }
-        cacheContext.putBlogEx(po);
         return ResultUtils.success("success");
     }
 
