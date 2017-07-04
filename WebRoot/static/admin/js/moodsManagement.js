@@ -5,8 +5,10 @@
  * @version 1.0
  * @date 5/24/2017 9:56 PM
  */
-
-var moodNum = 3
+var sPageNow = sessionStorageGet(location.href)
+if(isEmpty(sPageNow) ) {
+    sPageNow = 1
+}
 
 layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
     var $ = layui.jquery;
@@ -17,20 +19,17 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
     var laypageId = 'pageNav';
 
 
-    initilData(1);
+    initilData(sPageNow);
     //页数据初始化
-    //currentIndex：当前页面
-    //pageSize：页容量（每页显示的条数）
-    function initilData(currentIndex) {
+    function initilData(pageNow) {
         var index = layer.load(1);
-        //模拟数据加载
         setTimeout(function () {
             layer.close(index);
             ajax({
                 url: reqMap.mood.list,
                 type: "GET",
                 data: {
-                    pageNow: currentIndex,
+                    pageNow: pageNow,
                     pageSize: pageSize
                 },
                 success: function (resp) {
@@ -60,11 +59,12 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
                             pages: resp.data.totalPage,
                             groups: 5,
                             skip: true,
-                            curr: currentIndex,
+                            curr: pageNow,
                             jump: function (obj, first) {
-                                var currentIndex = obj.curr;
+                                sPageNow = obj.curr;
+                                sessionStorageSet(location.href, sPageNow)
                                 if (!first) {
-                                    initilData(currentIndex, pageSize);
+                                    initilData(sPageNow);
                                 }
                             }
                         });

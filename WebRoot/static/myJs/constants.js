@@ -10,6 +10,14 @@
  * 分页的时候, 页面的记录条数
  */
 var pageSize = 10
+/**
+ * 评论的最大字符数量
+ */
+var commentMaxLen = 4096
+/**
+ * 评论的数量提醒的阈值
+ */
+var commentLenThreshold = 100
 
 /**
  * 如果 monthFacet 则部分隐藏

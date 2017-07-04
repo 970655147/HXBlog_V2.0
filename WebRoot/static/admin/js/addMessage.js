@@ -1,12 +1,12 @@
 /**
- * writeBlog.js
+ * addMessage.js
  *
  * @author Jerry.X.He <970655147@qq.com>
  * @version 1.0
  * @date 5/21/2017 10:01 PM
  */
 
-    //实例化编辑器
+//实例化编辑器
 var ue = UE.getEditor('editor');
 
 // 加载用户列表, 角色

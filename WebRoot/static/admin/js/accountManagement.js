@@ -6,7 +6,10 @@
  * @date 5/24/2017 9:33 PM
  */
 
-var linkNum = 3;
+var sPageNow = sessionStorageGet(location.href)
+if(isEmpty(sPageNow) ) {
+    sPageNow = 1
+}
 
 layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
     var $ = layui.jquery;
@@ -16,10 +19,8 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
     var element = layui.element();
     var laypageId = 'pageNav';
 
-    initilData(1);
+    initilData(sPageNow);
     //页数据初始化
-    //currentIndex：当前页面
-    //pageSize：页容量（每页显示的条数）
     function initilData(pageNow) {
         var index = layer.load(1);
         //模拟数据加载
@@ -63,9 +64,10 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
                             skip: true,
                             curr: pageNow,
                             jump: function (obj, first) {
-                                var pageNow = obj.curr;
+                                sPageNow = obj.curr;
+                                sessionStorageSet(location.href, sPageNow)
                                 if (!first) {
-                                    initilData(pageNow);
+                                    initilData(sPageNow);
                                 }
                             }
                         });

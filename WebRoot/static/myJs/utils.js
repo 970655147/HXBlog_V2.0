@@ -270,7 +270,7 @@ function ajax(config) {
     }
 
     var beforeSend = function (xhr) {
-        xhr.setRequestHeader(tokenHeader, localStorage.getItem(tokenHeader));
+        xhr.setRequestHeader(tokenHeader, localStorageGet(tokenHeader));
         return true
     }
     var beforeSucc = function (resp, status, xhr) {
@@ -278,7 +278,7 @@ function ajax(config) {
         if (!isEmpty(tokenFromServer)) {
             // hide this !!
             var tokenClientHandled = hex_md5(tokenFromServer)
-            localStorage.setItem(tokenHeader, tokenClientHandled)
+            localStorageSet(tokenHeader, tokenClientHandled)
         }
         if (resp.code === 200) {
             return true
@@ -362,6 +362,36 @@ function ajax0(config, beforeSend, beforeSucc, afterSucc, beforeEx, afterEx) {
     }
 
     $.ajax(config)
+}
+
+/**
+ * 将给定的kv 存放到 localStorage
+ * 增加一层封装, 为了一些统一的处理
+ *
+ * @param key
+ * @param value
+ */
+function localStorageSet(key, value) {
+    localStorage.setItem(key, value)
+}
+
+function localStorageGet(key) {
+    return localStorage.getItem(key)
+}
+
+/**
+ * 将给定的kv 存放到 sessionStorage
+ * 增加一层封装, 为了一些统一的处理
+ *
+ * @param key
+ * @param value
+ */
+function sessionStorageSet(key, value) {
+    sessionStorage.setItem(key, value)
+}
+
+function sessionStorageGet(key) {
+    return sessionStorage.getItem(key)
 }
 
 /**
@@ -460,9 +490,9 @@ function detransfer(str, needToTransfer, transferChar) {
     var sb = new StringBuilder()
     for (var i = 0, len = str.length; i < len; i++) {
         var ch = str.charAt(i)
-        if((ch === transferChar) && (contains(needToTransfer, str.charAt(i+1))) ) {
-            sb.append(str.charAt(i+1))
-            i ++;
+        if ((ch === transferChar) && (contains(needToTransfer, str.charAt(i + 1)))) {
+            sb.append(str.charAt(i + 1))
+            i++;
         } else {
             sb.append(ch)
         }

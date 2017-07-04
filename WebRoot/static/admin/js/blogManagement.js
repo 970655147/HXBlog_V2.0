@@ -1,4 +1,16 @@
-﻿// 加载类型, 标签, 同步加载, 否则 可能 layui 绑定不了事件
+﻿/**
+ * blogManagement.js
+ *
+ * @author Jerry.X.He <970655147@qq.com>
+ * @version 1.0
+ * @date 5/24/2017 9:56 PM
+ */
+var sPageNow = sessionStorageGet(location.href)
+if(isEmpty(sPageNow) ) {
+    sPageNow = 1
+}
+
+// 加载类型, 标签, 同步加载, 否则 可能 layui 绑定不了事件
 initTypeAndTags()
 
 layui.define(['element', 'laypage', 'layer', 'form', 'pagesize'], function (exports) {
@@ -15,7 +27,7 @@ layui.define(['element', 'laypage', 'layer', 'form', 'pagesize'], function (expo
         return false;
     });
 
-    initilData(1);
+    initilData(sPageNow);
     //页数据初始化
     function initilData(pageNow) {
         var index = layer.load(1);
@@ -69,9 +81,10 @@ layui.define(['element', 'laypage', 'layer', 'form', 'pagesize'], function (expo
                         skip: true,
                         curr: pageNow,
                         jump: function (obj, first) {
-                            var pageNow = obj.curr;
+                            sPageNow = obj.curr;
+                            sessionStorageSet(location.href, sPageNow)
                             if (!first) {
-                                initilData(pageNow);
+                                initilData(sPageNow);
                             }
                         }
                     });

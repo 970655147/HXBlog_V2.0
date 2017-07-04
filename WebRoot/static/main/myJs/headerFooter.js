@@ -186,8 +186,8 @@ function headerFooterInit() {
             fontStyle: 'normal',//italic
             fontStretch: 'normal',//wider, narrower, ultra-condensed, extra-condensed, condensed, semi-condensed, semi-expanded, expanded, extra-expanded, ultra-expanded
             fontToUpperCase: false
-
         };
+
         //var svg3DTagCloud = new SVG3DTagCloud( document.getElementById( 'holder'  ), settings );
         $("[name='tagCloudEle']").svg3DTagCloud(settings);
         parse()

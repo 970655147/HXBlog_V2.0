@@ -1,11 +1,10 @@
 /**
- * blogTagManage.js
+ * correctionManagement.js
  *
  * @author Jerry.X.He <970655147@qq.com>
  * @version 1.0
  * @date 5/24/2017 9:40 PM
  */
-
 var params = getParamsFromUrl(location.href)
 var codeNow = params.code
 /**

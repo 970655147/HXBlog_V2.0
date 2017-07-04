@@ -56,6 +56,25 @@ function contentInit() {
             that.initHeadImages(that)
             SyntaxHighlighter.all()
             that.initEmoji()
+
+            $("[name='comment']").keydown(function(e){
+                if((e.keyCode === 46) || (e.keyCode === 8) ) {
+                    return
+                }
+
+                var commentEle = $(this)
+                var comment = commentEle.html()
+                var delta = commentMaxLen - comment.length
+                if(delta < commentLenThreshold) {
+                    layer.tips("还可以输入" + delta + "个字符", "[name='comment']", {
+                        tips: [1, '#ff0000'],
+                        time: 1000
+                    })
+                }
+                if(delta < 0) {
+                    return false
+                }
+            });
         },
         methods: {
             replyFunc: function (event) {

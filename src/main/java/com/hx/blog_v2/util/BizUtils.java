@@ -66,7 +66,9 @@ public final class BizUtils {
             user.setName(params.getName());
             user.setEmail(params.getEmail());
         }
-        user.setHeadImgUrl(params.getHeadImgUrl());
+        if(! Tools.isEmpty(params.getHeadImgUrl())) {
+            user.setHeadImgUrl(params.getHeadImgUrl());
+        }
 
         return user;
     }

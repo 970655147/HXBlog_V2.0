@@ -1257,6 +1257,7 @@ public class CacheContext {
         if (recentlyStatistics.size() > (constantsContext.maxCacheStatisticsDays - 1)) {
             recentlyStatistics.poll();
         }
+
         recentlyStatistics.add(todaysStatistics);
         sumStatistics.merge(todaysStatistics);
         recentlySumStatistics = null;

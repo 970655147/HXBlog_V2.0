@@ -1,12 +1,12 @@
 /**
- * writeBlog.js
+ * addBlog.js
  *
  * @author Jerry.X.He <970655147@qq.com>
  * @version 1.0
  * @date 5/21/2017 10:01 PM
  */
 
-    //实例化编辑器
+//实例化编辑器
 var ue = UE.getEditor('editor');
 
 // 加载类型, 标签, 同步加载, 否则 可能 layui 绑定不了事件
@@ -353,9 +353,9 @@ function loadBlogInfo(blog) {
  */
 function clearSaveBlogInfo() {
     layer.confirm('确认清理暂存? 不可恢复哦 !', {icon: 3, title:'确认'}, function() {
-        localStorage.setItem(saveBlogInfoBakKey, localStorage.getItem(saveBlogInfoKey))
-        localStorage.setItem(saveBlogContentBakKey, localStorage.getItem(saveBlogContentKey))
-        localStorage.setItem(saveBlogInfoKey, "")
+        localStorageSet(saveBlogInfoBakKey, localStorage.getItem(saveBlogInfoKey))
+        localStorageSet(saveBlogContentBakKey, localStorage.getItem(saveBlogContentKey))
+        localStorageSet(saveBlogInfoKey, "")
         refresh()
     });
 }
@@ -379,18 +379,18 @@ function saveBlogInfoFunc() {
     var content = ue.getContent()
     params.editorValue = null
     var saveBlogInfoStr = transferQuote(encodeURI(JSON.stringify(params)))
-    localStorage.setItem(saveBlogInfoKey, saveBlogInfoStr)
-    localStorage.setItem(saveBlogContentKey, encodeURI(content))
+    localStorageSet(saveBlogInfoKey, saveBlogInfoStr)
+    localStorageSet(saveBlogContentKey, encodeURI(content))
 }
 
 /**
  * 如果暂存了博客信息的话, 加载博客信息
  */
 function loadBlogInfoIfWith() {
-    var blogInfoStr = localStorage.getItem(saveBlogInfoKey)
+    var blogInfoStr = localStorageGet(saveBlogInfoKey)
     if (!isEmpty(blogInfoStr)) {
         var blogInfo = JSON.parse(decodeURI(transferQuote(blogInfoStr)))
-        blogInfo.content = decodeURI(localStorage.getItem(saveBlogContentKey))
+        blogInfo.content = decodeURI(localStorageGet(saveBlogContentKey))
         loadBlogInfo(blogInfo)
     }
 }

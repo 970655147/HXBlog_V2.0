@@ -1,5 +1,5 @@
 /**
- * moodsManage.js
+ * blogCreateTypeManagement.js
  *
  * @author Jerry.X.He <970655147@qq.com>
  * @version 1.0
@@ -14,13 +14,10 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
     var element = layui.element();
     var laypageId = 'pageNav';
 
-    initilData(1);
+    initilData();
     //页数据初始化
-    //currentIndex：当前页面
-    //pageSize：页容量（每页显示的条数）
-    function initilData(pageNow) {
+    function initilData() {
         var index = layer.load(1);
-        //模拟数据加载
         setTimeout(function () {
             layer.close(index);
             ajax({

@@ -1,12 +1,10 @@
 /**
- * blogTagManage.js
+ * blogTagManagement.js
  *
  * @author Jerry.X.He <970655147@qq.com>
  * @version 1.0
  * @date 5/24/2017 9:40 PM
  */
-
-var blogTagNum = 3;
 
 layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
     var $ = layui.jquery;

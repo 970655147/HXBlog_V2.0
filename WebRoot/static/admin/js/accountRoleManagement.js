@@ -1,12 +1,15 @@
 /**
- * accountManagement.js
+ * accountRoleManagement.js.js
  *
  * @author Jerry.X.He <970655147@qq.com>
  * @version 1.0
- * @date 5/24/2017 9:33 PM
+ * @date 5/24/2017 9:35 PM
  */
+var sPageNow = sessionStorageGet(location.href)
+if(isEmpty(sPageNow) ) {
+    sPageNow = 1
+}
 
-var linkNum = 3;
 var roles = null
 
 layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
@@ -18,14 +21,11 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
     var laypageId = 'pageNav';
 
     initRoles()
-    initilData(1);
+    initilData(sPageNow);
 
     //页数据初始化
-    //currentIndex：当前页面
-    //pageSize：页容量（每页显示的条数）
     function initilData(pageNow) {
         var index = layer.load(1);
-        //模拟数据加载
         setTimeout(function () {
             layer.close(index);
             ajax({
@@ -65,9 +65,10 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
                             skip: true,
                             curr: pageNow,
                             jump: function (obj, first) {
-                                var pageNow = obj.curr;
+                                sPageNow = obj.curr;
+                                sessionStorageSet(location.href, sPageNow)
                                 if (!first) {
-                                    initilData(pageNow);
+                                    initilData(sPageNow);
                                 }
                             }
                         });

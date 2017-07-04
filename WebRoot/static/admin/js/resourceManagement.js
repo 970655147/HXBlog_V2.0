@@ -1,12 +1,10 @@
 /**
- * accountManagement.js
+ * resourceManagement.js
  *
  * @author Jerry.X.He <970655147@qq.com>
  * @version 1.0
  * @date 5/24/2017 9:33 PM
  */
-
-var linkNum = 3;
 
 layui.define(['element', 'laypage', 'layer', 'form', 'tree'], function (exports) {
     var $ = layui.jquery;
@@ -18,11 +16,8 @@ layui.define(['element', 'laypage', 'layer', 'form', 'tree'], function (exports)
 
     initilData();
     //页数据初始化
-    //currentIndex：当前页面
-    //pageSize：页容量（每页显示的条数）
     function initilData() {
         var index = layer.load(1);
-        //模拟数据加载
         setTimeout(function () {
             layer.close(index);
             var prams = getParamsFromUrl(location.href)
