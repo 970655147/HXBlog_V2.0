@@ -10,6 +10,7 @@ import com.hx.blog_v2.domain.po.BlogCommentPO;
 import com.hx.blog_v2.domain.po.BlogExPO;
 import com.hx.blog_v2.util.BlogConstants;
 import com.hx.common.interf.common.Result;
+import com.hx.log.util.Tools;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -40,6 +41,27 @@ public class CommentRemoveHandler extends BizHandlerAdapter {
     public void afterHandle(BizContext context) {
         Result result = (Result) context.result();
         if (result.isSuccess()) {
+            Tools.execute(new DoBizRunnable(context));
+        }
+    }
+
+    /**
+     * 处理业务的 Runnable
+     *
+     * @author Jerry.X.He <970655147@qq.com>
+     * @version 1.0
+     * @date 7/4/2017 9:31 PM
+     */
+    private class DoBizRunnable implements Runnable {
+        private BizContext context;
+
+        public DoBizRunnable(BizContext context) {
+            this.context = context;
+        }
+
+        @Override
+        public void run() {
+            Result result = (Result) context.result();
             BlogCommentPO po = (BlogCommentPO) WebContext.getAttributeFromRequest(BlogConstants.REQUEST_DATA);
             if ("1".equals(po.getCommentId())) {
                 Result getExResult = blogExDao.get(new BeanIdForm(po.getBlogId()));

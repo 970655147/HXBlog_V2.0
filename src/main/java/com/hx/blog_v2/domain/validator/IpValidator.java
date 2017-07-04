@@ -1,8 +1,8 @@
 package com.hx.blog_v2.domain.validator;
 
+import com.hx.blog_v2.util.ResultUtils;
 import com.hx.common.interf.common.Result;
 import com.hx.common.interf.validator.Validator;
-import com.hx.blog_v2.util.ResultUtils;
 import com.hx.log.util.Tools;
 import org.springframework.stereotype.Component;
 
@@ -37,6 +37,13 @@ public class IpValidator extends ConfigRefreshableValidator<String> implements V
         Matcher matcher = pattern.matcher(ip);
         if (!matcher.find()) {
             return ResultUtils.failed(" ip 的格式不正确 !");
+        }
+        String[] ipSplited = ip.split("\\.");
+        for (String ipPart : ipSplited) {
+            Integer intIpPart = Integer.valueOf(ipPart);
+            if ((intIpPart < 0) || (intIpPart > 255) ) {
+                return ResultUtils.failed(" ip 的格式不正确 !");
+            }
         }
 
         return ResultUtils.success();

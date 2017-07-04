@@ -48,31 +48,7 @@ public class CommentAddHandler extends BizHandlerAdapter {
     public void afterHandle(BizContext context) {
         Result result = (Result) context.result();
         if (result.isSuccess()) {
-            CommentSaveForm params = (CommentSaveForm) context.args()[0];
-            String replyExtracted = BizUtils.extractReplyFrom(params.getComment(),
-                    constantsContext.replyCommentPrefix, constantsContext.replyCommentSuffix);
-            boolean isReply = ((!Tools.isEmpty(params.getFloorId())) && (replyExtracted != null));
-            if (!isReply) {
-                Result getExResult = blogExDao.get(new BeanIdForm(params.getBlogId()));
-                if (!getExResult.isSuccess()) {
-                    result.setExtra(getExResult);
-                    return;
-                }
-                BlogExPO exPo = ((BlogExPO) getExResult.getData());
-                exPo.incCommentCnt(1);
-                cacheContext.putBlogEx(exPo);
-            }
-
-            cacheContext.todaysStatistics().incCommentCnt(1);
-            cacheContext.now5SecStatistics().incCommentCnt(1);
-
-            RolePO role = cacheContext.roleByName(constants.roleAdmin);
-            if (role != null) {
-                Result sendEmailResult = sendMessage(role, result, params);
-                if (!sendEmailResult.isSuccess()) {
-                    // ignore
-                }
-            }
+            Tools.execute(new DoBizRunnable(context));
         }
     }
 
@@ -114,6 +90,51 @@ public class CommentAddHandler extends BizHandlerAdapter {
                 " 新增了一条评论 : " + params.getComment() + ", " +
                 "请知晓 ! ");
         return messageService.add(msgForm);
+    }
+
+    /**
+     * 处理业务的 Runnable
+     *
+     * @author Jerry.X.He <970655147@qq.com>
+     * @version 1.0
+     * @date 7/4/2017 9:31 PM
+     */
+    private class DoBizRunnable implements Runnable {
+        private BizContext context;
+
+        public DoBizRunnable(BizContext context) {
+            this.context = context;
+        }
+
+        @Override
+        public void run() {
+            Result result = (Result) context.result();
+            CommentSaveForm params = (CommentSaveForm) context.args()[0];
+            String replyExtracted = BizUtils.extractReplyFrom(params.getComment(),
+                    constantsContext.replyCommentPrefix, constantsContext.replyCommentSuffix);
+            boolean isReply = ((!Tools.isEmpty(params.getFloorId())) && (replyExtracted != null));
+            if (!isReply) {
+                Result getExResult = blogExDao.get(new BeanIdForm(params.getBlogId()));
+                if (!getExResult.isSuccess()) {
+                    result.setExtra(getExResult);
+                    return;
+                }
+                BlogExPO exPo = ((BlogExPO) getExResult.getData());
+                exPo.incCommentCnt(1);
+                cacheContext.putBlogEx(exPo);
+            }
+
+            cacheContext.todaysStatistics().incCommentCnt(1);
+            cacheContext.now5SecStatistics().incCommentCnt(1);
+
+            RolePO role = cacheContext.roleByName(constants.roleAdmin);
+            if (role != null) {
+                Result sendEmailResult = sendMessage(role, result, params);
+                if (!sendEmailResult.isSuccess()) {
+                    // ignore
+                }
+            }
+        }
     }
 
 }

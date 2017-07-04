@@ -9,7 +9,6 @@ import com.hx.blog_v2.dao.interf.BlogDao;
 import com.hx.blog_v2.domain.dto.MessageType;
 import com.hx.blog_v2.domain.dto.SessionUser;
 import com.hx.blog_v2.domain.form.BeanIdForm;
-import com.hx.blog_v2.domain.form.BlogSaveForm;
 import com.hx.blog_v2.domain.form.MessageSaveForm;
 import com.hx.blog_v2.domain.po.BlogPO;
 import com.hx.blog_v2.domain.po.RolePO;
@@ -17,6 +16,7 @@ import com.hx.blog_v2.service.interf.MessageService;
 import com.hx.blog_v2.util.BlogConstants;
 import com.hx.blog_v2.util.DateUtils;
 import com.hx.common.interf.common.Result;
+import com.hx.log.util.Tools;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -66,41 +66,7 @@ public class BlogRemoveHandler extends BizHandlerAdapter {
 
         Result result = (Result) context.result();
         if (result.isSuccess()) {
-            BeanIdForm params = (BeanIdForm) context.args()[0];
-            Result getBlogResult = blogDao.get(params);
-            if (!getBlogResult.isSuccess()) {
-                result.setExtra(getBlogResult);
-                return;
-            }
-
-            BlogPO po = (BlogPO) getBlogResult.getData();
-            Date now = new Date();
-            Date createdAt = DateUtils.parse(po.getCreatedAt(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
-            long offsetFromNow = now.getTime() - createdAt.getTime();
-            long offsetByDay = DateUtils.beginOfDay(now).getTime() - DateUtils.beginOfDay(createdAt).getTime();
-
-            if (offsetFromNow < now5SecStatsMaxTsOff) {
-                cacheContext.now5SecStatistics().incBlogCnt(-1);
-                cacheContext.todaysStatistics().incBlogCnt(-1);
-            } else if (Objects.equals(DateUtils.formate(now, BlogConstants.FORMAT_YYYY_MM_DD),
-                    DateUtils.formate(createdAt, BlogConstants.FORMAT_YYYY_MM_DD))) {
-                cacheContext.todaysStatistics().incBlogCnt(-1);
-            } else if (offsetByDay < recentlyStatsMaxTsOff) {
-                int offFromNow = (int) (offsetByDay / oneDayTsOff);
-                cacheContext.recentlyStatistics().get(cacheContext.recentlyStatistics().size() - 1 - offFromNow).incBlogCnt(-1);
-                cacheContext.sumStatistics().incBlogCnt(-1);
-            } else {
-                cacheContext.sumStatistics().incBlogCnt(-1);
-            }
-            cacheContext.updateBlogInMonthFacet(po.getCreatedAtMonth(), false);
-
-            RolePO role = cacheContext.roleByName(constants.roleAdmin);
-            if (role != null) {
-                Result sendEmailResult = sendMessage(role, result, po);
-                if (!sendEmailResult.isSuccess()) {
-                    // ignore
-                }
-            }
+            Tools.execute(new DoBizRunnable(context));
         }
     }
 
@@ -143,6 +109,61 @@ public class BlogRemoveHandler extends BizHandlerAdapter {
                 " color='red' > " +
                 po.getTitle() + "</a>, 请知晓 ! ");
         return messageService.add(msgForm);
+    }
+
+    /**
+     * 处理业务的 Runnable
+     *
+     * @author Jerry.X.He <970655147@qq.com>
+     * @version 1.0
+     * @date 7/4/2017 9:31 PM
+     */
+    private class DoBizRunnable implements Runnable {
+        private BizContext context;
+
+        public DoBizRunnable(BizContext context) {
+            this.context = context;
+        }
+
+        @Override
+        public void run() {
+            BeanIdForm params = (BeanIdForm) context.args()[0];
+            Result result = (Result) context.result();
+            Result getBlogResult = blogDao.get(params);
+            if (!getBlogResult.isSuccess()) {
+                result.setExtra(getBlogResult);
+                return;
+            }
+
+            BlogPO po = (BlogPO) getBlogResult.getData();
+            Date now = new Date();
+            Date createdAt = DateUtils.parse(po.getCreatedAt(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
+            long offsetFromNow = now.getTime() - createdAt.getTime();
+            long offsetByDay = DateUtils.beginOfDay(now).getTime() - DateUtils.beginOfDay(createdAt).getTime();
+
+            if (offsetFromNow < now5SecStatsMaxTsOff) {
+                cacheContext.now5SecStatistics().incBlogCnt(-1);
+                cacheContext.todaysStatistics().incBlogCnt(-1);
+            } else if (Objects.equals(DateUtils.formate(now, BlogConstants.FORMAT_YYYY_MM_DD),
+                    DateUtils.formate(createdAt, BlogConstants.FORMAT_YYYY_MM_DD))) {
+                cacheContext.todaysStatistics().incBlogCnt(-1);
+            } else if (offsetByDay < recentlyStatsMaxTsOff) {
+                int offFromNow = (int) (offsetByDay / oneDayTsOff);
+                cacheContext.recentlyStatistics().get(cacheContext.recentlyStatistics().size() - 1 - offFromNow).incBlogCnt(-1);
+                cacheContext.sumStatistics().incBlogCnt(-1);
+            } else {
+                cacheContext.sumStatistics().incBlogCnt(-1);
+            }
+            cacheContext.updateBlogInMonthFacet(po.getCreatedAtMonth(), false);
+
+            RolePO role = cacheContext.roleByName(constants.roleAdmin);
+            if (role != null) {
+                Result sendEmailResult = sendMessage(role, result, po);
+                if (!sendEmailResult.isSuccess()) {
+                    // ignore
+                }
+            }
+        }
     }
 
 }

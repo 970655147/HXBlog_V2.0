@@ -43,27 +43,7 @@ public class BlogSaveHandler extends BizHandlerAdapter {
     public void afterHandle(BizContext context) {
         Result result = (Result) context.result();
         if (result.isSuccess()) {
-            if ((context.args().length > 0) && (context.args()[0] instanceof BlogSaveForm)) {
-                BlogSaveForm params = (BlogSaveForm) context.args()[0];
-                SessionUser user = (SessionUser) WebContext.getAttributeFromSession(BlogConstants.SESSION_USER);
-
-                // add
-                if (Tools.isEmpty(params.getId())) {
-                    cacheContext.todaysStatistics().incBlogCnt(1);
-                    cacheContext.now5SecStatistics().incBlogCnt(1);
-                    Date now = new Date();
-                    String createdAtMonth = DateUtils.formate(now, BlogConstants.FORMAT_YYYY_MM);
-                    cacheContext.updateBlogInMonthFacet(createdAtMonth, true);
-                }
-
-                RolePO role = cacheContext.roleByName(constants.roleAdmin);
-                if (role != null) {
-                    Result sendEmailResult = sendMessage(role, result, params);
-                    if (!sendEmailResult.isSuccess()) {
-                        // ignore
-                    }
-                }
-            }
+            Tools.execute(new DoBizRunnable(context));
         }
     }
 
@@ -89,6 +69,47 @@ public class BlogSaveHandler extends BizHandlerAdapter {
                 " color='red' > " +
                 params.getTitle() + "</a>, 请注意审核该内容 ! ");
         return messageService.add(msgForm);
+    }
+
+    /**
+     * 处理业务的 Runnable
+     *
+     * @author Jerry.X.He <970655147@qq.com>
+     * @version 1.0
+     * @date 7/4/2017 9:31 PM
+     */
+    private class DoBizRunnable implements Runnable {
+        private BizContext context;
+
+        public DoBizRunnable(BizContext context) {
+            this.context = context;
+        }
+
+        @Override
+        public void run() {
+            if ((context.args().length > 0) && (context.args()[0] instanceof BlogSaveForm)) {
+                Result result = (Result) context.result();
+                BlogSaveForm params = (BlogSaveForm) context.args()[0];
+                SessionUser user = (SessionUser) WebContext.getAttributeFromSession(BlogConstants.SESSION_USER);
+
+                // add
+                if (Tools.isEmpty(params.getId())) {
+                    cacheContext.todaysStatistics().incBlogCnt(1);
+                    cacheContext.now5SecStatistics().incBlogCnt(1);
+                    Date now = new Date();
+                    String createdAtMonth = DateUtils.formate(now, BlogConstants.FORMAT_YYYY_MM);
+                    cacheContext.updateBlogInMonthFacet(createdAtMonth, true);
+                }
+
+                RolePO role = cacheContext.roleByName(constants.roleAdmin);
+                if (role != null) {
+                    Result sendEmailResult = sendMessage(role, result, params);
+                    if (!sendEmailResult.isSuccess()) {
+                        // ignore
+                    }
+                }
+            }
+        }
     }
 
 }

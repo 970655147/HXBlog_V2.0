@@ -14,6 +14,7 @@ import com.hx.blog_v2.domain.po.RolePO;
 import com.hx.blog_v2.service.interf.MessageService;
 import com.hx.blog_v2.util.BlogConstants;
 import com.hx.common.interf.common.Result;
+import com.hx.log.util.Tools;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -42,24 +43,7 @@ public class BlogSenseHandler extends BizHandlerAdapter {
     public void afterHandle(BizContext context) {
         Result result = (Result) context.result();
         if (result.isSuccess()) {
-            BlogSenseForm params = (BlogSenseForm) context.args()[0];
-            if (params.getScore() > 3) {
-                cacheContext.todaysStatistics().incGoodCnt(1);
-                cacheContext.now5SecStatistics().incGoodCnt(1);
-//                    cacheContext.todaysStatistics().incNotGoodCnt(-1);
-            } else {
-//                    cacheContext.todaysStatistics().incGoodCnt(-1);
-                cacheContext.todaysStatistics().incNotGoodCnt(1);
-                cacheContext.now5SecStatistics().incNotGoodCnt(1);
-            }
-
-            RolePO role = cacheContext.roleByName(constants.roleAdmin);
-            if (role != null) {
-                Result sendEmailResult = sendMessage(role, result, params);
-                if (!sendEmailResult.isSuccess()) {
-                    // ignore
-                }
-            }
+            Tools.execute(new DoBizRunnable(context));
         }
     }
 
@@ -91,5 +75,42 @@ public class BlogSenseHandler extends BizHandlerAdapter {
         return messageService.add(msgForm);
     }
 
+    /**
+     * 处理业务的 Runnable
+     *
+     * @author Jerry.X.He <970655147@qq.com>
+     * @version 1.0
+     * @date 7/4/2017 9:31 PM
+     */
+    private class DoBizRunnable implements Runnable {
+        private BizContext context;
+
+        public DoBizRunnable(BizContext context) {
+            this.context = context;
+        }
+
+        @Override
+        public void run() {
+            Result result = (Result) context.result();
+            BlogSenseForm params = (BlogSenseForm) context.args()[0];
+            if (params.getScore() > 3) {
+                cacheContext.todaysStatistics().incGoodCnt(1);
+                cacheContext.now5SecStatistics().incGoodCnt(1);
+//                    cacheContext.todaysStatistics().incNotGoodCnt(-1);
+            } else {
+//                    cacheContext.todaysStatistics().incGoodCnt(-1);
+                cacheContext.todaysStatistics().incNotGoodCnt(1);
+                cacheContext.now5SecStatistics().incNotGoodCnt(1);
+            }
+
+            RolePO role = cacheContext.roleByName(constants.roleAdmin);
+            if (role != null) {
+                Result sendEmailResult = sendMessage(role, result, params);
+                if (!sendEmailResult.isSuccess()) {
+                    // ignore
+                }
+            }
+        }
+    }
 
 }
