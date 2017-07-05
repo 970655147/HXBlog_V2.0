@@ -1,9 +1,11 @@
 package com.hx.blog_v2.biz_handler.handler;
 
 import com.hx.blog_v2.biz_handler.handler.common.BizHandlerAdapter;
+import com.hx.blog_v2.biz_handler.handler.common.WebContextAwareableRunnable;
 import com.hx.blog_v2.biz_handler.interf.BizContext;
 import com.hx.blog_v2.context.CacheContext;
 import com.hx.blog_v2.context.ConstantsContext;
+import com.hx.blog_v2.context.WebContext;
 import com.hx.blog_v2.dao.interf.BlogDao;
 import com.hx.blog_v2.dao.interf.BlogExDao;
 import com.hx.blog_v2.domain.dto.MessageType;
@@ -20,6 +22,10 @@ import com.hx.common.interf.common.Result;
 import com.hx.log.util.Tools;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  * BlogSaveHandler
@@ -48,7 +54,8 @@ public class CommentAddHandler extends BizHandlerAdapter {
     public void afterHandle(BizContext context) {
         Result result = (Result) context.result();
         if (result.isSuccess()) {
-            Tools.execute(new DoBizRunnable(context));
+            Tools.execute(new DoBizRunnable(context, WebContext.getRequest(),
+                    WebContext.getResponse(), WebContext.getSession()));
         }
     }
 
@@ -99,15 +106,15 @@ public class CommentAddHandler extends BizHandlerAdapter {
      * @version 1.0
      * @date 7/4/2017 9:31 PM
      */
-    private class DoBizRunnable implements Runnable {
-        private BizContext context;
+    private class DoBizRunnable extends WebContextAwareableRunnable {
 
-        public DoBizRunnable(BizContext context) {
-            this.context = context;
+        public DoBizRunnable(BizContext context,
+                             HttpServletRequest req, HttpServletResponse resp, HttpSession session) {
+            super(context, req, resp, session);
         }
 
         @Override
-        public void run() {
+        public void doBiz() {
             Result result = (Result) context.result();
             CommentSaveForm params = (CommentSaveForm) context.args()[0];
             String replyExtracted = BizUtils.extractReplyFrom(params.getComment(),

@@ -198,7 +198,7 @@ public class CacheContext {
     /**
      * 黑名单中的信息
      */
-    private Map<String, String> blackList = new HashMap<>();
+    private Cache<String, String> blackList;
 
     /**
      * 上一次访问 all5SecStatistics 的时间戳
@@ -638,6 +638,10 @@ public class CacheContext {
         return digest2UploadedFiles.evict(digest);
     }
 
+    public Cache<String, UploadFilePO> allUploadedFile() {
+        return digest2UploadedFiles;
+    }
+
     /**
      * 获取参数相关的 BlogSense
      *
@@ -657,6 +661,10 @@ public class CacheContext {
 
     public BlogSensePO removeBlogSense(BlogSenseForm params) {
         return blogIdUserInfo2Sense.evict(generateBlogSenseKey(params));
+    }
+
+    public Cache<String, BlogSensePO> allBlogSense() {
+        return blogIdUserInfo2Sense;
     }
 
     /**
@@ -680,6 +688,10 @@ public class CacheContext {
         return blogId2BlogEx.evict(blogId);
     }
 
+    public Cache<String, BlogExPO> allBlogEx() {
+        return blogId2BlogEx;
+    }
+
     /**
      * 获取参数相关的 BlogSense
      *
@@ -699,6 +711,10 @@ public class CacheContext {
 
     public BlogVisitLogPO removeBlogVisitLog(BlogVisitLogForm params) {
         return requestIp2BlogVisitLog.evict(generateBlogVisitLogKey(params));
+    }
+
+    public Cache<String, BlogVisitLogPO> allBlogVisitLog() {
+        return requestIp2BlogVisitLog;
     }
 
     /**
@@ -849,7 +865,7 @@ public class CacheContext {
      * @date 6/25/2017 2:32 PM
      * @since 1.0
      */
-    public Map<String, String> blankList() {
+    public Cache<String, String> blackList() {
         return blackList;
     }
 
@@ -995,6 +1011,10 @@ public class CacheContext {
         forceOffLineMap.evict(userId);
     }
 
+    public Cache<String, String> allForceOffLine() {
+        return forceOffLineMap;
+    }
+
     /**
      * 根据给定的role集合, 获取所有的可以访问的资源
      *
@@ -1010,6 +1030,10 @@ public class CacheContext {
 
     public void putResourceIdsByRoleIds(String roleIds, List<String> resourceIds) {
         roles2ResourceIds.put(roleIds, resourceIds);
+    }
+
+    public Cache<String, List<String>> allResourceIdsByRoleIds() {
+        return roles2ResourceIds;
     }
 
     /**
@@ -1029,6 +1053,10 @@ public class CacheContext {
         resource2Interfs.put(resourceIds, interfs);
     }
 
+    public Cache<String, List<String>> allInterfsByResourceIds() {
+        return resource2Interfs;
+    }
+
     // -------------------- 辅助方法 --------------------------
 
     /**
@@ -1043,6 +1071,7 @@ public class CacheContext {
         blog2NextFloorId = new LRUMCache<>(constantsContext.maxCachedBlog2FloorId, false);
         blogFloor2NextCommentId = new LRUMCache<>(constantsContext.maxCachedBlogFloor2CommentId, false);
         forceOffLineMap = new UniverseCache<>(true);
+        blackList = new UniverseCache<>(false);
 
         digest2UploadedFiles = new LRUMCache<>(constantsContext.maxCachedUploadedImage, false);
         roles2ResourceIds = new LRUMCache<>(constantsContext.maxRoleIds2ResourceIds, false);

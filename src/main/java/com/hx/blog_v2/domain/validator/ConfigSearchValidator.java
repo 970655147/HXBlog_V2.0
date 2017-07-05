@@ -24,11 +24,9 @@ public class ConfigSearchValidator implements Validator<SystemConfigSaveForm> {
 
     @Override
     public Result validate(SystemConfigSaveForm form, Object extra) {
-        if (!Tools.isEmpty(form.getType())) {
-            Result errResult = configTypeValidator.validate(form.getType(), extra);
-            if (!errResult.isSuccess()) {
-                return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " configType 不存在 ! ");
-            }
+        Result errResult = configTypeValidator.validate(form.getType(), extra);
+        if (!errResult.isSuccess()) {
+            return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " configType 不存在 ! ");
         }
 
         return ResultUtils.success();

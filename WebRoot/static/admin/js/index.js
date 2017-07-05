@@ -14,8 +14,8 @@ layui.define([ 'layer', 'form'], function (exports) {
     form.verify({
         password: [/^[\S]{3,32}$/, '密码必须3到32位'],
         userName: function (value) {
-            if (value.length <= 3 || value.length > 32) {
-                return "账号必须1到10位"
+            if (value.length <= 2 || value.length > 32) {
+                return "账号必须3到32位"
             }
             var reg = /^[a-zA-Z0-9]*$/;
             if (!reg.test(value)) {

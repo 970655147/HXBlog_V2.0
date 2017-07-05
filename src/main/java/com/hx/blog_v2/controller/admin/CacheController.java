@@ -1,5 +1,9 @@
 package com.hx.blog_v2.controller.admin;
 
+import com.hx.blog_v2.domain.form.CacheRemoveForm;
+import com.hx.blog_v2.domain.form.CacheSearchForm;
+import com.hx.blog_v2.domain.validator.CacheRemoveValidator;
+import com.hx.blog_v2.domain.validator.CacheSearchValidator;
 import com.hx.blog_v2.service.interf.CacheService;
 import com.hx.common.interf.common.Result;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,56 +24,10 @@ public class CacheController {
 
     @Autowired
     private CacheService cacheService;
-
-    @RequestMapping(value = "/refreshAll", method = RequestMethod.GET)
-    public Result refreshAll() {
-        return cacheService.refreshAll();
-    }
-
-    @RequestMapping(value = "/refreshAllCached", method = RequestMethod.GET)
-    public Result refreshAllCached() {
-        return cacheService.refreshAllCached();
-    }
-
-    @RequestMapping(value = "/refreshTableCached", method = RequestMethod.GET)
-    public Result refreshTableCached() {
-        return cacheService.refreshTableCached();
-    }
-
-    @RequestMapping(value = "/refreshLocalCached", method = RequestMethod.GET)
-    public Result refreshLocalCached() {
-        return cacheService.refreshLocalCached();
-    }
-
-    @RequestMapping(value = "/refreshStatisticsInfo", method = RequestMethod.GET)
-    public Result refreshStatisticsInfo() {
-        return cacheService.refreshStatisticsInfo();
-    }
-
-    @RequestMapping(value = "/refreshOtherCached", method = RequestMethod.GET)
-    public Result refreshOtherCached() {
-        return cacheService.refreshOtherCached();
-    }
-
-    @RequestMapping(value = "/refreshAllConfigured", method = RequestMethod.GET)
-    public Result refreshAllConfigured() {
-        return cacheService.refreshAllConfigured();
-    }
-
-    @RequestMapping(value = "/refreshSystemConfig", method = RequestMethod.GET)
-    public Result refreshSystemConfig() {
-        return cacheService.refreshSystemConfig();
-    }
-
-    @RequestMapping(value = "/refreshRuleConfig", method = RequestMethod.GET)
-    public Result refreshRuleConfig() {
-        return cacheService.refreshRuleConfig();
-    }
-
-    @RequestMapping(value = "/refreshFrontIdxConfig", method = RequestMethod.GET)
-    public Result refreshFrontIdxConfig() {
-        return cacheService.refreshFrontIdxConfig();
-    }
+    @Autowired
+    private CacheSearchValidator cacheSearchValidator;
+    @Autowired
+    private CacheRemoveValidator cacheRemoveValidator;
 
     @RequestMapping(value = "/localCacheSummary", method = RequestMethod.GET)
     public Result localCacheSummary() {
@@ -79,6 +37,76 @@ public class CacheController {
     @RequestMapping(value = "/cacheSummary", method = RequestMethod.GET)
     public Result cacheSummary() {
         return cacheService.cacheSummary();
+    }
+
+    @RequestMapping(value = "/cacheDetail", method = RequestMethod.GET)
+    public Result cacheDetail(CacheSearchForm params) {
+        Result errResult = cacheSearchValidator.validate(params, null);
+        if (!errResult.isSuccess()) {
+            return errResult;
+        }
+
+        return cacheService.cacheDetail(params);
+    }
+
+    @RequestMapping(value = "/refreshAll", method = RequestMethod.POST)
+    public Result refreshAll() {
+        return cacheService.refreshAll();
+    }
+
+    @RequestMapping(value = "/refreshAllCached", method = RequestMethod.POST)
+    public Result refreshAllCached() {
+        return cacheService.refreshAllCached();
+    }
+
+    @RequestMapping(value = "/refreshTableCached", method = RequestMethod.POST)
+    public Result refreshTableCached() {
+        return cacheService.refreshTableCached();
+    }
+
+    @RequestMapping(value = "/refreshLocalCached", method = RequestMethod.POST)
+    public Result refreshLocalCached() {
+        return cacheService.refreshLocalCached();
+    }
+
+    @RequestMapping(value = "/refreshStatisticsInfo", method = RequestMethod.POST)
+    public Result refreshStatisticsInfo() {
+        return cacheService.refreshStatisticsInfo();
+    }
+
+    @RequestMapping(value = "/refreshOtherCached", method = RequestMethod.POST)
+    public Result refreshOtherCached() {
+        return cacheService.refreshOtherCached();
+    }
+
+    @RequestMapping(value = "/refreshAllConfigured", method = RequestMethod.POST)
+    public Result refreshAllConfigured() {
+        return cacheService.refreshAllConfigured();
+    }
+
+    @RequestMapping(value = "/refreshSystemConfig", method = RequestMethod.POST)
+    public Result refreshSystemConfig() {
+        return cacheService.refreshSystemConfig();
+    }
+
+    @RequestMapping(value = "/refreshRuleConfig", method = RequestMethod.POST)
+    public Result refreshRuleConfig() {
+        return cacheService.refreshRuleConfig();
+    }
+
+    @RequestMapping(value = "/refreshFrontIdxConfig", method = RequestMethod.POST)
+    public Result refreshFrontIdxConfig() {
+        return cacheService.refreshFrontIdxConfig();
+    }
+
+    @RequestMapping(value = "/cacheRemove", method = RequestMethod.POST)
+    public Result cacheRemove(CacheRemoveForm params) {
+        Result errResult = cacheRemoveValidator.validate(params, null);
+        if (!errResult.isSuccess()) {
+            return errResult;
+        }
+
+        return cacheService.cacheRemove(params);
     }
 
 }

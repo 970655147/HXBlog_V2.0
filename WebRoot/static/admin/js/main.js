@@ -168,7 +168,7 @@ layui.define(['element', 'layer', 'util', 'pagesize', 'form'], function (exports
 
             if ((isStop) && (respInfo.cnt > 0)) {
                 var content = '<p>目前有<span>' + respInfo.cnt + '</span>条消息<a href="javascript:void(0)" onclick="layui.funcs.toViewMessage()" >点击查看</a></p>';
-                for (var idx in respInfo.list) {
+                for (var idx=respInfo.list.length-1; idx>=0; idx--) {
                     var toRead = respInfo.list[idx]
                     content += '<span>' + toRead.left + ' : <span style="display:inline;" >' + toRead.right + '</span></span><br/>';
                 }

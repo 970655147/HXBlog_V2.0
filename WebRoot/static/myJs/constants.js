@@ -301,6 +301,9 @@ var reqMap = {
      * 缓存相关
      */
     cache: {
+        cacheSummary: formatContextUrl("/admin/cache/cacheSummary"),
+        localCacheSummary: formatContextUrl("/admin/cache/localCacheSummary"),
+        cacheDetail : formatContextUrl("/admin/cache/cacheDetail"),
         refreshAll: formatContextUrl("/admin/cache/refreshAll"),
         refreshAllCached: formatContextUrl("/admin/cache/refreshAllCached"),
         refreshTableCached: formatContextUrl("/admin/cache/refreshTableCached"),
@@ -311,8 +314,7 @@ var reqMap = {
         refreshSystemConfig: formatContextUrl("/admin/cache/refreshSystemConfig"),
         refreshRuleConfig: formatContextUrl("/admin/cache/refreshRuleConfig"),
         refreshFrontIdxConfig: formatContextUrl("/admin/cache/refreshFrontIdxConfig"),
-        cacheSummary: formatContextUrl("/admin/cache/cacheSummary"),
-        localCacheSummary: formatContextUrl("/admin/cache/localCacheSummary")
+        cacheRemove : formatContextUrl("/admin/cache/cacheRemove")
     },
 
     /**

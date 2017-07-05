@@ -6,7 +6,7 @@
  * @date 5/24/2017 9:40 PM
  */
 var params = getParamsFromUrl(location.href)
-var codeNow = params.code
+var typeNow = params.type
 /**
  * 所有的需要校正的记录的id
  * @type {StringBuilder}
@@ -18,11 +18,11 @@ var correctionItemIds = new StringBuilder()
  */
 $("[name='correctionItem']").click(function () {
     var baseUrl = "/static/admin/correctionManagement.html"
-    params.code = $(this).attr("correctionCode")
+    params.type = $(this).attr("correctionCode")
     location.href = encapGetUrl(baseUrl, params)
 })
 
-$("[name='correctionItem'][correctionCode='" + codeNow + "']").addClass("layui-btn-normal")
+$("[name='correctionItem'][correctionCode='" + typeNow + "']").addClass("layui-btn-normal")
 
 layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
     var $ = layui.jquery;
@@ -38,7 +38,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
      * 初始化校验列表
      */
     function initTable() {
-        if (isEmpty(codeNow)) {
+        if (isEmpty(typeNow)) {
             return
         }
 
@@ -48,7 +48,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
             ajax({
                 url: reqMap.correction.list,
                 type: "GET",
-                data: {code: codeNow},
+                data: {type: typeNow},
                 success: function (resp) {
                     if (resp.success) {
                         var html = new StringBuilder()
@@ -81,7 +81,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
         doCorrect: function (id) {
             ajax({
                 url: reqMap.correction.doCorrection,
-                data: {id: id, code: codeNow},
+                data: {id: id, type : typeNow},
                 type: "POST",
                 success: function (resp) {
                     if (resp.success) {
@@ -95,9 +95,9 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
             })
         },
         doCorrectAll: function () {
-            var correctionAllParams = {code : codeNow}
+            var correctionAllParams = {typeNow : typeNow}
             // 文件校验特殊处理 !
-            if(codeNow === "3") {
+            if(typeNow === "3") {
                 correctionAllParams.ids = correctionItemIds.join(",")
             }
 

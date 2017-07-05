@@ -42,6 +42,6 @@ public class CommentContentValidator extends ConfigRefreshableValidator<String> 
     @Override
     public void refreshConfig() {
         minLen = Integer.parseInt(constantsContext.ruleConfig("content.comment.min.length", "3"));
-        maxLen = Integer.parseInt(constantsContext.ruleConfig("content.comment.max.length", "4096"));
+        maxLen = Integer.parseInt(constantsContext.ruleConfig("content.comment.max.length", "1024"));
     }
 }

@@ -23,7 +23,7 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
      * @type {Object}
      */
     var params = getParamsFromUrl(location.href)
-    var imageType = isEmpty(params.code) ? "dummy" : params.code
+    var imageType = isEmpty(params.type) ? "-1" : params.type
 
     initilData(sPageNow);
     //页数据初始化

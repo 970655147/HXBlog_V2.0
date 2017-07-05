@@ -1,6 +1,7 @@
 package com.hx.blog_v2.biz_handler.handler;
 
 import com.hx.blog_v2.biz_handler.handler.common.BizHandlerAdapter;
+import com.hx.blog_v2.biz_handler.handler.common.WebContextAwareableRunnable;
 import com.hx.blog_v2.biz_handler.interf.BizContext;
 import com.hx.blog_v2.context.CacheContext;
 import com.hx.blog_v2.context.ConstantsContext;
@@ -12,7 +13,6 @@ import com.hx.blog_v2.domain.form.BeanIdForm;
 import com.hx.blog_v2.domain.form.BlogVisitLogForm;
 import com.hx.blog_v2.domain.po.BlogExPO;
 import com.hx.blog_v2.domain.po.BlogVisitLogPO;
-import com.hx.blog_v2.util.BizUtils;
 import com.hx.blog_v2.util.BlogConstants;
 import com.hx.blog_v2.util.DateUtils;
 import com.hx.common.interf.common.Result;
@@ -20,6 +20,9 @@ import com.hx.log.util.Tools;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -47,9 +50,9 @@ public class BlogVisitLogHandler extends BizHandlerAdapter {
     @Override
     public void afterHandle(BizContext context) {
         Result result = (Result) context.result();
-        SessionUser user = (SessionUser) WebContext.getAttributeFromSession(BlogConstants.SESSION_USER);
         if (result.isSuccess()) {
-            Tools.execute(new DoBizRunnable(context, user));
+            Tools.execute(new DoBizRunnable(context, WebContext.getRequest(),
+                    WebContext.getResponse(), WebContext.getSession()));
         }
     }
 
@@ -85,17 +88,15 @@ public class BlogVisitLogHandler extends BizHandlerAdapter {
      * @version 1.0
      * @date 7/4/2017 9:31 PM
      */
-    private class DoBizRunnable implements Runnable {
-        private BizContext context;
-        private SessionUser user;
+    private class DoBizRunnable extends WebContextAwareableRunnable {
 
-        public DoBizRunnable(BizContext context, SessionUser user) {
-            this.context = context;
-            this.user = user;
+        public DoBizRunnable(BizContext context,
+                             HttpServletRequest req, HttpServletResponse resp, HttpSession session) {
+            super(context, req, resp, session);
         }
 
         @Override
-        public void run() {
+        public void doBiz() {
             List<String> blogIdCandidate = new ArrayList<>();
             if ((context.args().length > 0) && (context.args()[0] instanceof BeanIdForm)) {
                 blogIdCandidate.add(((BeanIdForm) context.args()[0]).getId());
@@ -106,8 +107,10 @@ public class BlogVisitLogHandler extends BizHandlerAdapter {
                 }
             }
 
+            SessionUser user = (SessionUser) WebContext.getAttributeFromSession(BlogConstants.SESSION_USER);
+            ;
             for (String blogId : blogIdCandidate) {
-                BlogVisitLogForm params = new BlogVisitLogForm(blogId, BizUtils.getIp());
+                BlogVisitLogForm params = new BlogVisitLogForm(blogId, user.getRequestIp());
                 BlogExPO blogEx = (BlogExPO) blogExDao.get(new BeanIdForm(blogId)).getData();
 
                 blogEx.incViewCnt(1);

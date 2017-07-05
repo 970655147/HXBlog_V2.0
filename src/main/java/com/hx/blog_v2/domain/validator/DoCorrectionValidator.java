@@ -39,7 +39,7 @@ public class DoCorrectionValidator implements Validator<DoCorrectionForm> {
                 return ResultUtils.failed(" 给定的ids 格式不正确 ! ");
             }
         }
-        Result errResult = correctionTypeValidator.validate(form.getCode(), extra);
+        Result errResult = correctionTypeValidator.validate(form.getType(), extra);
         if (!errResult.isSuccess()) {
             return errResult;
         }

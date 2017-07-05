@@ -14,7 +14,7 @@ public class DoCorrectionForm {
      */
     public String id;
     public String ids;
-    public String code;
+    public String type;
 
     public DoCorrectionForm() {
     }
@@ -35,11 +35,11 @@ public class DoCorrectionForm {
         this.ids = ids;
     }
 
-    public String getCode() {
-        return code;
+    public String getType() {
+        return type;
     }
 
-    public void setCode(String code) {
-        this.code = code;
+    public void setType(String type) {
+        this.type = type;
     }
 }

@@ -1,0 +1,75 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>数据列表页面</title>
+
+    <!-- common imports -->
+    <script type="text/javascript" src="../js/jquery-1.11.1.min.js" ></script>
+    <script type="text/javascript" src="./js/commonImport.js" ></script>
+    <script type="text/javascript" src="./plugin/layui/layui.js" ></script>
+    <script type="text/javascript" src="../myJs/md5.js"></script>
+    <script type="text/javascript" src="../myJs/constants.js" ></script>
+    <script type="text/javascript" src="../myJs/utils.js" ></script>
+
+</head>
+
+<body>
+<form id="blogSearchForm" class="layui-form layui-form-pane">
+    <button class="layui-btn" style="margin-left: 30px" lay-submit lay-filter="refreshBtn">
+        <i class="layui-icon">&#x1002;</i> 刷新
+    </button>
+
+    <div class="layui-input-inline" style="margin-left: 30px" >
+        <select name="localCacheType">
+            <option value=" "> none </option>
+            <option value="1"> blogEx </option>
+            <option value="2"> visitLog </option>
+            <option value="3"> blogSense </option>
+            <option value="4"> role2Res </option>
+            <option value="5"> res2Interf </option>
+            <option value="6"> uploadFile </option>
+            <option value="7"> forceOffline </option>
+            <option value="8"> blackList </option>
+        </select>
+    </div>
+    <button class="layui-btn" lay-submit lay-filter="formSearch">
+        <i class="layui-icon">&#xe623;</i> 查询
+    </button>
+</form>
+
+<fieldset id="dataList" class="layui-elem-field layui-field-title sys-list-field" >
+    <legend style="text-align:center;">缓存列表</legend>
+    <div class="layui-field-box layui-form">
+        <div class="">
+            <table style="table-layout: fixed" class="layui-table" lay-even>
+                <colgroup>
+                    <col width="80">
+                    <col width="400">
+                    <col width="30">
+                    <col width="30">
+                </colgroup>
+                <thead>
+                <tr>
+                    <th>key</th>
+                    <th>value</th>
+                    <th colspan="2">操作</th>
+                </tr>
+                </thead>
+                <tbody id="dataContent">
+                </tbody>
+            </table>
+            <!--内容区域 ajax获取-->
+        </div>
+        <div id="pageNav"></div>
+    </div>
+</fieldset>
+
+<script type="text/javascript">
+    layui.config({
+        base: './js/'
+    }).use('cacheDetailManagement');
+</script>
+</body>
+</html>

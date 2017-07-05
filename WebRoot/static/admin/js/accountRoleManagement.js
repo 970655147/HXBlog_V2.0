@@ -71,12 +71,12 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
                                     initilData(sPageNow);
                                 }
                             }
-                        });
+                        })
                     } else {
                         layer.alert("拉取用户列表失败[" + resp.data + "] !", {icon: 5});
                     }
                 }
-            });
+            })
         }, 500);
     }
 
@@ -106,7 +106,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
     var funcs = {
         editData: function (userId, userName, roleIds, roleNames) {
             var html = new StringBuilder();
-            html += '<div>'
+            html.append('<div>')
             html.append('<form id="updateUserRoleForm" class="layui-form layui-form-pane" action="/admin/role/userRole/update" method="post">')
             html.append('<input type="hidden" name="userId" value="' + userId + '" />')
             html.append('<input type="hidden" name="roleIds" />')
@@ -202,5 +202,5 @@ function collectRoleIdList(userRole) {
     for (idx in userRole.roleIds) {
         result.append(userRole.roleIds[idx])
     }
-    return result.join(", ");
+    return result.join(", ")
 }

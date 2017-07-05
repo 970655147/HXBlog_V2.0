@@ -127,12 +127,12 @@ layui.define(['element', 'laypage', 'layer', 'form', 'pagesize'], function (expo
     var funcs = {
         showData: function (id, senderName, createdAt, subject, content) {
             var html = new StringBuilder();
-            html += '<div id="showMsgForm" class="layui-form layui-form-pane" action="#" method="post">'
+            html.append('<div id="showMsgForm" class="layui-form layui-form-pane" action="#" method="post">')
             html.append('<fieldset  class="layui-elem-field layui-field-title sys-list-field" >')
             html.append('<legend style="text-align:center;"><span> 发送者 : ' + senderName + ' 时间 : ' + createdAt + '</span></legend>')
             html.append('<div class="layui-field-box layui-form">')
             html.append('<input style="width:87%;margin: auto;color: #000!important;" value="' + subject + '" class="layui-input" readonly >')
-            html += '<hr>'
+            html.append('<hr>')
             html.append('<div style="width:87%;margin-left:20px;color: #000!important; height:200px" name="content" class="layui-area" readonly >' + decodeURI(detransferQuote(content)) + '</div>')
             html.append('<hr>')
             html.append('</div>')

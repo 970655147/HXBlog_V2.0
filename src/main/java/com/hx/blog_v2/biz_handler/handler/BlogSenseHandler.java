@@ -1,6 +1,7 @@
 package com.hx.blog_v2.biz_handler.handler;
 
 import com.hx.blog_v2.biz_handler.handler.common.BizHandlerAdapter;
+import com.hx.blog_v2.biz_handler.handler.common.WebContextAwareableRunnable;
 import com.hx.blog_v2.biz_handler.interf.BizContext;
 import com.hx.blog_v2.context.CacheContext;
 import com.hx.blog_v2.context.ConstantsContext;
@@ -22,6 +23,10 @@ import com.hx.common.interf.common.Result;
 import com.hx.log.util.Tools;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  * BlogSaveHandler
@@ -49,10 +54,9 @@ public class BlogSenseHandler extends BizHandlerAdapter {
     @Override
     public void afterHandle(BizContext context) {
         Result result = (Result) context.result();
-        BlogSensePO oldPo = (BlogSensePO) WebContext.getAttributeFromRequest(BlogConstants.REQUEST_EXTRA);
-
         if (result.isSuccess()) {
-            Tools.execute(new DoBizRunnable(context, oldPo));
+            Tools.execute(new DoBizRunnable(context, WebContext.getRequest(),
+                    WebContext.getResponse(), WebContext.getSession()));
         }
     }
 
@@ -117,20 +121,18 @@ public class BlogSenseHandler extends BizHandlerAdapter {
      * @version 1.0
      * @date 7/4/2017 9:31 PM
      */
-    private class DoBizRunnable implements Runnable {
-        private BizContext context;
-        private BlogSensePO oldPo;
+    private class DoBizRunnable extends WebContextAwareableRunnable {
 
-        public DoBizRunnable(BizContext context, BlogSensePO oldPo) {
-            this.context = context;
-            this.oldPo = oldPo;
+        public DoBizRunnable(BizContext context,
+                             HttpServletRequest req, HttpServletResponse resp, HttpSession session) {
+            super(context, req, resp, session);
         }
 
         @Override
-        public void run() {
+        public void doBiz() {
             Result result = (Result) context.result();
             BlogSenseForm params = (BlogSenseForm) context.args()[0];
-
+            BlogSensePO oldPo = (BlogSensePO) WebContext.getAttributeFromRequest(BlogConstants.REQUEST_EXTRA);
             Result updateExResult = updateBlogEx(oldPo, params);
             if (!updateExResult.isSuccess()) {
                 return;

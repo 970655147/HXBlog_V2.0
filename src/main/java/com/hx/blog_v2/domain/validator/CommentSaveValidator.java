@@ -30,6 +30,8 @@ public class CommentSaveValidator implements Validator<CommentSaveForm> {
     @Autowired
     private IpValidator ipValidator;
     @Autowired
+    private CommentContentValidator commentContentValidator;
+    @Autowired
     private BeanIdStrValidator beanIdStrValidator;
     @Autowired
     private ConstantsContext constantsContext;
@@ -75,6 +77,10 @@ public class CommentSaveValidator implements Validator<CommentSaveForm> {
         result = urlValidator.validate(form.getHeadImgUrl(), extra);
         if (!result.isSuccess()) {
             return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " 头像url 格式不合法 ! ");
+        }
+        result = commentContentValidator.validate(form.getComment(), extra);
+        if (!result.isSuccess()) {
+            return result;
         }
 
         // comment 的处理

@@ -7,6 +7,7 @@ import com.hx.blog_v2.domain.ErrorCode;
 import com.hx.blog_v2.domain.dto.SessionUser;
 import com.hx.blog_v2.util.BlogConstants;
 import com.hx.blog_v2.util.ResultUtils;
+import com.hx.common.interf.cache.Cache;
 import com.hx.common.interf.common.Result;
 import com.hx.log.util.Tools;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,8 +38,8 @@ public class RobotInterceptor extends HandlerInterceptorAdapter {
         SessionUser user = addDummySessionIfNeed();
         String ip = user.getRequestIp();
 
-        Map<String, String> blankList = cacheContext.blankList();
-        String msg = blankList.get(ip);
+        Cache<String, String> blackList = cacheContext.blackList();
+        String msg = blackList.get(ip);
         if (!Tools.isEmpty(msg)) {
             Result result = ResultUtils.failed(ErrorCode.IN_BLANK_LIST, msg);
             WebContext.responseJson(result);
@@ -48,7 +49,7 @@ public class RobotInterceptor extends HandlerInterceptorAdapter {
 
         int visitCnt = incVisitCnt(ip, cacheContext.visitPerPeroid());
         if (visitCnt >= constantsContext.maxVisitCntPerPeriod) {
-            blankList.put(ip, " you visit server too frequency, system is busy now ! ");
+            blackList.put(ip, " you visit server too frequency, system is busy now ! ");
         }
 
         return true;
@@ -71,9 +72,9 @@ public class RobotInterceptor extends HandlerInterceptorAdapter {
             }
         }
 
-        Map<String, String> blankList = cacheContext.blankList();
+        Cache<String, String> blackList = cacheContext.blackList();
         if (notFormatCnt >= constantsContext.maxNotFormatCntPerPeriod) {
-            blankList.put(ip, " you visit server too frequency, system is busy now ! ");
+            blackList.put(ip, " you visit server too frequency, system is busy now ! ");
         }
     }
 

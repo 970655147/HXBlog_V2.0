@@ -17,9 +17,15 @@
 
 </head>
 <body>
-<button class="layui-btn" style="margin-left: 30px" onclick="refresh()">
-    <i class="layui-icon">&#x1002;</i> 刷新
-</button>
+<form id="blogSearchForm" class="layui-form layui-form-pane">
+    <button class="layui-btn" style="margin-left: 30px" onclick="refresh()">
+        <i class="layui-icon">&#x1002;</i> 刷新
+    </button>
+
+    <button class="layui-btn" lay-submit lay-filter="infoBtn" >
+        <i class="layui-icon">&#xe623;</i> 详情
+    </button>
+</form>
 
 <fieldset id="dataList" class="layui-elem-field layui-field-title sys-list-field">
     <legend style="text-align:center;">缓存控制列表</legend>

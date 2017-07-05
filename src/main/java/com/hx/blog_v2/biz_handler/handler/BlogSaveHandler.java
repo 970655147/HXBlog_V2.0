@@ -1,6 +1,7 @@
 package com.hx.blog_v2.biz_handler.handler;
 
 import com.hx.blog_v2.biz_handler.handler.common.BizHandlerAdapter;
+import com.hx.blog_v2.biz_handler.handler.common.WebContextAwareableRunnable;
 import com.hx.blog_v2.biz_handler.interf.BizContext;
 import com.hx.blog_v2.context.CacheContext;
 import com.hx.blog_v2.context.ConstantsContext;
@@ -18,6 +19,9 @@ import com.hx.log.util.Tools;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.util.Date;
 
 /**
@@ -42,9 +46,9 @@ public class BlogSaveHandler extends BizHandlerAdapter {
     @Override
     public void afterHandle(BizContext context) {
         Result result = (Result) context.result();
-        SessionUser user = (SessionUser) WebContext.getAttributeFromSession(BlogConstants.SESSION_USER);
         if (result.isSuccess()) {
-            Tools.execute(new DoBizRunnable(context, user));
+            Tools.execute(new DoBizRunnable(context, WebContext.getRequest(),
+                    WebContext.getResponse(), WebContext.getSession()));
         }
     }
 
@@ -78,20 +82,19 @@ public class BlogSaveHandler extends BizHandlerAdapter {
      * @version 1.0
      * @date 7/4/2017 9:31 PM
      */
-    private class DoBizRunnable implements Runnable {
-        private BizContext context;
-        private SessionUser user;
+    private class DoBizRunnable extends WebContextAwareableRunnable {
 
-        public DoBizRunnable(BizContext context, SessionUser user) {
-            this.context = context;
-            this.user = user;
+        public DoBizRunnable(BizContext context,
+                             HttpServletRequest req, HttpServletResponse resp, HttpSession session) {
+            super(context, req, resp, session);
         }
 
         @Override
-        public void run() {
+        public void doBiz() {
             if ((context.args().length > 0) && (context.args()[0] instanceof BlogSaveForm)) {
                 Result result = (Result) context.result();
                 BlogSaveForm params = (BlogSaveForm) context.args()[0];
+                SessionUser user = (SessionUser) WebContext.getAttributeFromSession(BlogConstants.SESSION_USER);
 
                 // add
                 if (Tools.isEmpty(params.getId())) {

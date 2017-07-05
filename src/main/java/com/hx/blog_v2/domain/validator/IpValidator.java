@@ -38,11 +38,13 @@ public class IpValidator extends ConfigRefreshableValidator<String> implements V
         if (!matcher.find()) {
             return ResultUtils.failed(" ip 的格式不正确 !");
         }
-        String[] ipSplited = ip.split("\\.");
-        for (String ipPart : ipSplited) {
-            Integer intIpPart = Integer.valueOf(ipPart);
-            if ((intIpPart < 0) || (intIpPart > 255) ) {
-                return ResultUtils.failed(" ip 的格式不正确 !");
+        if(! "0:0:0:0:0:0:0:1".equals(ip)) {
+            String[] ipSplited = ip.split("\\.");
+            for (String ipPart : ipSplited) {
+                Integer intIpPart = Integer.valueOf(ipPart);
+                if ((intIpPart < 0) || (intIpPart > 255) ) {
+                    return ResultUtils.failed(" ip 的格式不正确 !");
+                }
             }
         }
 

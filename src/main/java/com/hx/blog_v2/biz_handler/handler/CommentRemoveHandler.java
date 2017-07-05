@@ -1,6 +1,7 @@
 package com.hx.blog_v2.biz_handler.handler;
 
 import com.hx.blog_v2.biz_handler.handler.common.BizHandlerAdapter;
+import com.hx.blog_v2.biz_handler.handler.common.WebContextAwareableRunnable;
 import com.hx.blog_v2.biz_handler.interf.BizContext;
 import com.hx.blog_v2.context.CacheContext;
 import com.hx.blog_v2.context.WebContext;
@@ -13,6 +14,10 @@ import com.hx.common.interf.common.Result;
 import com.hx.log.util.Tools;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  * BlogSaveHandler
@@ -40,9 +45,9 @@ public class CommentRemoveHandler extends BizHandlerAdapter {
     @Override
     public void afterHandle(BizContext context) {
         Result result = (Result) context.result();
-        BlogCommentPO po = (BlogCommentPO) WebContext.getAttributeFromRequest(BlogConstants.REQUEST_DATA);
         if (result.isSuccess()) {
-            Tools.execute(new DoBizRunnable(context, po));
+            Tools.execute(new DoBizRunnable(context, WebContext.getRequest(),
+                    WebContext.getResponse(), WebContext.getSession()));
         }
     }
 
@@ -53,18 +58,17 @@ public class CommentRemoveHandler extends BizHandlerAdapter {
      * @version 1.0
      * @date 7/4/2017 9:31 PM
      */
-    private class DoBizRunnable implements Runnable {
-        private BizContext context;
-        private BlogCommentPO po;
+    private class DoBizRunnable extends WebContextAwareableRunnable {
 
-        public DoBizRunnable(BizContext context, BlogCommentPO po) {
-            this.context = context;
-            this.po = po;
+        public DoBizRunnable(BizContext context,
+                             HttpServletRequest req, HttpServletResponse resp, HttpSession session) {
+            super(context, req, resp, session);
         }
 
         @Override
-        public void run() {
+        public void doBiz() {
             Result result = (Result) context.result();
+            BlogCommentPO po = (BlogCommentPO) WebContext.getAttributeFromRequest(BlogConstants.REQUEST_DATA);
             if ("1".equals(po.getCommentId())) {
                 Result getExResult = blogExDao.get(new BeanIdForm(po.getBlogId()));
                 if (!getExResult.isSuccess()) {

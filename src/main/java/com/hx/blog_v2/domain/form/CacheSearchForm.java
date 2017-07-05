@@ -1,17 +1,21 @@
 package com.hx.blog_v2.domain.form;
 
 /**
- * CorrectionSearchForm
+ * CacheSearchForm
  *
  * @author Jerry.X.He <970655147@qq.com>
  * @version 1.0
- * @date 6/18/2017 7:22 PM
+ * @date 5/31/2017 8:36 PM
  */
-public class CorrectionSearchForm {
+public class CacheSearchForm {
 
-    public String type;
+    private String type;
 
-    public CorrectionSearchForm() {
+    public CacheSearchForm(String type) {
+        this.type = type;
+    }
+
+    public CacheSearchForm() {
     }
 
     public String getType() {
