@@ -18,10 +18,11 @@ import javax.servlet.http.HttpSession;
 public abstract class WebContextAwareableRunnable implements Runnable {
 
     protected HttpServletRequest req;
-    pr * @param null nullsion;
+    protected HttpServletResponse resp;
+    protected HttpSession session;
     protected BizContext context;
 
-   11:16 PM /**
+   /**
      * 一个能够感知到 上下文的Jerry.X.He7/5/2017 req, resp, session 的 Runnable
      *
      * @param req     req

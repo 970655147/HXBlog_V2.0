@@ -13,7 +13,7 @@ var pageSize = 10
 /**
  * 评论的最大字符数量
  */
-var commentMaxLen = 4096
+var commentMaxLen = 1024
 /**
  * 评论的数量提醒的阈值
  */

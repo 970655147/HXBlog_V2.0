@@ -144,7 +144,11 @@ function contentInit() {
                     }
                 });
 
-                that.updateComment(that.getUrlWithPage(1))
+                var prevUrl = sessionStorageGet(location.href)
+                if(isEmpty(prevUrl)) {
+                    prevUrl = that.getUrlWithPage(1)
+                }
+                that.updateComment(prevUrl)
             },
             initHeadImages: function (that) {
                 ajax({
@@ -309,6 +313,7 @@ function contentInit() {
             updateComment: function (url) {
                 var that = this
                 var params = getParamsFromUrl(url)
+                sessionStorageSet(location.href, url)
 
                 var loadCommentIdx = layer.load(0, {shade: false})
                 ajax({

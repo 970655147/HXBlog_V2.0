@@ -84,7 +84,7 @@ public class MessageSaveValidator implements Validator<MessageSaveForm> {
         form.setSubject(subjectFormatted);
         String contentFormatted = BizUtils.prepareContent(form.getUserIds() + "-" + form.getRoleIds() + "," + form.getUserIds(),
                 form.getContent(), constantsContext.allowTagSensetiveTags, constantsContext.allowTagSensetiveTag2Attr,
-                constantsContext.allowTagSensetiveAttrs);
+                constantsContext.allowTagSensetiveAttrs, null);
         form.setContent(contentFormatted);
         return ResultUtils.success();
 

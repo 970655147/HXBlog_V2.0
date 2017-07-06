@@ -84,7 +84,7 @@ public class BlogSaveValidator implements Validator<BlogSaveForm> {
         form.setSummary(summaryFormatted);
         String contentFormatted = BizUtils.prepareContent("[blog] " + form.getTitle() + "-" + form.getBlogTagIds(),
                 form.getContent(), constantsContext.allowTagSensetiveTags, constantsContext.allowTagSensetiveTag2Attr,
-                constantsContext.allowTagSensetiveAttrs);
+                constantsContext.allowTagSensetiveAttrs, null);
         form.setContent(contentFormatted);
         return ResultUtils.success();
 

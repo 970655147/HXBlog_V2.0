@@ -364,6 +364,10 @@ public final class BlogConstants {
     /**
      * 允许标签存在的情况下, 的敏感标签
      */
+    public static final String ALLOW_TAG_COMMENT_SENSETIVE_TAGS = "allow.tag.comment.sensetive.tags";
+    /**
+     * 允许标签存在的情况下, 的敏感标签
+     */
     public static final String ALLOW_TAG_SENSETIVE_TAG_2_ATTR = "allow.tag.sensetive.tag_2_attr";
     /**
      * 允许标签存在的情况下, 的敏感标签

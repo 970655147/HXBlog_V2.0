@@ -4,12 +4,16 @@ import com.hx.blog_v2.context.ConstantsContext;
 import com.hx.blog_v2.domain.ErrorCode;
 import com.hx.blog_v2.domain.form.CommentSaveForm;
 import com.hx.blog_v2.util.BizUtils;
+import com.hx.blog_v2.util.ElementHandler;
 import com.hx.blog_v2.util.ResultUtils;
 import com.hx.common.interf.common.Result;
 import com.hx.common.interf.validator.Validator;
 import com.hx.log.util.Tools;
+import org.jsoup.nodes.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.Map;
 
 /**
  * AdminCommentSearchValidator
@@ -84,12 +88,29 @@ public class CommentSaveValidator implements Validator<CommentSaveForm> {
         }
 
         // comment 的处理
+        Map<String, ElementHandler> tag2Handler = Tools.<String, ElementHandler>asMap("img", commentSaveElementHandler);
         String contentFormatted = BizUtils.prepareContent("[comment] " + form.getBlogId() + "-" + form.getFloorId(),
-                form.getComment(), constantsContext.allowTagSensetiveTags, constantsContext.allowTagSensetiveTag2Attr,
-                constantsContext.allowTagSensetiveAttrs);
+                form.getComment(), constantsContext.allowTagCommentSensetiveTags, constantsContext.allowTagSensetiveTag2Attr,
+                constantsContext.allowTagSensetiveAttrs, tag2Handler);
         form.setComment(contentFormatted);
 
         return ResultUtils.success();
 
     }
+
+    /**
+     * 处理评论的 ElementHandler
+     *
+     * @author Jerry.X.He <970655147@qq.com>
+     * @version 1.0
+     * @date 7/6/2017 8:44 PM
+     */
+    private ElementHandler commentSaveElementHandler = new ElementHandler() {
+        @Override
+        public void handle(Element element) {
+            element.attr("width", constantsContext.ruleConfig("comment.img.width", "40px"));
+            element.attr("height", constantsContext.ruleConfig("comment.img.height", "40px"));
+        }
+    };
+
 }

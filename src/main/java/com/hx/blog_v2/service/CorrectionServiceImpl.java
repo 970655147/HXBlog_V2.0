@@ -145,19 +145,12 @@ public class CorrectionServiceImpl extends BaseServiceImpl<Object> implements Co
         // 将缓存的数据, 持久化到 db
         cacheContext.clearScoreCached();
 
-        String scoreByBlogIdSql = " select blog_id, score from blog_sense where sense = ? group by blog_id, score ";
-        List<StringIntPair> scoreByBlogId = jdbcTemplate.query(scoreByBlogIdSql, new Object[]{SenseType.GOOD.code()}, new StringIntPairMapper("blog_id", "score"));
+        String scoreByBlogIdSql = " select concat(blog_id, '_', score) as id2Score, count(*) as cnt from blog_sense where sense = ? group by blog_id, score ";
+        List<StringIntPair> scoreByBlogId = jdbcTemplate.query(scoreByBlogIdSql, new Object[]{SenseType.GOOD.code()}, new StringIntPairMapper("id2Score", "cnt"));
         Set<String> blogIds = new HashSet<>();
         Map<String, Integer> blogScore2Cnt = new HashMap<>();
         for (StringIntPair pair : scoreByBlogId) {
-            blogIds.add(pair.getLeft());
-
-            String blogScoreKey = blogId2ScoreKey(pair.getLeft(), pair.getRight());
-            Integer cnt = blogScore2Cnt.get(blogScoreKey);
-            if (cnt == null) {
-                cnt = 0;
-            }
-            blogScore2Cnt.put(blogScoreKey, cnt + 1);
+            blogScore2Cnt.put(pair.getLeft(), pair.getRight());
         }
 
         List<CorrectionVO> vos = collectScoreCorrectionVo(blogIds, blogScore2Cnt);
@@ -403,8 +396,8 @@ public class CorrectionServiceImpl extends BaseServiceImpl<Object> implements Co
      * @since 1.0
      */
     private Result doCorrectionScore0(String blogId) {
-        String scoreByBlogIdSql = " select score from blog_sense where sense = ? and blog_id = ? group by blog_id, score ";
-        List<String> scores = jdbcTemplate.query(scoreByBlogIdSql, new Object[]{SenseType.GOOD.code(), blogId}, new OneStringMapper("score"));
+        String scoreByBlogIdSql = " select score, count(*) as cnt from blog_sense where sense = ? and blog_id = ? group by blog_id, score ";
+        List<StringIntPair> cntByScoreList = jdbcTemplate.query(scoreByBlogIdSql, new Object[]{SenseType.GOOD.code(), blogId}, new StringIntPairMapper("score", "cnt"));
         String blogExSql = " select blog_id, good1_cnt, good2_cnt, good3_cnt, good4_cnt, good5_cnt, good_total_cnt, good_total_score from blog_ex where blog_id = ? ";
         List<BlogExPO> blogExes = jdbcTemplate.query(blogExSql, new Object[]{blogId}, new CommonPOMapper<>(BlogExPO.PROTO_BEAN));
         if (Tools.isEmpty(blogExes) || (blogExes.size() > 1)) {
@@ -412,12 +405,8 @@ public class CorrectionServiceImpl extends BaseServiceImpl<Object> implements Co
         }
 
         Map<String, Integer> cntByScore = new HashMap<>();
-        for (String score : scores) {
-            Integer cnt = cntByScore.get(score);
-            if (cnt == null) {
-                cnt = 0;
-            }
-            cntByScore.put(String.valueOf(score), cnt + 1);
+        for (StringIntPair pair : cntByScoreList) {
+            cntByScore.put(pair.getLeft(), pair.getRight());
         }
         BlogExPO ex = blogExes.get(0);
         return doCorrectionScore0(cntByScore, ex);
@@ -449,18 +438,12 @@ public class CorrectionServiceImpl extends BaseServiceImpl<Object> implements Co
      * @since 1.0
      */
     private Result doCorrectionAllScore0() {
-        String scoreByBlogIdSql = " select blog_id, score from blog_sense where sense = ? group by blog_id, score ";
-        List<StringIntPair> scoreByBlogId = jdbcTemplate.query(scoreByBlogIdSql, new Object[]{SenseType.GOOD.code()}, new StringIntPairMapper("blog_id", "score"));
+        String scoreByBlogIdSql = " select concat(blog_id, '_', score) as id2Score, count(*) as cnt from blog_sense where sense = ? group by blog_id, score ";
+        List<StringIntPair> scoreByBlogId = jdbcTemplate.query(scoreByBlogIdSql, new Object[]{SenseType.GOOD.code()}, new StringIntPairMapper("id2Score", "cnt"));
         Set<String> blogIds = new HashSet<>();
         Map<String, Integer> blogScore2Cnt = new HashMap<>();
         for (StringIntPair pair : scoreByBlogId) {
-            blogIds.add(pair.getLeft());
-            String blogScoreKey = blogId2ScoreKey(pair.getLeft(), pair.getRight());
-            Integer cnt = blogScore2Cnt.get(blogScoreKey);
-            if (cnt == null) {
-                cnt = 0;
-            }
-            blogScore2Cnt.put(blogScoreKey, cnt + 1);
+            blogScore2Cnt.put(pair.getLeft(), pair.getRight());
         }
         if (Tools.isEmpty(blogIds)) {
             String statsInfo = " 总共 : " + 0 + ", 失败 : " + 0 + ", 失败记录 : " + 0;

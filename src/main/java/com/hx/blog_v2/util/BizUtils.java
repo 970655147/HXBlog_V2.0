@@ -66,7 +66,7 @@ public final class BizUtils {
             user.setName(params.getName());
             user.setEmail(params.getEmail());
         }
-        if(! Tools.isEmpty(params.getHeadImgUrl())) {
+        if (!Tools.isEmpty(params.getHeadImgUrl())) {
             user.setHeadImgUrl(params.getHeadImgUrl());
         }
 
@@ -465,11 +465,11 @@ public final class BizUtils {
      */
     public static String extractReplyFrom(String comment, String replyCommentPrefix, String replyCommentSuffix) {
         int replyPrefixIdx = comment.indexOf(replyCommentPrefix);
-        if(replyPrefixIdx < 0) {
+        if (replyPrefixIdx < 0) {
             return null;
         }
         int replySuffixIdx = comment.indexOf(replyCommentSuffix);
-        if(replySuffixIdx < 0) {
+        if (replySuffixIdx < 0) {
             return null;
         }
 
@@ -492,17 +492,18 @@ public final class BizUtils {
      */
     public static String prepareContent(String id, String content, Collection<String> sensetiveTags,
                                         Map<String, Map<String, List<String>>> sensetiveTag2Attr,
-                                        Collection<String> sensetiveAttrs) {
+                                        Collection<String> sensetiveAttrs, Map<String, ElementHandler> tag2Handler) {
         Document doc = Jsoup.parse(content);
         AtomicLong updated = new AtomicLong(0);
-        prepareContent(doc, sensetiveTags, sensetiveTag2Attr, sensetiveAttrs, updated);
+        prepareContent(doc, sensetiveTags, sensetiveTag2Attr, sensetiveAttrs, tag2Handler, updated);
         Log.logWithIdx(" deal [{0}], updated : {1} ", id, updated.get());
         return doc.toString();
     }
 
     public static void prepareContent(Element ele, Collection<String> sensetiveTags,
                                       Map<String, Map<String, List<String>>> sensetiveTag2Attr,
-                                      Collection<String> sensetiveAttrs, AtomicLong updated) {
+                                      Collection<String> sensetiveAttrs, Map<String, ElementHandler> tag2Handler,
+                                      AtomicLong updated) {
         String lowerTagName = ele.tagName().toLowerCase();
         // remove if tag is forbidden
         for (String sensetiveTag : sensetiveTags) {
@@ -532,7 +533,7 @@ public final class BizUtils {
                     String lowerAttrValue = attr.getValue().toLowerCase();
                     for (String sensetiveWord : attr2SensetiveWords.get(lowerAttrKey)) {
                         if (lowerAttrValue.contains(sensetiveWord)) {
-                            ele.removeAttr(attr.getKey());
+                            attrIts.remove();
                             updated.addAndGet(1);
                             break;
                         }
@@ -548,15 +549,22 @@ public final class BizUtils {
             String lowerAttrKey = attr.getKey().toLowerCase();
             for (String sensetiveAttr : sensetiveAttrs) {
                 if (ANT_PATH_MATCHER.match(sensetiveAttr, lowerAttrKey)) {
-                    ele.removeAttr(attr.getKey());
+                    attrIts.remove();
                     updated.addAndGet(1);
                     break;
                 }
             }
         }
 
+        /**
+         * listener 处理额外的业务
+         */
+        if ((tag2Handler != null) && tag2Handler.containsKey(lowerTagName)) {
+            tag2Handler.get(lowerTagName).handle(ele);
+        }
+
         for (Element child : ele.children()) {
-            prepareContent(child, sensetiveTags, sensetiveTag2Attr, sensetiveAttrs, updated);
+            prepareContent(child, sensetiveTags, sensetiveTag2Attr, sensetiveAttrs, tag2Handler, updated);
         }
     }
 

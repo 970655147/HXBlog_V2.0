@@ -51,15 +51,57 @@ public class ConstantsContext {
             | REFRESH_FRONT_IDX__CACHED;
 
     /**
+     * 所有的 标准 html 标签列表
+     */
+    public static final JSONArray ALL_HTML_STD_TAG_ARR = new JSONArray().element("!DOCTYPE").element("a")
+            .element("abbr").element("acronym").element("address").element("applet").element("area")
+            .element("article").element("aside").element("audio").element("b").element("base").element("basefont")
+            .element("bdi").element("bdo").element("big").element("blockquote").element("body").element("br")
+            .element("button").element("canvas").element("caption").element("center").element("cite")
+            .element("code").element("col").element("colgroup").element("command").element("datalist")
+            .element("dd").element("del").element("details").element("dfn").element("dialog").element("dir")
+            .element("div").element("dl").element("dt").element("em").element("embed").element("fieldset")
+            .element("figcaption").element("figure").element("font").element("footer").element("form")
+            .element("frame").element("frameset").element("h1").element("h2").element("h3").element("h4")
+            .element("h5").element("h6").element("head").element("header")
+            .element("hr").element("html").element("i").element("iframe").element("img").element("input")
+            .element("ins").element("kbd").element("keygen").element("label").element("legend").element("li")
+            .element("link").element("main").element("map").element("mark").element("menu").element("menuitem")
+            .element("meta").element("meter").element("nav").element("noframes").element("noscript")
+            .element("object").element("ol").element("optgroup").element("option").element("output").element("p")
+            .element("param").element("pre").element("progress").element("q").element("rp").element("rt")
+            .element("ruby").element("s").element("samp").element("script").element("section").element("select")
+            .element("small").element("source").element("span").element("strike").element("strong").element("style")
+            .element("sub").element("summary").element("sup").element("table").element("tbody").element("td")
+            .element("textarea").element("tfoot").element("th").element("thead").element("time").element("title")
+            .element("tr").element("track").element("tt").element("u").element("ul").element("var").element("video")
+            .element("wbr");
+
+    /**
      * 敏感标签的默认配置
      */
-    public static final JSONArray DEFAULT_ALLOW_TAG_SENSETIVE_TAGS = new JSONArray().element("script").element("iframe").element("el-*");
+    public static final JSONArray DEFAULT_ALLOW_TAG_SENSETIVE_TAGS = new JSONArray().element("script")
+            .element("frame").element("iframe").element("style").element("input").element("el-*")
+            .element("el-*");
+    /**
+     * 敏感评论标签的默认配置
+     */
+    public static final JSONArray DEFAULT_ALLOW_TAG_COMMENT_SENSETIVE_TAGS = JSONArray.fromObject(ALL_HTML_STD_TAG_ARR)
+            .element("el-*");
     /**
      * 敏感属性 -> 关键字 的默认配置
      */
+    public static final JSONArray SRC_SENSETIVE_KEYWORDS = new JSONArray().element("javascript").element(".js");
     public static final JSONObject DEFAULT_SENSETIVE_TAG_2_ATTR = new JSONObject()
-            .element("a", new JSONObject().element("href", new JSONArray().element("javascript")))
-            .element("iframe", new JSONObject().element("src", new JSONArray().element("")));
+            .element("*", new JSONObject().element("style", JSONArray.fromObject(SRC_SENSETIVE_KEYWORDS)
+                    .element("display").element("background").element("opacity").element("z-index")))
+            .element("a", new JSONObject().element("href", SRC_SENSETIVE_KEYWORDS))
+            .element("img", new JSONObject().element("href", SRC_SENSETIVE_KEYWORDS))
+            .element("image", new JSONObject().element("href", SRC_SENSETIVE_KEYWORDS))
+            .element("audio", new JSONObject().element("src", SRC_SENSETIVE_KEYWORDS))
+            .element("video", new JSONObject().element("src", SRC_SENSETIVE_KEYWORDS))
+            ;
+
     /**
      * 敏感属性的默认配置
      */
@@ -70,11 +112,16 @@ public class ConstantsContext {
     public static final JSONObject DEFAULT_TRANSFER_TAG_NEED_FORMAT = new JSONObject()
             .element("<", "&lt;").element(">", "&gt;").element("&", "&amp;");
     /**
-     * 标签转义配置
+     * 需要压缩参数的请求列表
      */
     public static final JSONArray DEFAULT_PARAMS_NEED_TO_CUT = new JSONArray()
             .element("/admin/blog/add").element("/admin/blog/adminUpdate").element("/admin/blog/update")
             .element("/comment/add");
+    static {
+        DEFAULT_ALLOW_TAG_COMMENT_SENSETIVE_TAGS.remove("html");
+        DEFAULT_ALLOW_TAG_COMMENT_SENSETIVE_TAGS.remove("body");
+        DEFAULT_ALLOW_TAG_COMMENT_SENSETIVE_TAGS.remove("img");
+    }
 
     @Autowired
     private SystemConfigDao systemConfigDao;
@@ -167,6 +214,7 @@ public class ConstantsContext {
      * 博客, 评论内容 需要的相关配置
      */
     public List<String> allowTagSensetiveTags;
+    public List<String> allowTagCommentSensetiveTags;
     public Map<String, Map<String, List<String>>> allowTagSensetiveTag2Attr;
     public List<String> allowTagSensetiveAttrs;
     /**
@@ -577,6 +625,11 @@ public class ConstantsContext {
                 allowTagSensetiveTags = Tools.optJSONArray(systemConfig, BlogConstants.ALLOW_TAG_SENSETIVE_TAGS, DEFAULT_ALLOW_TAG_SENSETIVE_TAGS);
             } catch (Exception e) {
                 allowTagSensetiveTags = DEFAULT_ALLOW_TAG_SENSETIVE_TAGS;
+            }
+            try {
+                allowTagCommentSensetiveTags = Tools.optJSONArray(systemConfig, BlogConstants.ALLOW_TAG_COMMENT_SENSETIVE_TAGS, DEFAULT_ALLOW_TAG_COMMENT_SENSETIVE_TAGS);
+            } catch (Exception e) {
+                allowTagCommentSensetiveTags = DEFAULT_ALLOW_TAG_COMMENT_SENSETIVE_TAGS;
             }
             try {
                 allowTagSensetiveTag2Attr = Tools.optJSONObject(systemConfig, BlogConstants.ALLOW_TAG_SENSETIVE_TAG_2_ATTR, DEFAULT_SENSETIVE_TAG_2_ATTR);
