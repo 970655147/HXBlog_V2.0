@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <link href="../main/images/blog.ico" rel="icon" type="image/x-icon"/>
+    <link href="../main/css/style.css" rel="stylesheet"/>
+    <link href="../main/css/mystyle.css" rel="stylesheet"/>
+    <link href="../main/css/animate.min.css" rel="stylesheet"/>
+    <link href="../main/css/bootstrap.css" rel="stylesheet"/>
+    <link href="../main/css/dropdown.css" rel="stylesheet"/>
+    <link href="../main/css/jquery.mCustomScrollbar.min.css" rel="stylesheet"/>
+    <link href="../main/css/jquery.emoji.css" rel="stylesheet"/>
+    <link href="../main/css/upprise.css" rel="stylesheet"/>
+
+    <script src="../js/jquery-1.11.1.min.js"></script>
+    <script src="../main/js/jquery.svg3dtagcloud.min.js"></script>
+
+</head>
+<body>
+
+    <div class="insta wow fadeInDown" data-wow-duration=".8s" data-wow-delay=".2s">
+        <h4>标签云</h4>
+        <div name="tagCloudEle"></div>
+    </div><!--标签云结束-->
+
+    <script type="text/javascript" >
+
+        var entries = [
+            { label: '千寻博客', url: 'http://qianxunclub.com', target: '_Blank' },
+            { label: '千寻博客', url: 'http://qianxunclub.com', target: '_Blank' },
+            { label: '千寻博客', url: 'http://qianxunclub.com', target: '_Blank' },
+            { label: '千寻博客', url: 'http://qianxunclub.com', target: '_Blank' },
+            { label: '千寻博客', url: 'http://qianxunclub.com', target: '_Blank' }
+        ];
+
+        var settings = {
+            entries: entries,
+            width: 640,
+            height: 480,
+            radius: '65%',
+            radiusMin: 75,
+            bgDraw: false,
+            opacityOver: 1.00,
+            opacityOut: 0.05,
+            opacitySpeed: 6,
+            fov: 800,
+            speed: 0.5,
+            fontFamily: 'Oswald, Arial, sans-serif',
+            fontSize: '15',
+            fontColor: '#009688',
+            fontWeight: 'normal',
+            fontStyle: 'normal',
+            fontStretch: 'normal',
+            fontToUpperCase: true
+        };
+        $( "[name='tagCloudEle']" ).svg3DTagCloud( settings );
+
+    </script>
+
+</body>
+</html>

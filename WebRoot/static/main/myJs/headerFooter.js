@@ -161,11 +161,33 @@ function headerFooterInit() {
         for (var idx in tags) {
             var entry = {
                 label: tags[idx].name,
-                url: '/static/main/blogList.html?tagId=' + tags[idx].id + '&tagName=' + tags[idx].name
+                url: '/static/main/blogList.html?tagId=' + tags[idx].id + '&tagName=' + tags[idx].name,
+                target : "_blank"
             }
             tagEntries.push(entry);
         }
 
+        // var settings = {
+        //     entries: tagEntries,
+        //     width: '100%',
+        //     height: '100%',
+        //     radius: '73%',
+        //     radiusMin: '50%',
+        //     bgDraw: true,
+        //     bgColor: '#FFF',
+        //     opacityOver: 1.00,
+        //     opacityOut: 0.13,
+        //     opacitySpeed: 6,
+        //     fov: 800,
+        //     speed: 0.5,
+        //     fontFamily: 'Oswald, Arial, sans-serif',
+        //     fontSize: '15',
+        //     fontColor: '#000',
+        //     fontWeight: 'normal',//bold
+        //     fontStyle: 'normal',//italic
+        //     fontStretch: 'normal',//wider, narrower, ultra-condensed, extra-condensed, condensed, semi-condensed, semi-expanded, expanded, extra-expanded, ultra-expanded
+        //     fontToUpperCase: false
+        // };
         var settings = {
             entries: tagEntries,
             width: '100%',

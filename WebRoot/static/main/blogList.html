@@ -33,7 +33,9 @@
 
     <!-- common imports -->
     <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="./js/wow.min.js"></script>
     <script type="text/javascript" src="./js/jquery.svg3dtagcloud.min.js"></script>
+    <script type="text/javascript" src="./js/modernizr.custom.js" ></script>
     <script type="text/javascript" src="./js/jquery.emoji.js"></script>
     <script type="text/javascript" src="./js/bootstrap.min.js"></script>
     <script type="text/javascript" src="./js/jquery.dropdown.js"></script>
@@ -58,18 +60,17 @@
 
 </head>
 <body>
-<div id="topEle"></div>
+    <div id="topEle"></div>
 
-<div class="header" id="headerNav"></div><!--头部导航结束-->
+    <div class="header" id="headerNav"></div><!--头部导航结束-->
 
-<div class="header-bottom" id="bannerNav"></div><!--博客标题结束-->
-<div class="banner-1"
-     style="background: url(./images/background.jpg) no-repeat 0px 0px;background-size: 100%">
-</div>
+    <div class="header-bottom" id="bannerNav"></div><!--博客标题结束-->
+    <div class="banner-1"
+         style="background: url(./images/background.jpg) no-repeat 0px 0px;background-size: 100%">
+    </div>
 
-<div class="technology" id="bodyContent">
     <div class="container">
-        <div class="col-md-9 technology-left">
+        <div id="bodyContent" class="col-md-9 technology-left">
             <div class="col-md-9 technology-left" v-if="blogs.length == 0">
                 <div class="inner">
                     <div class="taogongzai"></div>
@@ -135,16 +136,16 @@
             </div>
         </div><!--左侧内容结束-->
 
-        <div class="col-md-3 technology-right" id="rightNav"></div><!--右侧内容结束-->
-
+        <div name="header">
+            <div class="col-md-3 technology-right" id="rightNav"></div><!--右侧内容结束-->
+        </div>
         <div class="clearfix"></div>
     </div>
-</div><!--内容主体结束-->
 
-<div class="footer" id="footerNav"></div><!--尾部结束-->
-<div class="copyright wow fadeInDown" id="copyrightNav" data-wow-duration=".8s" data-wow-delay=".2s"></div><!--版权区结束-->
+    <div class="footer" id="footerNav"></div><!--尾部结束-->
+    <div class="copyright wow fadeInDown" id="copyrightNav" data-wow-duration=".8s" data-wow-delay=".2s"></div><!--版权区结束-->
 
-<img id="xiaolongbao" src="./images/xiaolongbao.gif"/>
+    <img id="xiaolongbao" src="./images/xiaolongbao.gif"/>
 
 </body>
 </html>

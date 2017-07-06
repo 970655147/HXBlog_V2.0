@@ -20,7 +20,9 @@
     <link rel="stylesheet" href="../css/iconface.css">
     <!-- common imports -->
     <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="./js/wow.min.js"></script>
     <script type="text/javascript" src="./js/jquery.svg3dtagcloud.min.js"></script>
+    <script type="text/javascript" src="./js/modernizr.custom.js" ></script>
     <script type="text/javascript" src="./js/jquery.emoji.js"></script>
     <script type="text/javascript" src="./js/jquery.mCustomScrollbar.min.js"></script>
     <script type="text/javascript" src="./js/jquery.mousewheel-3.0.6.min.js"></script>
@@ -53,17 +55,14 @@
 
 </head>
 <body>
-<div id="topEle"></div>
+    <div id="topEle"></div>
 
-<div class="header" id="headerNav"></div><!--头部导航结束-->
-<div class="header-bottom" id="bannerNav"></div><!--博客标题结束-->
+    <div class="header" id="headerNav"></div><!--头部导航结束-->
+    <div class="header-bottom" id="bannerNav"></div><!--博客标题结束-->
 
-<!--<div class="banner-1"></div>-->
-
-<!-- technology-left -->
-<div class="technology" id="bodyContent">
+    <!-- technology-left -->
     <div class="container">
-        <div class="col-md-9 technology-left">
+        <div id="bodyContent" class="col-md-9 technology-left">
             <div class="agileinfo">
                 <h2 class="w3" style="text-align: center">{{blog.title}}</h2>
                 <p class="box">
@@ -99,20 +98,20 @@
                 <!-- 回复的评论框 -->
                 <hr id="responseHr">
                 <div id="replyNav" ></div>
-
             </div>
         </div>
 
-        <div class="col-md-3 technology-right" id="rightNav"></div><!--右侧内容结束-->
+        <div name="header">
+            <div class="col-md-3 technology-right" id="rightNav"></div><!--右侧内容结束-->
+        </div>
         <div class="clearfix"></div>
     </div>
-</div>
 
-<!-- 这里出现了一个 样式问题, 结果 是由于 iconface.css 中对于 footer 增加了一些样式[margin-top:-120px], 然后 导致样式出现问题, 我擦嘞 -->
-<div class="footer" id="footerNav"></div><!--尾部结束-->
-<div class="copyright wow" id="copyrightNav" data-wow-duration=".8s" data-wow-delay=".2s"></div><!--版权区结束-->
+    <!-- 这里出现了一个 样式问题, 结果 是由于 iconface.css 中对于 footer 增加了一些样式[margin-top:-120px], 然后 导致样式出现问题, 我擦嘞 -->
+    <div class="footer" id="footerNav"></div><!--尾部结束-->
+    <div class="copyright wow" id="copyrightNav" data-wow-duration=".8s" data-wow-delay=".2s"></div><!--版权区结束-->
 
-<img id="xiaolongbao" src="./images/xiaolongbao.gif"/>
+    <img id="xiaolongbao" src="./images/xiaolongbao.gif"/>
 
 </body>
 </html>

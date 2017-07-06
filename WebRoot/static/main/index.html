@@ -15,12 +15,15 @@
     <link href="./css/jquery.mCustomScrollbar.min.css" rel="stylesheet"/>
     <link href="./css/jquery.emoji.css" rel="stylesheet"/>
     <link href="./css/upprise.css" rel="stylesheet"/>
-    <!-- common imports -->
+     common imports
     <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="./js/wow.min.js"></script>
     <script type="text/javascript" src="./js/jquery.svg3dtagcloud.min.js"></script>
+    <script type="text/javascript" src="./js/modernizr.custom.js" ></script>
     <script type="text/javascript" src="./js/jquery.emoji.js"></script>
     <script type="text/javascript" src="./js/bootstrap.min.js"></script>
     <script type="text/javascript" src="./js/jquery.dropdown.js"></script>
+
     <script type="text/javascript" src="../js/vue.js"></script>
     <script type="text/javascript" src="./layer/layer.js"></script>
     <script type="text/javascript" src="./myJs/commonImport.js"></script>
@@ -43,178 +46,129 @@
 <boday>
     <div id="topEle" ></div>
 
-    <div>
-        <div name="header">
-            <div class="header" id="headerNav"></div><!--头部导航结束-->
-            <div class="header-bottom" id="bannerNav"></div><!--博客标题结束-->
+    <div name="header">
+        <div class="header" id="headerNav"></div><!--头部导航结束-->
+        <div class="header-bottom" id="bannerNav"></div><!--博客标题结束-->
 
-            <div class="banner"
-                 style="background: url(./images/background.jpg) no-repeat 0px 0px;background-size: 100%">
-                <div class="container">
-                    <h2 name="title">{{title}}</h2>
-                    <p name="subTitle">{{subTitle}}</p>
-                    <a href="#"> Hello Guys </a>
-                </div>
-            </div><!--鸡汤签名结束-->
-        </div>
-
-        <div class="services w3l wow fadeInDown" data-wow-duration=".8s" data-wow-delay=".2s">
+        <div class="banner"
+             style="background: url(./images/background.jpg) no-repeat 0px 0px;background-size: 100%">
             <div class="container">
-                <div class="grid_3 grid_5">
-                    <div class="bs-example bs-example-tabs" role="tabpanel" data-example-id="togglable-tabs">
-                        <ul id="myTab" class="nav nav-tabs" role="tablist">
-                            <li role="presentation" class="active">
-                                <a href="#expeditions" id="expeditions-tab" role="tab" data-toggle="tab"
-                                   aria-controls="expeditions" aria-expanded="true">音乐欣赏</a>
-                            </li>
-                            <li role="presentation" class="">
-                                <a href="#safari" role="tab" id="safari-tab" data-toggle="tab" aria-controls="safari">网页游戏</a>
-                            </li>
-                            <li role="presentation" class="">
-                                <a href="#trekking" role="tab" id="trekking-tab" data-toggle="tab"
-                                   aria-controls="trekking">照片墙</a>
-                            </li>
-                        </ul><!--tabs标题结束-->
-                        <div id="myTabContent" class="tab-content">
-                            <div role="tabpanel" class="tab-pane fade" id="expeditions"
-                                 aria-labelledby="expeditions-tab">
+                <h2 name="title">{{title}}</h2>
+                <p name="subTitle">{{subTitle}}</p>
+                <a href="#"> Hello Guys </a>
+            </div>
+        </div><!--鸡汤签名结束-->
+    </div>
 
-                                <div class="col-md-4 col-sm-5 tab-image">
-                                    <img src="./images/f2.jpg" class="img-responsive" alt="Wanderer">
-                                </div>
-                                <div class="col-md-4 col-sm-5 tab-image">
-                                    <img src="./images/f4.jpg" class="img-responsive" alt="Wanderer">
-                                </div>
-                                <div class="col-md-4 col-sm-5 tab-image">
-                                    <img src="./images/f3.jpg" class="img-responsive" alt="Wanderer">
-                                </div>
-                                <div class="clearfix"></div>
-                            </div><!--tab1内容结束-->
-                            <div role="tabpanel" class="tab-pane fade" id="safari" aria-labelledby="safari-tab">
-                                <div class="col-md-4 col-sm-5 tab-image">
-                                    <img src="./images/t1.jpg" class="img-responsive" alt="Wanderer">
-                                </div>
-                                <div class="col-md-4 col-sm-5 tab-image">
-                                    <img src="./images/t2.jpg" class="img-responsive" alt="Wanderer">
-                                </div>
-                                <div class="col-md-4 col-sm-5 tab-image">
-                                    <img src="./images/t3.jpg" class="img-responsive" alt="Wanderer">
-                                </div>
-                                <div class="clearfix"></div>
-                            </div><!--tab2内容结束-->
-                            <div role="tabpanel" class="tab-pane fade active in" id="trekking"
-                                 aria-labelledby="trekking-tab">
+    <div class="services w3l wow fadeInDown" data-wow-duration=".8s" data-wow-delay=".2s">
+        <div class="container">
+            <div class="grid_3 grid_5">
+                <div class="bs-example bs-example-tabs" role="tabpanel" data-example-id="togglable-tabs">
+                    <ul id="myTab" class="nav nav-tabs" role="tablist">
+                        <li role="presentation" class="active">
+                            <a href="#expeditions" id="expeditions-tab" role="tab" data-toggle="tab"
+                               aria-controls="expeditions" aria-expanded="true">音乐欣赏</a>
+                        </li>
+                        <li role="presentation" class="">
+                            <a href="#safari" role="tab" id="safari-tab" data-toggle="tab" aria-controls="safari">网页游戏</a>
+                        </li>
+                        <li role="presentation" class="">
+                            <a href="#trekking" role="tab" id="trekking-tab" data-toggle="tab"
+                               aria-controls="trekking">照片墙</a>
+                        </li>
+                    </ul><!--tabs标题结束-->
+                    <div id="myTabContent" class="tab-content">
+                        <div role="tabpanel" class="tab-pane fade" id="expeditions"
+                             aria-labelledby="expeditions-tab">
 
-                                <div class="col-md-4 col-sm-5 tab-image">
-                                    <img src="./images/m2.jpg" class="img-responsive" alt="Wanderer">
-                                </div>
-                                <div class="col-md-4 col-sm-5 tab-image">
-                                    <img src="./images/m1.jpg" class="img-responsive" alt="Wanderer">
-                                </div>
-                                <div class="col-md-4 col-sm-5 tab-image">
-                                    <img src="./images/m3.jpg" class="img-responsive" alt="Wanderer">
-                                </div>
-                                <div class="clearfix"></div>
-                            </div><!--tab3内容结束-->
-                        </div>
+                            <div class="col-md-4 col-sm-5 tab-image">
+                                <img src="./images/f2.jpg" class="img-responsive" alt="Wanderer">
+                            </div>
+                            <div class="col-md-4 col-sm-5 tab-image">
+                                <img src="./images/f4.jpg" class="img-responsive" alt="Wanderer">
+                            </div>
+                            <div class="col-md-4 col-sm-5 tab-image">
+                                <img src="./images/f3.jpg" class="img-responsive" alt="Wanderer">
+                            </div>
+                            <div class="clearfix"></div>
+                        </div><!--tab1内容结束-->
+                        <div role="tabpanel" class="tab-pane fade" id="safari" aria-labelledby="safari-tab">
+                            <div class="col-md-4 col-sm-5 tab-image">
+                                <img src="./images/t1.jpg" class="img-responsive" alt="Wanderer">
+                            </div>
+                            <div class="col-md-4 col-sm-5 tab-image">
+                                <img src="./images/t2.jpg" class="img-responsive" alt="Wanderer">
+                            </div>
+                            <div class="col-md-4 col-sm-5 tab-image">
+                                <img src="./images/t3.jpg" class="img-responsive" alt="Wanderer">
+                            </div>
+                            <div class="clearfix"></div>
+                        </div><!--tab2内容结束-->
+                        <div role="tabpanel" class="tab-pane fade active in" id="trekking"
+                             aria-labelledby="trekking-tab">
+
+                            <div class="col-md-4 col-sm-5 tab-image">
+                                <img src="./images/m2.jpg" class="img-responsive" alt="Wanderer">
+                            </div>
+                            <div class="col-md-4 col-sm-5 tab-image">
+                                <img src="./images/m1.jpg" class="img-responsive" alt="Wanderer">
+                            </div>
+                            <div class="col-md-4 col-sm-5 tab-image">
+                                <img src="./images/m3.jpg" class="img-responsive" alt="Wanderer">
+                            </div>
+                            <div class="clearfix"></div>
+                        </div><!--tab3内容结束-->
                     </div>
                 </div>
             </div>
-        </div><!--tabs页面结束-->
+        </div>
+    </div><!--tabs页面结束-->
 
-        <div id="bodyContent" class="technology">
-            <div class="container">
-                <div class="col-md-9 technology-left">
-                    <div class="tech-no">
-                        <div class="tc-ch" v-if="recommend != null" >
-                            <h3>
-                                <a :href="'/static/main/blogDetail.html?id=' + recommend.id">推荐 :
-                                    <img :src="recommend.blogCreateTypeImgUrl" />
-                                    <span>{{recommend.title}}</span>
-                                </a>
-                            </h3>
-                            <h6></h6>
-                            <div class="tch-img">
-                                <a :href="'/static/main/blogDetail.html?id=' + recommend.id">
-                                    <img :src="recommend.coverUrl" class="img-responsive"
-                                         :alt="recommend.author" width="300px" height="300px">
-                                </a>
-                            </div>
-                            <h6> by <a :href="'/static/main/userHome.html?id=' + recommend.author" > {{recommend.author}} </a> <span> {{recommend.createdAt}} </span>
-                            </h6>
-                            <p> {{recommend.summary}} </p>
-                            <div class="bht1">
-                                <a :href="'/static/main/blogDetail.html?id=' + recommend.id">继续阅读</a>
-                            </div>
+    <div class="container">
+        <div id="bodyContent" class="col-md-9 technology-left">
+            <div class="tech-no">
+                <div class="tc-ch" v-if="recommend != null" >
+                    <h3>
+                        <a :href="'/static/main/blogDetail.html?id=' + recommend.id">推荐 :
+                            <img :src="recommend.blogCreateTypeImgUrl" />
+                            <span>{{recommend.title}}</span>
+                        </a>
+                    </h3>
+                    <h6></h6>
+                    <div class="tch-img">
+                        <a :href="'/static/main/blogDetail.html?id=' + recommend.id">
+                            <img :src="recommend.coverUrl" class="img-responsive"
+                                 :alt="recommend.author" width="300px" height="300px">
+                        </a>
+                    </div>
+                    <h6> by <a :href="'/static/main/userHome.html?id=' + recommend.author" > {{recommend.author}} </a> <span> {{recommend.createdAt}} </span>
+                    </h6>
+                    <p> {{recommend.summary}} </p>
+                    <div class="bht1">
+                        <a :href="'/static/main/blogDetail.html?id=' + recommend.id">继续阅读</a>
+                    </div>
 
-                            <div class="clearfix"></div>
-                        </div><!--推荐阅读结束-->
-                        <div class="clearfix"></div>
+                    <div class="clearfix"></div>
+                </div><!--推荐阅读结束-->
+                <div class="clearfix"></div>
 
-                        <div class="w3ls tc-ch wow fadeInDown" data-wow-duration=".8s" data-wow-delay=".2s">
-                            <h3><a href="javascript:void(0)">最新更新</a></h3>
-                            <h6></h6>
-                            <div>
-                                <div>
-                                    <div class="col-md-6  w3ls-left wow fadeInDown" v-for="blog in latestBlogL1">
-                                        <div class="tc-ch">
-                                            <div class="tch-img">
-                                                <a :href="'/static/main/blogDetail.html?id=' + blog.id">
-                                                    <img :src="blog.coverUrl" class="img-responsive" width="300px" height="300px">
-                                                </a>
-                                            </div>
-                                            <h6>
-                                                <img :src="blog.blogCreateTypeImgUrl" />
-                                                <a :href="'/static/main/blogDetail.html?id=' + blog.id">{{blog.title}}</a>
-                                            </h6>
-                                            <h6> by <a>{{blog.author}}</a>
-                                                <span>{{blog.createdAt}}</span>
-                                            </h6>
-                                            <p class="summary">{{blog.summary}}</p>
-                                            <div class="bht1">
-                                                <a :href="'/static/main/blogDetail.html?id=' + blog.id">查看更多</a>
-                                            </div>
-                                            <div class="soci">
-                                                <p style="padding-right: 1.8em">
-                                                    <a class="span_link">
-                                                        <span class="glyphicon glyphicon-comment"></span>
-                                                        <span>{{blog.commentCnt}}</span>
-                                                    </a>
-                                                    <a class="span_link">
-                                                        <span class="glyphicon glyphicon-eye-open"></span>
-                                                        <span>{{blog.viewCnt}}</span>
-                                                    </a>
-                                                </p>
-                                            </div>
-                                            <div class="clearfix"></div>
-                                        </div>
-                                    </div>
-
-                                </div>
-
-                                <div class="clearfix"></div>
-                            </div>
-
-                        </div><!--最新更新结束-->
-
-                        <div v-for="blog in latestBlogL2">
-                            <div class="wthree">
-                                <div class="col-md-6 wthree-left wow fadeInDown" data-wow-duration=".8s"
-                                     data-wow-delay=".2s" style="width: 250px;height: 250px;">
+                <div class="w3ls tc-ch wow fadeInDown" data-wow-duration=".8s" data-wow-delay=".2s">
+                    <h3><a href="javascript:void(0)">最新更新</a></h3>
+                    <h6></h6>
+                    <div>
+                        <div>
+                            <div class="col-md-6  w3ls-left wow fadeInDown" v-for="blog in latestBlogL1">
+                                <div class="tc-ch">
                                     <div class="tch-img">
-                                        <a :href="'/static/main/blogDetail.html?id=' + blog.id" >
+                                        <a :href="'/static/main/blogDetail.html?id=' + blog.id">
                                             <img :src="blog.coverUrl" class="img-responsive" width="300px" height="300px">
                                         </a>
                                     </div>
-                                </div>
-                                <div class="col-md-6 wthree-right wow fadeInDown" data-wow-duration=".8s"
-                                     data-wow-delay=".2s">
                                     <h6>
                                         <img :src="blog.blogCreateTypeImgUrl" />
                                         <a :href="'/static/main/blogDetail.html?id=' + blog.id">{{blog.title}}</a>
                                     </h6>
-                                    <h6> by
-                                        <a>{{blog.author}}</a>
+                                    <h6> by <a>{{blog.author}}</a>
                                         <span>{{blog.createdAt}}</span>
                                     </h6>
                                     <p class="summary">{{blog.summary}}</p>
@@ -222,7 +176,7 @@
                                         <a :href="'/static/main/blogDetail.html?id=' + blog.id">查看更多</a>
                                     </div>
                                     <div class="soci">
-                                        <p>
+                                        <p style="padding-right: 1.8em">
                                             <a class="span_link">
                                                 <span class="glyphicon glyphicon-comment"></span>
                                                 <span>{{blog.commentCnt}}</span>
@@ -234,31 +188,76 @@
                                         </p>
                                     </div>
                                     <div class="clearfix"></div>
-
                                 </div>
-                                <div class="clearfix"></div>
+                            </div>
+
+                        </div>
+
+                        <div class="clearfix"></div>
+                    </div>
+
+                </div><!--最新更新结束-->
+
+                <div v-for="blog in latestBlogL2">
+                    <div class="wthree">
+                        <div class="col-md-6 wthree-left wow fadeInDown" data-wow-duration=".8s"
+                             data-wow-delay=".2s" style="width: 250px;height: 250px;">
+                            <div class="tch-img">
+                                <a :href="'/static/main/blogDetail.html?id=' + blog.id" >
+                                    <img :src="blog.coverUrl" class="img-responsive" width="300px" height="300px">
+                                </a>
                             </div>
                         </div>
-                        <!--3篇博文结束-->
-                    </div>
-                </div><!--左侧内容结束-->
+                        <div class="col-md-6 wthree-right wow fadeInDown" data-wow-duration=".8s"
+                             data-wow-delay=".2s">
+                            <h6>
+                                <img :src="blog.blogCreateTypeImgUrl" />
+                                <a :href="'/static/main/blogDetail.html?id=' + blog.id">{{blog.title}}</a>
+                            </h6>
+                            <h6> by
+                                <a>{{blog.author}}</a>
+                                <span>{{blog.createdAt}}</span>
+                            </h6>
+                            <p class="summary">{{blog.summary}}</p>
+                            <div class="bht1">
+                                <a :href="'/static/main/blogDetail.html?id=' + blog.id">查看更多</a>
+                            </div>
+                            <div class="soci">
+                                <p>
+                                    <a class="span_link">
+                                        <span class="glyphicon glyphicon-comment"></span>
+                                        <span>{{blog.commentCnt}}</span>
+                                    </a>
+                                    <a class="span_link">
+                                        <span class="glyphicon glyphicon-eye-open"></span>
+                                        <span>{{blog.viewCnt}}</span>
+                                    </a>
+                                </p>
+                            </div>
+                            <div class="clearfix"></div>
 
-                <div name="header">
-                    <div class="col-md-3 technology-right" id="rightNav"></div><!--右侧内容结束-->
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
                 </div>
-                <div class="clearfix"></div>
+                <!--3篇博文结束-->
             </div>
-        </div><!--内容主体结束-->
+        </div><!--左侧内容结束-->
 
         <div name="header">
-            <div class="footer" id="footerNav"></div><!--尾部结束-->
-            <div class="copyright wow fadeInDown" id="copyrightNav" data-wow-duration=".8s" data-wow-delay=".2s"></div>
+            <div class="col-md-3 technology-right" id="rightNav"></div><!--右侧内容结束-->
         </div>
-        <!--版权区结束-->
+        <div class="clearfix"></div>
+    </div><!--内容主体结束-->
 
-        <img id="xiaolongbao" src="./images/xiaolongbao.gif"/>
-
+    <div name="header">
+        <div class="footer" id="footerNav"></div><!--尾部结束-->
+        <div class="copyright wow fadeInDown" id="copyrightNav" data-wow-duration=".8s" data-wow-delay=".2s"></div>
     </div>
+    <!--版权区结束-->
+
+    <img id="xiaolongbao" src="./images/xiaolongbao.gif"/>
+
 </boday>
 
 </body>

@@ -9,8 +9,6 @@
 // 需要导入的css, js
 var styleShetts = []
 var jses = [
-    "./js/wow.min.js",
-    "./js/modernizr.custom.js",
     "./js/time.js",
     "./js/xiaolongbao.js",
     "./js/myjs.js"

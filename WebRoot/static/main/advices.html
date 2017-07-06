@@ -18,9 +18,12 @@
     <link href="./css/upprise.css" rel="stylesheet"/>
     <link rel="stylesheet" href="../css/element.css">
     <link rel="stylesheet" href="../css/iconface.css">
+
     <!-- common imports -->
     <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="./js/wow.min.js"></script>
     <script type="text/javascript" src="./js/jquery.svg3dtagcloud.min.js"></script>
+    <script type="text/javascript" src="./js/modernizr.custom.js" ></script>
     <script type="text/javascript" src="./js/jquery.emoji.js"></script>
     <script type="text/javascript" src="./js/jquery.mCustomScrollbar.min.js"></script>
     <script type="text/javascript" src="./js/jquery.mousewheel-3.0.6.min.js"></script>
@@ -37,15 +40,9 @@
     <script type="text/javascript" src="./myJs/headerFooter.js"></script>
     <script type="text/javascript" src="./myJs/blogDetail.js"></script>
     <!--代码高亮-->
-    <link href="http://cdn.bootcss.com/SyntaxHighlighter/3.0.83/styles/shCore.min.css" rel="stylesheet">
-    <link href="http://cdn.bootcss.com/SyntaxHighlighter/3.0.83/styles/shThemeEclipse.min.css" rel="stylesheet">
-    <!--代码高亮-->
-    <script src="http://cdn.bootcss.com/SyntaxHighlighter/3.0.83/scripts/shCore.min.js"></script>
-    <script src="http://cdn.bootcss.com/SyntaxHighlighter/3.0.83/scripts/shBrushJava.min.js"></script>
-    <script src="http://cdn.bootcss.com/SyntaxHighlighter/3.0.83/scripts/shBrushXml.min.js"></script>
-    <script src="http://cdn.bootcss.com/SyntaxHighlighter/3.0.83/scripts/shBrushSql.min.js"></script>
-    <script src="http://cdn.bootcss.com/SyntaxHighlighter/3.0.83/scripts/shBrushPython.min.js"></script>
-    <script src="http://cdn.bootcss.com/SyntaxHighlighter/3.0.83/scripts/shBrushJScript.min.js"></script>
+    <link href="./css/shCore.min.css" rel="stylesheet">
+    <link href="./css/shThemeEclipse.min.css" rel="stylesheet">
+    <script src="./js/SyntaxHighlighter/shCore.js"></script>
     <script type="text/javascript">
         importCss()
         $(document).ready(function () {
@@ -65,9 +62,8 @@
 <div class="header-bottom" id="bannerNav"></div><!--博客标题结束-->
 
 <!-- technology-left -->
-<div class="technology" id="bodyContent">
     <div class="container">
-        <div class="col-md-12 technology-left" style="width: 100%">
+        <div id="bodyContent" class="col-md-12 technology-left" style="width: 100%">
             <div class="row">
                 <div class="col-md-12">
                     <div class="services w3l ">
@@ -84,12 +80,11 @@
         <div class="clearfix"></div>
         <!-- technology-right -->
     </div>
-</div>
 
-<div class="footer" id="footerNav"></div><!--尾部结束-->
-<div class="copyright wow" id="copyrightNav" data-wow-duration=".8s" data-wow-delay=".2s"></div><!--版权区结束-->
+    <div class="footer" id="footerNav"></div><!--尾部结束-->
+    <div class="copyright wow" id="copyrightNav" data-wow-duration=".8s" data-wow-delay=".2s"></div><!--版权区结束-->
 
-<img id="xiaolongbao" src="./images/xiaolongbao.gif"/>
+    <img id="xiaolongbao" src="./images/xiaolongbao.gif"/>
 
 </body>
 </html>
