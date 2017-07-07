@@ -23,7 +23,7 @@ import java.util.Map;
  * @date 6/15/2017 7:18 PM
  */
 @Component
-public class CommentSaveValidator implements Validator<CommentSaveForm> {
+public class CommentSaveValidator extends ConfigRefreshableValidator<CommentSaveForm> implements Validator<CommentSaveForm> {
 
     @Autowired
     private UserNameValidator userNameValidator;
@@ -40,8 +40,15 @@ public class CommentSaveValidator implements Validator<CommentSaveForm> {
     @Autowired
     private ConstantsContext constantsContext;
 
+    /**
+     * 相关配置
+     */
+    private String commentImgWidth = null;
+    private String commentImgHeight = null;
+    private int commentDivMinLen = -1;
+
     @Override
-    public Result validate(CommentSaveForm form, Object extra) {
+    public Result doValidate(CommentSaveForm form, Object extra) {
         if (!beanIdStrValidator.validate(form.getBlogId(), extra).isSuccess()) {
             return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " blogId 非数字 ! ");
         }
@@ -88,14 +95,26 @@ public class CommentSaveValidator implements Validator<CommentSaveForm> {
         }
 
         // comment 的处理
-        Map<String, ElementHandler> tag2Handler = Tools.<String, ElementHandler>asMap("img", commentSaveElementHandler);
+        Map<String, ElementHandler> tag2Handler = Tools.<String, ElementHandler>asMap(new String[]{"img", "div"},
+                commentSaveElementHandler, commentSaveElementHandler);
         String contentFormatted = BizUtils.prepareContent("[comment] " + form.getBlogId() + "-" + form.getFloorId(),
                 form.getComment(), constantsContext.allowTagCommentSensetiveTags, constantsContext.allowTagSensetiveTag2Attr,
                 constantsContext.allowTagSensetiveAttrs, tag2Handler);
         form.setComment(contentFormatted);
 
         return ResultUtils.success();
+    }
 
+    @Override
+    public boolean needRefresh() {
+        return commentDivMinLen < 0;
+    }
+
+    @Override
+    public void refreshConfig() {
+        commentImgWidth = constantsContext.ruleConfig("comment.img.width", "40px");
+        commentImgHeight = constantsContext.ruleConfig("comment.img.height", "40px");
+        commentDivMinLen = Integer.parseInt(constantsContext.ruleConfig("comment.div.minLen", "20"));
     }
 
     /**
@@ -107,9 +126,17 @@ public class CommentSaveValidator implements Validator<CommentSaveForm> {
      */
     private ElementHandler commentSaveElementHandler = new ElementHandler() {
         @Override
-        public void handle(Element element) {
-            element.attr("width", constantsContext.ruleConfig("comment.img.width", "40px"));
-            element.attr("height", constantsContext.ruleConfig("comment.img.height", "40px"));
+        public void handle(Element ele) {
+            String lowerTagName = ele.tagName().toLowerCase();
+            if ("img".equals(lowerTagName)) {
+                ele.attr("width", commentImgWidth);
+                ele.attr("height", commentImgHeight);
+            } else if ("div".equals(lowerTagName)) {
+                int lenOfDiv = ele.text().length();
+                if (lenOfDiv < commentDivMinLen) {
+                    ele.attr("style", "display:inline;");
+                }
+            }
         }
     };
 

@@ -1,7 +1,7 @@
 html, body{
 font-family: 'Raleway', sans-serif;
 	font-size: 100%;
-    background: #f7f7f7;
+    background: #f7f7f7 !important;
 }
 body a,.grid_1,plan_1,plan_1.one,plan_1.two,i.icon1, i.icon2, i.icon3, i.icon4, i.icon5, i.icon6 {
 	transition:0.5s all;
@@ -316,7 +316,7 @@ min-height: 250px;
 }
 .banner p {
     font-size: 1.2em;
-    color: rgba(255, 255, 255, 0.46);
+    color: #00FF00;
     font-weight: 400;
     line-height: 1.8em;
     margin: 1em auto 2em;
@@ -604,7 +604,7 @@ i.glyphicon.glyphicon-comment {
 }
 /*--footer--*/
 .footer {
-    background: #303030;
+    background: #FCFCEC;
     padding: 3em 0;
     margin-top: 3em;
 }
@@ -613,11 +613,11 @@ i.glyphicon.glyphicon-comment {
     background: #fa4b2a;
     padding: 0.5em 1.7em;
     font-weight: 700;
-    color: #fff;
+    color: #000;
 }
 .footer p {
     font-size: 0.875em;
-    color: #fff;
+    color: #000;
     margin: 1em 0;
     line-height: 1.8em;
 }
@@ -625,12 +625,17 @@ i.glyphicon.glyphicon-comment {
     margin: 0;
 }
 .footer-middle a {
-    color: #fa4b2a;
+    color: #000;
 	font-family: 'Open Sans', sans-serif;
 }
+.footer-middle span {
+    color: #000;
+    font-family: 'Open Sans', sans-serif;
+}
+
 .footer h4 {
     font-size: 1.7em;
-    color: #fff;
+    color: #000;
     border-bottom: 1px solid #fff;
     margin-bottom: 1em;
     padding-bottom: 1em;
@@ -677,17 +682,17 @@ i.glyphicon.glyphicon-comment {
 }
 /*--footer--*/
 .copyright {
-    background:#0a0a0a;
+    background: #FCFCEC;
     padding: 1em 0;
     text-align: center;
 }
 .copyright p {
     font-size: 0.875em;
-    color: #ffffff;
+    color: #000;
     line-height: 1.8em;
 }
 .copyright p a{
-    color: #ffffff;
+    color: #000;
 	font-weight:700;
 }
 .copyright p a:hover{

@@ -559,8 +559,12 @@ public final class BizUtils {
         /**
          * listener 处理额外的业务
          */
-        if ((tag2Handler != null) && tag2Handler.containsKey(lowerTagName)) {
-            tag2Handler.get(lowerTagName).handle(ele);
+        if (!Tools.isEmpty(tag2Handler)) {
+            for (Map.Entry<String, ElementHandler> entry : tag2Handler.entrySet()) {
+                if (ANT_PATH_MATCHER.match(entry.getKey(), lowerTagName)) {
+                    entry.getValue().handle(ele);
+                }
+            }
         }
 
         for (Element child : ele.children()) {

@@ -65,13 +65,17 @@ function contentInit() {
                 var commentEle = $(this)
                 var comment = commentEle.html()
                 var delta = commentMaxLen - comment.length
+                if(delta < 0) {
+                    commentEle.html(comment.substr(0, commentMaxLen))
+                    delta = 0
+                }
                 if(delta < commentLenThreshold) {
                     layer.tips("还可以输入" + delta + "个字符", "[name='comment']", {
                         tips: [1, '#ff0000'],
                         time: 1000
                     })
                 }
-                if(delta < 0) {
+                if(delta <= 0) {
                     return false
                 }
             });

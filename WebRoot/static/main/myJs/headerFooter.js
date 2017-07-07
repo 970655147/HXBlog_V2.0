@@ -105,9 +105,11 @@ function headerFooterInit() {
                     var comment = data.latestComments[idx]
                     latestComments.append(
                         "<span>" +
-                        "<a href='/static/main/blogDetail.html?id=" + comment.blogId + "'>" + comment.name + "@" + comment.toUser + " </a> - " + comment.createdAt + " " +
+                        "<a href='/static/main/blogDetail.html?id=" + comment.blogId + "'>" + comment.name + "@" + comment.toUser + " </a> - <span>" + comment.createdAt + "</span> " +
                         "</span>" +
-                        "<p><span class='sourceText'>" + comment.comment + "</span></p>"
+                        "<p>" +
+                        "<span class='sourceText' style='word-break: break-all;' >" + comment.comment + "</span>" +
+                        "</p>"
                     )
                 }
 

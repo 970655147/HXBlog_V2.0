@@ -169,7 +169,8 @@
                     </option>
                 </select>
                 <br/>
-                <div title="reply" name="comment" class="editor form-control" contenteditable="true">
+                <div title="reply" name="comment" class="editor form-control" contenteditable="true"
+                     style="overflow-y:auto;overflow-x:hidden;" >
                 </div>
 
                 <br/>
@@ -183,12 +184,11 @@
         </div>
 
         <div class="response">
-            <span style="padding : 10px 10px 30px 20px; color : red"
-                  v-for="floor in comments">
+            <span v-for="floor in comments">
                 <div class="floor">
-                    <hr/>
+                    <!--<hr/>-->
                     <dl class='comment_item comment_topic'>
-                    <div class="replyDiv">
+                    <div class="replyDiv comment_reply" >
                         <dt class='comment_head'>
                         <span> {{floor.floorComment.floorId}} 楼</span>&nbsp;&nbsp;&nbsp;&nbsp;
                         <span class='floorInfo'
@@ -216,19 +216,18 @@
                                  :title='floor.floorComment.email'/>
                         </a>
                         </dd>
-                        <dd class='comment_body'> [@{{floor.floorComment.toUser}}] : <span
-                                v-html="floor.floorComment.comment"></span>  </dd>
+                        <dd class='comment_body'> [@{{floor.floorComment.toUser}}] :
+                            <span v-html="floor.floorComment.comment" style="word-break: break-all;" ></span>
+                        </dd>
                     </div>
 
-                    <div class='replyDiv comment_reply' v-for="reply in floor.replies">
+                    <div class='replyDiv comment_reply' style="margin-left:100px" v-for="reply in floor.replies">
                         <dl class='comment_item'>
                         <dt class='comment_head'>
                         Re:
                         <span class='floorInfo'
-                              :floorId='reply.floorId'
-                              :commentId='reply.commentId'
-                              :name='reply.name'
-                              :role="reply.role"
+                              :floorId='reply.floorId' :commentId='reply.commentId'
+                              :name='reply.name' :role="reply.role"
                         >
                         <span name='commenter' class='text-warning'> {{reply.name}} </span>&nbsp;&nbsp;&nbsp;&nbsp;
                         <span name='role' class='text-error'>[{{reply.role}}]</span>&nbsp;&nbsp;&nbsp;&nbsp;
@@ -249,12 +248,15 @@
                             <img :src='reply.headImgUrl' width='40' height='40' :title='reply.email'/>
                         </a>
                         </dd>
-                        <dd class='comment_body'> [@{{reply.toUser}}] : <span
-                                v-html="reply.comment"></span>  </dd>
+                        <dd class='comment_body'> [@{{reply.toUser}}] :
+                            <span v-html="reply.comment" style="word-break: break-all;" ></span>
+                        </dd>
                         </dl>
                     </div>
                     </dl>
                 </div>
+
+                <div class="replyDiv comment_reply" style="width:980px; height: 20px;margin-top:-2px;margin-left:60px"></div>
             </span>
         </div>
 

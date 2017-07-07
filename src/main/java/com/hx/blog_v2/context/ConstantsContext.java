@@ -121,6 +121,8 @@ public class ConstantsContext {
         DEFAULT_ALLOW_TAG_COMMENT_SENSETIVE_TAGS.remove("html");
         DEFAULT_ALLOW_TAG_COMMENT_SENSETIVE_TAGS.remove("body");
         DEFAULT_ALLOW_TAG_COMMENT_SENSETIVE_TAGS.remove("img");
+        DEFAULT_ALLOW_TAG_COMMENT_SENSETIVE_TAGS.remove("div");
+        DEFAULT_ALLOW_TAG_COMMENT_SENSETIVE_TAGS.remove("span");
     }
 
     @Autowired
