@@ -141,6 +141,10 @@ public class CommentSaveHandler extends BizHandlerAdapter {
                 cacheContext.todaysStatistics().incCommentCnt(1);
                 cacheContext.now5SecStatistics().incCommentCnt(1);
                 cacheContext.latestComments().put(po.getId(), po);
+            } else {
+                if (cacheContext.latestComments().get(po.getId()) != null) {
+                    cacheContext.refreshLatestComments();
+                }
             }
 
             // 不能取到 pageNo, 因此 只能删掉当前blog所有的缓存了

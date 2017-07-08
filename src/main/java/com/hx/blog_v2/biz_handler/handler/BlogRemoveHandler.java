@@ -151,12 +151,13 @@ public class BlogRemoveHandler extends BizHandlerAdapter {
             } else {
                 cacheContext.sumStatistics().incBlogCnt(-1);
             }
+
             cacheContext.updateBlogInMonthFacet(po.getCreatedAtMonth(), false);
+            cacheContext.allBlog().evict(po.getId());
+            cacheContext.allTagIds().evict(po.getId());
             if(cacheContext.latestBlogs().get(po.getId()) != null) {
-                cacheContext.latestBlogs().evict(po.getId());
                 cacheContext.refreshLatestBlogs();
             }
-            cacheContext.allBlog().evict(po.getId());
 
             RolePO role = cacheContext.roleByName(constants.roleAdmin);
             if (role != null) {

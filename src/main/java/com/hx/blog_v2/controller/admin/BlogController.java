@@ -100,6 +100,7 @@ public class BlogController {
     }
 
     @RequestMapping(value = "/adminUpdate", method = RequestMethod.POST)
+    @BizHandle(handler = "blogSaveHandler")
     public Result adminUpdate(BlogSaveForm params) {
         Result errResult = blogSaveValidator.validate(params, null);
         if (!errResult.isSuccess()) {
@@ -114,6 +115,7 @@ public class BlogController {
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST)
+    @BizHandle(handler = "blogSaveHandler")
     public Result update(BlogSaveForm params) {
         Result errResult = blogSaveValidator.validate(params, null);
         if (!errResult.isSuccess()) {

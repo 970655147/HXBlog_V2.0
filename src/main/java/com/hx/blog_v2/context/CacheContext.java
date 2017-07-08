@@ -1199,7 +1199,8 @@ public class CacheContext {
         Result latestBlogResult = blogDao.list(latestBlogCriteria, Criteria.sortBy("created_at", SortByCriteria.DESC), latestBlogLimit);
         if (latestBlogResult.isSuccess()) {
             List<BlogPO> latestBlogsFromDb = (List<BlogPO>) latestBlogResult.getData();
-            for (BlogPO po : latestBlogsFromDb) {
+            for (int i = latestBlogsFromDb.size() - 1; i >= 0; i--) {
+                BlogPO po = latestBlogsFromDb.get(i);
                 latestBlogs.put(po.getId(), po);
             }
         } else {
@@ -1237,8 +1238,9 @@ public class CacheContext {
         LimitCriteria latestCommentLimit = Criteria.limit(0, Tools.optInt(constantsContext.allSystemConfig(), "latest.blog.cnt", 5));
         Result latestCommentResult = blogCommentDao.list(latestCommentCriteria, Criteria.sortBy("created_at", SortByCriteria.DESC), latestCommentLimit);
         if (latestCommentResult.isSuccess()) {
-            List<BlogCommentPO> latestBlogsFromDb = (List<BlogCommentPO>) latestCommentResult.getData();
-            for (BlogCommentPO po : latestBlogsFromDb) {
+            List<BlogCommentPO> latestCommentsFromDb = (List<BlogCommentPO>) latestCommentResult.getData();
+            for (int i = latestCommentsFromDb.size() - 1; i >= 0; i--) {
+                BlogCommentPO po = latestCommentsFromDb.get(i);
                 latestComments.put(po.getId(), po);
             }
         } else {

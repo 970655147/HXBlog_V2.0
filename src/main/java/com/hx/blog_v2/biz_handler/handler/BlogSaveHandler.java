@@ -110,6 +110,10 @@ public class BlogSaveHandler extends BizHandlerAdapter {
                 } else {
                     cacheContext.allBlog().evict(params.getId());
                     cacheContext.allTagIds().evict(params.getId());
+
+                    if (cacheContext.latestBlogs().get(params.getId()) != null) {
+                        cacheContext.refreshLatestBlogs();
+                    }
                 }
 
                 RolePO role = cacheContext.roleByName(constants.roleAdmin);

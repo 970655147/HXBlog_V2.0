@@ -86,9 +86,9 @@ public class CommentRemoveHandler extends BizHandlerAdapter {
             cacheContext.todaysStatistics().incCommentCnt(-1);
             cacheContext.now5SecStatistics().incCommentCnt(-1);
             if (cacheContext.latestComments().get(po.getId()) != null) {
-                cacheContext.latestComments().evict(po.getId());
                 cacheContext.refreshLatestComments();
             }
+
             // 不能取到 pageNo, 因此 只能删掉当前blog所有的缓存了
             Cache<String, List<List<CommentVO>>> allComments = cacheContext.allComment();
             for (String key : allComments.keys()) {

@@ -1,9 +1,11 @@
 package com.hx.blog_v2.domain.validator;
 
 import com.hx.blog_v2.context.ConstantsContext;
+import com.hx.blog_v2.context.WebContext;
 import com.hx.blog_v2.domain.ErrorCode;
 import com.hx.blog_v2.domain.form.CommentSaveForm;
 import com.hx.blog_v2.util.BizUtils;
+import com.hx.blog_v2.util.BlogConstants;
 import com.hx.blog_v2.util.ElementHandler;
 import com.hx.blog_v2.util.ResultUtils;
 import com.hx.common.interf.common.Result;
@@ -63,7 +65,8 @@ public class CommentSaveValidator extends ConfigRefreshableValidator<CommentSave
             }
         }
 
-        if (!Tools.isEmpty(form.getName())) {
+        boolean isLogin = WebContext.getAttributeFromSession(BlogConstants.SESSION_USER_ID) != null;
+        if ((!isLogin) || (!Tools.isEmpty(form.getName()))) {
             Result result = userNameValidator.validate(form.getName(), extra);
             if (!result.isSuccess()) {
                 return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " 用户名格式不合法 ! ");
@@ -73,7 +76,7 @@ public class CommentSaveValidator extends ConfigRefreshableValidator<CommentSave
         if (!result.isSuccess()) {
             return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " 用户名格式不合法 ! ");
         }
-        if (!Tools.isEmpty(form.getEmail())) {
+        if ((!isLogin) || (!Tools.isEmpty(form.getEmail()))) {
             result = emailValidator.validate(form.getEmail(), extra);
             if (!result.isSuccess()) {
                 return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " email 格式不合法 ! ");
@@ -85,9 +88,11 @@ public class CommentSaveValidator extends ConfigRefreshableValidator<CommentSave
                 return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " requestIp 格式不合法 ! ");
             }
         }
-        result = urlValidator.validate(form.getHeadImgUrl(), extra);
-        if (!result.isSuccess()) {
-            return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " 头像url 格式不合法 ! ");
+        if ((!isLogin) || (!Tools.isEmpty(form.getHeadImgUrl()))) {
+            result = urlValidator.validate(form.getHeadImgUrl(), extra);
+            if (!result.isSuccess()) {
+                return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " 头像url 格式不合法 ! ");
+            }
         }
         result = commentContentValidator.validate(form.getComment(), extra);
         if (!result.isSuccess()) {

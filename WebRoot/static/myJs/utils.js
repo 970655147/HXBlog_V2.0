@@ -519,5 +519,21 @@ function detransferQuote(str) {
     return detransfer(str, ['\'', '"'], "\\")
 }
 
+/**
+ * 将arr中的所有元素旋转一次
+ * @param arr
+ */
+function reverse(arr) {
+    if (arr &&
+        (typeof arr === 'object' && Array === arr.constructor)) {
+        var halfOf = (arr.length >>> 1);
+        for (var i = 0; i < halfOf; i++) {
+            var tmp = arr[i]
+            arr[i] = arr[arr.length - i - 1]
+            arr[arr.length - i - 1] = tmp
+        }
+    }
+}
+
 // -------------------------------------------------- to be continued ------------------------------------------------
 

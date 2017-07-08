@@ -36,6 +36,7 @@ function contentInit() {
         },
         methods: {
             initLatestBlogs : function(that) {
+                reverse(that.latestBlogs)
                 if(that.latestBlogs.length <= 2) {
                     that.latestBlogL1 = that.latestBlogs
                 } else {

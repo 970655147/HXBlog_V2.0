@@ -181,7 +181,6 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
         addReply: function (id, blogId, floorId, commentId, toUser, comment) {
             var html = new StringBuilder();
             html.append('<form id="addReplyForm" class="layui-form layui-form-pane" action="/admin/comment/reply" method="post">')
-            html.append('<input type="hidden" name="id" value="' + id + '"/>')
             html.append('<input type="hidden" name="blogId" value="' + blogId + '"/>')
             html.append('<input type="hidden" name="floorId" value="' + floorId + '"/>')
             html.append('<input type="hidden" name="commentId" value="' + commentId + '"/>')
