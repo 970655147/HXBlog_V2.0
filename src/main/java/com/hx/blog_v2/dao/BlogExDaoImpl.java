@@ -58,6 +58,7 @@ public class BlogExDaoImpl extends BaseDaoImpl<BlogExPO> implements BlogExDao {
         }
 
         if (po != null) {
+            cacheContext.putBlogEx(po);
             return ResultUtils.success(po);
         }
         return ResultUtils.failed("记录不存在 !");

@@ -44,7 +44,7 @@ public class CommentController {
     private PageValidator pageValidator;
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    @BizHandle(handler = "commentAddHandler")
+    @BizHandle(handler = "commentSaveHandler")
     public Result add(CommentSaveForm params) {
         Result errResult = commentSaveValidator.validate(params, null);
         if (!errResult.isSuccess()) {
@@ -87,6 +87,7 @@ public class CommentController {
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST)
+    @BizHandle(handler = "commentSaveHandler")
     public Result update(CommentSaveForm params) {
         Result errResult = commentSaveValidator.validate(params, null);
         if (!errResult.isSuccess()) {

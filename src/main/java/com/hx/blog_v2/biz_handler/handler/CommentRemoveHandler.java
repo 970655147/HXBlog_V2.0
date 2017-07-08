@@ -9,7 +9,9 @@ import com.hx.blog_v2.dao.interf.BlogExDao;
 import com.hx.blog_v2.domain.form.BeanIdForm;
 import com.hx.blog_v2.domain.po.BlogCommentPO;
 import com.hx.blog_v2.domain.po.BlogExPO;
+import com.hx.blog_v2.domain.vo.CommentVO;
 import com.hx.blog_v2.util.BlogConstants;
+import com.hx.common.interf.cache.Cache;
 import com.hx.common.interf.common.Result;
 import com.hx.log.util.Tools;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,7 @@ import org.springframework.stereotype.Component;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 /**
  * BlogSaveHandler
@@ -78,11 +81,22 @@ public class CommentRemoveHandler extends BizHandlerAdapter {
 
                 BlogExPO exPo = ((BlogExPO) getExResult.getData());
                 exPo.incCommentCnt(-1);
-                cacheContext.putBlogEx(exPo);
             }
 
             cacheContext.todaysStatistics().incCommentCnt(-1);
             cacheContext.now5SecStatistics().incCommentCnt(-1);
+            if (cacheContext.latestComments().get(po.getId()) != null) {
+                cacheContext.latestComments().evict(po.getId());
+                cacheContext.refreshLatestComments();
+            }
+            // 不能取到 pageNo, 因此 只能删掉当前blog所有的缓存了
+            Cache<String, List<List<CommentVO>>> allComments = cacheContext.allComment();
+            for (String key : allComments.keys()) {
+                if(key.startsWith(po.getBlogId())) {
+                    allComments.evict(key);
+                }
+            }
+
         }
     }
 

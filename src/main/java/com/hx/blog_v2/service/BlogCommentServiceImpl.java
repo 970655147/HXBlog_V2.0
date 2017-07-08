@@ -32,7 +32,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 
 /**
  * BlogServiceImpl
@@ -75,27 +78,24 @@ public class BlogCommentServiceImpl extends BaseServiceImpl<BlogCommentPO> imple
         if (!saveResult.isSuccess()) {
             return saveResult;
         }
+        WebContext.setAttributeForRequest(BlogConstants.REQUEST_DATA, po);
         return ResultUtils.success(po.getId());
     }
 
     @Override
     public Result list(BeanIdForm params, Page<List<CommentVO>> page) {
-        String selectSql = " select * from blog_comment where blog_id = ? and deleted = 0 and floor_id in ( %s ) order by created_at asc ";
-        String selectFloorSql = " select distinct(floor_id) as floor_id from blog_comment where blog_id = ? and deleted = 0 order by floor_id asc limit ?, ? ";
         String countSql = " select count(distinct(floor_id)) as totalRecord from blog_comment where blog_id = ? and deleted = 0 ";
-
         Object[] sqlParams = new Object[]{params.getId()};
         Integer totalRecord = jdbcTemplate.queryForObject(countSql, sqlParams, new OneIntMapper("totalRecord"));
+
         if (totalRecord <= 0) {
             page.setList(Collections.<List<CommentVO>>emptyList());
         } else {
-            // 1, 2 可以折叠, 可惜 我的 mysql 似乎 是不支持 limit 作为子查询
-            List<Integer> floorIds = jdbcTemplate.query(selectFloorSql, new Object[]{params.getId(), page.recordOffset(), page.getPageSize()}, new OneIntMapper("floor_id"));
-            List<CommentVO> comments = Collections.emptyList();
-            if (!Tools.isEmpty(floorIds)) {
-                comments = jdbcTemplate.query(String.format(selectSql, SqlUtils.wrapInSnippetForIds(floorIds)), sqlParams, new CommentVOMapper());
+            Result getCommentResult = commentDao.getCommentFor(params, page);
+            if (!getCommentResult.isSuccess()) {
+                return getCommentResult;
             }
-            List<List<CommentVO>> result = generateCommentTree(comments);
+            List<List<CommentVO>> result = (List<List<CommentVO>>) getCommentResult.getData();
             page.setList(result);
         }
 
@@ -171,6 +171,11 @@ public class BlogCommentServiceImpl extends BaseServiceImpl<BlogCommentPO> imple
             return getResult;
         }
 
+        // 如果是删除的层主的回复, 删掉子回复
+        BlogCommentPO po = (BlogCommentPO) getResult.getData();
+        if ("1".equals(po.getCommentId())) {
+            query = Criteria.eq("floor_id", po.getFloorId());
+        }
         String updatedAt = DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
         IUpdateCriteria update = Criteria.set("deleted", "1").add("updated_at", updatedAt);
         Result result = commentDao.update(query, update);
@@ -178,7 +183,6 @@ public class BlogCommentServiceImpl extends BaseServiceImpl<BlogCommentPO> imple
             return result;
         }
 
-        BlogCommentPO po = (BlogCommentPO) getResult.getData();
         WebContext.setAttributeForRequest(BlogConstants.REQUEST_DATA, po);
         return ResultUtils.success(params.getId());
     }
@@ -287,34 +291,6 @@ public class BlogCommentServiceImpl extends BaseServiceImpl<BlogCommentPO> imple
             condSql.append(" and c.floor_id = ? ");
             selectParams.add(params.getFloorId());
         }
-    }
-
-    /**
-     * 生成评论树
-     *
-     * @param comments comments
-     * @return com.hx.json.JSONArray
-     * @author Jerry.X.He
-     * @date 5/28/2017 2:48 PM
-     * @since 1.0
-     */
-    public List<List<CommentVO>> generateCommentTree(List<CommentVO> comments) {
-        Map<String, List<CommentVO>> commentsByFloor = new LinkedHashMap<>();
-        for (CommentVO comment : comments) {
-            List<CommentVO> floorComments = commentsByFloor.get(comment.getFloorId());
-            if (floorComments == null) {
-                floorComments = new ArrayList<>();
-                commentsByFloor.put(comment.getFloorId(), floorComments);
-            }
-
-            floorComments.add(comment);
-        }
-
-        List<List<CommentVO>> result = new ArrayList<>(commentsByFloor.size());
-        for (Map.Entry<String, List<CommentVO>> entry : commentsByFloor.entrySet()) {
-            result.add(entry.getValue());
-        }
-        return result;
     }
 
 

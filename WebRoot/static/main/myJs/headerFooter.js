@@ -65,7 +65,7 @@ function headerFooterInit() {
                 initTags(tags)
 
                 var hotBlogsEle = $("[name='hotBlogsEle']")
-                for (idx in data.hotBlogs) {
+                for (var idx=data.hotBlogs.length-1; idx>=0; idx--) {
                     var blog = data.hotBlogs[idx]
                     hotBlogsEle.append(
                         "<div class='blog-grids wow fadeInDown' data-wow-duration='.8s' data-wow-delay='.2s'> " +
@@ -101,11 +101,11 @@ function headerFooterInit() {
 
 
                 var latestComments = $("[name='latestCommentsEle']")
-                for (idx in data.latestComments) {
+                for (var idx=data.latestComments.length-1; idx>=0; idx--) {
                     var comment = data.latestComments[idx]
                     latestComments.append(
                         "<span>" +
-                        "<a href='/static/main/blogDetail.html?id=" + comment.blogId + "'>" + comment.name + "@" + comment.toUser + " </a> - <span>" + comment.createdAt + "</span> " +
+                        "<span name='latestCommentTitle' ><a href='/static/main/blogDetail.html?id=" + comment.blogId + "'>" + comment.name + "@" + comment.toUser + " </a> - <span>" + comment.createdAt + "</span> </span> " +
                         "</span>" +
                         "<p>" +
                         "<span class='sourceText' style='word-break: break-all;' >" + comment.comment + "</span>" +

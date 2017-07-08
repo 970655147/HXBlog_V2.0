@@ -42,6 +42,7 @@ layui.define(['element', 'laypage', 'layer', 'form', 'pagesize'], function (expo
                         html.append('<td>' + key + '</td>')
                         html.append('<td>' + value + '</td>')
                         html.append('<td><button class="layui-btn layui-btn-small layui-btn-normal" onclick="layui.funcs.showData(\'' + transferQuote(encodeURI(key)) + '\', \'' + transferQuote(encodeURI(value)) + '\')"><i class="layui-icon">&#x1005;</i></button></td>')
+                        html.append('<td><button class="layui-btn layui-btn-small layui-btn-normal" onclick="layui.funcs.visitInfo(\'' + key + '\')"><i class="layui-icon">&#xe60b;</i></button></td>')
                         html.append('<td><button class="layui-btn layui-btn-small layui-btn-danger" onclick="layui.funcs.deleteData(\'' + transferQuote(encodeURI(key)) + '\')"><i class="layui-icon">&#xe640;</i></button></td>')
                         html.append('</tr>')
                     }
@@ -51,7 +52,7 @@ layui.define(['element', 'laypage', 'layer', 'form', 'pagesize'], function (expo
         });
     }
 
-    var showMsgDialog
+    var showMsgDialog, visitInfoDialog
     form.on('submit(refreshBtn)', function (data) {
         refresh()
         return false
@@ -72,6 +73,10 @@ layui.define(['element', 'laypage', 'layer', 'form', 'pagesize'], function (expo
         layer.close(showMsgDialog)
         return false
     })
+    form.on('submit(visitInfoFormSubmit)', function (data) {
+        layer.close(visitInfoDialog)
+        return false
+    })
 
     var funcs = {
         showData: function (key, value) {
@@ -79,10 +84,10 @@ layui.define(['element', 'laypage', 'layer', 'form', 'pagesize'], function (expo
             value = decodeURI(detransferQuote(value))
             var html = new StringBuilder();
             html.append('<div id="showMsgForm" class="layui-form layui-form-pane" action="#" method="post">')
-            html.append('<label class="layui-form-label" style="border: none" > key : </label>')
+            html.append('<label class="layui-form-label" style="border: none" > key </label>')
             html.append('<textarea style="width:87%;margin-left:60px; color: #000!important; height:40px" name="params" class="layui-area" readonly > ' + key + '</textarea>')
             html.append('<hr>')
-            html.append('<label class="layui-form-label" style="border: none" > 值 : </label>')
+            html.append('<label class="layui-form-label" style="border: none" > 值 </label>')
             html.append('<textarea style="width:87%;margin-left:60px; color: #000!important; height:200px" name="params" class="layui-area" readonly > ' + prettyJson(value) + '</textarea>')
             html.append('<hr>')
             html.append('<div class="layui-form-item">')
@@ -99,7 +104,62 @@ layui.define(['element', 'laypage', 'layer', 'form', 'pagesize'], function (expo
                 title: '查看回复',
                 content: html.toString()
             });
-            consumeMessage(id)
+        },
+        visitInfo: function (key) {
+            key = decodeURI(detransferQuote(key))
+
+            ajax({
+                url: reqMap.cache.cacheVisitInfo,
+                data: {
+                    type: sTypeNow,
+                    id: key
+                },
+                type: 'GET',
+                success: function (resp) {
+                    if (resp.success) {
+                        var visitInfo = resp.data
+                        var html = new StringBuilder();
+                        html.append('<div id="showMsgForm" class="layui-form layui-form-pane" action="#" method="post">')
+                        html.append('<label class="layui-form-label" style="border: none" > key </label>')
+                        html.append('<textarea style="width:87%;margin-left:60px; color: #000!important; height:40px" name="params" class="layui-area" readonly > ' + key + '</textarea>')
+                        html.append('<hr>')
+                        html.append('<label class="layui-form-label" style="border: none" > 值 </label>')
+                        html.append('<textarea style="width:87%;margin-left:60px; color: #000!important; height:200px" name="params" class="layui-area" readonly > ' + prettyJson(visitInfo.value) + '</textarea>')
+                        html.append('<hr>')
+                        html.append('<label class="layui-form-label" style="border: none" > accessCnt </label>')
+                        html.append('<input style="width:87%;margin: auto;color: #000!important;" class="layui-input" value="' + visitInfo.accessCount + '" readonly >')
+                        html.append('<hr>')
+                        html.append('<label class="layui-form-label" style="border: none" > createdAt </label>')
+                        html.append('<input style="width:87%;margin: auto;color: #000!important;" class="layui-input" value="' + new Date(visitInfo.createdAt).format("yyyy-MM-dd hh:mm:ss") + '" readonly >')
+                        html.append('<hr>')
+                        html.append('<label class="layui-form-label" style="border: none" > lastAccess </label>')
+                        html.append('<input style="width:87%;margin: auto;color: #000!important;" class="layui-input" value="' + new Date(visitInfo.lastAccessed).format("yyyy-MM-dd hh:mm:ss") + '" readonly >')
+                        html.append('<hr>')
+                        html.append('<label class="layui-form-label" style="border: none" > lastUpdated </label>')
+                        html.append('<input style="width:87%;margin: auto;color: #000!important;" class="layui-input" value="' + new Date(visitInfo.lastUpdated).format("yyyy-MM-dd hh:mm:ss") + '" readonly >')
+                        html.append('<hr>')
+                        html.append('<label class="layui-form-label" style="border: none" > ttl </label>')
+                        html.append('<input style="width:87%;margin: auto;color: #000!important;" class="layui-input" value="' + visitInfo.ttl + '" readonly >')
+                        html.append('<hr>')
+                        html.append('<div class="layui-form-item">')
+                        html.append('<div class="layui-input-inline" style="margin:10px auto 0 auto;display: block;float: none;">')
+                        html.append('<button class="layui-btn" id="submit"  lay-submit="" lay-filter="visitInfoFormSubmit">确认</button>')
+                        html.append('</div>')
+                        html.append('</div>')
+                        html.append('</div>')
+
+                        visitInfoDialog = layer.open({
+                            type: 1,
+                            skin: 'layui-layer-rim', //加上边框
+                            area: ['800px', '600px'], //宽高
+                            title: '查看回复',
+                            content: html.toString()
+                        });
+                    } else {
+                        layer.alert("拉取访问信息失败[" + resp.data + "] !", {icon: 5});
+                    }
+                }
+            });
         },
         deleteData: function (key) {
             layer.confirm('删除对应缓存，确定删除？', {

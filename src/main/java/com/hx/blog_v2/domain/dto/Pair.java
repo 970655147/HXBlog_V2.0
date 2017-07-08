@@ -7,7 +7,7 @@ package com.hx.blog_v2.domain.dto;
  * @version 1.0
  * @date 6/18/2017 7:38 PM
  */
-public class Pair<T1, T2> {
+public class Pair<T1 extends Comparable<T1>, T2> implements Comparable<Pair<T1, T2>> {
 
     private T1 left;
     private T2 right;
@@ -35,4 +35,17 @@ public class Pair<T1, T2> {
     public void setRight(T2 right) {
         this.right = right;
     }
+
+    @Override
+    public int compareTo(Pair<T1, T2> o) {
+        if (this.getLeft() == null) {
+            if (o.getLeft() == null) {
+                return 0;
+            }
+            return -1;
+        }
+
+        return this.getLeft().compareTo(o.getLeft());
+    }
+
 }

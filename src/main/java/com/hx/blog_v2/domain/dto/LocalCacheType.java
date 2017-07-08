@@ -45,7 +45,19 @@ public enum LocalCacheType implements Code2Msg<String, String> {
     /**
      * 黑名单缓存
      */
-    BLACK_LIST("8", "blackList");
+    BLACK_LIST("8", "blackList"),
+    /**
+     * 博客缓存
+     */
+    BLOG("9", "blog"),
+    /**
+     * blogId -> tagIds
+     */
+    BLOG_2_TAG_IDS("10", "blogId2TagIds"),
+    /**
+     * (blogId, pageNo) -> [comment ]
+     */
+    BLOG_ID_PAGE_NO_2_COMMENT("11", "blogIdPageNo2Comment");
 
     /**
      * type -> imageType

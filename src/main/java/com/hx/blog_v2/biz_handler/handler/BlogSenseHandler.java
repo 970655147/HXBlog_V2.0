@@ -110,7 +110,6 @@ public class BlogSenseHandler extends BizHandlerAdapter {
         if (params.getScore() > 0) {
             po.incGoodCnt(params.getScore(), 1);
         }
-        cacheContext.putBlogEx(po);
         return ResultUtils.success("success");
     }
 

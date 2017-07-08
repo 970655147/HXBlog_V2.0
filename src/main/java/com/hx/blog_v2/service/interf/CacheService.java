@@ -1,6 +1,6 @@
 package com.hx.blog_v2.service.interf;
 
-import com.hx.blog_v2.domain.form.CacheRemoveForm;
+import com.hx.blog_v2.domain.form.CacheDetailForm;
 import com.hx.blog_v2.domain.form.CacheSearchForm;
 import com.hx.common.interf.common.Result;
 
@@ -43,6 +43,16 @@ public interface CacheService {
      * @since 1.0
      */
     Result cacheDetail(CacheSearchForm params);
+
+    /**
+     * 获取缓存的访问信息
+     *
+     * @return
+     * @author Jerry.X.He
+     * @date 6/11/2017 9:45 AM
+     * @since 1.0
+     */
+    Result cacheVisitInfo(CacheDetailForm params);
 
     /**
      * 刷新所有的配置
@@ -152,6 +162,6 @@ public interface CacheService {
      * @date 6/11/2017 9:45 AM
      * @since 1.0
      */
-    Result cacheRemove(CacheRemoveForm params);
+    Result cacheRemove(CacheDetailForm params);
 
 }

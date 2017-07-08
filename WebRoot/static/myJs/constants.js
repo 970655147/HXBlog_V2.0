@@ -304,6 +304,7 @@ var reqMap = {
         cacheSummary: formatContextUrl("/admin/cache/cacheSummary"),
         localCacheSummary: formatContextUrl("/admin/cache/localCacheSummary"),
         cacheDetail : formatContextUrl("/admin/cache/cacheDetail"),
+        cacheVisitInfo : formatContextUrl("/admin/cache/cacheVisitInfo"),
         refreshAll: formatContextUrl("/admin/cache/refreshAll"),
         refreshAllCached: formatContextUrl("/admin/cache/refreshAllCached"),
         refreshTableCached: formatContextUrl("/admin/cache/refreshTableCached"),

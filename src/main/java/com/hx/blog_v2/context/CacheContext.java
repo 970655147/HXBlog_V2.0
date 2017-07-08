@@ -5,6 +5,7 @@ import com.hx.blog_v2.domain.dto.StatisticsInfo;
 import com.hx.blog_v2.domain.form.BlogSenseForm;
 import com.hx.blog_v2.domain.form.BlogVisitLogForm;
 import com.hx.blog_v2.domain.po.*;
+import com.hx.blog_v2.domain.vo.CommentVO;
 import com.hx.blog_v2.util.*;
 import com.hx.common.interf.cache.Cache;
 import com.hx.common.interf.common.Result;
@@ -12,12 +13,15 @@ import com.hx.json.JSONArray;
 import com.hx.json.JSONObject;
 import com.hx.log.alogrithm.tree.TreeUtils;
 import com.hx.log.alogrithm.tree.interf.TreeInfoExtractor;
+import com.hx.log.cache.mem.FIFOMCache;
 import com.hx.log.cache.mem.LRUMCache;
 import com.hx.log.cache.mem.UniverseCache;
 import com.hx.log.util.Log;
 import com.hx.log.util.Tools;
 import com.hx.mongo.criteria.Criteria;
+import com.hx.mongo.criteria.LimitCriteria;
 import com.hx.mongo.criteria.SortByCriteria;
+import com.hx.mongo.criteria.interf.IQueryCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
@@ -42,7 +46,7 @@ public class CacheContext {
     /**
      * blogSense 的key 的分隔符
      */
-    public static final String BLOG_SENSE_KEY_SEP = "&%$";
+    public static final String BLOG_SENSE_KEY_SEP = "$$$";
     /**
      * 刷新缓存了表的所有的数据的缓存的标志位
      */
@@ -81,6 +85,10 @@ public class CacheContext {
     private BlogCreateTypeDao blogCreateTypeDao;
     @Autowired
     private BlogSenseDao blogSenseDao;
+    @Autowired
+    private BlogDao blogDao;
+    @Autowired
+    private BlogCommentDao blogCommentDao;
     @Autowired
     private BlogExDao blogExDao;
     @Autowired
@@ -156,6 +164,18 @@ public class CacheContext {
      * requestIp[_create_at_day] -> BlogVisitLogPO 的缓存
      */
     private Cache<String, BlogVisitLogPO> requestIp2BlogVisitLog;
+    /**
+     * blogId -> blogId 的缓存
+     */
+    private Cache<String, BlogPO> id2Blog;
+    /**
+     * blogId -> tagIds 的缓存
+     */
+    private Cache<String, List<String>> blogId2TagIds;
+    /**
+     * blogId_pageNo -> [comment ] 的缓存
+     */
+    private Cache<String, List<List<CommentVO>>> blogIdPage2Comment;
 
     /**
      * 今天的统计数据
@@ -199,6 +219,14 @@ public class CacheContext {
      * 黑名单中的信息
      */
     private Cache<String, String> blackList;
+    /**
+     * 缓存的最近的博客的信息
+     */
+    private Cache<String, BlogPO> latestBlogs;
+    /**
+     * 缓存的最近的评论的信息
+     */
+    private Cache<String, BlogCommentPO> latestComments;
 
     /**
      * 上一次访问 all5SecStatistics 的时间戳
@@ -268,6 +296,9 @@ public class CacheContext {
             blogIdUserInfo2Sense.clear();
             blogId2BlogEx.clear();
             requestIp2BlogVisitLog.clear();
+            id2Blog.clear();
+            blogId2TagIds.clear();
+            blogIdPage2Comment.clear();
         }
 
         if (BizUtils.flagExists(clearFlag, REFRESH_STATISTICS_CACHED)) {
@@ -278,6 +309,9 @@ public class CacheContext {
             now5SecStatistics = new StatisticsInfo();
             all5SecStatistics.clear();
             monthFacet.clear();
+
+            latestBlogs.clear();
+            latestComments.clear();
         }
 
         if (BizUtils.flagExists(clearFlag, REFRESH_OTHER_CACHED)) {
@@ -693,7 +727,7 @@ public class CacheContext {
     }
 
     /**
-     * 获取参数相关的 BlogSense
+     * 获取参数相关的 BlogVisitLog
      *
      * @param params params
      * @return java.lang.Boolean
@@ -715,6 +749,82 @@ public class CacheContext {
 
     public Cache<String, BlogVisitLogPO> allBlogVisitLog() {
         return requestIp2BlogVisitLog;
+    }
+
+    /**
+     * 获取参数相关的 Blog
+     *
+     * @param id id
+     * @return java.lang.Boolean
+     * @author Jerry.X.He
+     * @date 6/6/2017 8:32 PM
+     * @since 1.0
+     */
+    public BlogPO getBlog(String id) {
+        return id2Blog.get(id);
+    }
+
+    public void putBlog(String id, BlogPO po) {
+        id2Blog.put(id, po);
+    }
+
+    public BlogPO removeBlog(String id) {
+        return id2Blog.evict(id);
+    }
+
+    public Cache<String, BlogPO> allBlog() {
+        return id2Blog;
+    }
+
+    /**
+     * 获取参数相关的 tagIds
+     *
+     * @param blogId blogId
+     * @return java.lang.Boolean
+     * @author Jerry.X.He
+     * @date 6/6/2017 8:32 PM
+     * @since 1.0
+     */
+    public List<String> getTagIds(String blogId) {
+        return blogId2TagIds.get(blogId);
+    }
+
+    public void putTagIds(String blogId, List<String> tagIds) {
+        blogId2TagIds.put(blogId, tagIds);
+    }
+
+    public List<String> removeTagIds(String blogId) {
+        return blogId2TagIds.evict(blogId);
+    }
+
+    public Cache<String, List<String>> allTagIds() {
+        return blogId2TagIds;
+    }
+
+    /**
+     * 获取参数相关的 评论列表
+     *
+     * @param blogId blogId
+     * @param pageNo pageNo
+     * @return java.lang.Boolean
+     * @author Jerry.X.He
+     * @date 6/6/2017 8:32 PM
+     * @since 1.0
+     */
+    public List<List<CommentVO>> getComment(String blogId, String pageNo) {
+        return blogIdPage2Comment.get(generateBlogIdPageNoKey(blogId, pageNo));
+    }
+
+    public void putComment(String blogId, String pageNo, List<List<CommentVO>> po) {
+        blogIdPage2Comment.put(generateBlogIdPageNoKey(blogId, pageNo), po);
+    }
+
+    public List<List<CommentVO>> removeComment(String blogId, String pageNo) {
+        return blogIdPage2Comment.evict(generateBlogIdPageNoKey(blogId, pageNo));
+    }
+
+    public Cache<String, List<List<CommentVO>>> allComment() {
+        return blogIdPage2Comment;
     }
 
     /**
@@ -879,6 +989,9 @@ public class CacheContext {
      */
     public JSONArray localCachedCapacities() {
         JSONArray result = new JSONArray();
+        result.add(id2Blog.capacity());
+        result.add(blogId2TagIds.capacity());
+        result.add(blogIdPage2Comment.capacity());
         result.add(blogId2BlogEx.capacity());
         result.add(requestIp2BlogVisitLog.capacity());
         result.add(blogIdUserInfo2Sense.capacity());
@@ -899,6 +1012,9 @@ public class CacheContext {
      */
     public JSONArray localCachedUsed() {
         JSONArray result = new JSONArray();
+        result.add(id2Blog.size());
+        result.add(blogId2TagIds.size());
+        result.add(blogIdPage2Comment.size());
         result.add(blogId2BlogEx.size());
         result.add(requestIp2BlogVisitLog.size());
         result.add(blogIdUserInfo2Sense.size());
@@ -1057,6 +1173,84 @@ public class CacheContext {
         return resource2Interfs;
     }
 
+    /**
+     * 获取最近的博客的记录
+     *
+     * @return com.hx.common.interf.cache.Cache<java.lang.String,com.hx.blog_v2.domain.po.BlogPO>
+     * @author Jerry.X.He
+     * @date 7/8/2017 10:34 AM
+     * @since 1.0
+     */
+    public Cache<String, BlogPO> latestBlogs() {
+        return latestBlogs;
+    }
+
+    /**
+     * 加载最近的博客的记录
+     *
+     * @return com.hx.common.interf.cache.Cache<java.lang.String,com.hx.blog_v2.domain.po.BlogPO>
+     * @author Jerry.X.He
+     * @date 7/8/2017 10:34 AM
+     * @since 1.0
+     */
+    public void loadLatestBlogs() {
+        IQueryCriteria latestBlogCriteria = Criteria.and(Criteria.gte("id", 0), Criteria.eq("deleted", 0));
+        LimitCriteria latestBlogLimit = Criteria.limit(0, Tools.optInt(constantsContext.allSystemConfig(), "latest.blog.cnt", 5));
+        Result latestBlogResult = blogDao.list(latestBlogCriteria, Criteria.sortBy("created_at", SortByCriteria.DESC), latestBlogLimit);
+        if (latestBlogResult.isSuccess()) {
+            List<BlogPO> latestBlogsFromDb = (List<BlogPO>) latestBlogResult.getData();
+            for (BlogPO po : latestBlogsFromDb) {
+                latestBlogs.put(po.getId(), po);
+            }
+        } else {
+            Log.err(" error while load latest blog ");
+        }
+    }
+
+    public void refreshLatestBlogs() {
+        latestBlogs.clear();
+        loadLatestBlogs();
+    }
+
+    /**
+     * 获取最近的评论的记录
+     *
+     * @return com.hx.common.interf.cache.Cache<java.lang.String,com.hx.blog_v2.domain.po.BlogPO>
+     * @author Jerry.X.He
+     * @date 7/8/2017 10:34 AM
+     * @since 1.0
+     */
+    public Cache<String, BlogCommentPO> latestComments() {
+        return latestComments;
+    }
+
+    /**
+     * 加载最近的评论的记录
+     *
+     * @return com.hx.common.interf.cache.Cache<java.lang.String,com.hx.blog_v2.domain.po.BlogPO>
+     * @author Jerry.X.He
+     * @date 7/8/2017 10:34 AM
+     * @since 1.0
+     */
+    public void loadLatestComments() {
+        IQueryCriteria latestCommentCriteria = Criteria.eq("deleted", 0);
+        LimitCriteria latestCommentLimit = Criteria.limit(0, Tools.optInt(constantsContext.allSystemConfig(), "latest.blog.cnt", 5));
+        Result latestCommentResult = blogCommentDao.list(latestCommentCriteria, Criteria.sortBy("created_at", SortByCriteria.DESC), latestCommentLimit);
+        if (latestCommentResult.isSuccess()) {
+            List<BlogCommentPO> latestBlogsFromDb = (List<BlogCommentPO>) latestCommentResult.getData();
+            for (BlogCommentPO po : latestBlogsFromDb) {
+                latestComments.put(po.getId(), po);
+            }
+        } else {
+            Log.err(" error while load latest blog ");
+        }
+    }
+
+    public void refreshLatestComments() {
+        latestComments.clear();
+        loadLatestComments();
+    }
+
     // -------------------- 辅助方法 --------------------------
 
     /**
@@ -1072,6 +1266,8 @@ public class CacheContext {
         blogFloor2NextCommentId = new LRUMCache<>(constantsContext.maxCachedBlogFloor2CommentId, false);
         forceOffLineMap = new UniverseCache<>(true);
         blackList = new UniverseCache<>(false);
+        latestBlogs = new FIFOMCache<>(constantsContext.maxLatestBlog, false);
+        latestComments = new FIFOMCache<>(constantsContext.maxLatestComment, false);
 
         digest2UploadedFiles = new LRUMCache<>(constantsContext.maxCachedUploadedImage, false);
         roles2ResourceIds = new LRUMCache<>(constantsContext.maxRoleIds2ResourceIds, false);
@@ -1079,6 +1275,9 @@ public class CacheContext {
         blogIdUserInfo2Sense = new LRUMCache<>(constantsContext.maxSense2Clicked, false);
         blogId2BlogEx = new LRUMCache<>(constantsContext.maxBlogId2BlogEx, false);
         requestIp2BlogVisitLog = new LRUMCache<>(constantsContext.maxRequestIp2BlogVisitLog, false);
+        id2Blog = new LRUMCache<>(constantsContext.maxId2Blog, false);
+        blogId2TagIds = new LRUMCache<>(constantsContext.maxBlogId2TagIds, false);
+        blogIdPage2Comment = new LRUMCache<>(constantsContext.maxBlogIdPageNo2Comment, false);
 
         blogIdUserInfo2Sense.addCacheListener(new JSONTransferableCacheListener<>(blogSenseDao));
         blogId2BlogEx.addCacheListener(new JSONTransferableCacheListener<>(blogExDao));
@@ -1156,6 +1355,9 @@ public class CacheContext {
 
         Map<String, Integer> allMonthFacet = BizUtils.collectMonthFacet(jdbcTemplate);
         monthFacet.putAll(allMonthFacet);
+
+        loadLatestBlogs();
+        loadLatestComments();
     }
 
     /**
@@ -1200,6 +1402,20 @@ public class CacheContext {
      */
     private String generateBlogSenseKey(BlogSenseForm params) {
         return params.getBlogId() + BLOG_SENSE_KEY_SEP + params.getName() + BLOG_SENSE_KEY_SEP + params.getRequestIp() + BLOG_SENSE_KEY_SEP + params.getSense();
+    }
+
+    /**
+     * 生成 blogId 和 pageNo 组合的key
+     *
+     * @param blogId blogId
+     * @param pageNo pageNo
+     * @return java.lang.String
+     * @author Jerry.X.He
+     * @date 7/8/2017 12:02 PM
+     * @since 1.0
+     */
+    private String generateBlogIdPageNoKey(String blogId, String pageNo) {
+        return blogId + BLOG_SENSE_KEY_SEP + pageNo;
     }
 
     /**

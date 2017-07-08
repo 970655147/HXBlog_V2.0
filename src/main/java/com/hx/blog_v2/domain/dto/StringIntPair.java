@@ -22,4 +22,5 @@ public class StringIntPair extends Pair<String, Integer> implements LogisticalId
     public String logisticalId() {
         return getLeft();
     }
+
 }

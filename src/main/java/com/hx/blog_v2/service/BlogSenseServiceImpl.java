@@ -5,9 +5,7 @@ import com.hx.blog_v2.context.WebContext;
 import com.hx.blog_v2.dao.interf.BlogExDao;
 import com.hx.blog_v2.dao.interf.BlogSenseDao;
 import com.hx.blog_v2.domain.dto.SessionUser;
-import com.hx.blog_v2.domain.form.BeanIdForm;
 import com.hx.blog_v2.domain.form.BlogSenseForm;
-import com.hx.blog_v2.domain.po.BlogExPO;
 import com.hx.blog_v2.domain.po.BlogSensePO;
 import com.hx.blog_v2.service.interf.BaseServiceImpl;
 import com.hx.blog_v2.service.interf.BlogSenseService;
@@ -56,7 +54,6 @@ public class BlogSenseServiceImpl extends BaseServiceImpl<BlogSensePO> implement
                 return saveResult;
             }
         }
-        cacheContext.putBlogSense(params, po);
         return ResultUtils.success("success");
     }
 

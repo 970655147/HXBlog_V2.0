@@ -12,12 +12,15 @@ import com.hx.blog_v2.domain.dto.MessageType;
 import com.hx.blog_v2.domain.form.BeanIdForm;
 import com.hx.blog_v2.domain.form.CommentSaveForm;
 import com.hx.blog_v2.domain.form.MessageSaveForm;
+import com.hx.blog_v2.domain.po.BlogCommentPO;
 import com.hx.blog_v2.domain.po.BlogExPO;
 import com.hx.blog_v2.domain.po.BlogPO;
 import com.hx.blog_v2.domain.po.RolePO;
+import com.hx.blog_v2.domain.vo.CommentVO;
 import com.hx.blog_v2.service.interf.MessageService;
 import com.hx.blog_v2.util.BizUtils;
 import com.hx.blog_v2.util.BlogConstants;
+import com.hx.common.interf.cache.Cache;
 import com.hx.common.interf.common.Result;
 import com.hx.log.util.Tools;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +29,7 @@ import org.springframework.stereotype.Component;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 /**
  * BlogSaveHandler
@@ -35,7 +39,7 @@ import javax.servlet.http.HttpSession;
  * @date 6/11/2017 12:30 AM
  */
 @Component
-public class CommentAddHandler extends BizHandlerAdapter {
+public class CommentSaveHandler extends BizHandlerAdapter {
 
     @Autowired
     private BlogDao blogDao;
@@ -116,23 +120,36 @@ public class CommentAddHandler extends BizHandlerAdapter {
         @Override
         public void doBiz() {
             Result result = (Result) context.result();
+            BlogCommentPO po = (BlogCommentPO) WebContext.getAttributeFromRequest(BlogConstants.REQUEST_DATA);
             CommentSaveForm params = (CommentSaveForm) context.args()[0];
-            String replyExtracted = BizUtils.extractReplyFrom(params.getComment(),
-                    constantsContext.replyCommentPrefix, constantsContext.replyCommentSuffix);
-            boolean isReply = ((!Tools.isEmpty(params.getFloorId())) && (replyExtracted != null));
-            if (!isReply) {
-                Result getExResult = blogExDao.get(new BeanIdForm(params.getBlogId()));
-                if (!getExResult.isSuccess()) {
-                    result.setExtra(getExResult);
-                    return;
+
+            // add
+            if(Tools.isEmpty(params.getId())) {
+                String replyExtracted = BizUtils.extractReplyFrom(params.getComment(),
+                        constantsContext.replyCommentPrefix, constantsContext.replyCommentSuffix);
+                boolean isReply = ((!Tools.isEmpty(params.getFloorId())) && (replyExtracted != null));
+                if (!isReply) {
+                    Result getExResult = blogExDao.get(new BeanIdForm(params.getBlogId()));
+                    if (!getExResult.isSuccess()) {
+                        result.setExtra(getExResult);
+                        return;
+                    }
+                    BlogExPO exPo = ((BlogExPO) getExResult.getData());
+                    exPo.incCommentCnt(1);
                 }
-                BlogExPO exPo = ((BlogExPO) getExResult.getData());
-                exPo.incCommentCnt(1);
-                cacheContext.putBlogEx(exPo);
+
+                cacheContext.todaysStatistics().incCommentCnt(1);
+                cacheContext.now5SecStatistics().incCommentCnt(1);
+                cacheContext.latestComments().put(po.getId(), po);
             }
 
-            cacheContext.todaysStatistics().incCommentCnt(1);
-            cacheContext.now5SecStatistics().incCommentCnt(1);
+            // 不能取到 pageNo, 因此 只能删掉当前blog所有的缓存了
+            Cache<String, List<List<CommentVO>>> allComments = cacheContext.allComment();
+            for (String key : allComments.keys()) {
+                if(key.startsWith(po.getBlogId())) {
+                    allComments.evict(key);
+                }
+            }
 
             RolePO role = cacheContext.roleByName(constants.roleAdmin);
             if (role != null) {
@@ -141,6 +158,7 @@ public class CommentAddHandler extends BizHandlerAdapter {
                     // ignore
                 }
             }
+
         }
     }
 

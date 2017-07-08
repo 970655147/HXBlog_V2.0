@@ -1,6 +1,6 @@
 package com.hx.blog_v2.controller.admin;
 
-import com.hx.blog_v2.domain.form.CacheRemoveForm;
+import com.hx.blog_v2.domain.form.CacheDetailForm;
 import com.hx.blog_v2.domain.form.CacheSearchForm;
 import com.hx.blog_v2.domain.validator.CacheRemoveValidator;
 import com.hx.blog_v2.domain.validator.CacheSearchValidator;
@@ -47,6 +47,16 @@ public class CacheController {
         }
 
         return cacheService.cacheDetail(params);
+    }
+
+    @RequestMapping(value = "/cacheVisitInfo", method = RequestMethod.GET)
+    public Result cacheVisitInfo(CacheDetailForm params) {
+        Result errResult = cacheRemoveValidator.validate(params, null);
+        if (!errResult.isSuccess()) {
+            return errResult;
+        }
+
+        return cacheService.cacheVisitInfo(params);
     }
 
     @RequestMapping(value = "/refreshAll", method = RequestMethod.POST)
@@ -100,7 +110,7 @@ public class CacheController {
     }
 
     @RequestMapping(value = "/cacheRemove", method = RequestMethod.POST)
-    public Result cacheRemove(CacheRemoveForm params) {
+    public Result cacheRemove(CacheDetailForm params) {
         Result errResult = cacheRemoveValidator.validate(params, null);
         if (!errResult.isSuccess()) {
             return errResult;

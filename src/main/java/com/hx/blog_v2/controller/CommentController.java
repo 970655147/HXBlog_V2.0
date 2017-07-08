@@ -44,7 +44,7 @@ public class CommentController {
     private PageValidator pageValidator;
 
     @RequestMapping("/add")
-    @BizHandle(handler = "commentAddHandler")
+    @BizHandle(handler = "commentSaveHandler")
     public Result add(CommentSaveForm params) {
         Result errResult = commentSaveValidator.validate(params, null);
         if(! errResult.isSuccess()) {

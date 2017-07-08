@@ -1,11 +1,10 @@
 package com.hx.blog_v2.domain.validator;
 
-import com.hx.blog_v2.domain.form.CacheRemoveForm;
+import com.hx.blog_v2.domain.form.CacheDetailForm;
 import com.hx.blog_v2.util.ResultUtils;
 import com.hx.common.interf.common.Result;
 import com.hx.common.interf.validator.Validator;
 import com.hx.log.util.Tools;
-import com.hx.log.validator.validator.RangeValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -17,7 +16,7 @@ import org.springframework.stereotype.Component;
  * @date 6/15/2017 7:18 PM
  */
 @Component
-public class CacheRemoveValidator extends ConfigRefreshableValidator<CacheRemoveForm> implements Validator<CacheRemoveForm> {
+public class CacheRemoveValidator extends ConfigRefreshableValidator<CacheDetailForm> implements Validator<CacheDetailForm> {
 
     @Autowired
     private LocalCacheTypeValidator cacheTypeValidator;
@@ -28,7 +27,7 @@ public class CacheRemoveValidator extends ConfigRefreshableValidator<CacheRemove
     private int maxLen = -1;
 
     @Override
-    public Result doValidate(CacheRemoveForm form, Object extra) {
+    public Result doValidate(CacheDetailForm form, Object extra) {
         Result errResult = cacheTypeValidator.validate(form.getType(), extra);
         if (!errResult.isSuccess()) {
             return errResult;

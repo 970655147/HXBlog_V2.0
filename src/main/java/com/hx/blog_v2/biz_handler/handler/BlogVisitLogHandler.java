@@ -131,16 +131,10 @@ public class BlogVisitLogHandler extends BizHandlerAdapter {
                     if (ipVisitLogPo == null) {
                         blogEx.incUniqueViewCnt(1);
                     }
-
-                    cacheContext.putBlogVisitLog(params, po);
-                    if (ipVisitLogPo == null) {
-                        cacheContext.putBlogVisitLog(ipVisitLogParam, po);
-                    }
                 }
 
                 po = encapBlogVisitLog(user, params);
                 visitLogDao.add(po);
-                cacheContext.putBlogEx(blogEx);
             }
         }
     }

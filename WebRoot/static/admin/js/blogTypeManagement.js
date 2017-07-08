@@ -93,9 +93,9 @@ layui.define(['layer', 'form'], function (exports) {
         addData: function () {
             var html = new StringBuilder();
             html.append('<form id="addTypeForm" action="/admin/type/add" class="layui-form layui-form-pane" >')
-            html.append('<label class="layui-form-label" style="border: none" name="content" >名称:</label>')
+            html.append('<label class="layui-form-label" style="border: none" >名称:</label>')
             html.append('<input style="width:87%;margin: auto;color: #000!important;" name="name" lay-verify="required" class="layui-input" >')
-            html.append('<label class="layui-form-label" style="border: none" name="content" >排序:</label>')
+            html.append('<label class="layui-form-label" style="border: none" >排序:</label>')
             html.append('<input style="width:87%;margin: auto;color: #000!important;" name="sort" lay-verify="required" class="layui-input" >')
             html.append('<div class="layui-form-item">')
             html.append('<div class="layui-input-inline" style="margin:10px auto 0 auto;display: block;float: none;">')

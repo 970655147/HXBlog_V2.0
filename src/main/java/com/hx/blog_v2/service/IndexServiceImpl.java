@@ -3,13 +3,16 @@ package com.hx.blog_v2.service;
 import com.hx.blog_v2.context.CacheContext;
 import com.hx.blog_v2.context.ConstantsContext;
 import com.hx.blog_v2.context.WebContext;
+import com.hx.blog_v2.dao.interf.BlogDao;
 import com.hx.blog_v2.dao.interf.RltRoleResourceDao;
 import com.hx.blog_v2.domain.POVOTransferUtils;
 import com.hx.blog_v2.domain.dto.SessionUser;
+import com.hx.blog_v2.domain.dto.StringStringPair;
 import com.hx.blog_v2.domain.extractor.ResourceTreeInfoExtractor;
+import com.hx.blog_v2.domain.form.BeanIdForm;
 import com.hx.blog_v2.domain.form.BeanIdsForm;
-import com.hx.blog_v2.domain.mapper.BlogVOMapper;
-import com.hx.blog_v2.domain.mapper.CommentVOMapper;
+import com.hx.blog_v2.domain.po.BlogCommentPO;
+import com.hx.blog_v2.domain.po.BlogPO;
 import com.hx.blog_v2.domain.po.ResourcePO;
 import com.hx.blog_v2.domain.vo.BlogVO;
 import com.hx.blog_v2.domain.vo.CommentVO;
@@ -20,6 +23,8 @@ import com.hx.blog_v2.service.interf.IndexService;
 import com.hx.blog_v2.service.interf.LinkService;
 import com.hx.blog_v2.util.BlogConstants;
 import com.hx.blog_v2.util.ResultUtils;
+import com.hx.common.interf.cache.Cache;
+import com.hx.common.interf.cache.CacheEntryFacade;
 import com.hx.common.interf.common.Result;
 import com.hx.json.JSONArray;
 import com.hx.json.JSONObject;
@@ -46,6 +51,8 @@ public class IndexServiceImpl extends BaseServiceImpl<Object> implements IndexSe
     @Autowired
     private BlogServiceImpl blogService;
     @Autowired
+    private BlogDao blogDao;
+    @Autowired
     private RltRoleResourceDao rltRoleResourceDao;
     @Autowired
     private CacheContext cacheContext;
@@ -56,15 +63,15 @@ public class IndexServiceImpl extends BaseServiceImpl<Object> implements IndexSe
 
     @Override
     public Result index() {
-        String hotBlogsSql = " select b.* from blog as b inner join blog_ex as e on b.id = e.blog_id " +
-                " where b.deleted = 0 and b.id >= 0 order by e.comment_cnt desc limit 0, 5 ";
-        String latestCommentsSql = " select * from blog_comment where deleted = 0 order by created_at desc limit 0, 5 ";
-        String contextBlogSql = " select b.* from blog as b inner join blog_ex as e on b.id = e.blog_id " +
-                " where b.id = " + constantsContext.contextBlogId;
+        List<BlogVO> hotBlogs = collectHotBlogs();
+        List<CommentVO> latestComments = collectLatestComments();
+        Result getContextBlogResult = blogDao.get(new BeanIdForm(constantsContext.contextBlogId));
+        if (!getContextBlogResult.isSuccess()) {
+            getContextBlogResult.setData(new BlogPO());
+        }
+        BlogPO contextBlogPO = (BlogPO) getContextBlogResult.getData();
+        BlogVO contextBlog = POVOTransferUtils.blogPO2BlogVO(contextBlogPO);
 
-        List<BlogVO> hotBlogs = jdbcTemplate.query(hotBlogsSql, new BlogVOMapper());
-        List<CommentVO> latestComments = jdbcTemplate.query(latestCommentsSql, new CommentVOMapper());
-        BlogVO contextBlog = jdbcTemplate.queryForObject(contextBlogSql, new BlogVOMapper());
         Integer todayVisited = cacheContext.todaysStatistics().getDayFlushViewCnt();
         Integer totalVisited = cacheContext.sumStatistics().getDayFlushViewCnt();
         encapBlogVo(hotBlogs);
@@ -96,17 +103,8 @@ public class IndexServiceImpl extends BaseServiceImpl<Object> implements IndexSe
 
     @Override
     public Result latest() {
-        String recommendBlogsSql = " select b.* from blog as b inner join blog_ex as e on b.id = e.blog_id " +
-                " where b.deleted = 0 and b.id >= 0 order by e.comment_cnt desc limit 0, 1 ";
-        String latestBlogsSql = " select b.* from blog as b where b.deleted = 0 and b.id >= 0 order by b.created_at desc limit 0, 5 ";
-
-        BlogVO recommendBlog = null;
-        try {
-            recommendBlog = jdbcTemplate.queryForObject(recommendBlogsSql, new BlogVOMapper());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        List<BlogVO> latestBlogs = jdbcTemplate.query(latestBlogsSql, new BlogVOMapper());
+        BlogVO recommendBlog = collectRecommendBlogs();
+        List<BlogVO> latestBlogs = collectLatestBlogs();
         if (recommendBlog != null) {
             encapBlogVo(recommendBlog);
         }
@@ -252,5 +250,105 @@ public class IndexServiceImpl extends BaseServiceImpl<Object> implements IndexSe
 
         return needToGet;
     }
+
+    /**
+     * 获取最近添加的博客
+     *
+     * @return java.util.List<com.hx.blog_v2.domain.po.BlogPO>
+     * @author Jerry.X.He
+     * @date 7/8/2017 10:57 AM
+     * @since 1.0
+     */
+    private List<BlogVO> collectLatestBlogs() {
+        Cache<String, BlogPO> latestBlogs = cacheContext.latestBlogs();
+        List<BlogVO> result = new ArrayList<>(latestBlogs.size());
+        for (String key : latestBlogs.keys()) {
+            BlogPO po = latestBlogs.get(key);
+            if (po.getId().compareTo("0") > 0) {
+                BlogVO vo = POVOTransferUtils.blogPO2BlogVO(po);
+                result.add(vo);
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * 获取最近添加的评论
+     *
+     * @return java.util.List<com.hx.blog_v2.domain.po.BlogPO>
+     * @author Jerry.X.He
+     * @date 7/8/2017 10:57 AM
+     * @since 1.0
+     */
+    private List<CommentVO> collectLatestComments() {
+        Cache<String, BlogCommentPO> latestComments = cacheContext.latestComments();
+        List<CommentVO> result = new ArrayList<>(latestComments.size());
+        for (String key : latestComments.keys()) {
+            BlogCommentPO po = latestComments.get(key);
+            CommentVO vo = POVOTransferUtils.blogCommentPO2CommentVO(po);
+            result.add(vo);
+        }
+
+        return result;
+    }
+
+    /**
+     * 收集 热帖
+     *
+     * @return java.util.List<com.hx.blog_v2.domain.vo.BlogVO>
+     * @author Jerry.X.He
+     * @date 7/8/2017 1:52 PM
+     * @since 1.0
+     */
+    private List<BlogVO> collectHotBlogs() {
+        Cache<String, BlogPO> allBlogs = cacheContext.allBlog();
+        PriorityQueue<StringStringPair> hotBlogKeys = new PriorityQueue<>(constantsContext.maxHotBlogCnt + 1);
+        for (String key : allBlogs.keys()) {
+            CacheEntryFacade<String, BlogPO> entry = allBlogs.getEntry(key);
+            if (entry.value().getId().compareTo("0") > 0) {
+                hotBlogKeys.add(new StringStringPair(String.valueOf(entry.accessCount()), key));
+                if (hotBlogKeys.size() > constantsContext.maxHotBlogCnt) {
+                    hotBlogKeys.poll();
+                }
+            }
+        }
+
+        List<BlogVO> result = new ArrayList<>(hotBlogKeys.size());
+        for (StringStringPair pair : hotBlogKeys) {
+            BlogPO po = cacheContext.getBlog(pair.getRight());
+            result.add(POVOTransferUtils.blogPO2BlogVO(po));
+        }
+        return result;
+    }
+
+    /**
+     * 收集 推荐的博客
+     *
+     * @return java.util.List<com.hx.blog_v2.domain.vo.BlogVO>
+     * @author Jerry.X.He
+     * @date 7/8/2017 1:52 PM
+     * @since 1.0
+     */
+    private BlogVO collectRecommendBlogs() {
+        Cache<String, BlogPO> allBlogs = cacheContext.allBlog();
+        String maxAccessBlogId = null;
+        long maxAccessCnt = -1;
+        for (String key : allBlogs.keys()) {
+            CacheEntryFacade<String, BlogPO> entry = allBlogs.getEntry(key);
+            if ((entry.value().getId().compareTo("0") > 0)
+                    && (entry.accessCount() > maxAccessCnt)) {
+                maxAccessCnt = entry.accessCount();
+                maxAccessBlogId = entry.key();
+            }
+        }
+
+        if (Tools.isEmpty(maxAccessBlogId)) {
+            return null;
+        }
+        BlogPO po = cacheContext.getBlog(maxAccessBlogId);
+        return POVOTransferUtils.blogPO2BlogVO(po);
+    }
+
 
 }

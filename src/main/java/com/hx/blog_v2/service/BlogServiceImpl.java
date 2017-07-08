@@ -94,17 +94,21 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
 
     @Override
     public Result get(BeanIdForm params) {
-        String blogSql = " select b.*, GROUP_CONCAT(rlt.tag_id) as tagIds from blog as b " +
-                " inner join rlt_blog_tag as rlt on b.id = rlt.blog_id " +
-                " where b.deleted = 0 and b.id = ? and b.state='" + BlogState.SUCCESS.code() + "' group by b.id ";
-        Object[] sqlParams = new Object[]{params.getId()};
-        // 如果 没有找到记录, 或者 找到多条记录, 都会抛出异常, ex.*, b.* 这个顺序, 避免 po.id 被 exPo.id 覆盖
-        List<BlogVO> vos = jdbcTemplate.query(blogSql, sqlParams, new BlogVOMapper());
-        if (Tools.isEmpty(vos)) {
-            return ResultUtils.failed("给定的博客[" + params.getId() + "]不存在 !");
+        Result getBlogResult = blogDao.get(params);
+        if (!getBlogResult.isSuccess()) {
+            return getBlogResult;
         }
+        BlogPO po = (BlogPO) getBlogResult.getData();
+        if (!BlogState.SUCCESS.code().equals(po.getState())) {
+            return ResultUtils.failed(" 给定的博客不存在 ");
+        }
+        Result getTagIdsResult = blogDao.getTagIdsFor(params);
+        if (!getTagIdsResult.isSuccess()) {
+            return getTagIdsResult;
+        }
+        BlogVO vo = POVOTransferUtils.blogPO2BlogVO(po);
+        vo.setBlogTagIds((List<String>) getTagIdsResult.getData());
 
-        BlogVO vo = vos.get(0);
         Result result = encapSense(vo);
         if (!result.isSuccess()) {
             return result;
@@ -119,17 +123,18 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
 
     @Override
     public Result adminGet(BeanIdForm params) {
-        String sql = " select b.*, GROUP_CONCAT(rlt.tag_id) as tagIds from blog as b " +
-                " inner join rlt_blog_tag as rlt on b.id = rlt.blog_id " +
-                " where b.deleted = 0 and b.id = ? group by b.id ";
-        Object[] sqlParams = new Object[]{params.getId()};
-        // 如果 没有找到记录, 或者 找到多条记录, 都会抛出异常
-        List<AdminBlogVO> vos = jdbcTemplate.query(sql, sqlParams, new AdminBlogVOMapper());
-        if (Tools.isEmpty(vos)) {
-            return ResultUtils.failed("给定的博客[" + params.getId() + "]不存在 !");
+        Result getBlogResult = blogDao.get(params);
+        if (!getBlogResult.isSuccess()) {
+            return getBlogResult;
         }
+        BlogPO po = (BlogPO) getBlogResult.getData();
+        Result getTagIdsResult = blogDao.getTagIdsFor(params);
+        if (!getTagIdsResult.isSuccess()) {
+            return getTagIdsResult;
+        }
+        AdminBlogVO vo = POVOTransferUtils.blogPO2AdminBlogVO(po);
+        vo.setBlogTagIds((List<String>) getTagIdsResult.getData());
 
-        AdminBlogVO vo = vos.get(0);
         encapTypeTagInfo(vo);
         encapContent(vo);
         return ResultUtils.success(vo);
@@ -139,13 +144,14 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
     public Result list(BlogSearchForm params, Page<BlogVO> page) {
         String selectSql = " select b.*, GROUP_CONCAT(rlt.tag_id) as tagIds from blog as b " +
                 " inner join rlt_blog_tag as rlt on b.id = rlt.blog_id " +
-                " where b.deleted = 0 and b.id >= 0 and b.state='" + BlogState.SUCCESS.code() + "' ";
+                " where b.deleted = 0 and b.id >= 0 and b.state = ? ";
         String selectSqlSuffix = " group by b.id order by b.created_at desc limit ?, ?";
         String countSql = " select count(*) as totalRecord from blog as b where b.deleted = 0 and b.id >= 0 " +
-                " and b.state='" + BlogState.SUCCESS.code() + "' ";
+                " and b.state = ? ";
 
         StringBuilder condSqlSb = new StringBuilder();
-        List<Object> selectParams = new ArrayList<>(3);
+        List<Object> selectParams = new ArrayList<>(8);
+        selectParams.add(BlogState.SUCCESS.code());
         encapQueryForAdminList(params, condSqlSb, selectParams);
         String condSql = condSqlSb.toString();
         Object[] countParams = selectParams.toArray();
@@ -170,7 +176,7 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
                 " inner join rlt_blog_tag as rlt on b.id = rlt.blog_id where b.deleted = 0 ";
         String selectSqlSuffix = " group by b.id order by b.created_at desc limit ?, ? ";
         String countSql = " select count(*) as totalRecord from blog as b where b.deleted = 0 ";
-        List<Object> selectParamsList = new ArrayList<>(3);
+        List<Object> selectParamsList = new ArrayList<>(7);
         StringBuilder condSqlSb = new StringBuilder();
 
         encapQueryForAdminList(params, condSqlSb, selectParamsList);
@@ -216,6 +222,7 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
         Result removeCommentResult = commentDao.update(Criteria.eq("blog_id", params.getId()),
                 Criteria.set("deleted", "1").add("updated_at", updatedAt), true);
         Log.log(" 删除了 blog[{}], 级联删除 {} 条评论 ! ", params.getId(), removeCommentResult.getData());
+        WebContext.setAttributeForRequest(BlogConstants.REQUEST_DATA, poFromServer);
         return ResultUtils.success(params.getId());
     }
 
@@ -315,6 +322,7 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
             return ResultUtils.failed(Tools.errorMsg(e));
         }
 
+        WebContext.setAttributeForRequest(BlogConstants.REQUEST_DATA, po);
         return ResultUtils.success(po.getId());
     }
 
@@ -386,6 +394,7 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
             return ResultUtils.failed(Tools.errorMsg(e));
         }
 
+        WebContext.setAttributeForRequest(BlogConstants.REQUEST_DATA, po);
         return ResultUtils.success(po.getId());
     }
 
@@ -678,7 +687,6 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
             return ResultUtils.success(0);
         }
         BlogSensePO po = (BlogSensePO) getSenseResult.getData();
-        cacheContext.putBlogSense(params, po);
         return ResultUtils.success(po.getScore());
     }
 

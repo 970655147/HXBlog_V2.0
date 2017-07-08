@@ -56,29 +56,7 @@ function contentInit() {
             that.initHeadImages(that)
             SyntaxHighlighter.all()
             that.initEmoji()
-
-            $("[name='comment']").keydown(function(e){
-                if((e.keyCode === 46) || (e.keyCode === 8) ) {
-                    return
-                }
-
-                var commentEle = $(this)
-                var comment = commentEle.html()
-                var delta = commentMaxLen - comment.length
-                if(delta < 0) {
-                    commentEle.html(comment.substr(0, commentMaxLen))
-                    delta = 0
-                }
-                if(delta < commentLenThreshold) {
-                    layer.tips("还可以输入" + delta + "个字符", "[name='comment']", {
-                        tips: [1, '#ff0000'],
-                        time: 1000
-                    })
-                }
-                if(delta <= 0) {
-                    return false
-                }
-            });
+            that.contentEventInit()
         },
         methods: {
             replyFunc: function (event) {
@@ -334,7 +312,8 @@ function contentInit() {
                             for (idx in comments) {
                                 that.comments.push({
                                     floorComment: comments[idx][0],
-                                    replies: comments[idx].slice(1)
+                                    replies: comments[idx].slice(1),
+                                    fillingDivMargin: comments[idx].length > 1 ? "100" : "50"
                                 })
                             }
 
@@ -344,6 +323,30 @@ function contentInit() {
                             layer.alert("拉取评论列表失败 !")
                         }
                         layer.close(loadCommentIdx)
+                    }
+                });
+            },
+            contentEventInit : function() {
+                $("[name='comment']").keydown(function(e){
+                    if((e.keyCode === 46) || (e.keyCode === 8) ) {
+                        return
+                    }
+
+                    var commentEle = $(this)
+                    var comment = commentEle.html()
+                    var delta = commentMaxLen - comment.length
+                    if(delta < 0) {
+                        commentEle.html(comment.substr(0, commentMaxLen))
+                        delta = 0
+                    }
+                    if(delta < commentLenThreshold) {
+                        layer.tips("还可以输入" + delta + "个字符", "[name='comment']", {
+                            tips: [1, '#ff0000'],
+                            time: 1000
+                        })
+                    }
+                    if(delta <= 0) {
+                        return false
                     }
                 });
             }

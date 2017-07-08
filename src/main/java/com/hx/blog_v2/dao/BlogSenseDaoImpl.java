@@ -62,6 +62,7 @@ public class BlogSenseDaoImpl extends BaseDaoImpl<BlogSensePO> implements BlogSe
         }
 
         if (po != null) {
+            cacheContext.putBlogSense(params, po);
             return ResultUtils.success(po);
         }
         return ResultUtils.failed("没有对应的记录 !");

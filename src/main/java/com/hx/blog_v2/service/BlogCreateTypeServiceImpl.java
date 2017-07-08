@@ -90,7 +90,6 @@ public class BlogCreateTypeServiceImpl extends BaseServiceImpl<BlogCreateTypePO>
             return result;
         }
 
-        cacheContext.putBlogCreateType(po);
         return ResultUtils.success(params.getId());
     }
 

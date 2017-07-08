@@ -4,24 +4,18 @@ import com.hx.blog_v2.context.CacheContext;
 import com.hx.blog_v2.context.ConstantsContext;
 import com.hx.blog_v2.domain.ErrorCode;
 import com.hx.blog_v2.domain.dto.LocalCacheType;
-import com.hx.blog_v2.domain.form.BeanIdForm;
-import com.hx.blog_v2.domain.form.CacheRemoveForm;
+import com.hx.blog_v2.domain.form.CacheDetailForm;
 import com.hx.blog_v2.domain.form.CacheSearchForm;
-import com.hx.blog_v2.domain.po.BlogExPO;
-import com.hx.blog_v2.domain.po.BlogSensePO;
-import com.hx.blog_v2.domain.po.BlogVisitLogPO;
-import com.hx.blog_v2.domain.po.UploadFilePO;
 import com.hx.blog_v2.service.interf.BaseServiceImpl;
 import com.hx.blog_v2.service.interf.CacheService;
 import com.hx.blog_v2.util.ResultUtils;
 import com.hx.common.interf.cache.Cache;
+import com.hx.common.interf.cache.CacheEntryFacade;
 import com.hx.common.interf.common.Result;
 import com.hx.json.JSONArray;
 import com.hx.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /**
  * CacheServiceImpl
@@ -62,33 +56,29 @@ public class CacheServiceImpl extends BaseServiceImpl<Object> implements CacheSe
     @Override
     public Result cacheDetail(CacheSearchForm params) {
         LocalCacheType type = LocalCacheType.of(params.getType());
-        if (LocalCacheType.BLOG_EX == type) {
-            Cache<String, BlogExPO> all = cacheContext.allBlogEx();
-            return cacheDetail0(all);
-        } else if (LocalCacheType.VISIT_LOG == type) {
-            Cache<String, BlogVisitLogPO> all = cacheContext.allBlogVisitLog();
-            return cacheDetail0(all);
-        } else if (LocalCacheType.BLOG_SENSE == type) {
-            Cache<String, BlogSensePO> all = cacheContext.allBlogSense();
-            return cacheDetail0(all);
-        } else if (LocalCacheType.ROLE_2_RES == type) {
-            Cache<String, List<String>> all = cacheContext.allResourceIdsByRoleIds();
-            return cacheDetail0(all);
-        } else if (LocalCacheType.RES_2_INTERF == type) {
-            Cache<String, List<String>> all = cacheContext.allInterfsByResourceIds();
-            return cacheDetail0(all);
-        } else if (LocalCacheType.UPLOAD_FILE == type) {
-            Cache<String, UploadFilePO> all = cacheContext.allUploadedFile();
-            return cacheDetail0(all);
-        } else if (LocalCacheType.FORCE_OFF_LINE == type) {
-            Cache<String, String> all = cacheContext.allForceOffLine();
-            return cacheDetail0(all);
-        } else if (LocalCacheType.BLACK_LIST == type) {
-            Cache<String, String> all = cacheContext.blackList();
-            return cacheDetail0(all);
-        } else {
-            return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " 没有这个类型 ! ");
+        Result getCacheResult = getCacheByType(type);
+        if (!getCacheResult.isSuccess()) {
+            return getCacheResult;
         }
+
+        Cache<String, ?> all = (Cache<String, ?>) getCacheResult.getData();
+        return cacheDetail0(all);
+    }
+
+    @Override
+    public Result cacheVisitInfo(CacheDetailForm params) {
+        LocalCacheType type = LocalCacheType.of(params.getType());
+        Result getCacheResult = getCacheByType(type);
+        if (!getCacheResult.isSuccess()) {
+            return getCacheResult;
+        }
+
+        Cache<String, ?> all = (Cache<String, ?>) getCacheResult.getData();
+        CacheEntryFacade<String, ?> entry = all.getEntry(params.getId());
+        if (entry == null) {
+            return ResultUtils.failed(" 没有这个缓存变量 ! ");
+        }
+        return cacheVisitInfo0(entry);
     }
 
     @Override
@@ -153,38 +143,17 @@ public class CacheServiceImpl extends BaseServiceImpl<Object> implements CacheSe
     }
 
     @Override
-    public Result cacheRemove(CacheRemoveForm params) {
+    public Result cacheRemove(CacheDetailForm params) {
         LocalCacheType type = LocalCacheType.of(params.getType());
         Object evicted = null;
-        if (LocalCacheType.BLOG_EX == type) {
-            Cache<String, BlogExPO> all = cacheContext.allBlogEx();
-            evicted = all.evict(params.getId());
-        } else if (LocalCacheType.VISIT_LOG == type) {
-            Cache<String, BlogVisitLogPO> all = cacheContext.allBlogVisitLog();
-            evicted = all.evict(params.getId());
-        } else if (LocalCacheType.BLOG_SENSE == type) {
-            Cache<String, BlogSensePO> all = cacheContext.allBlogSense();
-            evicted = all.evict(params.getId());
-        } else if (LocalCacheType.ROLE_2_RES == type) {
-            Cache<String, List<String>> all = cacheContext.allResourceIdsByRoleIds();
-            evicted = all.evict(params.getId());
-        } else if (LocalCacheType.RES_2_INTERF == type) {
-            Cache<String, List<String>> all = cacheContext.allInterfsByResourceIds();
-            evicted = all.evict(params.getId());
-        } else if (LocalCacheType.UPLOAD_FILE == type) {
-            Cache<String, UploadFilePO> all = cacheContext.allUploadedFile();
-            evicted = all.evict(params.getId());
-        } else if (LocalCacheType.FORCE_OFF_LINE == type) {
-            Cache<String, String> all = cacheContext.allForceOffLine();
-            evicted = all.evict(params.getId());
-        } else if (LocalCacheType.BLACK_LIST == type) {
-            Cache<String, String> all = cacheContext.blackList();
-            evicted = all.evict(params.getId());
-        } else {
-            return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " 没有这个类型 ! ");
+        Result getCacheResult = getCacheByType(type);
+        if (!getCacheResult.isSuccess()) {
+            return getCacheResult;
         }
 
-        if(evicted == null) {
+        Cache<String, ?> all = (Cache<String, ?>) getCacheResult.getData();
+        evicted = all.evict(params.getId());
+        if (evicted == null) {
             return ResultUtils.failed(" 没有这个缓存变量 ! ");
         }
         return ResultUtils.success(evicted);
@@ -236,6 +205,68 @@ public class CacheServiceImpl extends BaseServiceImpl<Object> implements CacheSe
         JSONObject result = new JSONObject();
         for (String key : cached.keys()) {
             result.put(key, cached.get(key));
+        }
+
+        return ResultUtils.success(result);
+    }
+
+    /**
+     * 获取当前缓存的所有的信息
+     *
+     * @param entry entry
+     * @return com.hx.common.interf.common.Result
+     * @author Jerry.X.He
+     * @date 7/5/2017 9:07 PM
+     * @since 1.0
+     */
+    private <T> Result cacheVisitInfo0(CacheEntryFacade<String, T> entry) {
+        JSONObject result = new JSONObject();
+        result.element("key", entry.key());
+        result.element("value", entry.value());
+        result.element("accessCount", entry.accessCount());
+        result.element("createdAt", entry.createdAt());
+        result.element("lastAccessed", entry.lastAccessed());
+        result.element("lastUpdated", entry.lastUpdated());
+        result.element("ttl", entry.ttl());
+
+        return ResultUtils.success(result);
+    }
+
+    /**
+     * 根据给定的类型, 获取对应的缓存
+     *
+     * @param type type
+     * @return com.hx.common.interf.common.Result
+     * @author Jerry.X.He
+     * @date 7/8/2017 3:24 PM
+     * @since 1.0
+     */
+    private Result getCacheByType(LocalCacheType type) {
+        Cache<?, ?> result = null;
+        if (LocalCacheType.BLOG_EX == type) {
+            result = cacheContext.allBlogEx();
+        } else if (LocalCacheType.VISIT_LOG == type) {
+            result = cacheContext.allBlogVisitLog();
+        } else if (LocalCacheType.BLOG_SENSE == type) {
+            result = cacheContext.allBlogSense();
+        } else if (LocalCacheType.ROLE_2_RES == type) {
+            result = cacheContext.allResourceIdsByRoleIds();
+        } else if (LocalCacheType.RES_2_INTERF == type) {
+            result = cacheContext.allInterfsByResourceIds();
+        } else if (LocalCacheType.UPLOAD_FILE == type) {
+            result = cacheContext.allUploadedFile();
+        } else if (LocalCacheType.FORCE_OFF_LINE == type) {
+            result = cacheContext.allForceOffLine();
+        } else if (LocalCacheType.BLACK_LIST == type) {
+            result = cacheContext.blackList();
+        } else if (LocalCacheType.BLOG == type) {
+            result = cacheContext.allBlog();
+        } else if (LocalCacheType.BLOG_2_TAG_IDS == type) {
+            result = cacheContext.allTagIds();
+        } else if (LocalCacheType.BLOG_ID_PAGE_NO_2_COMMENT == type) {
+            result = cacheContext.allComment();
+        } else {
+            return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " 没有这个类型 ! ");
         }
 
         return ResultUtils.success(result);

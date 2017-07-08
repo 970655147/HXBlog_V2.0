@@ -250,6 +250,18 @@ public final class BlogConstants {
      */
     public static final String MAX_CACHED_BLOG_FLOOR_2_COMMENT_ID = "cache.max.blog_floor_2_comment_id";
     /**
+     * 缓存的 最近的blog 的个数
+     */
+    public static final String MAX_LATEST_BLOG = "cache.max.latest_blog";
+    /**
+     * 缓存的 最近的comment 的个数
+     */
+    public static final String MAX_LATEST_COMMENT = "cache.max.latest_comment";
+    /**
+     * 需要返回的热帖的数量 的个数
+     */
+    public static final String MAX_HOT_BLOG_CNT = "cache.max.hot_blog_cnt";
+    /**
      * 缓存的 blogId, floorId -> nextCommentId 的个数
      */
     public static final String SESSION_TIME_OUT = "session.timeout";
@@ -273,6 +285,18 @@ public final class BlogConstants {
      * 缓存的 ip -> blogVisitLog 的个数
      */
     public static final String MAX_REQUEST_IP_2_BLOG_VISIT_LOG = "cache.max.request_ip_2_blog_visit_log";
+    /**
+     * 缓存的 id -> blog 的个数
+     */
+    public static final String MAX_ID_2_BLOG = "cache.max.id_2_blog";
+    /**
+     * 缓存的 id -> blog 的个数
+     */
+    public static final String MAX_BLOG_ID_2_TAG_IDS = "cache.max.blog_id_2_tag_ids";
+    /**
+     * 缓存的 blogId_pageNo -> comment 的个数
+     */
+    public static final String MAX_BLOG_ID_PAGE_NO_2_COMMENT = "cache.max.blog_id_page_no_2_comment";
 
     /**
      * 上传到服务器的图片的 url 前缀

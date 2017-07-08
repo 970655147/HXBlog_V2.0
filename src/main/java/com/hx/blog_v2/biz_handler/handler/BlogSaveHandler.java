@@ -10,6 +10,7 @@ import com.hx.blog_v2.domain.dto.MessageType;
 import com.hx.blog_v2.domain.dto.SessionUser;
 import com.hx.blog_v2.domain.form.BlogSaveForm;
 import com.hx.blog_v2.domain.form.MessageSaveForm;
+import com.hx.blog_v2.domain.po.BlogPO;
 import com.hx.blog_v2.domain.po.RolePO;
 import com.hx.blog_v2.service.interf.MessageService;
 import com.hx.blog_v2.util.BlogConstants;
@@ -103,6 +104,12 @@ public class BlogSaveHandler extends BizHandlerAdapter {
                     Date now = new Date();
                     String createdAtMonth = DateUtils.formate(now, BlogConstants.FORMAT_YYYY_MM);
                     cacheContext.updateBlogInMonthFacet(createdAtMonth, true);
+
+                    BlogPO po = (BlogPO) WebContext.getAttributeFromRequest(BlogConstants.REQUEST_DATA);
+                    cacheContext.latestBlogs().put(po.getId(), po);
+                } else {
+                    cacheContext.allBlog().evict(params.getId());
+                    cacheContext.allTagIds().evict(params.getId());
                 }
 
                 RolePO role = cacheContext.roleByName(constants.roleAdmin);

@@ -170,6 +170,9 @@ public class ConstantsContext {
     public String defaultCharset;
     public int maxCachedBlog2FloorId;
     public int maxCachedBlogFloor2CommentId;
+    public int maxLatestBlog;
+    public int maxLatestComment;
+    public int maxHotBlogCnt;
     public int sesionTimeOut;
 
     public int maxCachedUploadedImage;
@@ -177,6 +180,9 @@ public class ConstantsContext {
     public int maxSense2Clicked;
     public int maxBlogId2BlogEx;
     public int maxRequestIp2BlogVisitLog;
+    public int maxId2Blog;
+    public int maxBlogId2TagIds;
+    public int maxBlogIdPageNo2Comment;
 
     public String imgTypeImgShow = ImageType.IMAGE_SHOW.code();
     public String imgTypeHeadImg = ImageType.HEAD_IMG.code();
@@ -587,12 +593,18 @@ public class ConstantsContext {
             defaultCharset = Tools.optString(systemConfig, BlogConstants.DEFAULT_CHARSET, Constants.DEFAULT_CHARSET);
             maxCachedBlog2FloorId = Tools.optInt(systemConfig, BlogConstants.MAX_CACHED_BLOG_2_FLOOR_ID, 100);
             maxCachedBlogFloor2CommentId = Tools.optInt(systemConfig, BlogConstants.MAX_CACHED_BLOG_FLOOR_2_COMMENT_ID, 1000);
+            maxLatestBlog = Tools.optInt(systemConfig, BlogConstants.MAX_LATEST_BLOG, 5);
+            maxLatestComment = Tools.optInt(systemConfig, BlogConstants.MAX_LATEST_COMMENT, 5);
+            maxHotBlogCnt = Tools.optInt(systemConfig, BlogConstants.MAX_HOT_BLOG_CNT, 5);
             sesionTimeOut = Tools.optInt(systemConfig, BlogConstants.SESSION_TIME_OUT, 30 * 60 * 1000);
             maxCachedUploadedImage = Tools.optInt(systemConfig, BlogConstants.MAX_CACHED_UPLOADED_IMAGE, 100);
             maxRoleIds2ResourceIds = Tools.optInt(systemConfig, BlogConstants.MAX_ROLE_IDS_2_RESOURCE_IDS, 20);
             maxSense2Clicked = Tools.optInt(systemConfig, BlogConstants.MAX_SENSE_2_CLICKED, 1000);
             maxBlogId2BlogEx = Tools.optInt(systemConfig, BlogConstants.MAX_BLOG_ID_2_BLOG_EX, 1000);
             maxRequestIp2BlogVisitLog = Tools.optInt(systemConfig, BlogConstants.MAX_REQUEST_IP_2_BLOG_VISIT_LOG, 1000);
+            maxId2Blog = Tools.optInt(systemConfig, BlogConstants.MAX_ID_2_BLOG, 100);
+            maxBlogId2TagIds = Tools.optInt(systemConfig, BlogConstants.MAX_BLOG_ID_2_TAG_IDS, 100);
+            maxBlogIdPageNo2Comment = Tools.optInt(systemConfig, BlogConstants.MAX_BLOG_ID_PAGE_NO_2_COMMENT, 300);
 
             imageUrlPrefix = Tools.optString(systemConfig, BlogConstants.IMAGE_URL_PREFIX, "http://localhost/files/");
             contextUrlPrefix = Tools.optString(systemConfig, BlogConstants.CONTEXT_URL_PREFIX, "http://localhost:8080/");

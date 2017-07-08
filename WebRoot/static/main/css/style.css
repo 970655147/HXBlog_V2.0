@@ -624,12 +624,12 @@ i.glyphicon.glyphicon-comment {
 .footer-middle p {
     margin: 0;
 }
-.footer-middle a {
-    color: #000;
-	font-family: 'Open Sans', sans-serif;
+.footer-middle [name='latestCommentTitle'] {
+    color: #f00;
+    font-family: 'Open Sans', sans-serif;
 }
-.footer-middle span {
-    color: #000;
+.footer-middle a {
+    color: #f00;
     font-family: 'Open Sans', sans-serif;
 }
 

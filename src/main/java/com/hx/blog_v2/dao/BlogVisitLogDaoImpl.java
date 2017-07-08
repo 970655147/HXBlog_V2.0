@@ -57,11 +57,15 @@ public class BlogVisitLogDaoImpl extends BaseDaoImpl<BlogVisitLogPO> implements 
 
         try {
             po = findOne(query, BlogConstants.LOAD_ALL_CONFIG);
-            return po;
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
         }
+
+        if(po != null) {
+            cacheContext.putBlogVisitLog(params, po);
+            return po;
+        }
+        return null;
     }
 
 }

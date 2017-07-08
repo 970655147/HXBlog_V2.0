@@ -188,15 +188,14 @@
                 <div class="floor">
                     <!--<hr/>-->
                     <dl class='comment_item comment_topic'>
-                    <div class="replyDiv comment_reply" >
+                    <div name="floorDiv" class="replyDiv comment_reply" >
                         <dt class='comment_head'>
                         <span> {{floor.floorComment.floorId}} 楼</span>&nbsp;&nbsp;&nbsp;&nbsp;
                         <span class='floorInfo'
                               :floorId='floor.floorComment.floorId'
                               :commentId='floor.floorComment.commentId'
                               :name='floor.floorComment.name'
-                              :role="floor.floorComment.role"
-                        >
+                              :role="floor.floorComment.role">
                         <span name='commenter' class='text-warning'> {{floor.floorComment.name}} </span>&nbsp;&nbsp;&nbsp;&nbsp;
                         <span name='role' class='text-error'>[{{floor.floorComment.role}}]</span>&nbsp;&nbsp;&nbsp;&nbsp;
                         <span name='date' class='text-success'>发表于 {{floor.floorComment.createdAt}} </span>&nbsp;&nbsp;&nbsp;&nbsp;
@@ -221,14 +220,13 @@
                         </dd>
                     </div>
 
-                    <div class='replyDiv comment_reply' style="margin-left:100px" v-for="reply in floor.replies">
+                    <div name="replyDiv" class='replyDiv comment_reply' style="margin-left:100px" v-for="reply in floor.replies">
                         <dl class='comment_item'>
                         <dt class='comment_head'>
                         Re:
                         <span class='floorInfo'
                               :floorId='reply.floorId' :commentId='reply.commentId'
-                              :name='reply.name' :role="reply.role"
-                        >
+                              :name='reply.name' :role="reply.role">
                         <span name='commenter' class='text-warning'> {{reply.name}} </span>&nbsp;&nbsp;&nbsp;&nbsp;
                         <span name='role' class='text-error'>[{{reply.role}}]</span>&nbsp;&nbsp;&nbsp;&nbsp;
                         <span name='date' class='text-success'>发表于  {{reply.createdAt}}</span>&nbsp;&nbsp;&nbsp;&nbsp;
@@ -256,7 +254,7 @@
                     </dl>
                 </div>
 
-                <div class="replyDiv comment_reply" style="width:980px; height: 20px;margin-top:-2px;margin-left:60px"></div>
+                <div name="fillingDiv" class="comment_item comment_topic replyDiv comment_reply" :style="'margin-left:' + floor.fillingDivMargin + 'px;'"></div>
             </span>
         </div>
 

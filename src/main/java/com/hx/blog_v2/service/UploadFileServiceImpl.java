@@ -178,7 +178,7 @@ public class UploadFileServiceImpl extends BaseServiceImpl<UploadFilePO> impleme
         }
 
         String digest = (String) digestResult.getData();
-        Result getCachedResult = getUploadedImageFromExists(file, digest);
+        Result getCachedResult = uploadFileDao.get(file, digest);
         if (getCachedResult.isSuccess()) {
             UploadFilePO po = (UploadFilePO) getCachedResult.getData();
             JSONObject data = new JSONObject()
@@ -256,42 +256,6 @@ public class UploadFileServiceImpl extends BaseServiceImpl<UploadFilePO> impleme
      */
     private String getImageVisitUrl(String relativePath) {
         return constantsContext.imageUrlPrefix + relativePath;
-    }
-
-    /**
-     * 从缓存中获取 file 对应的 image
-     *
-     * @param file   file
-     * @param digest digest
-     * @return com.hx.blog_v2.domain.po.UploadFilePO
-     * @author Jerry.X.He
-     * @date 5/29/2017 4:31 PM
-     * @since 1.0
-     */
-    private Result getUploadedImageFromExists(MultipartFile file, String digest) {
-        UploadFilePO po = cacheContext.getUploadedFile(digest);
-        if (po != null) {
-            if (po.getSize().equals(String.valueOf(file.getSize()))
-                    && po.getOriginalFileName().equals(file.getOriginalFilename())
-                    && po.getContentType().equals(file.getContentType())
-                    ) {
-                return ResultUtils.success(po);
-            }
-        }
-
-        IQueryCriteria query = Criteria.and(Criteria.eq("digest", digest),
-                Criteria.eq("original_file_name", file.getOriginalFilename()),
-                Criteria.eq("size", file.getSize()), Criteria.eq("content_type", file.getContentType()));
-        Result getFileResult = uploadFileDao.get(query);
-        if (!getFileResult.isSuccess()) {
-            return getFileResult;
-        }
-
-        cacheContext.putUploadedFile(digest, po);
-        if (po != null) {
-            return ResultUtils.success(po);
-        }
-        return ResultUtils.failed(" 上传放行 ");
     }
 
     /**

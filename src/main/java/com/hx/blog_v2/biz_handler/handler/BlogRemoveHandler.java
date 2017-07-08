@@ -131,15 +131,8 @@ public class BlogRemoveHandler extends BizHandlerAdapter {
 
         @Override
         public void doBiz() {
-            BeanIdForm params = (BeanIdForm) context.args()[0];
             Result result = (Result) context.result();
-            Result getBlogResult = blogDao.get(params);
-            if (!getBlogResult.isSuccess()) {
-                result.setExtra(getBlogResult);
-                return;
-            }
-
-            BlogPO po = (BlogPO) getBlogResult.getData();
+            BlogPO po = (BlogPO) WebContext.getAttributeFromRequest(BlogConstants.REQUEST_DATA);
             Date now = new Date();
             Date createdAt = DateUtils.parse(po.getCreatedAt(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
             long offsetFromNow = now.getTime() - createdAt.getTime();
@@ -159,6 +152,11 @@ public class BlogRemoveHandler extends BizHandlerAdapter {
                 cacheContext.sumStatistics().incBlogCnt(-1);
             }
             cacheContext.updateBlogInMonthFacet(po.getCreatedAtMonth(), false);
+            if(cacheContext.latestBlogs().get(po.getId()) != null) {
+                cacheContext.latestBlogs().evict(po.getId());
+                cacheContext.refreshLatestBlogs();
+            }
+            cacheContext.allBlog().evict(po.getId());
 
             RolePO role = cacheContext.roleByName(constants.roleAdmin);
             if (role != null) {
