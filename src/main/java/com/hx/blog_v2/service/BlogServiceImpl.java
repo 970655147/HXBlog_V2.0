@@ -311,7 +311,7 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
         try {
             String blogFile = Tools.getFilePath(constants.blogRootDir, po.getContentUrl());
             FileUtils.createIfNotExists(blogFile, true);
-            Tools.save(params.getContent(), blogFile);
+            Tools.save(params.getContent(), blogFile, constantsContext.defaultCharset);
         } catch (Exception e) {
             e.printStackTrace();
             blogDao.remove(Criteria.eq("id", po.getId()));
@@ -383,7 +383,7 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
         try {
             String blogFile = Tools.getFilePath(constants.blogRootDir, po.getContentUrl());
             FileUtils.createIfNotExists(blogFile, true);
-            Tools.save(params.getContent(), blogFile);
+            Tools.save(params.getContent(), blogFile, constantsContext.defaultCharset);
         } catch (Exception e) {
             e.printStackTrace();
             return ResultUtils.failed(Tools.errorMsg(e));
