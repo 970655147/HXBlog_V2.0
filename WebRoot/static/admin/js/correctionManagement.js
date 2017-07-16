@@ -95,7 +95,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
             })
         },
         doCorrectAll: function () {
-            var correctionAllParams = {typeNow : typeNow}
+            var correctionAllParams = {type : typeNow}
             // 文件校验特殊处理 !
             if(typeNow === "3") {
                 correctionAllParams.ids = correctionItemIds.join(",")
