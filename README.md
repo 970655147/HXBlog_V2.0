@@ -53,6 +53,8 @@ QuickStart
 
 ![design_picure](https://raw.githubusercontent.com/970655147/HXBlog_V2.0/master/resources/readMeRes/3rd_configConfigProps.png)
 ![design_picure](https://raw.githubusercontent.com/970655147/HXBlog_V2.0/master/resources/readMeRes/3rd_configDbProps.png)
+blog.dir配置为 $RESOURCES/post
+files.dir配置为 $RESOURCES/files
 
 
 4 发布项目, 启动服务器

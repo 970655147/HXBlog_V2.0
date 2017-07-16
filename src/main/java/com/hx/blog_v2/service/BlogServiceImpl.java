@@ -715,7 +715,7 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
      */
     private String getBlogContentByUrl(String contentUrl) {
         try {
-            return (Tools.getContent(Tools.getFilePath(constants.blogRootDir, contentUrl)));
+            return (Tools.getContent(Tools.getFilePath(constants.blogRootDir, contentUrl), constantsContext.defaultCharset));
         } catch (Exception e) {
             Log.err(Tools.errorMsg(e));
             return " blog does not exists ! ";
