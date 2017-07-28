@@ -438,6 +438,10 @@ public final class BlogConstants {
      * 发送邮件的服务器
      */
     public static final String EMAIL_AUTH_SMTP = "email.auth.smtp";
+    /**
+     * 限制给定周期内请求次数的接口的配置
+     */
+    public static final String REQ_DELAY_MAP = "req.delay.map";
 
     // ----------------------------------------- configurable -------------------------------------------------
 

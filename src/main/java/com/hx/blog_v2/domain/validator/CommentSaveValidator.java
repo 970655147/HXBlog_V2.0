@@ -76,7 +76,7 @@ public class CommentSaveValidator extends ConfigRefreshableValidator<CommentSave
         if (!result.isSuccess()) {
             return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " 用户名格式不合法 ! ");
         }
-        if ((!isLogin) || (!Tools.isEmpty(form.getEmail()))) {
+        if (!Tools.isEmpty(form.getEmail())) {
             result = emailValidator.validate(form.getEmail(), extra);
             if (!result.isSuccess()) {
                 return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " email 格式不合法 ! ");

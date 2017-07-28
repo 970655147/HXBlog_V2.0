@@ -3,7 +3,6 @@ package com.hx.blog_v2.context;
 import com.hx.blog_v2.dao.interf.SystemConfigDao;
 import com.hx.blog_v2.domain.dto.ConfigType;
 import com.hx.blog_v2.domain.dto.ImageType;
-import com.hx.blog_v2.domain.dto.SenseType;
 import com.hx.blog_v2.domain.po.SystemConfigPO;
 import com.hx.blog_v2.util.BizUtils;
 import com.hx.blog_v2.util.BlogConstants;
@@ -99,8 +98,7 @@ public class ConstantsContext {
             .element("img", new JSONObject().element("href", SRC_SENSETIVE_KEYWORDS))
             .element("image", new JSONObject().element("href", SRC_SENSETIVE_KEYWORDS))
             .element("audio", new JSONObject().element("src", SRC_SENSETIVE_KEYWORDS))
-            .element("video", new JSONObject().element("src", SRC_SENSETIVE_KEYWORDS))
-            ;
+            .element("video", new JSONObject().element("src", SRC_SENSETIVE_KEYWORDS));
 
     /**
      * 敏感属性的默认配置
@@ -117,6 +115,7 @@ public class ConstantsContext {
     public static final JSONArray DEFAULT_PARAMS_NEED_TO_CUT = new JSONArray()
             .element("/admin/blog/add").element("/admin/blog/adminUpdate").element("/admin/blog/update")
             .element("/comment/add");
+
     static {
         DEFAULT_ALLOW_TAG_COMMENT_SENSETIVE_TAGS.remove("html");
         DEFAULT_ALLOW_TAG_COMMENT_SENSETIVE_TAGS.remove("body");
@@ -124,6 +123,12 @@ public class ConstantsContext {
         DEFAULT_ALLOW_TAG_COMMENT_SENSETIVE_TAGS.remove("div");
         DEFAULT_ALLOW_TAG_COMMENT_SENSETIVE_TAGS.remove("span");
     }
+
+    /**
+     * 默认的 请求延迟的映射
+     */
+    public static final JSONObject DEFAULT_REQ_DELAY_MAP = new JSONObject().element("/comment/add", 1000)
+            .element("/admin/blog/add", 1000).element("/blog/sense/sense", 500);
 
     @Autowired
     private SystemConfigDao systemConfigDao;
@@ -253,6 +258,11 @@ public class ConstantsContext {
     public String emailAuthUserName;
     public String emailAuthPassword;
     public String emailAuthSmtp;
+
+    /**
+     * 限制给定周期内请求次数的接口的配置
+     */
+    public JSONObject reqDelayMap;
 
     /**
      * 初始化 ConstantsContext
@@ -632,51 +642,70 @@ public class ConstantsContext {
             guestTitle = Tools.optString(systemConfig, BlogConstants.DEFAULT_GUEST_TITLE, "guest");
             guestRoles = Tools.optString(systemConfig, BlogConstants.DEFAULT_GUEST_ROLES, "guest");
 
-            /**
-             * 标签处理相关
-             */
-            try {
-                allowTagSensetiveTags = Tools.optJSONArray(systemConfig, BlogConstants.ALLOW_TAG_SENSETIVE_TAGS, DEFAULT_ALLOW_TAG_SENSETIVE_TAGS);
-            } catch (Exception e) {
-                allowTagSensetiveTags = DEFAULT_ALLOW_TAG_SENSETIVE_TAGS;
-            }
-            try {
-                allowTagCommentSensetiveTags = Tools.optJSONArray(systemConfig, BlogConstants.ALLOW_TAG_COMMENT_SENSETIVE_TAGS, DEFAULT_ALLOW_TAG_COMMENT_SENSETIVE_TAGS);
-            } catch (Exception e) {
-                allowTagCommentSensetiveTags = DEFAULT_ALLOW_TAG_COMMENT_SENSETIVE_TAGS;
-            }
-            try {
-                allowTagSensetiveTag2Attr = Tools.optJSONObject(systemConfig, BlogConstants.ALLOW_TAG_SENSETIVE_TAG_2_ATTR, DEFAULT_SENSETIVE_TAG_2_ATTR);
-            } catch (Exception e) {
-                allowTagSensetiveTag2Attr = DEFAULT_SENSETIVE_TAG_2_ATTR;
-            }
-            try {
-                allowTagSensetiveAttrs = Tools.optJSONArray(systemConfig, BlogConstants.ALLOW_TAG_SENSETIVE_ATTRS, DEFAULT_ALLOW_TAG_SENSETIVE_ATTRS);
-            } catch (Exception e) {
-                allowTagSensetiveAttrs = DEFAULT_ALLOW_TAG_SENSETIVE_ATTRS;
-            }
-            try {
-                forbiddenTagFormatMap = Tools.optJSONObject(systemConfig, BlogConstants.FORBIDDEN_TAG_FORMAT_MAP, DEFAULT_TRANSFER_TAG_NEED_FORMAT);
-            } catch (Exception e) {
-                forbiddenTagFormatMap = DEFAULT_TRANSFER_TAG_NEED_FORMAT;
-            }
-            try {
-                paramsNeedToCut = Tools.optJSONArray(systemConfig, BlogConstants.PARAMS_NEED_TO_CUT, DEFAULT_PARAMS_NEED_TO_CUT);
-            } catch (Exception e) {
-                paramsNeedToCut = DEFAULT_PARAMS_NEED_TO_CUT;
-            }
             paramsToCutMaxLen = Tools.optInt(systemConfig, BlogConstants.PARAMS_TO_CUT_MAX_LEN, 200);
+            maxVisitCntPerPeriod = Tools.optInt(systemConfig, BlogConstants.MAX_VISIT_CNT_PER_PERIOD, 20);
+            maxNotFormatCntPerPeriod = Tools.optInt(systemConfig, BlogConstants.MAX_NOT_FORMAT_CNT_PER_PERIOD, 5);
+            visitCntValidatePeriod = Tools.optInt(systemConfig, BlogConstants.VISIT_CNT_VALIDATE_PERIOD, 5);
+
+            sendEmailIfWithNotify = Tools.optBoolean(systemConfig, BlogConstants.SEND_EMAIL_IF_WITH_NOTIFY, true);
+            emailAuthUserName = Tools.optString(systemConfig, BlogConstants.EMAIL_AUTH_USERNAME, "");
+            emailAuthPassword = Tools.optString(systemConfig, BlogConstants.EMAIL_AUTH_PASSWORD, "");
+            emailAuthSmtp = Tools.optString(systemConfig, BlogConstants.EMAIL_AUTH_SMTP, "smtp.qq.com");
+
+            // 拉取 JSONObject, JSONArray
+            retrieveCompositeSystemConfig();
         }
 
-        maxVisitCntPerPeriod = Tools.optInt(systemConfig, BlogConstants.MAX_VISIT_CNT_PER_PERIOD, 20);
-        maxNotFormatCntPerPeriod = Tools.optInt(systemConfig, BlogConstants.MAX_NOT_FORMAT_CNT_PER_PERIOD, 5);
-        visitCntValidatePeriod = Tools.optInt(systemConfig, BlogConstants.VISIT_CNT_VALIDATE_PERIOD, 5);
 
-        sendEmailIfWithNotify = Tools.optBoolean(systemConfig, BlogConstants.SEND_EMAIL_IF_WITH_NOTIFY, true);
-        emailAuthUserName = Tools.optString(systemConfig, BlogConstants.EMAIL_AUTH_USERNAME, "");
-        emailAuthPassword = Tools.optString(systemConfig, BlogConstants.EMAIL_AUTH_PASSWORD, "");
-        emailAuthSmtp = Tools.optString(systemConfig, BlogConstants.EMAIL_AUTH_SMTP, "smtp.qq.com");
+    }
 
+    /**
+     * 拉取复合的系统配置[JSONObject, JSONArray]
+     *
+     * @return void
+     * @author Jerry.X.He
+     * @date 7/28/2017 8:36 PM
+     * @since 1.0
+     */
+    private void retrieveCompositeSystemConfig() {
+        /**
+         * 标签处理相关
+         */
+        try {
+            allowTagSensetiveTags = Tools.optJSONArray(systemConfig, BlogConstants.ALLOW_TAG_SENSETIVE_TAGS, DEFAULT_ALLOW_TAG_SENSETIVE_TAGS);
+        } catch (Exception e) {
+            allowTagSensetiveTags = DEFAULT_ALLOW_TAG_SENSETIVE_TAGS;
+        }
+        try {
+            allowTagCommentSensetiveTags = Tools.optJSONArray(systemConfig, BlogConstants.ALLOW_TAG_COMMENT_SENSETIVE_TAGS, DEFAULT_ALLOW_TAG_COMMENT_SENSETIVE_TAGS);
+        } catch (Exception e) {
+            allowTagCommentSensetiveTags = DEFAULT_ALLOW_TAG_COMMENT_SENSETIVE_TAGS;
+        }
+        try {
+            allowTagSensetiveTag2Attr = Tools.optJSONObject(systemConfig, BlogConstants.ALLOW_TAG_SENSETIVE_TAG_2_ATTR, DEFAULT_SENSETIVE_TAG_2_ATTR);
+        } catch (Exception e) {
+            allowTagSensetiveTag2Attr = DEFAULT_SENSETIVE_TAG_2_ATTR;
+        }
+        try {
+            allowTagSensetiveAttrs = Tools.optJSONArray(systemConfig, BlogConstants.ALLOW_TAG_SENSETIVE_ATTRS, DEFAULT_ALLOW_TAG_SENSETIVE_ATTRS);
+        } catch (Exception e) {
+            allowTagSensetiveAttrs = DEFAULT_ALLOW_TAG_SENSETIVE_ATTRS;
+        }
+        try {
+            forbiddenTagFormatMap = Tools.optJSONObject(systemConfig, BlogConstants.FORBIDDEN_TAG_FORMAT_MAP, DEFAULT_TRANSFER_TAG_NEED_FORMAT);
+        } catch (Exception e) {
+            forbiddenTagFormatMap = DEFAULT_TRANSFER_TAG_NEED_FORMAT;
+        }
+        try {
+            paramsNeedToCut = Tools.optJSONArray(systemConfig, BlogConstants.PARAMS_NEED_TO_CUT, DEFAULT_PARAMS_NEED_TO_CUT);
+        } catch (Exception e) {
+            paramsNeedToCut = DEFAULT_PARAMS_NEED_TO_CUT;
+        }
+        try {
+            reqDelayMap = Tools.optJSONObject(systemConfig, BlogConstants.REQ_DELAY_MAP, DEFAULT_REQ_DELAY_MAP);
+        } catch (Exception e) {
+            reqDelayMap = DEFAULT_REQ_DELAY_MAP;
+        }
     }
 
 }

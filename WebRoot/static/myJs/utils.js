@@ -291,7 +291,7 @@ function ajax(config) {
                 locateRoot(window).location.href = "/static/admin/index.html"
             })
             return false
-        } else if ((203 === resp.code) || (204 === resp.code) || (205 === resp.code)) {
+        } else if ((203 === resp.code) || (204 === resp.code) || (205 === resp.code) || (206 === resp.code)) {
             alertIfException(resp.data, function () {
                 layer.close(interceptorDialog)
                 interceptorDialog = null

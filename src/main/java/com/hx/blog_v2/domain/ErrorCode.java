@@ -37,6 +37,10 @@ public enum ErrorCode implements Code2Msg<Integer, String> {
      */
     IN_BLANK_LIST(205, " your are in blank list now, please come early tomorrow ! "),
     /**
+     * REQ_DELAY_COOLING
+     */
+    REQ_DELAY_COOLING(206, " please try again later ! "),
+    /**
      * NOT_FOUND
      */
     NOT_FOUND(404, "resource not found"),
