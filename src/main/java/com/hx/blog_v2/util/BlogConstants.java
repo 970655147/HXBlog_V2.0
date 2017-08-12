@@ -196,6 +196,10 @@ public final class BlogConstants {
      * 用户带过来token的请求头
      */
     public static final String HEADER_TOKEN = "hx_blog_token";
+    /**
+     * nginx 转发的时候, 放置客户端ip的头
+     */
+    public static final String HEADER_REAL_IP = "hx_blog_nginx_real_ip";
 
     /**
      * 相关常量的 key

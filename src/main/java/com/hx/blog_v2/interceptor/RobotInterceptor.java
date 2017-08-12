@@ -5,6 +5,7 @@ import com.hx.blog_v2.context.ConstantsContext;
 import com.hx.blog_v2.context.WebContext;
 import com.hx.blog_v2.domain.ErrorCode;
 import com.hx.blog_v2.domain.dto.SessionUser;
+import com.hx.blog_v2.util.BizUtils;
 import com.hx.blog_v2.util.BlogConstants;
 import com.hx.blog_v2.util.ResultUtils;
 import com.hx.common.interf.cache.Cache;
@@ -15,8 +16,6 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * 如果某用户 访问异常, 加入 黑名单, 关一天
@@ -47,7 +46,7 @@ public class RobotInterceptor extends HandlerInterceptorAdapter {
         }
 
 
-        int visitCnt = incVisitCnt(ip, cacheContext.visitPerPeroid());
+        int visitCnt = BizUtils.incFreq(cacheContext.inputNotFormatPerPeroid(), ip, 1);;
         if (visitCnt >= constantsContext.maxVisitCntPerPeriod) {
             blackList.put(ip, " you visit server too frequency, system is busy now ! ");
         }
@@ -68,7 +67,7 @@ public class RobotInterceptor extends HandlerInterceptorAdapter {
         // force cast if could
         if (instanceOfResult) {
             if (((Result) resultObj).getCode() == ErrorCode.INPUT_NOT_FORMAT.code()) {
-                notFormatCnt = incVisitCnt(ip, cacheContext.inputNotFormatPerPeroid());
+                notFormatCnt = BizUtils.incFreq(cacheContext.inputNotFormatPerPeroid(), ip, 1);
             }
         }
 
@@ -76,25 +75,6 @@ public class RobotInterceptor extends HandlerInterceptorAdapter {
         if (notFormatCnt >= constantsContext.maxNotFormatCntPerPeriod) {
             blackList.put(ip, " you visit server too frequency, system is busy now ! ");
         }
-    }
-
-    /**
-     * 累加 visitMap 中key 对应的次数
-     *
-     * @param key      key
-     * @param visitMap visitMap
-     * @return void
-     * @author Jerry.X.He
-     * @date 6/26/2017 7:58 PM
-     * @since 1.0
-     */
-    private int incVisitCnt(String key, Map<String, AtomicInteger> visitMap) {
-        AtomicInteger val = visitMap.get(key);
-        if (val == null) {
-            val = new AtomicInteger(0);
-            visitMap.put(key, val);
-        }
-        return val.incrementAndGet();
     }
 
     /**

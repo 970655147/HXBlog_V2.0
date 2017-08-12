@@ -30,6 +30,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.net.URL;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
@@ -84,6 +85,11 @@ public final class BizUtils {
     public static String getIp() {
         HttpServletRequest req = WebContext.getRequest();
 
+        // 优先获取 nginx 转发的时候, 配置的ip
+        String realIpFromNginx = req.getHeader(BlogConstants.HEADER_REAL_IP);
+        if (!Tools.isEmpty(realIpFromNginx)) {
+            return realIpFromNginx;
+        }
         String ip = req.getHeader("X-Forwarded-For");
         if (Tools.isEmpty(ip) || "unknown".equalsIgnoreCase(ip)) {
             if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
@@ -169,6 +175,26 @@ public final class BizUtils {
         }
 
         return false;
+    }
+
+    /**
+     * 累加 visitMap 中key 对应的次数
+     *
+     * @param visitMap visitMap
+     * @param key      key
+     * @param inc      inc
+     * @return void
+     * @author Jerry.X.He
+     * @date 6/26/2017 7:58 PM
+     * @since 1.0
+     */
+    public static int incFreq(Map<String, AtomicInteger> visitMap, String key, int inc) {
+        AtomicInteger val = visitMap.get(key);
+        if (val == null) {
+            val = new AtomicInteger(0);
+            visitMap.put(key, val);
+        }
+        return val.addAndGet(inc);
     }
 
     /**
