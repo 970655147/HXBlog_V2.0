@@ -61,7 +61,7 @@ layui.define(['form', 'upload', 'layer'], function (exports) {
 
     layui.upload({
         elem: "#uploadEditorHtml",
-        url: '/admin/upload/file', //上传接口
+        url: reqMap.file.upload, //上传接口
         ext: "html|txt",
         before: function (input) {
             var reader = new FileReader();

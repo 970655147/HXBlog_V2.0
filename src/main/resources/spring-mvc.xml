@@ -29,6 +29,8 @@
             <mvc:mapping path="/**"/>
             <mvc:exclude-mapping path="/static/**"/>
             <mvc:exclude-mapping path="/image/checkCode"/>
+            <mvc:exclude-mapping path="/admin/upload/image"/>
+            <mvc:exclude-mapping path="/admin/upload/file"/>
             <mvc:exclude-mapping path="/admin/upload/ueditor/config"/>
             <bean class="com.hx.blog_v2.interceptor.TokenInterceptor"/>
         </mvc:interceptor>

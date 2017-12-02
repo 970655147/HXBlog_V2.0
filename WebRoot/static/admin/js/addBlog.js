@@ -164,7 +164,7 @@ layui.define(['form', 'upload', 'layer'], function (exports) {
 
     layui.upload({
         elem: "#uploadCoverImage",
-        url: '/admin/upload/image', //上传接口
+        url: reqMap.image.upload, //上传接口
         ext: "jpg|jpeg|png|bmp|gif",
         success: function (resp) { //上传成功后的回调
             if (resp.success) {
@@ -179,7 +179,7 @@ layui.define(['form', 'upload', 'layer'], function (exports) {
 
     layui.upload({
         elem: "#uploadEditorHtml",
-        url: '/admin/upload/file', //上传接口
+        url: reqMap.file.upload, //上传接口
         ext: "html|txt",
         before: function (input) {
             var reader = new FileReader();

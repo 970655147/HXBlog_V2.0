@@ -238,8 +238,11 @@ var reqMap = {
         update: formatContextUrl("/admin/image/update"),
         reSort: formatContextUrl("/admin/image/reSort"),
         remove: formatContextUrl("/admin/image/remove")
-    }
-    ,
+    },
+
+    file : {
+        upload: formatContextUrl("/admin/upload/file"),
+    },
 
     /**
      * 心情相关
