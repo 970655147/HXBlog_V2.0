@@ -29,7 +29,7 @@ public class MessageVO implements LogisticalId<String> {
 
     public MessageVO() {
         Date now = new Date();
-        createdAt = DateUtils.formate(now, BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
+        createdAt = DateUtils.format(now, BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
         updatedAt = createdAt;
         consumed = 0;
     }

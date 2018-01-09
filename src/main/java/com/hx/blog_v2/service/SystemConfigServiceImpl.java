@@ -90,7 +90,7 @@ public class SystemConfigServiceImpl extends BaseServiceImpl<SystemConfigPO> imp
         SystemConfigPO po = new SystemConfigPO(params.getName(), params.getValue(), params.getDesc(),
                 params.getType(), params.getSort(), params.getEnable());
         po.setId(params.getId());
-        po.setUpdatedAt(DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS));
+        po.setUpdatedAt(DateUtils.format(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS));
         Result result = systemConfigDao.update(po);
         if (!result.isSuccess()) {
             return result;
@@ -111,7 +111,7 @@ public class SystemConfigServiceImpl extends BaseServiceImpl<SystemConfigPO> imp
             return ResultUtils.failed(" 缓存和数据库数据不一致 !");
         }
 
-        String updatedAt = DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
+        String updatedAt = DateUtils.format(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
         IQueryCriteria query = Criteria.eq("id", params.getId());
         IUpdateCriteria update = Criteria.set("deleted", "1").add("updated_at", updatedAt);
         Result result = systemConfigDao.update(query, update);

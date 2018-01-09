@@ -123,7 +123,7 @@ public class InterfServiceImpl extends BaseServiceImpl<InterfPO> implements Inte
         po.setDesc(params.getDesc());
         po.setSort(params.getSort());
         po.setEnable(params.getEnable());
-        po.setUpdatedAt(DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS));
+        po.setUpdatedAt(DateUtils.format(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS));
 
         Result result = interfDao.update(po);
         if (!result.isSuccess()) {
@@ -172,7 +172,7 @@ public class InterfServiceImpl extends BaseServiceImpl<InterfPO> implements Inte
             return ResultUtils.failed("该接口下面还有 " + totalRecord + "个资源, 请先迁移这部分资源 !");
         }
 
-        String updatedAt = DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
+        String updatedAt = DateUtils.format(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
         IQueryCriteria query = Criteria.eq("id", params.getId());
         IUpdateCriteria update = Criteria.set("deleted", "1").add("updated_at", updatedAt);
         Result result = interfDao.update(query, update);

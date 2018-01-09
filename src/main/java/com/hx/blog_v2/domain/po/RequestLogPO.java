@@ -55,7 +55,7 @@ public class RequestLogPO implements JSONTransferable<RequestLogPO> {
     }
 
     public RequestLogPO() {
-        createdAt = DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
+        createdAt = DateUtils.format(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
     }
 
     public String getId() {

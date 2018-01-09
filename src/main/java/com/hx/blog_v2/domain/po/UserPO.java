@@ -66,9 +66,9 @@ public class UserPO implements JSONTransferable<UserPO> {
 
     public UserPO() {
         Date now = new Date();
-        createdAt = DateUtils.formate(now, BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
+        createdAt = DateUtils.format(now, BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
         updatedAt = createdAt;
-        lastLoginAt = DateUtils.formate(new Date(0), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
+        lastLoginAt = DateUtils.format(new Date(0), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
         deleted = 0;
     }
 

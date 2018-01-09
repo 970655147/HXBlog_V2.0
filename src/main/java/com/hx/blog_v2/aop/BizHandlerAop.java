@@ -1,7 +1,7 @@
 package com.hx.blog_v2.aop;
 
-import com.hx.blog_v2.biz_handler.context.SimpleBizContext;
 import com.hx.blog_v2.biz_handler.anno.BizHandle;
+import com.hx.blog_v2.biz_handler.context.SimpleBizContext;
 import com.hx.blog_v2.biz_handler.interf.BizContext;
 import com.hx.blog_v2.biz_handler.interf.BizHandler;
 import com.hx.blog_v2.biz_handler.interf.BizValidator;
@@ -63,7 +63,8 @@ public class BizHandlerAop {
         BizValidator validator = context.validator();
         BizHandler handler = context.handler();
         if (handler == null) {
-            throw new RuntimeException(" there are no handler matched[" + context.bizHandle().handler() + "] ! ");
+            Log.err(" there are no handler matched[" + context.bizHandle().handler() + "] ! ");
+            return point.proceed();
         }
         if (validator != null) {
             Result validateResult = validator.validate(context);
@@ -105,8 +106,9 @@ public class BizHandlerAop {
 
         context.exception(e);
         BizHandler handler = context.handler();
-        if(handler == null) {
+        if (handler == null) {
             Log.err(" there are no handler matched[" + context.bizHandle().handler() + "] ! ");
+            return;
         }
         handler.afterException(context);
     }
@@ -131,9 +133,9 @@ public class BizHandlerAop {
         Method method = sig.getMethod();
         BizHandle bizHandle = method.getAnnotation(BizHandle.class);
         BizContext context = new SimpleBizContext(point, point.getTarget(), method, point.getArgs(), bizHandle);
-        if(!Tools.isEmpty(bizHandle.validator())) {
+        if (!Tools.isEmpty(bizHandle.validator())) {
             BizValidator validator = ac.getBean(bizHandle.validator(), BizValidator.class);
-            if(validator == null) {
+            if (validator == null) {
                 Log.err(" there are no validator matched[" + bizHandle.validator() + "] ! ");
             }
             context.validator(validator);

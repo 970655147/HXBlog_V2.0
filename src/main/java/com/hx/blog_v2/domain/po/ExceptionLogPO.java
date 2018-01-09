@@ -58,7 +58,7 @@ public class ExceptionLogPO implements JSONTransferable<ExceptionLogPO> {
     }
 
     public ExceptionLogPO() {
-        createdAt = DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
+        createdAt = DateUtils.format(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
     }
 
     public String getId() {

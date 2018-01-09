@@ -53,7 +53,7 @@ public class LinkPO implements JSONTransferable<LinkPO>, Comparable<LinkPO> {
 
     public LinkPO() {
         Date now = new Date();
-        createdAt = DateUtils.formate(now, BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
+        createdAt = DateUtils.format(now, BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
         updatedAt = createdAt;
         enable = 1;
         deleted = 0;

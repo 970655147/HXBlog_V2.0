@@ -87,7 +87,7 @@ public class ImageServiceImpl extends BaseServiceImpl<ImagePO> implements ImageS
     public Result update(ImageSaveForm params) {
         ImagePO po = new ImagePO(params.getTitle(), params.getUrl(), params.getType(), params.getSort(), params.getEnable());
         po.setId(params.getId());
-        po.setUpdatedAt(DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS));
+        po.setUpdatedAt(DateUtils.format(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS));
 
         Result result = imageDao.update(po);
         if (!result.isSuccess()) {
@@ -98,7 +98,7 @@ public class ImageServiceImpl extends BaseServiceImpl<ImagePO> implements ImageS
 
     @Override
     public Result remove(BeanIdForm params) {
-        String updatedAt = DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
+        String updatedAt = DateUtils.format(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
         IQueryCriteria query = Criteria.eq("id", params.getId());
         IUpdateCriteria update = Criteria.set("deleted", "1").add("updated_at", updatedAt);
 

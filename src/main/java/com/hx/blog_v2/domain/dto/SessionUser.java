@@ -49,7 +49,7 @@ public class SessionUser implements UserInfoExtractor {
     public SessionUser() {
         this.requestIp = BizUtils.getIp();
         this.ipAddr = BizUtils.getIpAddr(this.requestIp);
-        this.loginDate = DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
+        this.loginDate = DateUtils.format(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
     }
 
     public String getId() {

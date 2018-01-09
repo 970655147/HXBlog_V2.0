@@ -55,7 +55,7 @@ public class MessagePO implements JSONTransferable<MessagePO> {
 
     public MessagePO() {
         Date now = new Date();
-        createdAt = DateUtils.formate(now, BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
+        createdAt = DateUtils.format(now, BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
         updatedAt = createdAt;
         consumed = 0;
         deleted = 0;

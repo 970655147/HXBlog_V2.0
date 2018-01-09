@@ -51,8 +51,8 @@ public class BlogVisitLogPO implements JSONTransferable<BlogVisitLogPO> {
 
     public BlogVisitLogPO() {
         Date now = new Date();
-        createdAtDay = DateUtils.formate(now, BlogConstants.FORMAT_YYYY_MM_DD);
-        createdAt = DateUtils.formate(now, BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
+        createdAtDay = DateUtils.format(now, BlogConstants.FORMAT_YYYY_MM_DD);
+        createdAt = DateUtils.format(now, BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
     }
 
     public String getId() {

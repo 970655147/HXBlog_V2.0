@@ -47,7 +47,7 @@ public class MoodPO implements JSONTransferable<MoodPO> {
 
     public MoodPO() {
         Date now = new Date();
-        createdAt = DateUtils.formate(now, BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
+        createdAt = DateUtils.format(now, BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
         updatedAt = createdAt;
         deleted = 0;
     }

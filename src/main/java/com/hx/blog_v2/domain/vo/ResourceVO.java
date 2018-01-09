@@ -2,13 +2,7 @@ package com.hx.blog_v2.domain.vo;
 
 import com.hx.blog_v2.util.BlogConstants;
 import com.hx.blog_v2.util.DateUtils;
-import com.hx.json.JSONObject;
-import com.hx.json.config.interf.JSONConfig;
-import com.hx.json.interf.JSONField;
 import com.hx.log.alogrithm.tree.interf.TreeIdExtractor;
-import com.hx.log.json.interf.JSONTransferable;
-import com.hx.log.util.Constants;
-import com.hx.log.util.Tools;
 
 import java.util.*;
 
@@ -42,7 +36,7 @@ public class ResourceVO implements TreeIdExtractor<ResourceVO, String> {
 
     public ResourceVO() {
         Date now = new Date();
-        createdAt = DateUtils.formate(now, BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
+        createdAt = DateUtils.format(now, BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
         updatedAt = createdAt;
     }
 

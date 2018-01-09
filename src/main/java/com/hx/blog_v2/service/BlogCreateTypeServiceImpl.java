@@ -84,7 +84,7 @@ public class BlogCreateTypeServiceImpl extends BaseServiceImpl<BlogCreateTypePO>
 
         po.setName(params.getName());
         po.setSort(params.getSort());
-        po.setUpdatedAt(DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS));
+        po.setUpdatedAt(DateUtils.format(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS));
         Result result = blogCreateTypeDao.update(po);
         if (!result.isSuccess()) {
             return result;
@@ -105,7 +105,7 @@ public class BlogCreateTypeServiceImpl extends BaseServiceImpl<BlogCreateTypePO>
             return ResultUtils.failed("该创建类型下面还有 " + totalRecord + "篇博客, 请先迁移这部分博客 !");
         }
 
-        po.setUpdatedAt(DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS));
+        po.setUpdatedAt(DateUtils.format(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS));
         po.setDeleted(1);
         Result result = blogCreateTypeDao.update(po);
         if (!result.isSuccess()) {

@@ -20,7 +20,7 @@ public class Test04DateFormat {
 
         Date now = new Date();
 
-        info(DateUtils.formate(now, BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS));
+        info(DateUtils.format(now, BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS));
 
     }
 

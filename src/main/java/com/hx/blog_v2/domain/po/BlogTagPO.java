@@ -44,7 +44,7 @@ public class BlogTagPO implements JSONTransferable<BlogTagPO>, Comparable<BlogTa
     }
 
     public BlogTagPO() {
-        createdAt = DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
+        createdAt = DateUtils.format(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
         updatedAt = createdAt;
         deleted = 0;
     }

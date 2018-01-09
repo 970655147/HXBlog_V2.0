@@ -151,7 +151,7 @@ public class BlogCommentServiceImpl extends BaseServiceImpl<BlogCommentPO> imple
 
     @Override
     public Result update(CommentSaveForm params) {
-        String updatedAt = DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
+        String updatedAt = DateUtils.format(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
         IQueryCriteria query = Criteria.eq("id", params.getId());
         IUpdateCriteria update = Criteria.set("to_user", params.getToUser()).add("comment", params.getComment())
                 .add("updated_at", updatedAt);
@@ -176,7 +176,7 @@ public class BlogCommentServiceImpl extends BaseServiceImpl<BlogCommentPO> imple
         if ("1".equals(po.getCommentId())) {
             query = Criteria.eq("floor_id", po.getFloorId());
         }
-        String updatedAt = DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
+        String updatedAt = DateUtils.format(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
         IUpdateCriteria update = Criteria.set("deleted", "1").add("updated_at", updatedAt);
         Result result = commentDao.update(query, update);
         if (!result.isSuccess()) {

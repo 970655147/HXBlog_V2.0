@@ -23,11 +23,8 @@ import com.hx.log.alogrithm.code.Codec;
 import com.hx.log.file.FileUtils;
 import com.hx.log.util.Log;
 import com.hx.log.util.Tools;
-import com.hx.mongo.criteria.Criteria;
-import com.hx.mongo.criteria.interf.IQueryCriteria;
 import net.coobird.thumbnailator.Thumbnails;
 import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.disk.DiskFileItem;
 import org.imgscalr.Scalr;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -222,7 +219,7 @@ public class UploadFileServiceImpl extends BaseServiceImpl<UploadFilePO> impleme
      */
     private String generateImgPath(MultipartFile file) {
         String fileName = file.getOriginalFilename(), suffix = fileName.substring(fileName.indexOf("."));
-        String dateStr = DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD);
+        String dateStr = DateUtils.format(new Date(), BlogConstants.FORMAT_YYYY_MM_DD);
         String folder = dateStr.replace("-", "/");
         return Tools.getFilePath(folder, Codec.byte2Hex(Codec.md5((fileName + com.hx.log.date.DateUtils.nowStr()).getBytes())) + suffix);
     }

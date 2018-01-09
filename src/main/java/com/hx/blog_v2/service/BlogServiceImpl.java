@@ -212,7 +212,7 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
             }
         }
 
-        String updatedAt = DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
+        String updatedAt = DateUtils.format(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
         Result removeBlogResult = blogDao.update(Criteria.eq("id", params.getId()),
                 Criteria.set("deleted", "1").add("updated_at", updatedAt));
         if (!removeBlogResult.isSuccess()) {
@@ -240,7 +240,7 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
             return ResultUtils.failed(ErrorCode.INPUT_NOT_FORMAT, " bad state ! ");
         }
 
-        String updatedAt = DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
+        String updatedAt = DateUtils.format(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
         Result auditBlogResult = blogDao.update(Criteria.eq("id", params.getId()),
                 Criteria.set("state", params.getState()).add("updated_at", updatedAt));
         if (!auditBlogResult.isSuccess()) {
@@ -261,7 +261,7 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
      * @since 1.0
      */
     private String generateBlogPath(BlogSaveForm params) {
-        String fileName = DateUtils.formate(new Date(), BlogConstants.FORMAT_FILENAME) + "-" + params.getTitle();
+        String fileName = DateUtils.format(new Date(), BlogConstants.FORMAT_FILENAME) + "-" + params.getTitle();
         int bucket = (fileName.hashCode() & 63);
         return bucket + "/" + fileName + Tools.HTML;
     }
@@ -354,7 +354,7 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
         }
 
         po.setId(params.getId());
-        po.setUpdatedAt(DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS));
+        po.setUpdatedAt(DateUtils.format(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS));
         Result updateBlogResult = blogDao.update(po);
         if (!updateBlogResult.isSuccess()) {
             return updateBlogResult;

@@ -43,7 +43,7 @@ public final class DateUtils {
      * @date 5/20/2017 9:52 AM
      * @since 1.0
      */
-    public static String formate(Date date, String pattern) {
+    public static String format(Date date, String pattern) {
         return getDateFormat(pattern).format(date);
     }
 

@@ -74,7 +74,7 @@ public class EmailPO implements JSONTransferable<EmailPO> {
 
     public EmailPO() {
         Date now = new Date();
-        createdAt = DateUtils.formate(now, BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
+        createdAt = DateUtils.format(now, BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
     }
 
     public String getFrom() {

@@ -127,7 +127,7 @@ public class RoleServiceImpl extends BaseServiceImpl<RolePO> implements RoleServ
         po.setDesc(params.getDesc());
         po.setSort(params.getSort());
         po.setEnable(params.getEnable());
-        po.setUpdatedAt(DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS));
+        po.setUpdatedAt(DateUtils.format(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS));
 
         Result result = roleDao.update(po);
         if (!result.isSuccess()) {
@@ -176,7 +176,7 @@ public class RoleServiceImpl extends BaseServiceImpl<RolePO> implements RoleServ
             return ResultUtils.failed("该角色下面还有 " + totalRecord + "个用户, 请先迁移这部分用户 !");
         }
 
-        po.setUpdatedAt(DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS));
+        po.setUpdatedAt(DateUtils.format(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS));
         po.setDeleted(1);
         Result result = roleDao.update(po);
         if (!result.isSuccess()) {

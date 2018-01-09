@@ -46,7 +46,7 @@ public class BlogTypePO implements JSONTransferable<BlogTypePO>, Comparable<Blog
 
     public BlogTypePO() {
         Date now = new Date();
-        createdAt = DateUtils.formate(now, BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
+        createdAt = DateUtils.format(now, BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
         updatedAt = createdAt;
         deleted = 0;
     }

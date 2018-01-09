@@ -50,7 +50,7 @@ public class UploadFilePO implements JSONTransferable<UploadFilePO>, LogisticalI
 
     public UploadFilePO() {
         Date now = new Date();
-        createdAt = DateUtils.formate(now, BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
+        createdAt = DateUtils.format(now, BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
     }
 
     public String getId() {

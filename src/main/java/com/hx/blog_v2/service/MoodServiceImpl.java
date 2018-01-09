@@ -76,7 +76,7 @@ public class MoodServiceImpl extends BaseServiceImpl<MoodPO> implements MoodServ
     public Result update(MoodSaveForm params) {
         MoodPO po = new MoodPO(params.getTitle(), params.getContent(), params.getEnable());
         po.setId(params.getId());
-        po.setUpdatedAt(DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS));
+        po.setUpdatedAt(DateUtils.format(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS));
 
         Result result = moodDao.update(po);
         if (!result.isSuccess()) {
@@ -87,7 +87,7 @@ public class MoodServiceImpl extends BaseServiceImpl<MoodPO> implements MoodServ
 
     @Override
     public Result remove(BeanIdForm params) {
-        String updatedAt = DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
+        String updatedAt = DateUtils.format(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
         IQueryCriteria query = Criteria.eq("id", params.getId());
         IUpdateCriteria update = Criteria.set("deleted", "1").add("updated_at", updatedAt);
         Result result = moodDao.update(query, update);

@@ -51,7 +51,7 @@ public class BlogSensePO implements JSONTransferable<BlogSensePO> {
     }
 
     public BlogSensePO() {
-        this.createdAt = DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
+        this.createdAt = DateUtils.format(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
         this.score = 0;
     }
 

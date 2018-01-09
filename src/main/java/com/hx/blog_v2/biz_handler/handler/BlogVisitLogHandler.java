@@ -116,7 +116,7 @@ public class BlogVisitLogHandler extends BizHandlerAdapter {
                 blogEx.incViewCnt(1);
                 cacheContext.todaysStatistics().incViewCnt(1);
                 cacheContext.now5SecStatistics().incViewCnt(1);
-                params.setCreatedAtDay(DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD));
+                params.setCreatedAtDay(DateUtils.format(new Date(), BlogConstants.FORMAT_YYYY_MM_DD));
                 BlogVisitLogPO po = visitLogDao.get(params);
                 // 今天 没访问过?
                 if (po == null) {

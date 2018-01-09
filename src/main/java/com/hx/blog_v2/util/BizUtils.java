@@ -256,8 +256,8 @@ public final class BizUtils {
     public static List<StatisticsInfo> collectRecentlyStatisticsInfo(JdbcTemplate jdbcTemplate, int dayOff) {
         Date now = new Date();
         Date oldestDay = DateUtils.addDay(now, -dayOff + 1);
-        String begin = DateUtils.formate(DateUtils.beginOfDay(oldestDay), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
-        String end = DateUtils.formate(now, BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
+        String begin = DateUtils.format(DateUtils.beginOfDay(oldestDay), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
+        String end = DateUtils.format(now, BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
 
         String statsViewCntSql = " select created_at_day as date, count(request_ip) as viewCount, count(distinct(request_ip)) as uniqueViewCount from blog_visit_log where created_at >= ? and created_at <= ? group by created_at_day ";
         String statsSenseCntSql = " select date_format(created_at, '%Y-%m-%d') as date, count(if (score > 3, true, null)) as goodCnt, count(if (score <= 3, true, null)) as notGoodCnt from blog_sense where sense = '1' and created_at >= ? and created_at <= ? group by DATE_FORMAT(created_at, '%Y-%m-%d') ";
@@ -278,7 +278,7 @@ public final class BizUtils {
 
         List<StatisticsInfo> result = new ArrayList<>(dayOff);
         for (int off = 0; off < dayOff; off++) {
-            String dayStr = DateUtils.formate(DateUtils.addDay(oldestDay, off), BlogConstants.FORMAT_YYYY_MM_DD);
+            String dayStr = DateUtils.format(DateUtils.addDay(oldestDay, off), BlogConstants.FORMAT_YYYY_MM_DD);
             Map<String, Object> viewCntMap = locateByDate(viewCnts, "created_at_day", dayStr);
             Map<String, Object> senseCntMap = locateByDate(senseCnts, dateKey, dayStr);
             Map<String, Object> blogCntMap = locateByDate(blogCnts, dateKey, dayStr);
@@ -305,7 +305,7 @@ public final class BizUtils {
      * @since 1.0
      */
     public static StatisticsInfo collectSumStatisticsInfo(JdbcTemplate jdbcTemplate) {
-        String yesterday = DateUtils.formate(DateUtils.addDay(new Date(), -1), BlogConstants.FORMAT_YYYY_MM_DD);
+        String yesterday = DateUtils.format(DateUtils.addDay(new Date(), -1), BlogConstants.FORMAT_YYYY_MM_DD);
         String statsViewCntSql = " select created_at_day as date, count(request_ip) as viewCount, count(distinct(request_ip)) as uniqueViewCount from blog_visit_log where created_at_day <= ? ";
         String statsSenseCntSql = " select count(if (score > 3, true, null)) as goodCnt, count(if (score <= 3, true, null)) as notGoodCnt from blog_sense where sense = '1' and date_format(created_at, '%Y-%m-%d') <= ? ";
         String statsBlogCntSql = " select count(*) as blogCnt from blog where deleted = 0 and date_format(created_at, '%Y-%m-%d') <= ? ";

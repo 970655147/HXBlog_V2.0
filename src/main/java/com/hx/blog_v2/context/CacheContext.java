@@ -1237,14 +1237,14 @@ public class CacheContext {
         IQueryCriteria latestCommentCriteria = Criteria.eq("deleted", 0);
         LimitCriteria latestCommentLimit = Criteria.limit(0, Tools.optInt(constantsContext.allSystemConfig(), "latest.blog.cnt", 5));
         Result latestCommentResult = blogCommentDao.list(latestCommentCriteria, Criteria.sortBy("created_at", SortByCriteria.DESC), latestCommentLimit);
-        if (latestCommentResult.isSuccess()) {
-            List<BlogCommentPO> latestCommentsFromDb = (List<BlogCommentPO>) latestCommentResult.getData();
-            for (int i = latestCommentsFromDb.size() - 1; i >= 0; i--) {
-                BlogCommentPO po = latestCommentsFromDb.get(i);
-                latestComments.put(po.getId(), po);
-            }
-        } else {
+        if (! latestCommentResult.isSuccess()) {
             Log.err(" error while load latest blog ");
+        }
+
+        List<BlogCommentPO> latestCommentsFromDb = (List<BlogCommentPO>) latestCommentResult.getData();
+        for (int i = latestCommentsFromDb.size() - 1; i >= 0; i--) {
+            BlogCommentPO po = latestCommentsFromDb.get(i);
+            latestComments.put(po.getId(), po);
         }
     }
 

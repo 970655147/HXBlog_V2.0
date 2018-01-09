@@ -108,7 +108,7 @@ public class UserServiceImpl implements UserService {
         UserPO po = new UserPO(null, null, params.getNickName(), params.getTitle(),
                 params.getEmail(), params.getHeadImgUrl(), params.getMotto());
         po.setId(params.getId());
-        po.setUpdatedAt(DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS));
+        po.setUpdatedAt(DateUtils.format(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS));
 
         Result result = userDao.update(po);
         if (!result.isSuccess()) {
@@ -129,7 +129,7 @@ public class UserServiceImpl implements UserService {
             return ResultUtils.failed("用户密码不正确 !");
         }
 
-        String updatedAt = DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
+        String updatedAt = DateUtils.format(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
         String newSalt = newSalt();
         String newPwd = encodePwd(params.getNewPwd(), newSalt);
         IQueryCriteria query = Criteria.eq("id", user.getId());
@@ -144,7 +144,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Result remove(BeanIdForm params) {
-        String updatedAt = DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
+        String updatedAt = DateUtils.format(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
         IQueryCriteria query = Criteria.eq("id", params.getId());
         IUpdateCriteria update = Criteria.set("deleted", "1").add("updated_at", updatedAt);
         Result result = userDao.update(query, update);
@@ -191,7 +191,7 @@ public class UserServiceImpl implements UserService {
         cacheContext.removeForceOffLine(user.getId());
 
         IUpdateCriteria update = Criteria.set("last_login_ip", params.getIp())
-                .add("last_login_at", DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS));
+                .add("last_login_at", DateUtils.format(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS));
         Result updateResult = userDao.update(Criteria.eq("id", user.getId()), update);
         if (!updateResult.isSuccess()) {
             return updateResult;

@@ -153,7 +153,7 @@ public class MessageServiceImpl extends BaseServiceImpl<MessagePO> implements Me
 
     @Override
     public Result update(MessageSaveForm params) {
-        String updateAt = DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
+        String updateAt = DateUtils.format(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
         IQueryCriteria query = Criteria.eq("id", params.getId());
         IUpdateCriteria update = Criteria.set("subject", params.getSubject()).add("content", params.getContent())
                 .add("updated_at", updateAt);
@@ -196,7 +196,7 @@ public class MessageServiceImpl extends BaseServiceImpl<MessagePO> implements Me
 
     @Override
     public Result markConsumed(BeanIdForm params) {
-        String updateAt = DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
+        String updateAt = DateUtils.format(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
         IQueryCriteria query = Criteria.eq("id", params.getId());
         IUpdateCriteria update = Criteria.set("consumed", "1").add("updated_at", updateAt);
 
@@ -210,7 +210,7 @@ public class MessageServiceImpl extends BaseServiceImpl<MessagePO> implements Me
     @Override
     public Result markAllConsumed() {
         String userId = WebContext.getStrAttrFromSession(BlogConstants.SESSION_USER_ID);
-        String updateAt = DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
+        String updateAt = DateUtils.format(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
         IQueryCriteria query = Criteria.eq("receiver_id", userId);
         IUpdateCriteria update = Criteria.set("consumed", "1").add("updated_at", updateAt);
 
@@ -223,7 +223,7 @@ public class MessageServiceImpl extends BaseServiceImpl<MessagePO> implements Me
 
     @Override
     public Result remove(BeanIdForm params) {
-        String updatedAt = DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
+        String updatedAt = DateUtils.format(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
         IQueryCriteria query = Criteria.eq("id", params.getId());
         IUpdateCriteria update = Criteria.set("deleted", "1").add("updated_at", updatedAt);
 

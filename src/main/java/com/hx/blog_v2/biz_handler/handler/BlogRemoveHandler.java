@@ -9,7 +9,6 @@ import com.hx.blog_v2.context.WebContext;
 import com.hx.blog_v2.dao.interf.BlogDao;
 import com.hx.blog_v2.domain.dto.MessageType;
 import com.hx.blog_v2.domain.dto.SessionUser;
-import com.hx.blog_v2.domain.form.BeanIdForm;
 import com.hx.blog_v2.domain.form.MessageSaveForm;
 import com.hx.blog_v2.domain.po.BlogPO;
 import com.hx.blog_v2.domain.po.RolePO;
@@ -141,8 +140,8 @@ public class BlogRemoveHandler extends BizHandlerAdapter {
             if (offsetFromNow < now5SecStatsMaxTsOff) {
                 cacheContext.now5SecStatistics().incBlogCnt(-1);
                 cacheContext.todaysStatistics().incBlogCnt(-1);
-            } else if (Objects.equals(DateUtils.formate(now, BlogConstants.FORMAT_YYYY_MM_DD),
-                    DateUtils.formate(createdAt, BlogConstants.FORMAT_YYYY_MM_DD))) {
+            } else if (Objects.equals(DateUtils.format(now, BlogConstants.FORMAT_YYYY_MM_DD),
+                    DateUtils.format(createdAt, BlogConstants.FORMAT_YYYY_MM_DD))) {
                 cacheContext.todaysStatistics().incBlogCnt(-1);
             } else if (offsetByDay < recentlyStatsMaxTsOff) {
                 int offFromNow = (int) (offsetByDay / oneDayTsOff);

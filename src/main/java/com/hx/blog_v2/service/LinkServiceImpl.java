@@ -83,7 +83,7 @@ public class LinkServiceImpl extends BaseServiceImpl<LinkPO> implements LinkServ
     public Result update(LinkSaveForm params) {
         LinkPO po = new LinkPO(params.getName(), params.getDesc(), params.getUrl(), params.getSort(), params.getEnable());
         po.setId(params.getId());
-        po.setUpdatedAt(DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS));
+        po.setUpdatedAt(DateUtils.format(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS));
 
         Result result = linkDao.update(po);
         if (!result.isSuccess()) {
@@ -101,7 +101,7 @@ public class LinkServiceImpl extends BaseServiceImpl<LinkPO> implements LinkServ
         }
 
         cacheContext.allLinks().remove(params.getId());
-        String updatedAt = DateUtils.formate(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
+        String updatedAt = DateUtils.format(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
         IQueryCriteria query = Criteria.eq("id", params.getId());
         IUpdateCriteria update = Criteria.set("deleted", "1").add("updated_at", updatedAt);
         Result result = linkDao.update(query, update);

@@ -102,7 +102,7 @@ public class BlogSaveHandler extends BizHandlerAdapter {
                     cacheContext.todaysStatistics().incBlogCnt(1);
                     cacheContext.now5SecStatistics().incBlogCnt(1);
                     Date now = new Date();
-                    String createdAtMonth = DateUtils.formate(now, BlogConstants.FORMAT_YYYY_MM);
+                    String createdAtMonth = DateUtils.format(now, BlogConstants.FORMAT_YYYY_MM);
                     cacheContext.updateBlogInMonthFacet(createdAtMonth, true);
 
                     BlogPO po = (BlogPO) WebContext.getAttributeFromRequest(BlogConstants.REQUEST_DATA);
