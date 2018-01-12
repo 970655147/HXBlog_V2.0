@@ -240,7 +240,7 @@ var reqMap = {
         remove: formatContextUrl("/admin/image/remove")
     },
 
-    file : {
+    file: {
         upload: formatContextUrl("/admin/upload/file"),
     },
 
@@ -306,8 +306,8 @@ var reqMap = {
     cache: {
         cacheSummary: formatContextUrl("/admin/cache/cacheSummary"),
         localCacheSummary: formatContextUrl("/admin/cache/localCacheSummary"),
-        cacheDetail : formatContextUrl("/admin/cache/cacheDetail"),
-        cacheVisitInfo : formatContextUrl("/admin/cache/cacheVisitInfo"),
+        cacheDetail: formatContextUrl("/admin/cache/cacheDetail"),
+        cacheVisitInfo: formatContextUrl("/admin/cache/cacheVisitInfo"),
         refreshAll: formatContextUrl("/admin/cache/refreshAll"),
         refreshAllCached: formatContextUrl("/admin/cache/refreshAllCached"),
         refreshTableCached: formatContextUrl("/admin/cache/refreshTableCached"),
@@ -318,7 +318,7 @@ var reqMap = {
         refreshSystemConfig: formatContextUrl("/admin/cache/refreshSystemConfig"),
         refreshRuleConfig: formatContextUrl("/admin/cache/refreshRuleConfig"),
         refreshFrontIdxConfig: formatContextUrl("/admin/cache/refreshFrontIdxConfig"),
-        cacheRemove : formatContextUrl("/admin/cache/cacheRemove")
+        cacheRemove: formatContextUrl("/admin/cache/cacheRemove")
     },
 
     /**
