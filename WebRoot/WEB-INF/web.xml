@@ -43,7 +43,7 @@
     <!--</servlet>-->
     <!--<servlet-mapping>-->
         <!--<servlet-name>DruidStatView</servlet-name>-->
-        <!--<url-pattern>/druid/*</url-pattern>-->
+        <!--<url-pattern>/druidpathMatch/url-pattern>-->
     <!--</servlet-mapping>-->
 
     <listener>

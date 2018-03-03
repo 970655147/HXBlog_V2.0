@@ -630,6 +630,27 @@ public final class BizUtils {
         return sb.toString();
     }
 
+    /**
+     * 获取给定的 url 对应的 requestURI
+     *
+     * @param url url
+     * @return java.lang.String
+     * @author Jerry.X.He
+     * @date 3/3/2018 5:59 PM
+     * @since 1.0
+     */
+    public static String getRequestUri(String url) {
+        URL u = null;
+        try {
+            u = new URL(url);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        return u.getPath();
+    }
+
     // ----------------- 辅助方法 -----------------------
 
     /**

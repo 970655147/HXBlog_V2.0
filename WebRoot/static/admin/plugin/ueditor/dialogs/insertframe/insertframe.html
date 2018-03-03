@@ -55,7 +55,7 @@
         $G("align").value = iframe.align ? iframe.align : "";
     }
     function queding(){
-        var  url = $G("url").value.replace(/^\s*|\s*$/ig,""),
+        var  url = $G("pathMatch").value.replace(/^\s*|\s*$/ig,""),
                 width = $G("width").value,
                 height = $G("height").value,
                 scroll = $G("scroll"),
@@ -67,7 +67,7 @@
             alert(lang.enterAddress);
             return false;
         }
-        newIframe.setAttribute("src",/http:\/\/|https:\/\//ig.test(url) ? url : "http://"+url);
+        newIframe.setAttribute("src",/http:\/\/|https:\/\//ig.test(url) ? pathMatch : "http://"+pathMatch);
         /^[1-9]+[.]?\d*$/g.test( width ) ? newIframe.setAttribute("width",width) : "";
         /^[1-9]+[.]?\d*$/g.test( height ) ? newIframe.setAttribute("height",height) : "";
         scroll.checked ?  newIframe.setAttribute("scrolling","yes") : newIframe.setAttribute("scrolling","no");

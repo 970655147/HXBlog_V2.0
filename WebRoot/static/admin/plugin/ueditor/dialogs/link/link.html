@@ -65,7 +65,7 @@
 
     }
     $G("title").value = url ? link.title : "";
-    $G("href").value = url ? url: '';
+    $G("href").value = url ? pathMatch: '';
     $G("target").checked = url && link.target == "_blank" ? true :  false;
     $focus($G("href"));
 

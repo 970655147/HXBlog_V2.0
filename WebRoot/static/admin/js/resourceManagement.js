@@ -166,7 +166,7 @@ layui.define(['element', 'laypage', 'layer', 'form', 'tree'], function (exports)
                 skin: 'layui-layer-rim', //加上边框
                 area: '740px', //宽高
                 title: '添加资源',
-                content: html
+                content: html.toString()
             })
             form.render('radio');  // ratio，编辑和添加的时候
         },

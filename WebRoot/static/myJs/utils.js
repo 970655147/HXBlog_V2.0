@@ -307,8 +307,16 @@ function ajax(config) {
             return true;
         }
     }
+    var beforeEx = function(xhr, errMsg, ex) {
+        var exInfo = {
+            errorMsg : errMsg,
+            exception : ex
+        }
 
-    ajax0(config, beforeSend, beforeSucc)
+        layer.alert(JSON.stringify(exInfo))
+    }
+
+    ajax0(config, beforeSend, beforeSucc, null, beforeEx, null)
 }
 
 /**

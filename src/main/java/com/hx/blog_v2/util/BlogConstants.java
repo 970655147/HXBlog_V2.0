@@ -85,7 +85,8 @@ public final class BlogConstants {
             BlogTypePO.class, ExceptionLogPO.class, ImagePO.class, LinkPO.class, MoodPO.class, RequestLogPO.class,
             UserPO.class, VisitorPO.class, RltBlogTagPO.class, UploadFilePO.class,
             RolePO.class, RltUserRoleRolePO.class, ResourcePO.class, RltRoleResourcePO.class, InterfPO.class, RltResourceInterfPO.class,
-            BlogVisitLogPO.class, MessagePO.class, BlogCreateTypePO.class, SystemConfigPO.class, EmailPO.class
+            BlogVisitLogPO.class, MessagePO.class, BlogCreateTypePO.class, SystemConfigPO.class, EmailPO.class,
+            AdvPO.class
     };
     /**
      * 下划线的注册了各个PO 的 KeyNodeParser
@@ -516,6 +517,8 @@ public final class BlogConstants {
     public String tableSystemConfig = "system_config";
     @Value("${table.email}")
     public String tableEmail = "email";
+    @Value("${table.adv}")
+    public String tableAdv = "adv";
     @Value("${table.id}")
     public String tableId = "id";
 

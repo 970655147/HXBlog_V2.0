@@ -32,7 +32,9 @@ function contentInit() {
                         that.initLatestBlogs(that)
                     }
                 }
-            });
+            })
+
+            fetchAdv(location.href, $("#advArea"), {})
         },
         methods: {
             initLatestBlogs : function(that) {

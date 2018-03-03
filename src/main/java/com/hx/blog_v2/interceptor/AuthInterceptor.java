@@ -1,5 +1,6 @@
 package com.hx.blog_v2.interceptor;
 
+import com.baidu.ueditor.utils.Constants;
 import com.hx.blog_v2.context.WebContext;
 import com.hx.blog_v2.dao.interf.RltResourceInterfDao;
 import com.hx.blog_v2.dao.interf.RltRoleResourceDao;
@@ -44,7 +45,7 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
     /**
      * 多个 pattern 之间的分隔符
      */
-    public static String MULTI_PATTERN_SEP = "|";
+    public static String MULTI_PATTERN_SEP = Constants.MULTI_PATH_SEPRATOR;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response,

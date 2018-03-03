@@ -30,6 +30,11 @@ var monthFacetHideIfOver = 5
 var saveBlogInfoInterval = 5 * 1000
 
 /**
+ * 加载广告延迟的时间长度
+ */
+var fetchAdvDelayInMs = 1000
+
+/**
  * 存放暂存的博客信息的key
  * @type {string}
  */
@@ -52,7 +57,7 @@ var encoding = "gbk"
  * 项目的 contextPath
  * @type {string}
  */
-var contextPath = "/"
+var contextPath = "/HXBlog_V2.0/"
 
 /**
  * 存放小笼包位置的key
@@ -353,6 +358,18 @@ var reqMap = {
     },
 
     /**
+     * 广告相关
+     */
+    adv : {
+        list : formatContextUrl("/adv/list"),
+        add : formatContextUrl("/admin/adv/add"),
+        adminList : formatContextUrl("/admin/adv/list"),
+        update : formatContextUrl("/admin/adv/update"),
+        remove : formatContextUrl("/admin/adv/remove"),
+        reSort : formatContextUrl("/admin/adv/reSort")
+    },
+
+    /**
      * 其他配置
      */
     other: {
@@ -367,6 +384,24 @@ var reqMap = {
  * @type {{}}
  */
 ajaxNeedFilter = [reqMap.other.templateUrl]
+
+/**
+ * 广告的类型
+ * @type {{img_fixed: string, text_fixed: string, img_redirect: string, text_redirect: string}}
+ */
+advTypeKeyLiteral = {
+    imgFixed : "img_fixed",
+    textFixed : "text_fixed",
+    imgRedirect : "img_redirect",
+    textRedirect : "text_redirect"
+}
+advTypeKey2Tips = {
+    img_fixed : "固定图片",
+    text_fixed : "固定文字",
+    img_redirect : "跳转图片",
+    text_redirect : "跳转文字"
+}
+
 
 
 

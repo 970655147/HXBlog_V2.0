@@ -32,8 +32,8 @@ public final class POVOTransferUtils {
      */
     public static void main(String[] args) {
 
-        Class src = RequestLogPO.class;
-        Class dst = RequestLogVO.class;
+        Class src = AdvPO.class;
+        Class dst = AdminAdvVO.class;
 
         String transfer = BeanTransferUtils.transferTo(src, dst);
         String transferList = BeanTransferUtils.transferListTo(src, dst);
@@ -1106,6 +1106,86 @@ public final class POVOTransferUtils {
         List<ExceptionLogPO> result = new ArrayList<>(src.size());
         for (ExceptionLogVO ele : src) {
             result.add(exceptionLogVO2ExceptionLogPO(ele));
+        }
+        return result;
+    }
+
+    // -------------------- AdvPO <-> AdvVO --------------------------
+    public static AdvVO advPO2AdvVO(AdvPO src) {
+        AdvVO result = new AdvVO();
+        result.setName(src.getName());
+        result.setType(src.getType());
+        result.setParams(src.getParams());
+        result.setProvider(src.getProvider());
+        return result;
+    }
+
+    public static Collection<AdvVO> advPO2AdvVOList(Collection<AdvPO> src) {
+        List<AdvVO> result = new ArrayList<>(src.size());
+        for(AdvPO ele : src) {
+            result.add(advPO2AdvVO(ele));
+        }
+        return result;
+    }
+
+    public static AdvPO advVO2AdvPO(AdvVO src) {
+        AdvPO result = new AdvPO();
+        result.setName(src.getName());
+        result.setType(src.getType());
+        result.setParams(src.getParams());
+        result.setProvider(src.getProvider());
+        return result;
+    }
+
+    public static Collection<AdvPO> advVO2AdvPOList(Collection<AdvVO> src) {
+        List<AdvPO> result = new ArrayList<>(src.size());
+        for(AdvVO ele : src) {
+            result.add(advVO2AdvPO(ele));
+        }
+        return result;
+    }
+
+    // -------------------- AdvPO <-> AdminAdvVO --------------------------
+    public static AdminAdvVO advPO2AdminAdvVO(AdvPO src) {
+        AdminAdvVO result = new AdminAdvVO();
+        result.setName(src.getName());
+        result.setId(src.getId());
+        result.setType(src.getType());
+        result.setUpdatedAt(src.getUpdatedAt());
+        result.setSort(src.getSort());
+        result.setCreatedAt(src.getCreatedAt());
+        result.setPathMatch(src.getPathMatch());
+        result.setProvider(src.getProvider());
+        result.setParams(src.getParams());
+        return result;
+    }
+
+    public static Collection<AdminAdvVO> advPO2AdminAdvVOList(Collection<AdvPO> src) {
+        List<AdminAdvVO> result = new ArrayList<>(src.size());
+        for(AdvPO ele : src) {
+            result.add(advPO2AdminAdvVO(ele));
+        }
+        return result;
+    }
+
+    public static AdvPO adminAdvVO2AdvPO(AdminAdvVO src) {
+        AdvPO result = new AdvPO();
+        result.setName(src.getName());
+        result.setId(src.getId());
+        result.setType(src.getType());
+        result.setUpdatedAt(src.getUpdatedAt());
+        result.setSort(src.getSort());
+        result.setCreatedAt(src.getCreatedAt());
+        result.setPathMatch(src.getPathMatch());
+        result.setProvider(src.getProvider());
+        result.setParams(src.getParams());
+        return result;
+    }
+
+    public static Collection<AdvPO> adminAdvVO2AdvPOList(Collection<AdminAdvVO> src) {
+        List<AdvPO> result = new ArrayList<>(src.size());
+        for(AdminAdvVO ele : src) {
+            result.add(adminAdvVO2AdvPO(ele));
         }
         return result;
     }

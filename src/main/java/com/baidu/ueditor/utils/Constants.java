@@ -64,6 +64,11 @@ public final class Constants {
      */
     public static final String HEAD_IMG_SUFFIX = SUFFIX_PNG;
 
+	/**
+	 * 分割路径配置的分隔符 [正则]
+	 */
+	public static final String MULTI_PATH_SEPRATOR = "\\|";
+
 
 	
 

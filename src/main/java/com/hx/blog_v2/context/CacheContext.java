@@ -94,6 +94,8 @@ public class CacheContext {
     @Autowired
     private BlogVisitLogDao blogVisitLogDao;
     @Autowired
+    private AdvDao advDao;
+    @Autowired
     private JdbcTemplate jdbcTemplate;
     @Autowired
     private ConstantsContext constantsContext;
@@ -126,6 +128,10 @@ public class CacheContext {
      * 所有的博客创建类型
      */
     private Map<String, BlogCreateTypePO> createTypesById = new LinkedHashMap<>();
+    /**
+     * 所有的广告信息
+     */
+    private Map<String, AdvPO> advById = new LinkedHashMap<>();
 
     /**
      * blogId -> 给定的博客的下一个层数索引
@@ -287,6 +293,7 @@ public class CacheContext {
             resourcesById.clear();
             interfsById.clear();
             createTypesById.clear();
+            advById.clear();
         }
 
         if (BizUtils.flagExists(clearFlag, REFRESH_LOCAL_CACHED)) {
@@ -649,6 +656,30 @@ public class CacheContext {
 
     public BlogCreateTypePO removeBlogCreateType(String id) {
         return createTypesById.remove(id);
+    }
+
+    /**
+     * 获取所有的广告信息
+     *
+     * @return java.util.List<com.hx.blog_v2.domain.po.LinkPO>
+     * @author Jerry.X.He
+     * @date 6/1/2017 7:53 PM
+     * @since 1.0
+     */
+    public Map<String, AdvPO> allAdvById() {
+        return advById;
+    }
+
+    public AdvPO advById(String id) {
+        return advById.get(id);
+    }
+
+    public void putAdvById(AdvPO po) {
+        advById.put(po.getId(), po);
+    }
+
+    public AdvPO removeAdvById(String id) {
+        return advById.remove(id);
     }
 
     /**
@@ -1041,6 +1072,7 @@ public class CacheContext {
         result.add(rolesById.size());
         result.add(resourcesById.size());
         result.add(interfsById.size());
+        result.add(advById.size());
         result.add(createTypesById.size());
         return result;
     }
@@ -1331,6 +1363,11 @@ public class CacheContext {
                     Criteria.sortBy("sort", SortByCriteria.ASC), BlogConstants.LOAD_ALL_CONFIG);
             for (BlogCreateTypePO po : blogCreateTypeList) {
                 createTypesById.put(po.getId(), po);
+            }
+            List<AdvPO> advList = advDao.findMany(Criteria.eq("deleted", "0"), Criteria.limitNothing(),
+                    Criteria.sortBy("sort", SortByCriteria.ASC), BlogConstants.LOAD_ALL_CONFIG);
+            for (AdvPO po : advList) {
+                advById.put(po.getId(), po);
             }
         } catch (Exception e) {
             e.printStackTrace();
