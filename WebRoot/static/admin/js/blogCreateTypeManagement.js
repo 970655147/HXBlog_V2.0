@@ -98,7 +98,7 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
     var funcs = {
         addData: function () {
             var html = new StringBuilder();
-            html.append('<form id="addCreateTypeForm" class="layui-form layui-form-pane" action="/admin/blog/createType/add" method="post">')
+            html.append('<form id="addCreateTypeForm" class="layui-form layui-form-pane" action="' + reqMap.createType.add + '" method="post">')
             html.append('<label class="layui-form-label" style="border: none" >名称:</label>')
             html.append('<input  style="width:87%;margin: auto;color: #000!important;" name="name" lay-verify="required"  class="layui-input" >')
             html.append('<label class="layui-form-label" style="border: none" >描述:</label>')
@@ -130,7 +130,7 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
         },
         editData: function (item) {
             var html = new StringBuilder();
-            html.append('<form id="updateCreateTypeForm" class="layui-form layui-form-pane" action="/admin/blog/createType/update" method="post" >')
+            html.append('<form id="updateCreateTypeForm" class="layui-form layui-form-pane" action="' + reqMap.createType.update + '" method="post" >')
             html.append('<input type="hidden" id="id" name="id" value="' + item.id + '">')
             html.append('<label class="layui-form-label" style="border: none" >名称:</label>')
             html.append('<input  style="width:87%;margin: auto;color: #000!important;" name="name" lay-verify="required"  class="layui-input" value="' + item.name + '" >')

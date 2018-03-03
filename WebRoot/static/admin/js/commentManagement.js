@@ -55,10 +55,11 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
                     var html = new StringBuilder();
                     var comments = resp.data.list
                     for (var idx in comments) {
-                        var item = comments[idx];
+                        var item = comments[idx]
+                        var blogDetailUrl = formatContextUrl("/static/main/blogDetail.html?id=" + item.blogId)
                         html.append('<tr>')
                         html.append('<td>' + item.id + '</td>')
-                        html.append('<td><a href="/static/main/blogDetail.html?id=' + item.blogId + '" target="_blank" >' + item.blogName + '</a></td>')
+                        html.append('<td><a href="' + blogDetailUrl + '" target="_blank" >' + item.blogName + '</a></td>')
                         html.append('<td>' + item.floorId + '</td>')
                         html.append('<td>' + item.commentId + '</td>')
                         html.append('<td>' + item.name + '</td>')
@@ -180,7 +181,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
         },
         addReply: function (id, blogId, floorId, commentId, toUser, comment) {
             var html = new StringBuilder();
-            html.append('<form id="addReplyForm" class="layui-form layui-form-pane" action="/admin/comment/reply" method="post">')
+            html.append('<form id="addReplyForm" class="layui-form layui-form-pane" action="' + reqMap.comment.reply + '" method="post">')
             html.append('<input type="hidden" name="blogId" value="' + blogId + '"/>')
             html.append('<input type="hidden" name="floorId" value="' + floorId + '"/>')
             html.append('<input type="hidden" name="commentId" value="' + commentId + '"/>')
@@ -207,7 +208,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
         },
         editData: function (id, toUser, comment) {
             var html = new StringBuilder();
-            html.append('<form id="updateReplyForm" class="layui-form layui-form-pane" action="/admin/comment/update" method="post">')
+            html.append('<form id="updateReplyForm" class="layui-form layui-form-pane" action="' + reqMap.comment.update + '" method="post">')
             html.append('<input type="hidden" name="id" value="' + id + '"/>')
             html.append('<label class="layui-form-label" style="border: none" >目标用户:</label>')
             html.append('<input  style="width:87%;margin: auto;color: #000!important;" name="toUser" value="' + toUser + '" class="layui-input" lay-verify="required" >')

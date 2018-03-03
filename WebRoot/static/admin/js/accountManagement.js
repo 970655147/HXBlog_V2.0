@@ -125,7 +125,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
     var funcs = {
         addData: function () {
             var html = new StringBuilder()
-            html.append('<form id="addAccountForm" class="layui-form layui-form-pane" action="/admin/user/add" method="post">')
+            html.append('<form id="addAccountForm" class="layui-form layui-form-pane" action="' + reqMap.user.add + '" method="post">')
             html.append('<label class="layui-form-label" style="border: none;width: 180px;" >用户名:</label>')
             html.append('<input  style="width:87%;margin: auto;color: #000!important;" name="userName" lay-verify="required"  class="layui-input" >')
             html.append('<label class="layui-form-label" style="border: none;width: 180px;" >密码:</label>')
@@ -162,7 +162,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
         },
         editData: function (id, userName, nickName, title, email, headImgUrl, motto) {
             var html = new StringBuilder()
-            html.append('<form id="updateAccountForm" class="layui-form layui-form-pane" action="/admin/user/update" method="post">')
+            html.append('<form id="updateAccountForm" class="layui-form layui-form-pane" action="' + reqMap.user.update + '" method="post">')
             html.append('<input type="hidden" name="id" value="' + id + '"/>')
             html.append('<label class="layui-form-label" style="border: none;width: 180px;" >用户名:</label>')
             html.append('<input  style="width:87%;margin: auto;color: #000!important;" name="userName" value="' + userName + '" lay-verify="required"  class="layui-input" readonly >')

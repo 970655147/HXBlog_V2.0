@@ -106,7 +106,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
     var funcs = {
         addData: function () {
             var html = new StringBuilder();
-            html.append('<form id="addInterfForm" class="layui-form layui-form-pane" action="/admin/interf/add" method="post">')
+            html.append('<form id="addInterfForm" class="layui-form layui-form-pane" action="' + reqMap.interf.add + '" method="post">')
             html.append('<label class="layui-form-label" style="border: none" >名称:</label>')
             html.append('<input  style="width:87%;margin: auto;color: #000!important;" lay-verify="required" name="name"  class="layui-input" >')
             html.append('<label class="layui-form-label" style="border: none" >描述:</label>')
@@ -135,7 +135,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
         },
         editData: function (item) {
             var html = new StringBuilder();
-            html.append('<form id="updateInterfForm" class="layui-form layui-form-pane" action="/admin/interf/update" method="post" >')
+            html.append('<form id="updateInterfForm" class="layui-form layui-form-pane" action="' + reqMap.interf.update + '" method="post" >')
             html.append('<label class="layui-form-label" style="border: none" >名称:</label>')
             html.append('<input type="hidden" id="id" name="id" value="' + item.id + '">')
             html.append('<input  style="width:87%;margin: auto;color: #000!important;" name="name" lay-verify="required"  class="layui-input" value="' + item.name + '" >')

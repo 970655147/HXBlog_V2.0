@@ -97,7 +97,8 @@ layui.define(['element', 'laypage', 'layer', 'form', 'pagesize'], function (expo
     //输出接口，主要是两个函数，一个删除一个编辑
     var funcs = {
         editData: function (id) {
-            parent.switchTab(parent.$, parent.element, '修改博客', '/static/admin/addBlog.html?id=' + id + "&editType=admin", 'blog-' + id);
+            var saveBlogUrl = formatContextUrl('/static/admin/addBlog.html?id=' + id + "&editType=admin")
+            parent.switchTab(parent.$, parent.element, '修改博客', saveBlogUrl, 'blog-' + id);
         },
         deleteData: function (id) {
             layer.confirm('同时会删除对应评论，确定删除？', {
@@ -181,9 +182,9 @@ function initTypeAndTags() {
  */
 function previewUrl(id, state) {
     if ("30" === state) {
-        return "/static/main/blogDetail.html?id=" + id
+        return formatContextUrl("/static/main/blogDetail.html?id=" + id)
     } else {
-        return "/static/admin/blogDetail.html?id=" + id
+        return formatContextUrl("/static/admin/blogDetail.html?id=" + id)
     }
 }
 
@@ -193,14 +194,15 @@ function previewUrl(id, state) {
  * @returns {*}
  */
 function stateIconUrl(state) {
-    if ("10" === state) {
-        return "/static/admin/images/blog_draft.png"
-    } else if ("20" === state) {
-        return "/static/admin/images/blog_audit.png"
-    } else if ("30" === state) {
-        return "/static/admin/images/blog_success.png"
-    } else if ("40" === state) {
-        return "/static/admin/images/blog_failed.png"
+    var stateMap = {
+        "10" : "/static/admin/images/blog_draft.png",
+        "20" : "/static/admin/images/blog_audit.png",
+        "30" : "/static/admin/images/blog_success.png",
+        "40" : "/static/admin/images/blog_failed.png"
     }
+    stateMap[defaultKey] = "/static/admin/images/blog_failed.png"
+
+    var result = getByIdx(stateMap, state, defaultKey)
+    return formatContextUrl(result)
 }
 

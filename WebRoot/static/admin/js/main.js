@@ -216,7 +216,7 @@ layui.define(['element', 'layer', 'util', 'pagesize', 'form'], function (exports
          * 查看消息的函数
          */
         toViewMessage: function () {
-            var viewMessageUrl = "/static/admin/messageView.html"
+            var viewMessageUrl = formatContextUrl("/static/admin/messageView.html")
             var viewMessageEle = $("[data-url='" + viewMessageUrl + "']")
 
             var url = viewMessageUrl
@@ -361,7 +361,7 @@ function logout() {
         success: function (resp) {
             if (resp.success) {
                 layer.alert("登出成功 !", function () {
-                    location.href = "/static/admin/index.html"
+                    location.href = formatContextUrl("/static/admin/index.html")
                 })
             } else {
                 layer.alert("登出失败 ??")

@@ -97,7 +97,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
     var funcs = {
         addData: function () {
             var html = new StringBuilder();
-            html.append('<form id="addTagForm" class="layui-form layui-form-pane" action="/admin/tag/add" method="post">')
+            html.append('<form id="addTagForm" class="layui-form layui-form-pane" action="' + reqMap.tag.add + '" method="post">')
             html.append('<label class="layui-form-label" style="border: none" name="content"  >名称:</label>')
             html.append('<input  style="width:87%;margin: auto;color: #000!important;" name="name"  class="layui-input" lay-verify="required" >')
             html.append('<label class="layui-form-label" style="border: none" name="content"  >排序:</label>')
@@ -120,7 +120,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
         },
         editData: function (id, tagName, sort) {
             var html = new StringBuilder();
-            html.append('<form id="updateTagForm" class="layui-form layui-form-pane" action="/admin/tag/update" method="post">')
+            html.append('<form id="updateTagForm" class="layui-form layui-form-pane" action="' + reqMap.tag.update + '" method="post">')
             html.append('<input type="hidden" name="id" value="' + id + '"/>')
             html.append('<label class="layui-form-label" style="border: none" >名称:</label>')
             html.append('<textarea  style="width:87%;margin: auto;color: #000!important;" name="name" class="layui-textarea" lay-verify="required" >' + tagName + '</textarea>')

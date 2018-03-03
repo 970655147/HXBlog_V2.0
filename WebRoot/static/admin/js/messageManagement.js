@@ -165,7 +165,7 @@ layui.define(['element', 'laypage', 'layer', 'form', 'pagesize'], function (expo
         },
         addReply: function (id, senderId, senderName, createdAt, subject, content) {
             var html = new StringBuilder();
-            html.append('<form id="addReplyForm" class="layui-form layui-form-pane" action="/admin/message/add" method="post">')
+            html.append('<form id="addReplyForm" class="layui-form layui-form-pane" action="' + reqMap.message.add + '" method="post">')
             html.append('<input type="hidden" name="userIds" value="' + senderId + '"/>')
             html.append('<input type="hidden" name="type" value="2"/>')
             html.append('<label class="layui-form-label" style="border: none" >消息内容:</label>')
@@ -192,7 +192,7 @@ layui.define(['element', 'laypage', 'layer', 'form', 'pagesize'], function (expo
         },
         editData: function (id, senderName, createdAt, type, subject, content) {
             var html = new StringBuilder();
-            html.append('<form id="editMessageForm" class="layui-form layui-form-pane" action="/admin/message/update" method="post">')
+            html.append('<form id="editMessageForm" class="layui-form layui-form-pane" action="' + reqMap.message.update + '" method="post">')
             html.append('<input type="hidden" name="id" value="' + id + '"/>')
             html.append('<input type="hidden" name="type" value="' + type + '"/>')
             html.append('<fieldset  class="layui-elem-field layui-field-title sys-list-field" >')

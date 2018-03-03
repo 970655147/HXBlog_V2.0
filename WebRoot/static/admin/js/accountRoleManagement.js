@@ -107,7 +107,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
         editData: function (userId, userName, roleIds, roleNames) {
             var html = new StringBuilder();
             html.append('<div>')
-            html.append('<form id="updateUserRoleForm" class="layui-form layui-form-pane" action="/admin/role/userRole/update" method="post">')
+            html.append('<form id="updateUserRoleForm" class="layui-form layui-form-pane" action="' + reqMap.userRole.update + '" method="post">')
             html.append('<input type="hidden" name="userId" value="' + userId + '" />')
             html.append('<input type="hidden" name="roleIds" />')
             html.append('<label class="layui-form-label" style="border: none;width: 180px;" >用户名 :</label>')

@@ -311,7 +311,7 @@ public final class BlogConstants {
      */
     public static final String CONTEXT_URL_PREFIX = "context.url.prefix";
     /**
-     * 当前服务上下文的 url 前缀
+     * 系统用户编号[发送邮件等等]
      */
     public static final String CONTEXT_SYSTEM_USER_ID = "context.system.user.id";
     /**

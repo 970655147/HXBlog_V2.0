@@ -17,7 +17,7 @@ var correctionItemIds = new StringBuilder()
  * 各个校验类型按钮的事件
  */
 $("[name='correctionItem']").click(function () {
-    var baseUrl = "/static/admin/correctionManagement.html"
+    var baseUrl = formatContextUrl("/static/admin/correctionManagement.html")
     params.type = $(this).attr("correctionCode")
     location.href = encapGetUrl(baseUrl, params)
 })

@@ -87,7 +87,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
         editData: function (resourceId, resourceName, interfIds) {
             var html = new StringBuilder();
             html.append('<div>')
-            html.append('<form id="updateResourceInterfForm" class="layui-form layui-form-pane" action="/admin/role/userRole/update" method="post">')
+            html.append('<form id="updateResourceInterfForm" class="layui-form layui-form-pane" action="' + reqMap.userRole.update + '" method="post">')
             html.append('<input type="hidden" name="resourceId" value="' + resourceId + '" />')
             html.append('<input type="hidden" name="interfIds" />')
             html.append('<label class="layui-form-label" style="border: none;width: 180px;" >资源名 :</label>')

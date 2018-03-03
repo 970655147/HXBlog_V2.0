@@ -60,6 +60,12 @@ var contextPath = "/"
  */
 var xiaolongbaoPosKey = "xiaolongbaoPos"
 
+/**
+ * default 的字面量
+ * @type {string}
+ */
+var defaultKey = "default"
+
 function formatContextUrl(requestUri) {
     if (requestUri.startsWith("/")) {
         requestUri = requestUri.substr(1)
@@ -261,6 +267,7 @@ var reqMap = {
         add: formatContextUrl("/comment/add"),
         adminAdd: formatContextUrl("/admin/comment/add"),
         list: formatContextUrl("/comment/list"),
+        reply: formatContextUrl("/admin/comment/reply"),
         adminList: formatContextUrl("/admin/comment/list"),
         commentsForFloor: formatContextUrl("/admin/comment/comment/list"),
         update: formatContextUrl("/admin/comment/update"),

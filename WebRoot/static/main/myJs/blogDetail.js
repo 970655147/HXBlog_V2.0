@@ -17,7 +17,7 @@ function contentInit() {
      */
     var params = getParamsFromUrl(window.location.href)
     if (params.id === '') {
-        location.href = '/'
+        location.href = formatContextUrl('/')
     }
 
     var app = new Vue({
@@ -151,11 +151,11 @@ function contentInit() {
             },
             toType: function (event) {
                 var btn = $(event.target)
-                location.href = "/static/main/blogList.html?typeId=" + btn.attr("value") + "&typeName=" + btn.text();
+                location.href = formatContextUrl("/static/main/blogList.html?typeId=" + btn.attr("value") + "&typeName=" + btn.text())
             },
             toTag: function (event) {
                 var btn = $(event.target)
-                location.href = "/static/main/blogList.html?tagId=" + btn.attr("value") + "&tagName=" + btn.text();
+                location.href = formatContextUrl("/static/main/blogList.html?tagId=" + btn.attr("value") + "&tagName=" + btn.text())
             },
             reUseMyHeadImg: function (event) {
                 if (this.userInfo !== null) {

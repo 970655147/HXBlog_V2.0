@@ -136,7 +136,7 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
     var funcs = {
         addData: function () {
             var html = new StringBuilder();
-            html.append('<form id="addConfigForm" class="layui-form layui-form-pane" action="/admin/config/add" method="post">')
+            html.append('<form id="addConfigForm" class="layui-form layui-form-pane" action="' + reqMap.config.add + '" method="post">')
             html.append('<label class="layui-form-label" style="border: none" >name:</label>')
             html.append('<input  style="width:87%;margin: auto;color: #000!important;" lay-verify="required" name="name"  class="layui-input" >')
             html.append('<label class="layui-form-label" style="border: none" >value:</label>')
@@ -167,7 +167,7 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
         },
         editData: function (item) {
             var html = new StringBuilder();
-            html.append('<form id="updateConfigForm" class="layui-form layui-form-pane" action="/admin/config/update" method="post" >')
+            html.append('<form id="updateConfigForm" class="layui-form layui-form-pane" action="' + reqMap.config.update + '" method="post" >')
             html.append('<input type="hidden" id="id" name="id" value="' + item.id + '">')
             html.append('<label class="layui-form-label" style="border: none" >name:</label>')
             html.append('<input  style="width:87%;margin: auto;color: #000!important;" lay-verify="required" name="name" value="' + item.name + '" class="layui-input" readonly >')

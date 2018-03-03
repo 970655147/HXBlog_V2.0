@@ -13,10 +13,11 @@
 
 <body>
 
+    <script type="text/javascript" src="./static/myJs/md5.js"></script>
+    <script type="text/javascript" src="./static/myJs/constants.js" ></script>
+    <script type="text/javascript" src="./static/myJs/utils.js" ></script>
     <script type="text/javascript" >
-
-        location.href = "/static/main/index.html"
-
+        location.href = formatContextUrl("/static/main/index.html")
     </script>
 
 </body>

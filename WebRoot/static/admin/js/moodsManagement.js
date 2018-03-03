@@ -122,7 +122,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
     var funcs = {
         addData: function () {
             var html = new StringBuilder();
-            html.append('<form id="addMoodForm" class="layui-form layui-form-pane" action="/admin/mood/add" method="post">')
+            html.append('<form id="addMoodForm" class="layui-form layui-form-pane" action="' + reqMap.mood.add + '" method="post">')
             html.append('<label class="layui-form-label" style="border: none" >心情标题:</label>')
             html.append('<input  style="width:87%;margin: auto;color: #000!important;" lay-verify="required" id="title" name="title"  class="layui-input" >')
             html.append('<label class="layui-form-label" style="border: none" >心情内容:</label>')
@@ -149,7 +149,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
         },
         editData: function (item) {
             var html = new StringBuilder();
-            html.append('<form id="updateMoodForm" class="layui-form layui-form-pane" action="/admin/mood/update" method="post" >')
+            html.append('<form id="updateMoodForm" class="layui-form layui-form-pane" action="' + reqMap.mood.update + '" method="post" >')
             html.append('<label class="layui-form-label" style="border: none" >心情标题:</label>')
             html.append('<input type="hidden" id="id" name="id" value="' + item.id + '">')
             html.append('<input  style="width:87%;margin: auto;color: #000!important;" id="title" name="title" lay-verify="required"  class="layui-input" value="' + item.title + '" >')

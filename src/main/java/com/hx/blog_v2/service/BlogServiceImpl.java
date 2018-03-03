@@ -246,6 +246,8 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
         if (!auditBlogResult.isSuccess()) {
             return auditBlogResult;
         }
+
+        cacheContext.removeBlog(params.getId());
         return ResultUtils.success(params.getId());
     }
 

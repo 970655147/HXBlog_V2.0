@@ -6,7 +6,7 @@
  * @date 5/27/2017 7:58 PM
  */
 
-var templateUrl = "/static/main/templates.html"
+var templateUrl = "./templates.html"
 var jq = $
 
 /**
@@ -49,7 +49,7 @@ function headerFooterInit() {
                 var typesEle = $("[name='typesEle']")
                 for (idx in data.types) {
                     var type = data.types[idx]
-                    typesEle.append("<option name='type' value='/static/main/blogList.html?typeId=" + type.id + "&typeName=" + type.name + "' >" + type.name + "</option>")
+                    typesEle.append("<option name='type' value='./blogList.html?typeId=" + type.id + "&typeName=" + type.name + "' >" + type.name + "</option>")
                 }
 
                 var linksEle = $("[name='linksEle']")
@@ -71,14 +71,14 @@ function headerFooterInit() {
                     hotBlogsEle.append(
                         "<div class='blog-grids wow fadeInDown' data-wow-duration='.8s' data-wow-delay='.2s'> " +
                         "<div class='blog-grid-left'> " +
-                        "<a href='/static/main/blogDetail.html?id=" + blog.id + "'> " +
+                        "<a href='./blogDetail.html?id=" + blog.id + "'> " +
                         "<img src='" + blog.coverUrl + "' class='img-responsive' width='40px' height='40px'>" +
                         "</a>" +
                         "</div>" +
                         "<div class='blog-grid-right' name='hotBlogTitle' data-blog-title='" + blog.title + "' >" +
                         "<h5>" +
                         "<img src='" + blog.blogCreateTypeImgUrl + "' />" +
-                        "<a href='/static/main/blogDetail.html?id=" + blog.id + "'> " + trimIfExceed(blog.title, 20, "...") + " </a>" +
+                        "<a href='./blogDetail.html?id=" + blog.id + "'> " + trimIfExceed(blog.title, 20, "...") + " </a>" +
                         "</h5>" +
                         "</div>" +
                         "<div class='clearfix'></div>" +
@@ -107,7 +107,7 @@ function headerFooterInit() {
                     var comment = data.latestComments[idx]
                     latestComments.append(
                         "<span>" +
-                        "<span name='latestCommentTitle' ><a href='/static/main/blogDetail.html?id=" + comment.blogId + "'>" + comment.name + "@" + comment.toUser + " </a> - <span>" + comment.createdAt + "</span> </span> " +
+                        "<span name='latestCommentTitle' ><a href='./blogDetail.html?id=" + comment.blogId + "'>" + comment.name + "@" + comment.toUser + " </a> - <span>" + comment.createdAt + "</span> </span> " +
                         "</span>" +
                         "<p>" +
                         "<span class='sourceText' style='word-break: break-all;' >" + comment.comment + "</span>" +
@@ -149,7 +149,7 @@ function headerFooterInit() {
 
                 $("[name='searchBtn']").click(function() {
                     var keywords = $(this).parent().find("[name='keywords']").val()
-                    location.href = "/static/main/blogList.html?keywords=" + keywords
+                    location.href = formatContextUrl("./blogList.html?keywords=" + keywords)
                     return false
                 })
             }
@@ -165,7 +165,7 @@ function headerFooterInit() {
         for (var idx in tags) {
             var entry = {
                 label: tags[idx].name,
-                url: '/static/main/blogList.html?tagId=' + tags[idx].id + '&tagName=' + tags[idx].name,
+                url: './blogList.html?tagId=' + tags[idx].id + '&tagName=' + tags[idx].name,
                 target : "_blank"
             }
             tagEntries.push(entry);
@@ -305,7 +305,7 @@ function selectHeader() {
 function addMonthFacet(facetByMonthEle, monthFacet, start, min) {
     for (var i = start; i >= min; i--) {
         var facetByMonth = monthFacet[i]
-        facetByMonthEle.append("<a href='/static/main/blogList.html?createdAtMonth=" + facetByMonth.month + "' >" + facetByMonth.month + " (" + facetByMonth.cnt + ")</a>")
+        facetByMonthEle.append("<a href='./blogList.html?createdAtMonth=" + facetByMonth.month + "' >" + facetByMonth.month + " (" + facetByMonth.cnt + ")</a>")
     }
 }
 

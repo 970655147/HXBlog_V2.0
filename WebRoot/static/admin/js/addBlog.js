@@ -216,7 +216,7 @@ layui.define(['form', 'upload', 'layer'], function (exports) {
     var funcs = {
         addTypeData: function () {
             var html = new StringBuilder();
-            html.append('<form id="addTypeForm" class="layui-form layui-form-pane" action="/admin/type/add" method="post" >')
+            html.append('<form id="addTypeForm" class="layui-form layui-form-pane" action="' + reqMap.type.add + '" method="post" >')
             html.append('<label class="layui-form-label" style="border: none" name="content" >类别名称:</label>')
             html.append('<input style="width:87%;margin: auto;color: #000!important;" name="name"  class="layui-input" >')
             html.append('<label class="layui-form-label" style="border: none" name="content" >排序:</label>')
@@ -238,7 +238,7 @@ layui.define(['form', 'upload', 'layer'], function (exports) {
         },
         addTagData: function () {
             var html = new StringBuilder();
-            html.append('<form id="addTagForm" class="layui-form layui-form-pane" action="/admin/tag/add" method="post >')
+            html.append('<form id="addTagForm" class="layui-form layui-form-pane" action="' + reqMap.tag.add + '" method="post >')
             html.append('<label class="layui-form-label" style="border: none" name="content" >标签名称:</label>')
             html.append('<input style="width:87%;margin: auto;color: #000!important;" name="name"  class="layui-input" >')
             html.append('<label class="layui-form-label" style="border: none" name="content" >排序:</label>')

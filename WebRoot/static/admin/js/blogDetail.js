@@ -13,7 +13,7 @@ $(document).ready(function () {
      */
     var params = getParamsFromUrl(window.location.href)
     if (params.id === '') {
-        location.href = '/'
+        location.href = formatContextUrl('/')
     }
 
     ajax({
@@ -38,11 +38,11 @@ $(document).ready(function () {
 
                 $("[name='typeBtn']").click(function () {
                     var btn = $(this)
-                    location.href = "/static/main/blogList.html?typeId=" + btn.attr("typeId") + "&typeName=" + btn.attr("typeName")
+                    location.href = formatContextUrl("/static/main/blogList.html?typeId=" + btn.attr("typeId") + "&typeName=" + btn.attr("typeName"))
                 })
                 $("[name='tagBtn']").click(function () {
                     var btn = $(this)
-                    location.href = "/static/main/blogList.html?tagId=" + btn.attr("tagId") + "&tagName=" + btn.attr("tagName")
+                    location.href = formatContextUrl("/static/main/blogList.html?tagId=" + btn.attr("tagId") + "&tagName=" + btn.attr("tagName"))
                 })
 
                 $("#blogContent").html(blog.content)

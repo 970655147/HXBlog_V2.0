@@ -43,7 +43,8 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
     var form = layui.form();
 
     form.on('submit(infoBtn)', function (data) {
-        parent.switchTab(parent.$, parent.element, '缓存详情', "/static/admin/cacheDetailManagement.html", "cacheDetail");
+        var cacheDetailUrl = formatContextUrl("/static/admin/cacheDetailManagement.html")
+        parent.switchTab(parent.$, parent.element, '缓存详情', cacheDetailUrl, "cacheDetail");
         return false
     });
 

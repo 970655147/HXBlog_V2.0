@@ -139,7 +139,7 @@ layui.define(['element', 'laypage', 'layer', 'form', 'tree'], function (exports)
     var funcs = {
         addData: function () {
             var html = new StringBuilder();
-            html.append('<form id="addResourceForm" class="layui-form layui-form-pane" action="/admin/resource/add" method="post">')
+            html.append('<form id="addResourceForm" class="layui-form layui-form-pane" action="' + reqMap.resource.add + '" method="post">')
             html.append('<label class="layui-form-label" style="border: none;width: 180px;" >名称:</label>')
             html.append('<input  style="width:87%;margin: auto;color: #000!important;" name="name" lay-verify="required"  class="layui-input" >')
             html.append('<label class="layui-form-label" style="border: none;width: 180px;" >样式:</label>')

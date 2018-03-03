@@ -92,7 +92,7 @@ layui.define(['layer', 'form'], function (exports) {
     var funcs = {
         addData: function () {
             var html = new StringBuilder();
-            html.append('<form id="addTypeForm" action="/admin/type/add" class="layui-form layui-form-pane" >')
+            html.append('<form id="addTypeForm" action="' + reqMap.type.add + '" class="layui-form layui-form-pane" >')
             html.append('<label class="layui-form-label" style="border: none" >名称:</label>')
             html.append('<input style="width:87%;margin: auto;color: #000!important;" name="name" lay-verify="required" class="layui-input" >')
             html.append('<label class="layui-form-label" style="border: none" >排序:</label>')
@@ -115,7 +115,7 @@ layui.define(['layer', 'form'], function (exports) {
         },
         editData: function (id, typeName, sort) {
             var html = new StringBuilder();
-            html.append('<form id="updateTypeForm" action="/admin/type/update" class="layui-form layui-form-pane" >')
+            html.append('<form id="updateTypeForm" action="' + reqMap.type.update + '" class="layui-form layui-form-pane" >')
             html.append('<input type="hidden" name="id" value="' + id + '"/>')
             html.append('<label class="layui-form-label" style="border: none" >名称:</label>')
             html.append('<textarea style="width:87%;margin: auto;color: #000!important;" name="name" class="layui-textarea" lay-verify="required" >' + typeName + '</textarea>')

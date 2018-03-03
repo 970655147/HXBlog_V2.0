@@ -134,7 +134,7 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
     var funcs = {
         addData: function () {
             var html = new StringBuilder();
-            html.append('<form id="addImageForm" class="layui-form layui-form-pane" action="/admin/image/add" method="post">')
+            html.append('<form id="addImageForm" class="layui-form layui-form-pane" action="' + reqMap.image.add + '" method="post">')
             html.append('<label class="layui-form-label" style="border: none" >标题:</label>')
             html.append('<input  style="width:87%;margin: auto;color: #000!important;" lay-verify="required" name="title"  class="layui-input" >')
             html.append('<div>')
@@ -167,7 +167,7 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
         },
         editData: function (item) {
             var html = new StringBuilder();
-            html.append('<form id="updateImageForm" class="layui-form layui-form-pane" action="/admin/image/update" method="post" >')
+            html.append('<form id="updateImageForm" class="layui-form layui-form-pane" action="' + reqMap.image.update + '" method="post" >')
             html.append('<input type="hidden" id="id" name="id" value="' + item.id + '">')
             html.append('<label class="layui-form-label" style="border: none" >图片标题:</label>')
             html.append('<input  style="width:87%;margin: auto;color: #000!important;" name="title" lay-verify="required"  class="layui-input" value="' + item.title + '" >')

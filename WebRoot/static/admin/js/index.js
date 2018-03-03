@@ -55,7 +55,7 @@ layui.define([ 'layer', 'form'], function (exports) {
                     layer.msg('登陆成功，正在跳转......', { icon: 6 });
                     layer.closeAll('page');
                     setTimeout(function () {
-                        location.href = "/static/admin/main.html";
+                        location.href = formatContextUrl("/static/admin/main.html")
                     }, 1000);
                 }else{
                     refreshCheckCode()
@@ -137,6 +137,7 @@ layui.define([ 'layer', 'form'], function (exports) {
  * 刷新验证码
  */
 function refreshCheckCode() {
-    $("[name='checkCodeImg']").attr("src", "/image/checkCode?ts=" + Date.parse(new Date()))
+    var checkCodeUrl = formatContextUrl("/image/checkCode?ts=" + Date.parse(new Date()))
+    $("[name='checkCodeImg']").attr("src", checkCodeUrl)
 }
 

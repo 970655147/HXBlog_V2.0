@@ -155,7 +155,7 @@ layui.define(['element', 'laypage', 'layer', 'form', 'pagesize'], function (expo
         },
         addReply: function (id, senderId, senderName, createdAt, subject, content) {
             var html = new StringBuilder();
-            html.append('<form id="addReplyForm" class="layui-form layui-form-pane" action="/admin/message/add" method="post">')
+            html.append('<form id="addReplyForm" class="layui-form layui-form-pane" action="' + reqMap.message.add + '" method="post">')
             html.append('<input type="hidden" name="userIds" value="' + senderId + '"/>')
             html.append('<input type="hidden" name="type" value="2"/>')
             html.append('<label class="layui-form-label" style="border: none" >消息内容:</label>')
@@ -260,6 +260,6 @@ function consumeMessage(id) {
  * @returns {string}
  */
 function mapMessageUrl(read) {
-    return (read === 1) ? "/static/admin/images/message_readed.png" :
-        "/static/admin/images/message_unread.png"
+    return (read === 1) ? formatContextUrl("/static/admin/images/message_readed.png") :
+        formatContextUrl("/static/admin/images/message_unread.png")
 }
