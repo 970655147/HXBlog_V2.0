@@ -1,9 +1,10 @@
-package com.hx.blog_v2.domain.validator.adv;
+package com.hx.blog_v2.domain.validator.front_resources;
 
 import com.hx.blog_v2.domain.ErrorCode;
-import com.hx.blog_v2.domain.form.adv.AdvSaveForm;
+import com.hx.blog_v2.domain.form.front_resources.AdvSaveForm;
 import com.hx.blog_v2.domain.validator.common.BeanIdStrValidator;
 import com.hx.blog_v2.domain.validator.others.EntityNameValidator;
+import com.hx.blog_v2.domain.validator.others.ProviderNameValidator;
 import com.hx.blog_v2.domain.validator.others.SortValidator;
 import com.hx.blog_v2.util.ResultUtils;
 import com.hx.common.interf.common.Result;

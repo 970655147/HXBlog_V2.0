@@ -1,7 +1,7 @@
 package com.hx.blog_v2.domain;
 
 import com.hx.blog_v2.domain.common.system.SessionUser;
-import com.hx.blog_v2.domain.po.adv.AdvPO;
+import com.hx.blog_v2.domain.po.front_resources.AdvPO;
 import com.hx.blog_v2.domain.po.blog.*;
 import com.hx.blog_v2.domain.po.front_resources.ImagePO;
 import com.hx.blog_v2.domain.po.front_resources.LinkPO;
@@ -15,8 +15,8 @@ import com.hx.blog_v2.domain.po.rlt.RltRoleResourcePO;
 import com.hx.blog_v2.domain.po.system.ExceptionLogPO;
 import com.hx.blog_v2.domain.po.system.RequestLogPO;
 import com.hx.blog_v2.domain.po.system.SystemConfigPO;
-import com.hx.blog_v2.domain.vo.adv.AdminAdvVO;
-import com.hx.blog_v2.domain.vo.adv.AdvVO;
+import com.hx.blog_v2.domain.vo.front_resources.AdminAdvVO;
+import com.hx.blog_v2.domain.vo.front_resources.AdvVO;
 import com.hx.blog_v2.domain.vo.blog.*;
 import com.hx.blog_v2.domain.vo.front_resources.*;
 import com.hx.blog_v2.domain.vo.message.MessageVO;

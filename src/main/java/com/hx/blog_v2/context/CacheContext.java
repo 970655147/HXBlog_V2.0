@@ -4,7 +4,7 @@ import com.hx.blog_v2.dao.interf.*;
 import com.hx.blog_v2.domain.common.system.StatisticsInfo;
 import com.hx.blog_v2.domain.form.blog.BlogSenseForm;
 import com.hx.blog_v2.domain.form.blog.BlogVisitLogForm;
-import com.hx.blog_v2.domain.po.adv.AdvPO;
+import com.hx.blog_v2.domain.po.front_resources.AdvPO;
 import com.hx.blog_v2.domain.po.blog.*;
 import com.hx.blog_v2.domain.po.front_resources.LinkPO;
 import com.hx.blog_v2.domain.po.resources.InterfPO;

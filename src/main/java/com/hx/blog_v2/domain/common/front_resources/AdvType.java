@@ -1,4 +1,4 @@
-package com.hx.blog_v2.domain.common.adv;
+package com.hx.blog_v2.domain.common.front_resources;
 
 import com.hx.common.interf.common.Code2Msg;
 

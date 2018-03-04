@@ -1,8 +1,8 @@
-package com.hx.blog_v2.controller.adv;
+package com.hx.blog_v2.controller.resource;
 
-import com.hx.blog_v2.domain.form.adv.AdvListForm;
-import com.hx.blog_v2.domain.validator.adv.AdvListValidator;
-import com.hx.blog_v2.service.interf.adv.AdvService;
+import com.hx.blog_v2.domain.form.front_resources.AdvListForm;
+import com.hx.blog_v2.domain.validator.front_resources.AdvListValidator;
+import com.hx.blog_v2.service.interf.front_resources.AdvService;
 import com.hx.common.interf.common.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;

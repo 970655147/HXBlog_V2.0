@@ -1,17 +1,17 @@
-package com.hx.blog_v2.service.adv;
+package com.hx.blog_v2.service.front_resources;
 
 import com.baidu.ueditor.utils.Constants;
 import com.hx.blog_v2.context.CacheContext;
 import com.hx.blog_v2.context.ConstantsContext;
 import com.hx.blog_v2.dao.interf.AdvDao;
 import com.hx.blog_v2.domain.POVOTransferUtils;
-import com.hx.blog_v2.domain.form.adv.AdvListForm;
-import com.hx.blog_v2.domain.form.adv.AdvSaveForm;
+import com.hx.blog_v2.domain.form.front_resources.AdvListForm;
+import com.hx.blog_v2.domain.form.front_resources.AdvSaveForm;
 import com.hx.blog_v2.domain.form.common.BeanIdForm;
-import com.hx.blog_v2.domain.po.adv.AdvPO;
-import com.hx.blog_v2.domain.vo.adv.AdminAdvVO;
-import com.hx.blog_v2.domain.vo.adv.AdvVO;
-import com.hx.blog_v2.service.interf.adv.AdvService;
+import com.hx.blog_v2.domain.po.front_resources.AdvPO;
+import com.hx.blog_v2.domain.vo.front_resources.AdminAdvVO;
+import com.hx.blog_v2.domain.vo.front_resources.AdvVO;
+import com.hx.blog_v2.service.interf.front_resources.AdvService;
 import com.hx.blog_v2.service.interf.BaseServiceImpl;
 import com.hx.blog_v2.util.BizUtils;
 import com.hx.blog_v2.util.BlogConstants;

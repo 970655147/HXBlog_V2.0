@@ -1,4 +1,4 @@
-package com.hx.blog_v2.domain.po.adv;
+package com.hx.blog_v2.domain.po.front_resources;
 
 import com.hx.blog_v2.domain.po.interf.LogisticalId;
 import com.hx.blog_v2.util.BlogConstants;

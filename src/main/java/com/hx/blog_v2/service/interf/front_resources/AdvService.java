@@ -1,9 +1,9 @@
-package com.hx.blog_v2.service.interf.adv;
+package com.hx.blog_v2.service.interf.front_resources;
 
-import com.hx.blog_v2.domain.form.adv.AdvListForm;
-import com.hx.blog_v2.domain.form.adv.AdvSaveForm;
+import com.hx.blog_v2.domain.form.front_resources.AdvListForm;
+import com.hx.blog_v2.domain.form.front_resources.AdvSaveForm;
 import com.hx.blog_v2.domain.form.common.BeanIdForm;
-import com.hx.blog_v2.domain.po.adv.AdvPO;
+import com.hx.blog_v2.domain.po.front_resources.AdvPO;
 import com.hx.blog_v2.service.interf.BaseService;
 import com.hx.common.interf.common.Result;
 

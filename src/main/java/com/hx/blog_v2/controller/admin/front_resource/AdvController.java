@@ -1,11 +1,11 @@
-package com.hx.blog_v2.controller.admin.adv;
+package com.hx.blog_v2.controller.admin.front_resource;
 
 import com.hx.blog_v2.domain.ErrorCode;
-import com.hx.blog_v2.domain.form.adv.AdvSaveForm;
+import com.hx.blog_v2.domain.form.front_resources.AdvSaveForm;
 import com.hx.blog_v2.domain.form.common.BeanIdForm;
-import com.hx.blog_v2.domain.validator.adv.AdvSaveValidator;
+import com.hx.blog_v2.domain.validator.front_resources.AdvSaveValidator;
 import com.hx.blog_v2.domain.validator.common.BeanIdValidator;
-import com.hx.blog_v2.service.interf.adv.AdvService;
+import com.hx.blog_v2.service.interf.front_resources.AdvService;
 import com.hx.blog_v2.util.ResultUtils;
 import com.hx.common.interf.common.Result;
 import com.hx.log.util.Tools;

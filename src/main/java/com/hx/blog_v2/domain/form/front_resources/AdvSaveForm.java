@@ -1,22 +1,33 @@
-package com.hx.blog_v2.domain.vo.adv;
+package com.hx.blog_v2.domain.form.front_resources;
 
 import com.hx.json.interf.JSONField;
 
 /**
- * AdvVO
+ * AdvSaveForm
  *
  * @author Jerry.X.He <970655147@qq.com>
  * @version 1.0
- * @date 3/3/2018 6:04 PM
+ * @date 3/3/2018 7:26 PM
  */
-public class AdvVO {
+public class AdvSaveForm {
 
+    private String id;
     private String name;
     private String provider;
+    private String pathMatch;
     private String type;
     private String params;
+    private int sort;
 
-    public AdvVO() {
+    public AdvSaveForm() {
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -35,6 +46,14 @@ public class AdvVO {
         this.provider = provider;
     }
 
+    public String getPathMatch() {
+        return pathMatch;
+    }
+
+    public void setPathMatch(String pathMatch) {
+        this.pathMatch = pathMatch;
+    }
+
     public String getType() {
         return type;
     }
@@ -49,5 +68,13 @@ public class AdvVO {
 
     public void setParams(String params) {
         this.params = params;
+    }
+
+    public int getSort() {
+        return sort;
+    }
+
+    public void setSort(int sort) {
+        this.sort = sort;
     }
 }

@@ -1,7 +1,7 @@
-package com.hx.blog_v2.domain.validator.adv;
+package com.hx.blog_v2.domain.validator.front_resources;
 
 import com.hx.blog_v2.domain.ErrorCode;
-import com.hx.blog_v2.domain.common.adv.AdvType;
+import com.hx.blog_v2.domain.common.front_resources.AdvType;
 import com.hx.blog_v2.util.ResultUtils;
 import com.hx.common.interf.common.Result;
 import com.hx.common.interf.validator.Validator;

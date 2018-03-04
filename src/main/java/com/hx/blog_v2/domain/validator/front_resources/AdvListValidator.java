@@ -1,6 +1,6 @@
-package com.hx.blog_v2.domain.validator.adv;
+package com.hx.blog_v2.domain.validator.front_resources;
 
-import com.hx.blog_v2.domain.form.adv.AdvListForm;
+import com.hx.blog_v2.domain.form.front_resources.AdvListForm;
 import com.hx.blog_v2.domain.validator.common.UrlValidator;
 import com.hx.blog_v2.util.ResultUtils;
 import com.hx.common.interf.common.Result;

@@ -1,15 +1,15 @@
-package com.hx.blog_v2.domain.form.adv;
+package com.hx.blog_v2.domain.vo.front_resources;
 
 import com.hx.json.interf.JSONField;
 
 /**
- * AdvSaveForm
+ * AdminAdvVO
  *
  * @author Jerry.X.He <970655147@qq.com>
  * @version 1.0
- * @date 3/3/2018 7:26 PM
+ * @date 3/3/2018 7:48 PM
  */
-public class AdvSaveForm {
+public class AdminAdvVO {
 
     private String id;
     private String name;
@@ -18,8 +18,10 @@ public class AdvSaveForm {
     private String type;
     private String params;
     private int sort;
+    private String createdAt;
+    private String updatedAt;
 
-    public AdvSaveForm() {
+    public AdminAdvVO() {
     }
 
     public String getId() {
@@ -76,5 +78,21 @@ public class AdvSaveForm {
 
     public void setSort(int sort) {
         this.sort = sort;
+    }
+
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public String getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(String updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }

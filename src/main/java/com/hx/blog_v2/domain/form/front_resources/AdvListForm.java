@@ -1,4 +1,4 @@
-package com.hx.blog_v2.domain.form.adv;
+package com.hx.blog_v2.domain.form.front_resources;
 
 /**
  * AdvListForm

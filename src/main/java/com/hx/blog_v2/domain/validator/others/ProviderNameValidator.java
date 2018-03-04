@@ -1,4 +1,4 @@
-package com.hx.blog_v2.domain.validator.adv;
+package com.hx.blog_v2.domain.validator.others;
 
 import com.hx.blog_v2.domain.validator.common.VisibleValidator;
 import com.hx.blog_v2.domain.validator.interf.ConfigRefreshableValidator;
