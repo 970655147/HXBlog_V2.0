@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50721
 File Encoding         : 65001
 
-Date: 2018-03-03 21:39:28
+Date: 2018-03-04 21:06:20
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -161,7 +161,7 @@ CREATE TABLE `blog_comment` (
   PRIMARY KEY (`id`),
   KEY `FK_Reference_2` (`blog_id`),
   CONSTRAINT `FK_Reference_2` FOREIGN KEY (`blog_id`) REFERENCES `blog` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=227 DEFAULT CHARSET=utf8 COMMENT='博客评论表';
+) ENGINE=InnoDB AUTO_INCREMENT=229 DEFAULT CHARSET=utf8 COMMENT='博客评论表';
 
 -- ----------------------------
 -- Records of blog_comment
@@ -265,7 +265,7 @@ INSERT INTO `blog_comment` VALUES ('198', '-2', '23', '1', '-1', 'admin', '97065
 INSERT INTO `blog_comment` VALUES ('199', '-2', '24', '1', '-1', 'admin', '970655147@qq.com', 'http://tb2.bdstatic.com/tb/editor/images/face/i_f25.png?t=20140803', 'admin', 'guest', '<html>\n <body>\n  <img src=\"http://img2.imgtn.bdimg.com/it/u=2030965026,1272976928&amp;fm=26&amp;gp=0.jpg\">\n </body>\n</html>', '2017-07-06 20:35:00', '2017-07-06 20:35:00', '0');
 INSERT INTO `blog_comment` VALUES ('200', '-2', '25', '1', '-1', 'admin', '970655147@qq.com', 'http://tb2.bdstatic.com/tb/editor/images/face/i_f25.png?t=20140803', 'admin', 'guest', '<html>\n <body>\n  <img src=\"http://www.pp3.cn/uploads/201502/2015021111.jpg\" width=\"40px\" height=\"40px\">\n </body>\n</html>', '2017-07-06 20:35:48', '2017-07-06 20:35:48', '0');
 INSERT INTO `blog_comment` VALUES ('201', '-2', '26', '1', '-1', 'admin', '970655147@qq.com', 'http://tb2.bdstatic.com/tb/editor/images/face/i_f25.png?t=20140803', 'admin', 'guest', '<html>\n <body>\n  <img src=\"http://www.pp3.cn/uploads/201502/2015021111.jpg\" width=\"40\" height=\"40\">\n </body>\n</html>', '2017-07-06 20:47:07', '2017-07-06 20:47:07', '0');
-INSERT INTO `blog_comment` VALUES ('202', '-2', '27', '1', '-1', 'admin', '970655147@qq.com', 'http://tb2.bdstatic.com/tb/editor/images/face/i_f25.png?t=20140803', 'admin', 'guest', '<html>\n <body>\n  <img src=\"http://www.pp3.cn/uploads/201502/2015021111.jpg\" width=\"40px\" height=\"40px\">\n </body>\n</html>', '2017-07-06 20:51:44', '2017-07-06 20:51:44', '0');
+INSERT INTO `blog_comment` VALUES ('202', '-2', '27', '1', '-1', 'admin', '970655147@qq.com', 'http://tb2.bdstatic.com/tb/editor/images/face/i_f25.png?t=20140803', 'admin', 'guest', '<html>\n <body> \n  <img src=\"http://www.pp3.cn/uploads/201502/2015021111.jpg\" width=\"40px\" height=\"40px\">   \n </body>\n</html>', '2017-07-06 20:51:44', '2018-03-04 19:47:11', '0');
 INSERT INTO `blog_comment` VALUES ('203', '91', '2', '1', '-1', '12312', '', 'http://avatar.csdn.net/C/D/C/1_u011039332.jpg', 'admin', 'guest', '<html>\n <body></body>\n</html>', '2017-07-07 20:20:39', '2017-07-07 20:20:39', '0');
 INSERT INTO `blog_comment` VALUES ('204', '91', '5', '1', '-1', '12312', '', 'http://avatar.csdn.net/C/D/C/1_u011039332.jpg', 'admin', 'guest', '<html>\n <body>\n  1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111\n </body>\n</html>', '2017-07-07 20:21:45', '2017-07-07 20:21:45', '0');
 INSERT INTO `blog_comment` VALUES ('205', '91', '6', '1', '-1', '12312', '', 'http://avatar.csdn.net/C/D/C/1_u011039332.jpg', 'admin', 'guest', '<html>\n <body></body>\n</html>', '2017-07-07 20:27:43', '2017-07-07 20:27:43', '0');
@@ -290,6 +290,8 @@ INSERT INTO `blog_comment` VALUES ('223', '74', '7', '7', '222', 'admin', '97065
 INSERT INTO `blog_comment` VALUES ('224', '98', '4', '1', '-1', '你好1', '', 'http://avatar.csdn.net/C/D/C/1_u011039332.jpg', 'admin', 'guest', '<html>\n <body>\n  1111\n </body>\n</html>', '2017-07-28 21:06:49', '2017-07-28 21:06:49', '0');
 INSERT INTO `blog_comment` VALUES ('225', '98', '5', '1', '-1', '你好1', '', 'http://avatar.csdn.net/C/D/C/1_u011039332.jpg', 'admin', 'guest', '<html>\n <body>\n  1112\n </body>\n</html>', '2017-07-28 21:07:20', '2017-07-28 21:07:20', '0');
 INSERT INTO `blog_comment` VALUES ('226', '91', '2', '2', '203', 'admin', '970655147@qq.com', 'http://tb2.bdstatic.com/tb/editor/images/face/i_f25.png?t=20140803', '12312', 'admin', '<html>\n <body>\n   臭狗屁 \n </body>\n</html>', '2017-09-10 11:50:33', '2017-09-10 11:50:33', '0');
+INSERT INTO `blog_comment` VALUES ('227', '-2', '20', '2', '195', 'admin', '970655147@qq.com', 'http://tb2.bdstatic.com/tb/editor/images/face/i_f25.png?t=20140803', 'admin', 'admin', '<html>\n <body>\n   ccc\n </body>\n</html>', '2018-03-04 19:43:18', '2018-03-04 19:43:18', '0');
+INSERT INTO `blog_comment` VALUES ('228', '-2', '3', '8', '173', 'admin', '970655147@qq.com', 'http://tb2.bdstatic.com/tb/editor/images/face/i_f25.png?t=20140803', '1111', 'admin', '<html>\n <body>\n   增加了一跳评论\n </body>\n</html>', '2018-03-04 20:40:26', '2018-03-04 20:40:26', '0');
 
 -- ----------------------------
 -- Table structure for blog_create_type
@@ -342,7 +344,7 @@ CREATE TABLE `blog_ex` (
 -- Records of blog_ex
 -- ----------------------------
 INSERT INTO `blog_ex` VALUES ('8', '-2', '27', '5', '3', '2', '1', '0', '0', '0', '2', '3', '11');
-INSERT INTO `blog_ex` VALUES ('9', '-1', '0', '253', '7', '1', '1', '0', '0', '0', '0', '1', '1');
+INSERT INTO `blog_ex` VALUES ('9', '-1', '0', '254', '7', '1', '1', '0', '0', '0', '0', '1', '1');
 INSERT INTO `blog_ex` VALUES ('10', '-3', '0', '59', '2', '2', '1', '0', '0', '0', '1', '2', '6');
 INSERT INTO `blog_ex` VALUES ('11', '27', '43', '8', '0', '0', '0', '0', '0', '0', '0', '0', '0');
 INSERT INTO `blog_ex` VALUES ('22', '38', '0', '6', '1', '0', '0', '0', '0', '0', '0', '0', '0');
@@ -565,7 +567,7 @@ CREATE TABLE `blog_visit_log` (
   PRIMARY KEY (`id`),
   KEY `FK_Reference_13` (`blog_id`),
   CONSTRAINT `FK_Reference_13` FOREIGN KEY (`blog_id`) REFERENCES `blog` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2667 DEFAULT CHARSET=utf8 COMMENT='记录博客访问记录的表';
+) ENGINE=InnoDB AUTO_INCREMENT=2673 DEFAULT CHARSET=utf8 COMMENT='记录博客访问记录的表';
 
 -- ----------------------------
 -- Records of blog_visit_log
@@ -590,6 +592,32 @@ CREATE TABLE `email` (
 -- ----------------------------
 -- Records of email
 -- ----------------------------
+INSERT INTO `email` VALUES ('1', 'hexiong@cdqcp.com', '[\"970655147@qq.com\"]', '[]', '发表博客提醒', 'admin 发表了一篇博客 : 11', '1', '2017-06-26 22:04:26');
+INSERT INTO `email` VALUES ('2', 'hexiong@cdqcp.com', '[\"970655147@qq.com\"]', '[]', '[HXBlog]博客提醒', ' 用户 [admin] 发表了一篇博客 :  <a href=\'http://localhost:8080/static/main/blogDetail.html?id=97\' color=\'red\' > csdn图片服务器</a>, 请注意审核该内容 ! ', '1', '2017-06-27 21:07:54');
+INSERT INTO `email` VALUES ('3', 'hexiong@cdqcp.com', '[\"970655147@qq.com\", \"970655147@qq.com\"]', '[]', '[HXBlog]博客提醒', ' 用户 [admin] 发表了一篇博客 :  <a href=\'http://localhost:8080/static/main/blogDetail.html?id=98\' color=\'red\' > 关之琳大美女</a>, 请注意审核该内容 ! ', '1', '2017-06-27 21:34:10');
+INSERT INTO `email` VALUES ('4', 'hexiong@cdqcp.com', '[\"970655147@qq.com\", \"970655147@qq.com\"]', '[]', '[HXBlog]博客提醒', ' 用户 [admin] 发表了一篇博客 :  <a href=\'http://localhost:8080/static/main/blogDetail.html?id=99\' color=\'red\' > 关之琳大美女</a>, 请注意审核该内容 ! ', '1', '2017-06-27 21:34:20');
+INSERT INTO `email` VALUES ('5', 'hexiong@cdqcp.com', '[\"970655147@qq.com\", \"970655147@qq.com\"]', '[]', '[HXBlog]博客提醒', ' 用户 [admin] 移除了一篇博客 :  原url : <a href=\'http://localhost:8080/static/main/blogDetail.html?id=99\' color=\'red\' > 关之琳大美女</a>, 请知晓 ! ', '1', '2017-06-27 21:36:19');
+INSERT INTO `email` VALUES ('6', 'hexiong@cdqcp.com', '[\"970655147@qq.com\"]', '[]', '[HXBlog]评论提醒', ' 用户 [admin] 评论了您的文章 : <html>\n <head></head>\n <body>\n  关之琳大美人 !\n </body>\n</html>,  <a href=\'http://localhost:8080/static/main/blogDetail.html?id=98\' color=\'red\' > 博客 98</a>, 请知晓 ! ', '1', '2017-06-27 22:04:11');
+INSERT INTO `email` VALUES ('7', 'hexiong@cdqcp.com', '[\"970655147@qq.com\", \"970655147@qq.com\"]', '[]', '[HXBlog]评论提醒', ' 用户 [admin] 为博客  <a href=\'http://localhost:8080/static/main/blogDetail.html?id=98\' 新增了一条评论 : <html>\n <head></head>\n <body>\n  关之琳大美人 !\n </body>\n</html>,  color=\'red\' > 博客 98</a>, 请知晓 ! ', '1', '2017-06-27 22:04:12');
+INSERT INTO `email` VALUES ('8', 'hexiong@cdqcp.com', '[\"970655147@qq.com\"]', '[]', '[HXBlog]打分提醒', ' 用户 [admin] 为您的文章打了 5分 !,   <a href=\'http://localhost:8080/static/main/blogDetail.html?id=91\' color=\'red\' > 博客 csdn图片服务器</a>, 请知晓 ! ', '1', '2017-06-27 22:09:21');
+INSERT INTO `email` VALUES ('9', 'hexiong@cdqcp.com', '[\"970655147@qq.com\"]', '[]', '[HXBlog]打分提醒', ' 用户 [admin] 为您的文章打了 1分 !,   <a href=\'http://localhost:8080/static/main/blogDetail.html?id=-1\' color=\'red\' > 项目上下文信息</a>, 请知晓 ! ', '1', '2017-06-28 19:34:22');
+INSERT INTO `email` VALUES ('10', 'hexiong@cdqcp.com', '[\"970655147@qq.com\", \"970655147@qq.com\"]', '[]', '[HXBlog]博客提醒', ' 用户 [admin] 发表了一篇博客 :  <a href=\'http://localhost:8080/static/main/blogDetail.html?id=100\' color=\'red\' > 11</a>, 请注意审核该内容 ! ', 'text/html;charset=UTF-8', '2017-06-28 21:25:12');
+INSERT INTO `email` VALUES ('11', 'hexiong@cdqcp.com', '[\"970655147@qq.com\"]', '[]', '[HXBlog]打分提醒', ' 用户 [admin] 为您的文章打了 5分 !,   <a href=\'http://localhost:8080/static/main/blogDetail.html?id=100\' color=\'red\' > 11</a>, 请知晓 ! ', 'text/html;charset=UTF-8', '2017-06-29 20:34:56');
+INSERT INTO `email` VALUES ('12', 'hexiong@cdqcp.com', '[\"970655147@qq.com\", \"970655147@qq.com\"]', '[]', '[HXBlog]博客提醒', ' 用户 [admin] 发表了一篇博客 :  <a href=\'http://localhost:8080/static/main/blogDetail.html?id=101\' color=\'red\' > 13</a>, 请注意审核该内容 ! ', 'text/html;charset=UTF-8', '2017-06-29 20:41:59');
+INSERT INTO `email` VALUES ('13', 'hexiong@cdqcp.com', '[\"970655147@qq.com\", \"970655147@qq.com\"]', '[]', '111', '<html>\n <head></head>\n <body>\n  <p>31313</p>\n </body>\n</html>', 'text/html;charset=UTF-8', '2017-06-29 21:15:36');
+INSERT INTO `email` VALUES ('14', 'hexiong@cdqcp.com', '[\"970655147@qq.com\", \"970655147@qq.com\"]', '[]', '[HXBlog]博客提醒', ' 用户 [admin] 移除了一篇博客 :  原url : <a href=\'http://localhost:8080/static/main/blogDetail.html?id=101\' color=\'red\' > 13</a>, 请知晓 ! ', 'text/html;charset=UTF-8', '2017-06-29 21:26:55');
+INSERT INTO `email` VALUES ('15', 'hexiong@cdqcp.com', '[\"970655147@qq.com\", \"970655147@qq.com\"]', '[]', '[HXBlog]博客提醒', ' 用户 [admin] 移除了一篇博客 :  原url : <a href=\'http://localhost:8080/static/main/blogDetail.html?id=100\' color=\'red\' > 11</a>, 请知晓 ! ', 'text/html;charset=UTF-8', '2017-06-29 21:27:26');
+INSERT INTO `email` VALUES ('16', 'hexiong@cdqcp.com', '[\"970655147@qq.com\"]', '[]', '[HXBlog]打分提醒', ' 用户 [admin] 为您的文章打了 5分 !,   <a href=\'http://localhost:8080/static/main/blogDetail.html?id=98\' color=\'red\' > 关之琳大美女</a>, 请知晓 ! ', 'text/html;charset=UTF-8', '2017-06-29 21:32:32');
+INSERT INTO `email` VALUES ('17', 'hexiong@cdqcp.com', '[\"970655147@qq.com\"]', '[]', '[HXBlog]打分提醒', ' 用户 [admin] 为您的文章打了 5分 !,   <a href=\'http://localhost:8080/static/main/blogDetail.html?id=98\' color=\'red\' > 关之琳大美女</a>, 请知晓 ! ', 'text/html;charset=UTF-8', '2017-06-29 21:45:37');
+INSERT INTO `email` VALUES ('18', 'hexiong@cdqcp.com', '[\"970655147@qq.com\"]', '[]', '[HXBlog]打分提醒', ' 用户 [admin] 为您的文章打了 1分 !,   <a href=\'http://localhost:8080/static/main/blogDetail.html?id=-1\' color=\'red\' > 项目上下文信息</a>, 请知晓 ! ', 'text/html;charset=UTF-8', '2017-06-29 21:48:03');
+INSERT INTO `email` VALUES ('19', 'hexiong@cdqcp.com', '[\"970655147@qq.com\"]', '[]', '[HXBlog]打分提醒', ' 用户 [admin] 为您的文章打了 1分 !,   <a href=\'http://localhost:8080/static/main/blogDetail.html?id=-1\' color=\'red\' > 项目上下文信息</a>, 请知晓 ! ', 'text/html;charset=UTF-8', '2017-06-30 18:39:56');
+INSERT INTO `email` VALUES ('20', 'hexiong@cdqcp.com', '[\"970655147@qq.com\"]', '[]', '[HXBlog]打分提醒', ' 用户 [admin] 为您的文章打了 5分 !,   <a href=\'http://localhost:8080/static/main/blogDetail.html?id=-2\' color=\'red\' > 项目建议信息</a>, 请知晓 ! ', 'text/html;charset=UTF-8', '2017-06-30 18:49:36');
+INSERT INTO `email` VALUES ('21', 'hexiong@cdqcp.com', '[\"970655147@qq.com\"]', '[]', '[HXBlog]评论提醒', ' 用户 [admin] 评论了您的文章 : <html>\n <head></head>\n <body>\n  98695486sldkjf ⊙\n </body>\n</html>,  <a href=\'http://localhost:8080/static/main/blogDetail.html?id=27\' color=\'red\' > 关于java中有几种类型的变量</a>, 请知晓 ! ', 'text/html;charset=UTF-8', '2017-06-30 20:20:03');
+INSERT INTO `email` VALUES ('22', 'hexiong@cdqcp.com', '[\"970655147@qq.com\", \"970655147@qq.com\"]', '[]', '[HXBlog]评论提醒', ' 用户 [admin] 为博客  <a href=\'http://localhost:8080/static/main/blogDetail.html?id=27\' color=\'red\' > 关于java中有几种类型的变量</a>,  新增了一条评论 : <html>\n <head></head>\n <body>\n  98695486sldkjf ⊙\n </body>\n</html>, 请知晓 ! ', 'text/html;charset=UTF-8', '2017-06-30 20:20:05');
+INSERT INTO `email` VALUES ('23', 'hexiong@cdqcp.com', '[\"970655147@qq.com\"]', '[]', '[HXBlog]评论提醒', ' 用户 [Jerry.X.He] 评论了您的文章 : <html>\n <head></head>\n <body>\n  31313\n </body>\n</html>,  <a href=\'http://localhost:8080/static/main/blogDetail.html?id=27\' color=\'red\' > 关于java中有几种类型的变量</a>, 请知晓 ! ', 'text/html;charset=UTF-8', '2017-06-30 20:43:57');
+INSERT INTO `email` VALUES ('24', 'hexiong@cdqcp.com', '[\"970655147@qq.com\", \"970655147@qq.com\"]', '[]', '[HXBlog]评论提醒', ' 用户 [Jerry.X.He] 为博客  <a href=\'http://localhost:8080/static/main/blogDetail.html?id=27\' color=\'red\' > 关于java中有几种类型的变量</a>,  新增了一条评论 : <html>\n <head></head>\n <body>\n  31313\n </body>\n</html>, 请知晓 ! ', 'text/html;charset=UTF-8', '2017-06-30 20:43:59');
+INSERT INTO `email` VALUES ('25', 'hexiong@cdqcp.com', '[\"970655147@qq.com\"]', '[]', '[HXBlog]评论提醒', ' 用户 [Jerry.X.He] 评论了您的文章 : <html>\n <head></head>\n <body>\n  1313131111\n </body>\n</html>,  <a href=\'http://localhost:8080/static/main/blogDetail.html?id=27\' color=\'red\' > 关于java中有几种类型的变量</a>, 请知晓 ! ', 'text/html;charset=UTF-8', '2017-06-30 20:46:41');
+INSERT INTO `email` VALUES ('26', 'hexiong@cdqcp.com', '[\"970655147@qq.com\", \"970655147@qq.com\"]', '[]', '[HXBlog]评论提醒', ' 用户 [Jerry.X.He] 为博客  <a href=\'http://localhost:8080/static/main/blogDetail.html?id=27\' color=\'red\' > 关于java中有几种类型的变量</a>,  新增了一条评论 : <html>\n <head></head>\n <body>\n  1313131111\n </body>\n</html>, 请知晓 ! ', 'text/html;charset=UTF-8', '2017-06-30 20:46:42');
 
 -- ----------------------------
 -- Table structure for exception_log
@@ -608,7 +636,7 @@ CREATE TABLE `exception_log` (
   `msg` varchar(4096) DEFAULT NULL COMMENT '异常信息',
   `created_at` varchar(32) DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1934 DEFAULT CHARSET=utf8 COMMENT='异常记录表';
+) ENGINE=InnoDB AUTO_INCREMENT=1937 DEFAULT CHARSET=utf8 COMMENT='异常记录表';
 
 -- ----------------------------
 -- Records of exception_log
@@ -741,7 +769,7 @@ CREATE TABLE `message` (
   PRIMARY KEY (`id`),
   KEY `FK_Reference_14` (`receiver_id`),
   CONSTRAINT `FK_Reference_14` FOREIGN KEY (`receiver_id`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=187 DEFAULT CHARSET=utf8 COMMENT='消息表';
+) ENGINE=InnoDB AUTO_INCREMENT=193 DEFAULT CHARSET=utf8 COMMENT='消息表';
 
 -- ----------------------------
 -- Records of message
@@ -828,48 +856,48 @@ CREATE TABLE `resource` (
 INSERT INTO `resource` VALUES ('1', '博客管理', 'fa fa-file-text', '#', '0', '7', '1', '2017-05-30 10:21:09', '2017-06-03 11:47:19', '1', '0');
 INSERT INTO `resource` VALUES ('2', '标签类别管理', 'fa fa-pencil-square-o', '#', '20', '7', '1', '2017-05-30 10:21:55', '2017-06-03 11:49:37', '1', '0');
 INSERT INTO `resource` VALUES ('3', '网站信息管理', 'fa fa-info', '#', '50', '7', '1', '2017-05-30 10:22:59', '2017-06-03 11:49:52', '1', '0');
-INSERT INTO `resource` VALUES ('4', '写博客', 'fa fa-pencil-square-o', '/HXBlog_V2.0//static/admin/addBlog.html', '0', '1', '2', '2017-05-30 10:23:34', '2017-06-11 14:44:41', '1', '0');
-INSERT INTO `resource` VALUES ('5', '博客管理[admin]', 'fa fa-magic', '/HXBlog_V2.0//static/admin/adminBlogManagement.html', '10', '1', '2', '2017-05-30 10:24:12', '2017-06-28 20:49:32', '1', '0');
-INSERT INTO `resource` VALUES ('6', '评论管理', 'fa fa-comments', '/HXBlog_V2.0//static/admin/commentManagement.html', '30', '1', '2', '2017-05-30 10:24:45', '2017-05-31 08:51:09', '1', '0');
+INSERT INTO `resource` VALUES ('4', '写博客', 'fa fa-pencil-square-o', '/HXBlog_V2.0/static/admin/html/blog/addBlog.html', '0', '1', '2', '2017-05-30 10:23:34', '2018-03-04 20:22:58', '1', '0');
+INSERT INTO `resource` VALUES ('5', '博客管理[admin]', 'fa fa-magic', '/HXBlog_V2.0//static/admin/html/blog/adminBlogManagement.html', '10', '1', '2', '2017-05-30 10:24:12', '2018-03-04 20:12:57', '1', '0');
+INSERT INTO `resource` VALUES ('6', '评论管理', 'fa fa-comments', '/HXBlog_V2.0//static/admin/html/blog/commentManagement.html', '30', '1', '2', '2017-05-30 10:24:45', '2018-03-04 20:13:10', '1', '0');
 INSERT INTO `resource` VALUES ('7', '#root', '#', '#', '0', '-1', '0', '2017-05-30 10:25:58', '2017-05-30 10:26:03', '1', '0');
-INSERT INTO `resource` VALUES ('8', '标签管理', 'fa fa-tags', '/HXBlog_V2.0//static/admin/blogTagManagement.html', '0', '2', '2', '2017-05-30 10:35:41', '2017-05-31 08:47:23', '1', '0');
-INSERT INTO `resource` VALUES ('9', '类型管理', 'fa fa-list-ol', '/HXBlog_V2.0//static/admin/blogTypeManagement.html', '10', '2', '2', '2017-05-30 10:36:10', '2017-05-31 08:48:22', '1', '0');
-INSERT INTO `resource` VALUES ('10', '友情链接管理', 'fa fa-chain', '/HXBlog_V2.0//static/admin/linksManagement.html', '0', '3', '2', '2017-05-30 10:39:53', '2017-05-31 08:46:37', '1', '0');
+INSERT INTO `resource` VALUES ('8', '标签管理', 'fa fa-tags', '/HXBlog_V2.0//static/admin/html/blog/blogTagManagement.html', '0', '2', '2', '2017-05-30 10:35:41', '2018-03-04 20:29:03', '1', '0');
+INSERT INTO `resource` VALUES ('9', '类型管理', 'fa fa-list-ol', '/HXBlog_V2.0//static/admin/html/blog/blogTypeManagement.html', '10', '2', '2', '2017-05-30 10:36:10', '2018-03-04 20:29:08', '1', '0');
+INSERT INTO `resource` VALUES ('10', '友情链接管理', 'fa fa-chain', '/HXBlog_V2.0//static/admin/html/front_resources/linksManagement.html', '0', '3', '2', '2017-05-30 10:39:53', '2018-03-04 20:31:37', '1', '0');
 INSERT INTO `resource` VALUES ('11', '系统管理', 'fa fa-cog', '#', '80', '7', '1', '2017-05-30 10:40:40', '2017-06-03 11:49:56', '1', '0');
-INSERT INTO `resource` VALUES ('12', '账号管理', 'fa fa-sort-numeric-asc', '/HXBlog_V2.0//static/admin/accountManagement.html', '0', '22', '2', '2017-05-30 10:41:09', '2017-06-03 11:51:06', '1', '0');
-INSERT INTO `resource` VALUES ('13', '修改账号密码', 'fa fa-edit', '/HXBlog_V2.0//static/admin/accountPwdManagement.html', '0', '11', '2', '2017-05-30 10:41:43', '2017-05-31 08:56:12', '1', '0');
-INSERT INTO `resource` VALUES ('14', '资源管理', 'fa fa-file-zip-o', '/HXBlog_V2.0//static/admin/resourceManagement.html', '20', '22', '2', '2017-05-30 11:22:46', '2017-06-03 11:51:19', '1', '0');
-INSERT INTO `resource` VALUES ('17', '角色管理', 'fa fa-group', '/HXBlog_V2.0//static/admin/roleManagement.html', '10', '22', '2', '2017-05-30 04:24:43', '2017-06-03 11:51:12', '1', '0');
-INSERT INTO `resource` VALUES ('18', '心情管理', 'fa fa-heart', '/HXBlog_V2.0//static/admin/moodsManagement.html', '10', '3', '2', '2017-05-30 04:34:09', '2017-05-31 08:54:30', '1', '0');
-INSERT INTO `resource` VALUES ('19', '用户角色管理', 'fa fa-pencil', '/HXBlog_V2.0//static/admin/accountRoleManagement.html', '0', '27', '2', '2017-05-30 04:50:08', '2017-06-03 11:50:21', '1', '0');
-INSERT INTO `resource` VALUES ('20', '角色资源管理', 'fa fa-pencil', '/HXBlog_V2.0//static/admin/roleResourceManagement.html', '10', '27', '2', '2017-05-30 07:58:33', '2017-06-03 11:50:27', '1', '0');
+INSERT INTO `resource` VALUES ('12', '账号管理', 'fa fa-sort-numeric-asc', '/HXBlog_V2.0//static/admin/html/resources/accountManagement.html', '0', '22', '2', '2017-05-30 10:41:09', '2018-03-04 20:29:31', '1', '0');
+INSERT INTO `resource` VALUES ('13', '修改账号密码', 'fa fa-edit', '/HXBlog_V2.0/static/admin/html/system/accountPwdManagement.html', '0', '11', '2', '2017-05-30 10:41:43', '2018-03-04 20:44:57', '1', '0');
+INSERT INTO `resource` VALUES ('14', '资源管理', 'fa fa-file-zip-o', '/HXBlog_V2.0/static/admin/html/resources/resourceManagement.html', '20', '22', '2', '2017-05-30 11:22:46', '2018-03-04 20:42:49', '1', '0');
+INSERT INTO `resource` VALUES ('17', '角色管理', 'fa fa-group', '/HXBlog_V2.0//static/admin/html/resources/roleManagement.html', '10', '22', '2', '2017-05-30 04:24:43', '2018-03-04 20:29:37', '1', '0');
+INSERT INTO `resource` VALUES ('18', '心情管理', 'fa fa-heart', '/HXBlog_V2.0//static/admin/html/front_resources/moodsManagement.html', '10', '3', '2', '2017-05-30 04:34:09', '2018-03-04 20:31:56', '1', '0');
+INSERT INTO `resource` VALUES ('19', '用户角色管理', 'fa fa-pencil', '/HXBlog_V2.0//static/admin/html/rlt/accountRoleManagement.html', '0', '27', '2', '2017-05-30 04:50:08', '2018-03-04 20:30:09', '1', '0');
+INSERT INTO `resource` VALUES ('20', '角色资源管理', 'fa fa-pencil', '/HXBlog_V2.0//static/admin/html/rlt/roleResourceManagement.html', '10', '27', '2', '2017-05-30 07:58:33', '2018-03-04 20:30:15', '1', '0');
 INSERT INTO `resource` VALUES ('21', 'ddd', 'test', 'test', '1', '7', '1', '2017-05-30 10:14:26', '2017-05-30 10:14:45', '1', '1');
 INSERT INTO `resource` VALUES ('22', '用户资源管理', 'fa fa-folder-open', '#', '30', '7', '1', '2017-05-31 08:06:48', '2017-06-03 11:49:40', '1', '0');
-INSERT INTO `resource` VALUES ('23', '图片墙管理', 'fa fa-image', '/HXBlog_V2.0//static/admin/imagesManagement.html?type=2', '20', '3', '2', '2017-05-31 08:39:47', '2017-07-05 20:42:25', '1', '0');
-INSERT INTO `resource` VALUES ('24', '头像管理', 'fa fa-qq', '/HXBlog_V2.0//static/admin/imagesManagement.html?type=1', '30', '3', '2', '2017-05-31 08:40:32', '2017-07-05 20:42:30', '1', '0');
-INSERT INTO `resource` VALUES ('25', '接口管理', 'fa fa-plug', '/HXBlog_V2.0//static/admin/interfManagement.html', '30', '22', '2', '2017-06-01 07:44:13', '2017-06-03 11:51:24', '1', '0');
-INSERT INTO `resource` VALUES ('26', '资源接口管理', 'fa fa-edit', '/HXBlog_V2.0//static/admin/resourceInterfManagement.html', '20', '27', '2', '2017-06-01 08:24:51', '2017-06-03 11:50:31', '1', '0');
+INSERT INTO `resource` VALUES ('23', '图片墙管理', 'fa fa-image', '/HXBlog_V2.0//static/admin/html/front_resources/imagesManagement.html?type=2', '20', '3', '2', '2017-05-31 08:39:47', '2018-03-04 20:32:01', '1', '0');
+INSERT INTO `resource` VALUES ('24', '头像管理', 'fa fa-qq', '/HXBlog_V2.0//static/admin/html/front_resources/imagesManagement.html?type=1', '30', '3', '2', '2017-05-31 08:40:32', '2018-03-04 20:32:11', '1', '0');
+INSERT INTO `resource` VALUES ('25', '接口管理', 'fa fa-plug', '/HXBlog_V2.0//static/admin/html/resources/interfManagement.html', '30', '22', '2', '2017-06-01 07:44:13', '2018-03-04 20:29:49', '1', '0');
+INSERT INTO `resource` VALUES ('26', '资源接口管理', 'fa fa-edit', '/HXBlog_V2.0//static/admin/html/rlt/resourceInterfManagement.html', '20', '27', '2', '2017-06-01 08:24:51', '2018-03-04 20:30:21', '1', '0');
 INSERT INTO `resource` VALUES ('27', '用户资源关联', 'fa fa-exchange', '#', '40', '7', '1', '2017-06-03 11:47:06', '2017-06-03 11:53:58', '1', '0');
-INSERT INTO `resource` VALUES ('28', '系统监控', 'fa fa-camera', '/HXBlog_V2.0//static/admin/moniter.html', '10', '11', '2', '2017-06-11 09:23:45', '2017-06-11 09:23:45', '1', '0');
+INSERT INTO `resource` VALUES ('28', '系统监控', 'fa fa-camera', '/HXBlog_V2.0//static/admin/html/system/moniter.html', '10', '11', '2', '2017-06-11 09:23:45', '2018-03-04 20:33:55', '1', '0');
 INSERT INTO `resource` VALUES ('29', '消息管理', 'fa fa-envelope-o', '#', '10', '7', '1', '2017-06-11 14:18:43', '2017-06-11 14:18:43', '1', '0');
-INSERT INTO `resource` VALUES ('30', '发送消息', 'fa  fa-envelope-square', '/HXBlog_V2.0//static/admin/addMessage.html', '0', '29', '2', '2017-06-11 14:20:07', '2017-06-11 14:27:13', '1', '0');
-INSERT INTO `resource` VALUES ('31', '收件箱', 'fa fa-envelope', '/HXBlog_V2.0//static/admin/messageView.html', '10', '29', '2', '2017-06-11 14:20:54', '2017-06-11 15:58:19', '1', '0');
-INSERT INTO `resource` VALUES ('32', '消息管理', 'fa fa-envelope-o', '/HXBlog_V2.0//static/admin/messageManagement.html', '20', '29', '2', '2017-06-11 14:22:10', '2017-06-11 17:23:14', '1', '0');
+INSERT INTO `resource` VALUES ('30', '发送消息', 'fa  fa-envelope-square', '/HXBlog_V2.0//static/admin/html/message/addMessage.html', '0', '29', '2', '2017-06-11 14:20:07', '2018-03-04 20:28:20', '1', '0');
+INSERT INTO `resource` VALUES ('31', '收件箱', 'fa fa-envelope', '/HXBlog_V2.0//static/admin/html/message/messageView.html', '10', '29', '2', '2017-06-11 14:20:54', '2018-03-04 20:28:28', '1', '0');
+INSERT INTO `resource` VALUES ('32', '消息管理', 'fa fa-envelope-o', '/HXBlog_V2.0//static/admin/html/message/messageManagement.html', '20', '29', '2', '2017-06-11 14:22:10', '2018-03-04 20:28:35', '1', '0');
 INSERT INTO `resource` VALUES ('33', '临时资源集合', '#', '#', '90', '7', '1', '2017-06-12 21:25:47', '2017-06-12 21:43:27', '0', '0');
 INSERT INTO `resource` VALUES ('34', '基本资源集合临时节点', '#', '#', '10', '33', '2', '2017-06-12 21:26:43', '2017-06-12 21:26:43', '1', '0');
 INSERT INTO `resource` VALUES ('35', '管理员基本资源', '#', '#', '0', '33', '2', '2017-06-12 21:53:41', '2017-06-12 21:53:41', '1', '0');
-INSERT INTO `resource` VALUES ('36', '博客创建类型', 'fa fa-handshake-o', '/HXBlog_V2.0//static/admin/blogCreateTypeManagement.html', '20', '2', '2', '2017-06-13 20:37:38', '2017-06-13 21:29:06', '1', '0');
-INSERT INTO `resource` VALUES ('37', '系统配置', 'fa fa-th-large', '/HXBlog_V2.0//static/admin/systemConfigManagement.html?type=1', '0', '41', '2', '2017-06-13 21:55:45', '2017-06-28 20:22:29', '1', '0');
-INSERT INTO `resource` VALUES ('38', '规则配置', 'fa fa-th-large', '/HXBlog_V2.0//static/admin/systemConfigManagement.html?type=2', '10', '41', '2', '2017-06-14 19:42:22', '2017-06-28 20:22:35', '1', '0');
-INSERT INTO `resource` VALUES ('39', '缓存控制', 'fa fa-refresh', '/HXBlog_V2.0//static/admin/cacheManagement.html', '20', '11', '2', '2017-06-17 11:20:24', '2017-06-18 19:08:20', '1', '0');
-INSERT INTO `resource` VALUES ('40', '首页配置管理', 'fa fa-th-large', '/HXBlog_V2.0//static/admin/systemConfigManagement.html?type=3', '20', '41', '2', '2017-06-17 17:51:26', '2017-06-28 20:22:42', '1', '0');
+INSERT INTO `resource` VALUES ('36', '博客创建类型', 'fa fa-handshake-o', '/HXBlog_V2.0//static/admin/html/blog/blogCreateTypeManagement.html', '20', '2', '2', '2017-06-13 20:37:38', '2018-03-04 20:29:14', '1', '0');
+INSERT INTO `resource` VALUES ('37', '系统配置', 'fa fa-th-large', '/HXBlog_V2.0//static/admin/html/system/systemConfigManagement.html?type=1', '0', '41', '2', '2017-06-13 21:55:45', '2018-03-04 20:32:39', '1', '0');
+INSERT INTO `resource` VALUES ('38', '规则配置', 'fa fa-th-large', '/HXBlog_V2.0//static/admin/html/system/systemConfigManagement.html?type=2', '10', '41', '2', '2017-06-14 19:42:22', '2018-03-04 20:32:45', '1', '0');
+INSERT INTO `resource` VALUES ('39', '缓存控制', 'fa fa-refresh', '/HXBlog_V2.0/static/admin/html/system/cacheManagement.html', '20', '11', '2', '2017-06-17 11:20:24', '2018-03-04 20:44:52', '1', '0');
+INSERT INTO `resource` VALUES ('40', '首页配置管理', 'fa fa-th-large', '/HXBlog_V2.0//static/admin/html/system/systemConfigManagement.html?type=3', '20', '41', '2', '2017-06-17 17:51:26', '2018-03-04 20:32:50', '1', '0');
 INSERT INTO `resource` VALUES ('41', '配置管理', 'fa fa-th-large', '######', '60', '7', '1', '2017-06-17 19:24:58', '2017-06-17 19:26:44', '1', '0');
-INSERT INTO `resource` VALUES ('42', '校正管理', 'fa fa-wrench', '/HXBlog_V2.0//static/admin/correctionManagement.html', '30', '11', '2', '2017-06-18 19:09:31', '2017-06-18 19:09:31', '1', '0');
+INSERT INTO `resource` VALUES ('42', '校正管理', 'fa fa-wrench', '/HXBlog_V2.0//static/admin/html/system/correctionManagement.html', '30', '11', '2', '2017-06-18 19:09:31', '2018-03-04 20:33:42', '1', '0');
 INSERT INTO `resource` VALUES ('43', '日志管理', 'fa fa-file-archive-o', '#####', '70', '7', '1', '2017-06-18 21:34:29', '2017-06-18 21:36:45', '1', '0');
-INSERT INTO `resource` VALUES ('44', '请求日志', 'fa fa-file-text-o', '/HXBlog_V2.0//static/admin/requestLogManagement.html', '0', '43', '2', '2017-06-18 21:35:37', '2017-06-18 22:08:08', '1', '0');
-INSERT INTO `resource` VALUES ('45', '异常日志', 'fa fa-file-text', '/HXBlog_V2.0//static/admin/exceptionLogManagement.html', '10', '43', '2', '2017-06-18 21:36:28', '2017-06-18 22:08:25', '1', '0');
-INSERT INTO `resource` VALUES ('46', '博客管理', 'fa fa-magic', '/HXBlog_V2.0//static/admin/blogManagement.html', '20', '1', '2', '2017-06-28 20:37:08', '2017-06-28 20:49:35', '1', '0');
-INSERT INTO `resource` VALUES ('47', '广告管理', 'fa fa-window-close-o', '/HXBlog_V2.0//static/admin/advManagement.html', '50', '3', '2', '2018-03-03 20:05:04', '2018-03-03 20:08:00', '1', '0');
+INSERT INTO `resource` VALUES ('44', '请求日志', 'fa fa-file-text-o', '/HXBlog_V2.0//static/admin/html/system/requestLogManagement.html', '0', '43', '2', '2017-06-18 21:35:37', '2018-03-04 20:32:58', '1', '0');
+INSERT INTO `resource` VALUES ('45', '异常日志', 'fa fa-file-text', '/HXBlog_V2.0//static/admin/html/system/exceptionLogManagement.html', '10', '43', '2', '2017-06-18 21:36:28', '2018-03-04 20:33:04', '1', '0');
+INSERT INTO `resource` VALUES ('46', '博客管理', 'fa fa-magic', '/HXBlog_V2.0//static/admin/html/blog/blogManagement.html', '20', '1', '2', '2017-06-28 20:37:08', '2018-03-04 20:13:04', '1', '0');
+INSERT INTO `resource` VALUES ('47', '广告管理', 'fa fa-window-close-o', '/HXBlog_V2.0//static/admin/html/front_resources/advManagement.html', '50', '3', '2', '2018-03-03 20:05:04', '2018-03-04 20:32:16', '1', '0');
 
 -- ----------------------------
 -- Table structure for rlt_blog_tag
@@ -1273,7 +1301,7 @@ CREATE TABLE `user` (
 INSERT INTO `user` VALUES ('-2', 'guest', '15868791', '914B32D27992C8DAFCF2CEBFAD5805AF', 'guest', '', 'guest', 'http://tb.himg.baidu.com/sys/portrait/item/48c0c0b6b7e7393730363535313437f02d', '客户共用的dummy账号', 'null', '1970-01-01 08:00:00', '2017-06-30 20:29:34', '2017-06-30 20:29:34', '0');
 INSERT INTO `user` VALUES ('-1', 'system', '36435272', '3727F8FFA9E8A6788984C23C221B7E0E', 'system', '970655147@qq.com', 'system', 'http://tb.himg.baidu.com/sys/portrait/item/48c0c0b6b7e7393730363535313437f02d', 'I am Universe', 'null', '1970-01-01 08:00:00', '2017-06-27 21:21:24', '2017-06-27 21:21:24', '0');
 INSERT INTO `user` VALUES ('3', 'editor', '11111111', '53AE11208757F14BEBFD1A22E3207869', 'editor', '970655147@qq.com', 'editor', 'http://tb.himg.baidu.com/sys/portrait/item/48c0c0b6b7e7393730363535313437f02d', '写天下最好的书', '171.214.202.169', '2017-07-05 23:20:26', '2017-05-23 09:11:10', '2017-06-03 11:07:12', '0');
-INSERT INTO `user` VALUES ('4', 'admin', '98508110', '328A84F3F7886815916DAFE698E86939', 'admin', '970655147@qq.com', 'admin', 'http://tb2.bdstatic.com/tb/editor/images/face/i_f25.png?t=20140803', '你好啊, 要小黑屋套餐吗 ?', '118.116.19.27', '2018-03-03 20:21:14', '2017-05-23 09:23:21', '2018-03-02 20:12:38', '0');
+INSERT INTO `user` VALUES ('4', 'admin', '98508110', '328A84F3F7886815916DAFE698E86939', 'admin', '970655147@qq.com', 'admin', 'http://tb2.bdstatic.com/tb/editor/images/face/i_f25.png?t=20140803', '你好啊, 要小黑屋套餐吗 ?', '118.116.19.27', '2018-03-04 20:54:10', '2017-05-23 09:23:21', '2018-03-02 20:12:38', '0');
 
 -- ----------------------------
 -- Table structure for visitor
