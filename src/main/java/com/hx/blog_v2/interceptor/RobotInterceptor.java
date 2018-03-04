@@ -4,7 +4,7 @@ import com.hx.blog_v2.context.CacheContext;
 import com.hx.blog_v2.context.ConstantsContext;
 import com.hx.blog_v2.context.WebContext;
 import com.hx.blog_v2.domain.ErrorCode;
-import com.hx.blog_v2.domain.dto.SessionUser;
+import com.hx.blog_v2.domain.common.system.SessionUser;
 import com.hx.blog_v2.util.BizUtils;
 import com.hx.blog_v2.util.BlogConstants;
 import com.hx.blog_v2.util.ResultUtils;

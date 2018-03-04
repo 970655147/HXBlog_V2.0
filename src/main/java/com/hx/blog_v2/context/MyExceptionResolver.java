@@ -1,6 +1,6 @@
 package com.hx.blog_v2.context;
 
-import com.hx.blog_v2.service.interf.ExceptionLogService;
+import com.hx.blog_v2.service.interf.system.ExceptionLogService;
 import com.hx.log.util.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.ModelAndView;

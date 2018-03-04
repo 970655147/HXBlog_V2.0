@@ -1,6 +1,15 @@
 package com.hx.blog_v2.test;
 
-import com.hx.blog_v2.domain.po.*;
+import com.hx.blog_v2.domain.po.adv.AdvPO;
+import com.hx.blog_v2.domain.po.blog.*;
+import com.hx.blog_v2.domain.po.front_resources.ImagePO;
+import com.hx.blog_v2.domain.po.front_resources.LinkPO;
+import com.hx.blog_v2.domain.po.front_resources.MoodPO;
+import com.hx.blog_v2.domain.po.resources.UserPO;
+import com.hx.blog_v2.domain.po.rlt.RltBlogTagPO;
+import com.hx.blog_v2.domain.po.system.ExceptionLogPO;
+import com.hx.blog_v2.domain.po.system.RequestLogPO;
+import com.hx.blog_v2.domain.po.system.UploadFilePO;
 import com.hx.log.json.JSONTransferableUtils;
 import org.junit.Test;
 

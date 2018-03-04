@@ -1,9 +1,8 @@
 package com.hx.blog_v2.test;
 
-import com.hx.blog_v2.domain.po.BlogCommentPO;
-import com.hx.blog_v2.domain.po.BlogExPO;
-import com.hx.blog_v2.domain.po.BlogPO;
-import com.hx.blog_v2.domain.po.BlogSensePO;
+import com.hx.blog_v2.domain.po.blog.BlogCommentPO;
+import com.hx.blog_v2.domain.po.blog.BlogExPO;
+import com.hx.blog_v2.domain.po.blog.BlogPO;
 import com.hx.blog_v2.util.BlogConstants;
 import com.hx.json.JSONObject;
 import com.hx.json.config.simple.SimpleJSONConfig;

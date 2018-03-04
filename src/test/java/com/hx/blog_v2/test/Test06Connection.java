@@ -1,8 +1,8 @@
 package com.hx.blog_v2.test;
 
 import com.hx.blog_v2.dao.interf.BlogDao;
-import com.hx.blog_v2.domain.mapper.CommonPOMapper;
-import com.hx.blog_v2.domain.po.BlogPO;
+import com.hx.blog_v2.domain.mapper.others.CommonPOMapper;
+import com.hx.blog_v2.domain.po.blog.BlogPO;
 import com.hx.blog_v2.util.BlogConstants;
 import com.hx.mongo.criteria.Criteria;
 import org.junit.Test;

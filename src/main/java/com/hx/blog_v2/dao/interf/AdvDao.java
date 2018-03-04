@@ -1,6 +1,6 @@
 package com.hx.blog_v2.dao.interf;
 
-import com.hx.blog_v2.domain.po.AdvPO;
+import com.hx.blog_v2.domain.po.adv.AdvPO;
 
 /**
  * AdvDao

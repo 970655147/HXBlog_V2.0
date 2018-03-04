@@ -6,10 +6,10 @@ import com.hx.blog_v2.biz_handler.interf.BizContext;
 import com.hx.blog_v2.context.CacheContext;
 import com.hx.blog_v2.context.WebContext;
 import com.hx.blog_v2.dao.interf.BlogExDao;
-import com.hx.blog_v2.domain.form.BeanIdForm;
-import com.hx.blog_v2.domain.po.BlogCommentPO;
-import com.hx.blog_v2.domain.po.BlogExPO;
-import com.hx.blog_v2.domain.vo.CommentVO;
+import com.hx.blog_v2.domain.form.common.BeanIdForm;
+import com.hx.blog_v2.domain.po.blog.BlogCommentPO;
+import com.hx.blog_v2.domain.po.blog.BlogExPO;
+import com.hx.blog_v2.domain.vo.blog.CommentVO;
 import com.hx.blog_v2.util.BlogConstants;
 import com.hx.common.interf.cache.Cache;
 import com.hx.common.interf.common.Result;
@@ -23,7 +23,7 @@ import javax.servlet.http.HttpSession;
 import java.util.List;
 
 /**
- * BlogSaveHandler
+ * CommentRemoveHandler
  *
  * @author Jerry.X.He <970655147@qq.com>
  * @version 1.0

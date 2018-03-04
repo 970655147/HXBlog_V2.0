@@ -1,8 +1,8 @@
 package com.hx.blog_v2.aop;
 
 import com.hx.blog_v2.context.WebContext;
-import com.hx.blog_v2.service.interf.ExceptionLogService;
-import com.hx.blog_v2.service.interf.RequestLogService;
+import com.hx.blog_v2.service.interf.system.ExceptionLogService;
+import com.hx.blog_v2.service.interf.system.RequestLogService;
 import com.hx.blog_v2.util.BlogConstants;
 import com.hx.common.interf.common.Result;
 import org.aspectj.lang.JoinPoint;
@@ -15,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * Controller层 的AOP
+ * ControllerAop
  *
  * @author Jerry.X.He
  * @version 1.0

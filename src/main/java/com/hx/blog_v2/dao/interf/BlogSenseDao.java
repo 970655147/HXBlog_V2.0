@@ -1,7 +1,7 @@
 package com.hx.blog_v2.dao.interf;
 
-import com.hx.blog_v2.domain.form.BlogSenseForm;
-import com.hx.blog_v2.domain.po.BlogSensePO;
+import com.hx.blog_v2.domain.form.blog.BlogSenseForm;
+import com.hx.blog_v2.domain.po.blog.BlogSensePO;
 import com.hx.common.interf.common.Result;
 
 

@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 import java.lang.reflect.Method;
 
 /**
- * BizHandle 的AOP
+ * BizHandlerAop
  *
  * @author Jerry.X.He
  * @version 1.0

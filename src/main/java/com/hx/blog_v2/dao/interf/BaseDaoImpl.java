@@ -1,7 +1,7 @@
 package com.hx.blog_v2.dao.interf;
 
 import com.hx.blog_v2.domain.ErrorCode;
-import com.hx.blog_v2.domain.form.BeanIdForm;
+import com.hx.blog_v2.domain.form.common.BeanIdForm;
 import com.hx.blog_v2.util.BlogConstants;
 import com.hx.common.interf.common.Result;
 import com.hx.blog_v2.util.ResultUtils;
@@ -14,9 +14,6 @@ import com.hx.mongo.criteria.SortByCriteria;
 import com.hx.mongo.criteria.interf.IQueryCriteria;
 import com.hx.mongo.criteria.interf.IUpdateCriteria;
 import com.hx.mongo.dao.MysqlBaseDaoImpl;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 
 import java.sql.Connection;
 import java.util.List;

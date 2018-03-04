@@ -1,7 +1,7 @@
 package com.hx.blog_v2.dao.interf;
 
-import com.hx.blog_v2.domain.form.BeanIdsForm;
-import com.hx.blog_v2.domain.po.RltRoleResourcePO;
+import com.hx.blog_v2.domain.form.common.BeanIdsForm;
+import com.hx.blog_v2.domain.po.rlt.RltRoleResourcePO;
 import com.hx.common.interf.common.Result;
 
 /**

@@ -1,9 +1,8 @@
 package com.hx.blog_v2.dao.interf;
 
-import com.hx.blog_v2.domain.form.BeanIdsForm;
-import com.hx.blog_v2.domain.po.RltResourceInterfPO;
+import com.hx.blog_v2.domain.form.common.BeanIdsForm;
+import com.hx.blog_v2.domain.po.rlt.RltResourceInterfPO;
 import com.hx.common.interf.common.Result;
-import com.hx.mongo.dao.interf.MysqlIBaseDao;
 
 /**
  * BlogTagDao

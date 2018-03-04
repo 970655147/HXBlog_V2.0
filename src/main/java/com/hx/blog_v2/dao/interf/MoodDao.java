@@ -1,7 +1,6 @@
 package com.hx.blog_v2.dao.interf;
 
-import com.hx.blog_v2.domain.po.MoodPO;
-import com.hx.mongo.dao.interf.MysqlIBaseDao;
+import com.hx.blog_v2.domain.po.front_resources.MoodPO;
 
 /**
  * BlogPODao

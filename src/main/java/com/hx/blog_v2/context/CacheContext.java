@@ -1,11 +1,17 @@
 package com.hx.blog_v2.context;
 
 import com.hx.blog_v2.dao.interf.*;
-import com.hx.blog_v2.domain.dto.StatisticsInfo;
-import com.hx.blog_v2.domain.form.BlogSenseForm;
-import com.hx.blog_v2.domain.form.BlogVisitLogForm;
-import com.hx.blog_v2.domain.po.*;
-import com.hx.blog_v2.domain.vo.CommentVO;
+import com.hx.blog_v2.domain.common.system.StatisticsInfo;
+import com.hx.blog_v2.domain.form.blog.BlogSenseForm;
+import com.hx.blog_v2.domain.form.blog.BlogVisitLogForm;
+import com.hx.blog_v2.domain.po.adv.AdvPO;
+import com.hx.blog_v2.domain.po.blog.*;
+import com.hx.blog_v2.domain.po.front_resources.LinkPO;
+import com.hx.blog_v2.domain.po.resources.InterfPO;
+import com.hx.blog_v2.domain.po.resources.ResourcePO;
+import com.hx.blog_v2.domain.po.resources.RolePO;
+import com.hx.blog_v2.domain.po.system.UploadFilePO;
+import com.hx.blog_v2.domain.vo.blog.CommentVO;
 import com.hx.blog_v2.util.*;
 import com.hx.common.interf.cache.Cache;
 import com.hx.common.interf.common.Result;
@@ -480,7 +486,7 @@ public class CacheContext {
     /**
      * 获取所有的 BlogType
      *
-     * @return java.util.Map<java.lang.String,com.hx.blog_v2.domain.po.BlogTypePO>
+     * @return java.util.Map<java.lang.String,com.hx.blog_v2.domain.po.blog.BlogTypePO>
      * @author Jerry.X.He
      * @date 5/21/2017 6:13 PM
      * @since 1.0
@@ -504,7 +510,7 @@ public class CacheContext {
     /**
      * 获取所有的 BlogType
      *
-     * @return java.util.Map<java.lang.String,com.hx.blog_v2.domain.po.BlogTypePO>
+     * @return java.util.Map<java.lang.String,com.hx.blog_v2.domain.po.blog.BlogTypePO>
      * @author Jerry.X.He
      * @date 5/21/2017 6:13 PM
      * @since 1.0
@@ -528,7 +534,7 @@ public class CacheContext {
     /**
      * 获取所有的友情链接
      *
-     * @return java.util.List<com.hx.blog_v2.domain.po.LinkPO>
+     * @return java.util.List<com.hx.blog_v2.domain.po.front_resources.LinkPO>
      * @author Jerry.X.He
      * @date 5/27/2017 9:25 PM
      * @since 1.0
@@ -552,7 +558,7 @@ public class CacheContext {
     /**
      * 获取所有的角色
      *
-     * @return java.util.List<com.hx.blog_v2.domain.po.LinkPO>
+     * @return java.util.List<com.hx.blog_v2.domain.po.front_resources.LinkPO>
      * @author Jerry.X.He
      * @date 5/27/2017 9:25 PM
      * @since 1.0
@@ -569,7 +575,7 @@ public class CacheContext {
      * 根据 name 查询 role
      *
      * @param name name
-     * @return com.hx.blog_v2.domain.po.RolePO
+     * @return com.hx.blog_v2.domain.po.resources.RolePO
      * @author Jerry.X.He
      * @date 6/27/2017 8:13 PM
      * @since 1.0
@@ -589,7 +595,7 @@ public class CacheContext {
     /**
      * 获取所有的资源
      *
-     * @return java.util.List<com.hx.blog_v2.domain.po.LinkPO>
+     * @return java.util.List<com.hx.blog_v2.domain.po.front_resources.LinkPO>
      * @author Jerry.X.He
      * @date 5/27/2017 9:25 PM
      * @since 1.0
@@ -613,7 +619,7 @@ public class CacheContext {
     /**
      * 获取所有的接口列表
      *
-     * @return java.util.List<com.hx.blog_v2.domain.po.LinkPO>
+     * @return java.util.List<com.hx.blog_v2.domain.po.front_resources.LinkPO>
      * @author Jerry.X.He
      * @date 6/1/2017 7:53 PM
      * @since 1.0
@@ -637,7 +643,7 @@ public class CacheContext {
     /**
      * 获取所有的博客创建类型列表
      *
-     * @return java.util.List<com.hx.blog_v2.domain.po.LinkPO>
+     * @return java.util.List<com.hx.blog_v2.domain.po.front_resources.LinkPO>
      * @author Jerry.X.He
      * @date 6/1/2017 7:53 PM
      * @since 1.0
@@ -661,7 +667,7 @@ public class CacheContext {
     /**
      * 获取所有的广告信息
      *
-     * @return java.util.List<com.hx.blog_v2.domain.po.LinkPO>
+     * @return java.util.List<com.hx.blog_v2.domain.po.front_resources.LinkPO>
      * @author Jerry.X.He
      * @date 6/1/2017 7:53 PM
      * @since 1.0
@@ -686,7 +692,7 @@ public class CacheContext {
      * 根据digest 获取图片的信息
      *
      * @param digest digest
-     * @return com.hx.blog_v2.domain.po.UploadFilePO
+     * @return com.hx.blog_v2.domain.po.system.UploadFilePO
      * @author Jerry.X.He
      * @date 5/29/2017 4:27 PM
      * @since 1.0
@@ -736,7 +742,7 @@ public class CacheContext {
      * 获取blogId 对应的 BlogExPO
      *
      * @param blogId blogId
-     * @return com.hx.blog_v2.domain.po.BlogExPO
+     * @return com.hx.blog_v2.domain.po.blog.BlogExPO
      * @author Jerry.X.He
      * @date 6/6/2017 8:38 PM
      * @since 1.0
@@ -861,7 +867,7 @@ public class CacheContext {
     /**
      * 获取今天的统计数据的结果
      *
-     * @return com.hx.blog_v2.domain.dto.StatisticsInfo
+     * @return com.hx.blog_v2.domain.dto.system.StatisticsInfo
      * @author Jerry.X.He
      * @date 6/10/2017 9:03 PM
      * @since 1.0
@@ -877,7 +883,7 @@ public class CacheContext {
     /**
      * 获取最近7天的的统计数据的结果
      *
-     * @return com.hx.blog_v2.domain.dto.StatisticsInfo
+     * @return com.hx.blog_v2.domain.dto.system.StatisticsInfo
      * @author Jerry.X.He
      * @date 6/10/2017 9:03 PM
      * @since 1.0
@@ -889,7 +895,7 @@ public class CacheContext {
     /**
      * 获取最近7天的的统计数据的总和
      *
-     * @return com.hx.blog_v2.domain.dto.StatisticsInfo
+     * @return com.hx.blog_v2.domain.dto.system.StatisticsInfo
      * @author Jerry.X.He
      * @date 6/10/2017 9:03 PM
      * @since 1.0
@@ -908,7 +914,7 @@ public class CacheContext {
     /**
      * 获取今天的统计数据的结果
      *
-     * @return com.hx.blog_v2.domain.dto.StatisticsInfo
+     * @return com.hx.blog_v2.domain.dto.system.StatisticsInfo
      * @author Jerry.X.He
      * @date 6/10/2017 9:03 PM
      * @since 1.0
@@ -920,7 +926,7 @@ public class CacheContext {
     /**
      * 获取最近7天的的统计数据的结果
      *
-     * @return com.hx.blog_v2.domain.dto.StatisticsInfo
+     * @return com.hx.blog_v2.domain.dto.system.StatisticsInfo
      * @author Jerry.X.He
      * @date 6/10/2017 9:03 PM
      * @since 1.0
@@ -1208,7 +1214,7 @@ public class CacheContext {
     /**
      * 获取最近的博客的记录
      *
-     * @return com.hx.common.interf.cache.Cache<java.lang.String,com.hx.blog_v2.domain.po.BlogPO>
+     * @return com.hx.common.interf.cache.Cache<java.lang.String,com.hx.blog_v2.domain.po.blog.BlogPO>
      * @author Jerry.X.He
      * @date 7/8/2017 10:34 AM
      * @since 1.0
@@ -1220,7 +1226,7 @@ public class CacheContext {
     /**
      * 加载最近的博客的记录
      *
-     * @return com.hx.common.interf.cache.Cache<java.lang.String,com.hx.blog_v2.domain.po.BlogPO>
+     * @return com.hx.common.interf.cache.Cache<java.lang.String,com.hx.blog_v2.domain.po.blog.BlogPO>
      * @author Jerry.X.He
      * @date 7/8/2017 10:34 AM
      * @since 1.0
@@ -1248,7 +1254,7 @@ public class CacheContext {
     /**
      * 获取最近的评论的记录
      *
-     * @return com.hx.common.interf.cache.Cache<java.lang.String,com.hx.blog_v2.domain.po.BlogPO>
+     * @return com.hx.common.interf.cache.Cache<java.lang.String,com.hx.blog_v2.domain.po.blog.BlogPO>
      * @author Jerry.X.He
      * @date 7/8/2017 10:34 AM
      * @since 1.0
@@ -1260,7 +1266,7 @@ public class CacheContext {
     /**
      * 加载最近的评论的记录
      *
-     * @return com.hx.common.interf.cache.Cache<java.lang.String,com.hx.blog_v2.domain.po.BlogPO>
+     * @return com.hx.common.interf.cache.Cache<java.lang.String,com.hx.blog_v2.domain.po.blog.BlogPO>
      * @author Jerry.X.He
      * @date 7/8/2017 10:34 AM
      * @since 1.0
@@ -1485,7 +1491,7 @@ public class CacheContext {
      * 对于 resource 进行资源重排, 一级资源|二级资源|..
      *
      * @param resoures resoures
-     * @return java.util.List<com.hx.blog_v2.domain.po.ResourcePO>
+     * @return java.util.List<com.hx.blog_v2.domain.po.resources.ResourcePO>
      * @author Jerry.X.He
      * @date 6/12/2017 10:54 PM
      * @since 1.0

@@ -8,16 +8,16 @@ import com.hx.blog_v2.context.ConstantsContext;
 import com.hx.blog_v2.context.WebContext;
 import com.hx.blog_v2.dao.interf.BlogDao;
 import com.hx.blog_v2.dao.interf.BlogExDao;
-import com.hx.blog_v2.domain.dto.MessageType;
-import com.hx.blog_v2.domain.form.BeanIdForm;
-import com.hx.blog_v2.domain.form.CommentSaveForm;
-import com.hx.blog_v2.domain.form.MessageSaveForm;
-import com.hx.blog_v2.domain.po.BlogCommentPO;
-import com.hx.blog_v2.domain.po.BlogExPO;
-import com.hx.blog_v2.domain.po.BlogPO;
-import com.hx.blog_v2.domain.po.RolePO;
-import com.hx.blog_v2.domain.vo.CommentVO;
-import com.hx.blog_v2.service.interf.MessageService;
+import com.hx.blog_v2.domain.common.message.MessageType;
+import com.hx.blog_v2.domain.form.common.BeanIdForm;
+import com.hx.blog_v2.domain.form.blog.CommentSaveForm;
+import com.hx.blog_v2.domain.form.message.MessageSaveForm;
+import com.hx.blog_v2.domain.po.blog.BlogCommentPO;
+import com.hx.blog_v2.domain.po.blog.BlogExPO;
+import com.hx.blog_v2.domain.po.blog.BlogPO;
+import com.hx.blog_v2.domain.po.resources.RolePO;
+import com.hx.blog_v2.domain.vo.blog.CommentVO;
+import com.hx.blog_v2.service.interf.message.MessageService;
 import com.hx.blog_v2.util.BizUtils;
 import com.hx.blog_v2.util.BlogConstants;
 import com.hx.common.interf.cache.Cache;
@@ -32,7 +32,7 @@ import javax.servlet.http.HttpSession;
 import java.util.List;
 
 /**
- * BlogSaveHandler
+ * CommentSaveHandler
  *
  * @author Jerry.X.He <970655147@qq.com>
  * @version 1.0

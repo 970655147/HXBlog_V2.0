@@ -1,7 +1,7 @@
 package com.hx.blog_v2.domain;
 
-import com.hx.blog_v2.domain.dto.BlogState;
-import com.hx.blog_v2.domain.dto.BlogStateAction;
+import com.hx.blog_v2.domain.common.blog.BlogState;
+import com.hx.blog_v2.domain.common.blog.BlogStateAction;
 import com.hx.flow.flow.GenericStateMachine;
 import com.hx.flow.flow.StandardStateMachine;
 import com.hx.flow.flow.interf.StateMachine;

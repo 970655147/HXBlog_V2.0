@@ -1,7 +1,7 @@
 package com.hx.blog_v2.dao.interf;
 
-import com.hx.blog_v2.domain.form.BlogVisitLogForm;
-import com.hx.blog_v2.domain.po.BlogVisitLogPO;
+import com.hx.blog_v2.domain.form.blog.BlogVisitLogForm;
+import com.hx.blog_v2.domain.po.blog.BlogVisitLogPO;
 
 /**
  * BlogPODao

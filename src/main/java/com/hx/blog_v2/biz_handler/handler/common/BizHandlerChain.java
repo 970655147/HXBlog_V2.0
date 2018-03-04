@@ -7,7 +7,7 @@ import com.hx.log.util.Tools;
 import java.util.List;
 
 /**
- * BizHandlerAdapter
+ * BizHandlerChain
  *
  * @author Jerry.X.He <970655147@qq.com>
  * @version 1.0

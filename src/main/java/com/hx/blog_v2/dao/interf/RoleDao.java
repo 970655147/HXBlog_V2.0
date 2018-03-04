@@ -1,9 +1,6 @@
 package com.hx.blog_v2.dao.interf;
 
-import com.hx.blog_v2.domain.form.BeanIdForm;
-import com.hx.blog_v2.domain.po.RolePO;
-import com.hx.common.interf.common.Result;
-import com.hx.mongo.dao.interf.MysqlIBaseDao;
+import com.hx.blog_v2.domain.po.resources.RolePO;
 
 /**
  * BlogPODao

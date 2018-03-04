@@ -3,13 +3,13 @@ package com.hx.blog_v2.util;
 import com.hx.attr_handler.util.AttrHandlerConstants;
 import com.hx.attr_handler.util.AttrHandlerUtils;
 import com.hx.blog_v2.context.WebContext;
-import com.hx.blog_v2.domain.dto.SessionUser;
-import com.hx.blog_v2.domain.dto.StatisticsInfo;
-import com.hx.blog_v2.domain.dto.StringIntPair;
+import com.hx.blog_v2.domain.common.system.SessionUser;
+import com.hx.blog_v2.domain.common.system.StatisticsInfo;
+import com.hx.blog_v2.domain.common.common.StringIntPair;
 import com.hx.blog_v2.domain.form.interf.UserInfoExtractor;
-import com.hx.blog_v2.domain.mapper.StringIntPairMapper;
-import com.hx.blog_v2.domain.mapper.ToMapMapper;
-import com.hx.blog_v2.domain.po.ResourcePO;
+import com.hx.blog_v2.domain.mapper.common.StringIntPairMapper;
+import com.hx.blog_v2.domain.mapper.common.ToMapMapper;
+import com.hx.blog_v2.domain.po.resources.ResourcePO;
 import com.hx.blog_v2.domain.po.interf.LogisticalId;
 import com.hx.common.str.AntPathMatcher;
 import com.hx.common.str.interf.PathMatcher;
@@ -57,7 +57,7 @@ public final class BizUtils {
      *
      * @param user   user
      * @param params params
-     * @return com.hx.blog_v2.domain.dto.SessionUser
+     * @return com.hx.blog_v2.domain.dto.system.SessionUser
      * @author Jerry.X.He
      * @date 6/5/2017 8:50 PM
      * @since 1.0
@@ -404,7 +404,7 @@ public final class BizUtils {
      * @param id       id
      * @param parentId parentId
      * @param level    level
-     * @return com.hx.blog_v2.domain.po.ResourcePO
+     * @return com.hx.blog_v2.domain.po.resources.ResourcePO
      * @author Jerry.X.He
      * @date 6/28/2017 8:47 PM
      * @since 1.0

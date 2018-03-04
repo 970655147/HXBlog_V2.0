@@ -1,8 +1,6 @@
 package com.hx.blog_v2.test;
 
 
-import com.hx.blog_v2.service.UserServiceImpl;
-import com.hx.blog_v2.service.interf.UserService;
 import com.hx.log.alogrithm.code.Codec;
 
 import static com.hx.log.util.Log.info;

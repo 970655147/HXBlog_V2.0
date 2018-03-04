@@ -3,7 +3,7 @@ package com.hx.blog_v2.biz_handler.handler;
 import com.hx.blog_v2.biz_handler.handler.common.BizHandlerAdapter;
 import com.hx.blog_v2.biz_handler.interf.BizContext;
 import com.hx.blog_v2.context.CacheContext;
-import com.hx.blog_v2.domain.form.UserRoleUpdateForm;
+import com.hx.blog_v2.domain.form.rlt.UserRoleUpdateForm;
 import com.hx.common.interf.common.Result;
 import com.hx.log.util.Tools;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +14,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * BlogSaveHandler
+ * AuthUpdatedHandler
  *
  * @author Jerry.X.He <970655147@qq.com>
  * @version 1.0

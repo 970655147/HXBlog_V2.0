@@ -1,8 +1,6 @@
 package com.hx.blog_v2.dao.interf;
 
-import com.hx.blog_v2.domain.po.UserPO;
-import com.hx.mongo.dao.interf.MysqlIBaseDao;
-import org.springframework.stereotype.Component;
+import com.hx.blog_v2.domain.po.resources.UserPO;
 
 /**
  * BlogPODao

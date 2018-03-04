@@ -6,7 +6,7 @@ import com.hx.common.interf.common.Result;
 import com.hx.blog_v2.util.ResultUtils;
 
 /**
- * AlwaysTrueValidator
+ * AlwaysFalseValidator
  *
  * @author Jerry.X.He <970655147@qq.com>
  * @version 1.0

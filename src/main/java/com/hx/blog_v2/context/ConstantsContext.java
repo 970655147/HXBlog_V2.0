@@ -1,9 +1,9 @@
 package com.hx.blog_v2.context;
 
 import com.hx.blog_v2.dao.interf.SystemConfigDao;
-import com.hx.blog_v2.domain.dto.ConfigType;
-import com.hx.blog_v2.domain.dto.ImageType;
-import com.hx.blog_v2.domain.po.SystemConfigPO;
+import com.hx.blog_v2.domain.common.system.ConfigType;
+import com.hx.blog_v2.domain.common.front_resources.ImageType;
+import com.hx.blog_v2.domain.po.system.SystemConfigPO;
 import com.hx.blog_v2.util.BizUtils;
 import com.hx.blog_v2.util.BlogConstants;
 import com.hx.json.JSONArray;
@@ -431,7 +431,7 @@ public class ConstantsContext {
     /**
      * 获取所有的 给定的type下面的 key对应的配置
      *
-     * @return java.util.Map<java.lang.String,com.hx.blog_v2.domain.po.BlogTypePO>
+     * @return java.util.Map<java.lang.String,com.hx.blog_v2.domain.po.blog.BlogTypePO>
      * @author Jerry.X.He
      * @date 5/21/2017 6:13 PM
      * @since 1.0
@@ -473,7 +473,7 @@ public class ConstantsContext {
     /**
      * 获取所有的 SystemConfig
      *
-     * @return java.util.Map<java.lang.String,com.hx.blog_v2.domain.po.BlogTypePO>
+     * @return java.util.Map<java.lang.String,com.hx.blog_v2.domain.po.blog.BlogTypePO>
      * @author Jerry.X.He
      * @date 5/21/2017 6:13 PM
      * @since 1.0
@@ -497,7 +497,7 @@ public class ConstantsContext {
     /**
      * 获取所有的 RuleConfig
      *
-     * @return java.util.Map<java.lang.String,com.hx.blog_v2.domain.po.BlogTypePO>
+     * @return java.util.Map<java.lang.String,com.hx.blog_v2.domain.po.blog.BlogTypePO>
      * @author Jerry.X.He
      * @date 5/21/2017 6:13 PM
      * @since 1.0
@@ -521,7 +521,7 @@ public class ConstantsContext {
     /**
      * 获取所有的 FrontendIdxConfig
      *
-     * @return java.util.Map<java.lang.String,com.hx.blog_v2.domain.po.BlogTypePO>
+     * @return java.util.Map<java.lang.String,com.hx.blog_v2.domain.po.blog.BlogTypePO>
      * @author Jerry.X.He
      * @date 5/21/2017 6:13 PM
      * @since 1.0

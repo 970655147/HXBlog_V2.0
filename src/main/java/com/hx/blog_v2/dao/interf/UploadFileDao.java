@@ -1,6 +1,6 @@
 package com.hx.blog_v2.dao.interf;
 
-import com.hx.blog_v2.domain.po.UploadFilePO;
+import com.hx.blog_v2.domain.po.system.UploadFilePO;
 import com.hx.common.interf.common.Result;
 import org.springframework.web.multipart.MultipartFile;
 

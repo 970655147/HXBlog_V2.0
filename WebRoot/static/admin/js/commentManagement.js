@@ -69,7 +69,7 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
                         html.append('<td>' + item.createdAt + '</td>')
                         html.append('<td><i class="layui-icon layui-btn-small" style="cursor:pointer;font-size: 30px; color: #FA4B2A;vertical-align: middle;" onclick="layui.funcs.addReply(' + item.id + ', ' + item.blogId + ', ' + item.floorId + ', ' + item.commentId + ',\'' + item.name + '\',\'' + transferQuote(encodeURI(item.comment)) + '\')" >&#x1005;</i> </td>')
                         html.append('<td><button class="layui-btn layui-btn-small" onclick=\'layui.funcs.showData("' + item.blogName + '", ' + item.blogId + ', ' + item.floorId + ')\'><i class="layui-icon">&#xe63a;</i></button></td>')
-                        html.append('<td><button class="layui-btn layui-btn-small layui-btn-normal" onclick="layui.funcs.editData(' + item.id + ',\'' + item.toUser + '\',\'' + transferQuote(encodeURI(item.comment)) + '\')"><i class="layui-icon">&#xe642;</i></button></td>')
+                        html.append('<td><button class="layui-btn layui-btn-small layui-btn-normal" onclick="layui.funcs.editData(' + item.id + ', ' + item.blogId + ', \'' + item.toUser + '\',\'' + transferQuote(encodeURI(item.comment)) + '\')"><i class="layui-icon">&#xe642;</i></button></td>')
                         html.append('<td><button class="layui-btn layui-btn-small layui-btn-danger" onclick="layui.funcs.deleteData(' + item.id + ')"><i class="layui-icon">&#xe640;</i></button></td>')
                         html.append('</tr>')
                     }
@@ -206,10 +206,11 @@ layui.define(['element', 'laypage', 'layer', 'form'], function (exports) {
                 content: html.toString()
             });
         },
-        editData: function (id, toUser, comment) {
+        editData: function (id, blogId, toUser, comment) {
             var html = new StringBuilder();
             html.append('<form id="updateReplyForm" class="layui-form layui-form-pane" action="' + reqMap.comment.update + '" method="post">')
             html.append('<input type="hidden" name="id" value="' + id + '"/>')
+            html.append('<input type="hidden" name="blogId" value="' + blogId + '"/>')
             html.append('<label class="layui-form-label" style="border: none" >目标用户:</label>')
             html.append('<input  style="width:87%;margin: auto;color: #000!important;" name="toUser" value="' + toUser + '" class="layui-input" lay-verify="required" >')
             html.append('<label class="layui-form-label" style="border: none">回复内容:</label>')

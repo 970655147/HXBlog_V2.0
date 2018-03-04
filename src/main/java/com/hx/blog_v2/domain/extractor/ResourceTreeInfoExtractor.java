@@ -1,6 +1,6 @@
 package com.hx.blog_v2.domain.extractor;
 
-import com.hx.blog_v2.domain.vo.ResourceVO;
+import com.hx.blog_v2.domain.vo.resources.ResourceVO;
 import com.hx.json.JSONObject;
 import com.hx.log.alogrithm.tree.interf.TreeInfoExtractor;
 

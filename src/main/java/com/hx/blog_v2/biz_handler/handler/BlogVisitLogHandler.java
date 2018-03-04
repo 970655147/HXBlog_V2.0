@@ -8,11 +8,11 @@ import com.hx.blog_v2.context.ConstantsContext;
 import com.hx.blog_v2.context.WebContext;
 import com.hx.blog_v2.dao.interf.BlogExDao;
 import com.hx.blog_v2.dao.interf.BlogVisitLogDao;
-import com.hx.blog_v2.domain.dto.SessionUser;
-import com.hx.blog_v2.domain.form.BeanIdForm;
-import com.hx.blog_v2.domain.form.BlogVisitLogForm;
-import com.hx.blog_v2.domain.po.BlogExPO;
-import com.hx.blog_v2.domain.po.BlogVisitLogPO;
+import com.hx.blog_v2.domain.common.system.SessionUser;
+import com.hx.blog_v2.domain.form.common.BeanIdForm;
+import com.hx.blog_v2.domain.form.blog.BlogVisitLogForm;
+import com.hx.blog_v2.domain.po.blog.BlogExPO;
+import com.hx.blog_v2.domain.po.blog.BlogVisitLogPO;
 import com.hx.blog_v2.util.BlogConstants;
 import com.hx.blog_v2.util.DateUtils;
 import com.hx.common.interf.common.Result;
@@ -63,7 +63,7 @@ public class BlogVisitLogHandler extends BizHandlerAdapter {
      * 创建一个 BlogVisitLogPO 并持久化
      *
      * @param params params
-     * @return com.hx.blog_v2.domain.po.BlogVisitLogPO
+     * @return com.hx.blog_v2.domain.po.blog.BlogVisitLogPO
      * @author Jerry.X.He
      * @date 6/9/2017 9:34 PM
      * @since 1.0
