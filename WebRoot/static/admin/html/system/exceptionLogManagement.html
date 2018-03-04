@@ -1,0 +1,125 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>数据列表页面</title>
+
+    <!-- common imports -->
+    <script type="text/javascript" src="../../../js/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="../../js/common/commonImport.js"></script>
+    <script type="text/javascript" src="../../plugin/layui/layui.js"></script>
+    <script type="text/javascript" src="../../../myJs/md5.js"></script>
+    <script type="text/javascript" src="../../../myJs/constants.js"></script>
+    <script type="text/javascript" src="../../../myJs/utils.js"></script>
+
+</head>
+
+<body>
+<button class="layui-btn" style="margin-left: 30px" onclick="refresh()">
+    <i class="layui-icon">&#x1002;</i> 刷新
+</button>
+
+<div class="layui-field-box" style="text-align: center">
+    <div id="articleIndexTop">
+        <form id="logSearchForm" class="layui-form layui-form-pane">
+            <div class="layui-form-item" style="margin:0;margin-top:15px;">
+                <div class="layui-inline">
+                    <label class="layui-form-label">url</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="url" autocomplete="off" class="layui-input" />
+                    </div>
+                    <label class="layui-form-label">handler</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="handler" autocomplete="off" class="layui-input" />
+                    </div>
+                    <label class="layui-form-label">params</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="params" autocomplete="off" class="layui-input" />
+                    </div>
+                    <label class="layui-form-label">name</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="name" autocomplete="off" class="layui-input" />
+                    </div>
+                    <label class="layui-form-label">email</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="email" autocomplete="off" class="layui-input" />
+                    </div>
+
+                    <div style="height: 20px" ></div>
+                    <label class="layui-form-label">isSystemUser</label>
+                    <div class="layui-input-inline">
+                        <select name="isSystemUser">
+                            <option value=" ">全部</option>
+                            <option value="1">是</option>
+                            <option value="0">否</option>
+                        </select>
+                    </div>
+                    <label class="layui-form-label">requestIp</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="requestIp" autocomplete="off" class="layui-input" />
+                    </div>
+                    <label class="layui-form-label">msg</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="msg" autocomplete="off" class="layui-input" />
+                    </div>
+                    <div class="layui-input-inline" style="width:auto">
+                        <button class="layui-btn" lay-submit lay-filter="formSearch">搜索</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<fieldset id="dataList" class="layui-elem-field layui-field-title sys-list-field">
+    <legend style="text-align:center;">异常日志</legend>
+    <div class="layui-field-box layui-form">
+        <div class="">
+            <table style="table-layout: fixed" class="layui-table" lay-even>
+                <colgroup>
+                    <col width="40">
+                    <col width="40">
+                    <col width="40">
+                    <col width="150">
+                    <col width="150">
+                    <col width="40">
+                    <col width="80">
+                    <col width="80">
+                    <col width="40">
+                    <col width="40">
+                    <col width="80">
+                    <col width="40">
+                </colgroup>
+                <thead>
+                <tr>
+                    <th>编号</th>
+                    <th>url</th>
+                    <th>handler</th>
+                    <th>参数</th>
+                    <th>异常信息</th>
+                    <th>cost</th>
+                    <th>用户</th>
+                    <th>邮箱</th>
+                    <th>请求ip</th>
+                    <th>系统用户</th>
+                    <th>创建时间</th>
+                    <th colspan="1">操作</th>
+                </tr>
+                </thead>
+                <tbody id="dataContent">
+                </tbody>
+            </table>
+            <!--内容区域 ajax获取-->
+        </div>
+        <div id="pageNav"></div>
+    </div>
+</fieldset>
+
+<script type="text/javascript">
+    layui.config({
+        base: '../../js/system/'
+    }).use('exceptionLogManagement');
+</script>
+</body>
+</html>

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>写博客页面</title>
+
+    <link href="../../css/addBlog.css" rel="stylesheet"/>
+    <!-- common imports -->
+    <script type="text/javascript" src="../../../js/jquery-1.11.1.min.js" ></script>
+    <script type="text/javascript" src="../../js/common/commonImport.js"></script>
+    <script type="text/javascript" src="../../plugin/layui/layui.js"></script>
+    <!-- 导致 某css 加载不了 -->
+    <!--<script type="text/javascript" src="./plugin/layui/lay/modules/layer.js"></script>>-->
+    <script type="text/javascript" src="../../../myJs/md5.js"></script>
+    <script type="text/javascript" src="../../../myJs/constants.js" ></script>
+    <script type="text/javascript" src="../../../myJs/utils.js" ></script>
+
+</head>
+<body>
+<fieldset class="layui-elem-field layui-field-title" style="margin-top: 10px;">
+    <legend>编写博客</legend>
+</fieldset>
+
+<form id="addBlogForm" class="layui-form" action="/admin/blog/add" method="post" >
+    <div class="layui-form-item">
+        <label class="layui-form-label">博客标题</label>
+        <div class="layui-input-inline">
+            <input type="text" name="title" lay-verify="required" autocomplete="off" placeholder="请输入标题" class="layui-input" />
+        </div>
+        <label class="layui-form-label">创作类型</label>
+        <div class="layui-input-inline" style="z-index: 3003" >
+            <select name="blogCreateTypeId" lay-verify="required" >
+                <option value=""></option>
+            </select>
+        </div>
+    </div>
+
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">封面地址</label>
+        <div class="layui-input-inline">
+            <input type="text" name="coverUrl" id="coverUrl" lay-verify="required" autocomplete="off" placeholder="请输入封面url"
+                   class="layui-input" onblur="layui.funcs.coverImgShow()" />
+        </div>
+        <label class="layui-form-label">添加封面</label>
+        <div class="layui-input-inline">
+            <input id="uploadCoverImage" type="file" name="file" class="layui-upload-file" lay-title="添加一个碉堡了的图片">
+        </div>
+        <img id="coverShow" width="60px" height="60px" />
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">所属类别</label>
+        <div class="layui-input-inline" style="z-index: 3002" >
+            <select name="blogTypeId" lay-verify="required" >
+                <option value=""></option>
+            </select>
+        </div>
+        <div class="layui-input-inline">
+            <button class="layui-btn" type="button" onclick="layui.funcs.addTypeData()">
+                <i class="layui-icon">&#xe608;</i> 添加类别
+            </button>
+        </div>
+        <div class="layui-input-inline">
+            <button class="layui-btn" type="button" onclick="refresh()">
+                <i class="layui-icon">&#x1002;</i> 刷新
+            </button>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">所属标签</label>
+        <div class="layui-input-block" id="tagSelected" >
+
+        </div>
+        <!-- ueditor 的样式配置中 最高的 z-index 为 3000 -->
+        <div class="layui-input-inline" style="z-index: 3001">
+            <select id="tagIds" name="tagIds" lay-filter="tagIds" lay-verify="required" >
+                <option value="" ></option>
+            </select>
+        </div>
+        <div class="layui-input-inline">
+            <button class="layui-btn" type="button" onclick="layui.funcs.addTagData()">
+                <i class="layui-icon">&#xe608;</i> 添加标签
+            </button>
+        </div>
+        <div class="layui-input-inline">
+            <button class="layui-btn" type="button" onclick="clearSaveBlogInfo()">
+                <i class="layui-icon">&#x1002;</i> 清理缓存
+            </button>
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">博文摘要</label>
+        <div class="layui-input-block">
+            <textarea placeholder="请输入内容" name="summary" class="layui-textarea" lay-verify="required"
+                      style='width:99%;' rows="4"></textarea>
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">编辑博文</label>
+        <input type="hidden" name="id" >
+        <input type="hidden" name="blogTagIds">
+        <input type="hidden" name="state">
+        <input type="hidden" name="content" >
+
+        <div class="layui-input-block"><script id="editor" type="text/plain" style='width:99%;height:300px;'></script></div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <input id="uploadEditorHtml" type="file" name="file" class="layui-upload-file" lay-type="file" lay-title="插入html" />
+            <button class="layui-btn" id="submitBlog" lay-submit="" lay-filter="submitBlog" style="float:right; margin-right:40px" >立即提交</button>
+            <button class="layui-btn" id="draftBlog" lay-submit="" lay-filter="draftBlog" style="float:right; margin-right:40px" >保存草稿</button>
+        </div>
+    </div>
+</form>
+
+<!-- layui.js -->
+<script src="../../plugin/ueditor/ueditor.config.js" type="text/javascript"> </script><script src="../../plugin/ueditor/ueditor.all.js" type="text/javascript"> </script>
+<script src="../../plugin/ueditor/lang/zh-cn/zh-cn.js" type="text/javascript"></script>
+<script src="../../../myJs/stringBuilder.js" ></script>
+<script src="../../../myJs/utils.js" ></script>
+
+<!-- layui规范化用法 -->
+<script type="text/javascript" >
+    layui.config({
+        base: '../../js/blog/'
+    }).use('addBlog');
+</script>
+
+</body>
+</html>

@@ -288,7 +288,7 @@ function ajax(config) {
             alertIfException(resp.data, function () {
                 layer.close(interceptorDialog)
                 interceptorDialog = null
-                locateRoot(window).location.href = formatContextUrl("/static/admin/index.html")
+                locateRoot(window).location.href = formatContextUrl("/static/admin/html/common/index.html")
             })
             return false
         } else if ((203 === resp.code) || (204 === resp.code) || (205 === resp.code) || (206 === resp.code)) {

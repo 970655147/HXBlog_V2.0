@@ -1,0 +1,59 @@
+﻿<!DOCTYPE html>
+<html >
+<head>
+    <meta charset="utf-8" />
+    <title>数据列表页面</title>
+
+    <!-- common imports -->
+    <script type="text/javascript" src="../../../js/jquery-1.11.1.min.js" ></script>
+    <script type="text/javascript" src="../../js/common/commonImport.js" ></script>
+    <script type="text/javascript" src="../../plugin/layui/layui.js" ></script>
+    <script type="text/javascript" src="../../../myJs/md5.js"></script>
+    <script type="text/javascript" src="../../../myJs/constants.js" ></script>
+    <script type="text/javascript" src="../../../myJs/utils.js" ></script>
+    <script type="text/javascript" src="../../js/system/accountPwdManagement.js" ></script>
+
+</head>
+<body>
+    <button class="layui-btn" style="margin-left: 30px" onclick="refresh()">
+        <i class="layui-icon">&#x1002;</i> 刷新
+    </button>
+
+    <fieldset id="dataList" class="layui-elem-field layui-field-title sys-list-field" >
+        <legend style="text-align:center;">修改账号密码</legend>
+        <form class="layui-form" id="updatePwdForm" action="/admin/user/updatePwd" method="post">
+            <div class="layui-form-item">
+                <label class="layui-form-label">原密码</label>
+                <div class="layui-input-inline">
+                    <input type="password" name="oldPwd" lay-verify="required" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">新密码</label>
+                <div class="layui-input-inline">
+                    <input type="password" name="newPwd" lay-verify="required" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">确认密码</label>
+                <div class="layui-input-inline">
+                    <input type="password" name="confirmNewPwd" lay-verify="required"  autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <button class="layui-btn" style="margin-left: 55px;" lay-submit="" lay-filter="updatePwdSubmit">修改</button>
+                <button class="layui-btn" type="reset">重置</button>
+            </div>
+        </form>
+
+    </fieldset>
+
+    <script type="text/javascript">
+        layui.config({
+            base: '../../js/system/'
+        }).use('accountPwdManagent');
+    </script>
+</body>
+</html>

@@ -1,0 +1,62 @@
+﻿<!DOCTYPE html>
+<html >
+<head>
+    <meta charset="utf-8"/>
+    <title>数据列表页面</title>
+
+    <!-- common imports -->
+    <script type="text/javascript" src="../../../js/jquery-1.11.1.min.js" ></script>
+    <script type="text/javascript" src="../../js/common/commonImport.js" ></script>
+    <script type="text/javascript" src="../../plugin/layui/layui.js" ></script>
+    <script type="text/javascript" src="../../../myJs/md5.js"></script>
+    <script type="text/javascript" src="../../../myJs/constants.js" ></script>
+    <script type="text/javascript" src="../../../myJs/utils.js" ></script>
+    
+</head>
+<body>
+    <button class="layui-btn" style="margin-left: 30px" onclick="layui.funcs.reSort()">
+        <i class="layui-icon">&#x1002;</i> 刷新排序
+    </button>
+    <button class="layui-btn" style="margin-left: 30px" onclick="refresh()">
+        <i class="layui-icon">&#x1002;</i> 刷新
+    </button>
+
+    <fieldset id="dataList" class="layui-elem-field layui-field-title sys-list-field" >
+        <legend style="text-align:center;">博客标签列表</legend>
+        <button class="layui-btn" style="margin:10px auto auto auto;display: block" onclick="layui.funcs.addData()">
+            <i class="layui-icon">&#xe608;</i> 添加标签
+        </button>
+        <div class="layui-field-box layui-form">
+            <div class="">
+                <table style="table-layout: fixed" class="layui-table" lay-even>
+                    <colgroup>
+                        <col width="40">
+                        <col width="200">
+                        <col width="40">
+                        <col width="40">
+                        <col width="40">
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th>编号</th>
+                        <th>标签名</th>
+                        <th>排序</th>
+                        <th colspan="2">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody id="dataContent">
+
+                    </tbody>
+                </table>
+            </div>
+            <div id="pageNav"></div>
+        </div>
+    </fieldset>
+
+    <script type="text/javascript">
+        layui.config({
+            base: '../../js/blog/'
+        }).use('blogTagManagement');
+    </script>
+</body>
+</html>
