@@ -28,7 +28,7 @@ public class SystemController {
         return systemService.statsSummary();
     }
 
-    @RequestMapping(value = "/refreshAuthority", method = RequestMethod.GET)
+    @RequestMapping(value = "/refreshAuthority", method = RequestMethod.POST)
     @BizLogger(req = false, resp = false)
     public Result refreshAuthority() {
         return systemService.refreshAuthority();
