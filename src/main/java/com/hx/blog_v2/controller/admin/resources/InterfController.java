@@ -2,6 +2,7 @@ package com.hx.blog_v2.controller.admin.resources;
 
 import com.hx.blog_v2.biz_handler.anno.BizHandle;
 import com.hx.blog_v2.biz_handler.handler.AuthUpdatedHandler;
+import com.hx.blog_v2.biz_log.anno.BizLogger;
 import com.hx.blog_v2.domain.ErrorCode;
 import com.hx.blog_v2.domain.form.common.BeanIdForm;
 import com.hx.blog_v2.domain.form.resources.InterfSaveForm;
@@ -39,6 +40,7 @@ public class InterfController {
     private BeanIdValidator beanIdValidator;
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
+    @BizLogger
     public Result add(InterfSaveForm params) {
         Result errResult = interfSaveValidator.validate(params, null);
         if (!errResult.isSuccess()) {
@@ -52,16 +54,19 @@ public class InterfController {
     }
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
+    @BizLogger(req = false, resp = false)
     public Result list() {
         return interfService.adminList();
     }
 
     @RequestMapping(value = "/resourceInterf/list", method = RequestMethod.GET)
+    @BizLogger(req = false, resp = false)
     public Result resourceInterfList() {
         return interfService.resourceInterfList();
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST)
+    @BizLogger
     public Result update(InterfSaveForm params) {
         Result errResult = interfSaveValidator.validate(params, null);
         if (!errResult.isSuccess()) {
@@ -76,6 +81,7 @@ public class InterfController {
 
     @RequestMapping(value = "/resourceInterf/update", method = RequestMethod.POST)
     @BizHandle(handler = "authUpdatedHandler", others = AuthUpdatedHandler.RESOURCE_INTERF)
+    @BizLogger
     public Result userRoleUpdate(ResourceInterfUpdateForm params) {
         Result errResult = resourceInterfUpdateValidator.validate(params, null);
         if (!errResult.isSuccess()) {
@@ -86,6 +92,7 @@ public class InterfController {
     }
 
     @RequestMapping(value = "/remove", method = RequestMethod.POST)
+    @BizLogger
     public Result remove(BeanIdForm params) {
         Result errResult = beanIdValidator.validate(params, null);
         if (!errResult.isSuccess()) {
@@ -96,6 +103,7 @@ public class InterfController {
     }
 
     @RequestMapping(value = "/reSort", method = RequestMethod.POST)
+    @BizLogger
     public Result reSort() {
         return interfService.reSort();
     }

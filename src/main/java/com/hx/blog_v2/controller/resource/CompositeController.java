@@ -1,5 +1,6 @@
 package com.hx.blog_v2.controller.resource;
 
+import com.hx.blog_v2.biz_log.anno.BizLogger;
 import com.hx.blog_v2.context.ConstantsContext;
 import com.hx.blog_v2.domain.form.front_resources.ImageSearchForm;
 import com.hx.blog_v2.service.interf.blog.BlogCreateTypeService;
@@ -47,6 +48,7 @@ public class CompositeController {
 
 
     @RequestMapping(value = "/typeAndTags", method = RequestMethod.GET)
+    @BizLogger(req = false, resp = false)
     public Result typeAndTags() {
         Result createTypeResult = blogCreateTypeService.adminList();
         if (!createTypeResult.isSuccess()) {
@@ -67,6 +69,7 @@ public class CompositeController {
     }
 
     @RequestMapping(value = "/moodAndImages", method = RequestMethod.GET)
+    @BizLogger(req = false, resp = false)
     public Result moodAndImages() {
         Result moodsResult = moodService.list();
         if (!moodsResult.isSuccess()) {
@@ -84,6 +87,7 @@ public class CompositeController {
     }
 
     @RequestMapping(value = "/userAndRoles", method = RequestMethod.GET)
+    @BizLogger(req = false, resp = false)
     public Result userAndRoles() {
         Result userResult = userService.allId2Name();
         if (!userResult.isSuccess()) {

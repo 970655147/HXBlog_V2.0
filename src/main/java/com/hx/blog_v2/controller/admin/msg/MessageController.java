@@ -1,5 +1,6 @@
 package com.hx.blog_v2.controller.admin.msg;
 
+import com.hx.blog_v2.biz_log.anno.BizLogger;
 import com.hx.blog_v2.context.WebContext;
 import com.hx.blog_v2.domain.ErrorCode;
 import com.hx.blog_v2.domain.form.common.BeanIdForm;
@@ -44,6 +45,7 @@ public class MessageController {
     private PageValidator pageValidator;
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
+    @BizLogger
     public Result add(MessageSaveForm params) {
         Result errResult = messageSaveValidator.validate(params, null);
         if (!errResult.isSuccess()) {
@@ -58,6 +60,7 @@ public class MessageController {
     }
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
+    @BizLogger(req = false, resp = false)
     public Result list(MessageSearchForm params, SimplePage<MessageVO> page) {
         Result errResult = messageSearchValidator.validate(params, null);
         if (!errResult.isSuccess()) {
@@ -72,11 +75,13 @@ public class MessageController {
     }
 
     @RequestMapping(value = "/unread", method = RequestMethod.GET)
+    @BizLogger(req = false, resp = false)
     public Result unread() {
         return messageService.unread();
     }
 
     @RequestMapping(value = "/adminList", method = RequestMethod.GET)
+    @BizLogger(req = false, resp = false)
     public Result adminList(MessageSearchForm params, SimplePage<MessageVO> page) {
         Result errResult = messageSearchValidator.validate(params, null);
         if (!errResult.isSuccess()) {
@@ -91,6 +96,7 @@ public class MessageController {
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST)
+    @BizLogger
     public Result update(MessageSaveForm params) {
         Result errResult = messageSaveValidator.validate(params, null);
         if (!errResult.isSuccess()) {
@@ -104,6 +110,7 @@ public class MessageController {
     }
 
     @RequestMapping(value = "/markConsumed", method = RequestMethod.POST)
+    @BizLogger
     public Result markConsumed(BeanIdForm params) {
         Result errResult = beanIdValidator.validate(params, null);
         if (!errResult.isSuccess()) {
@@ -114,11 +121,13 @@ public class MessageController {
     }
 
     @RequestMapping(value = "/markAllConsumed", method = RequestMethod.POST)
+    @BizLogger
     public Result markAllConsumed() {
         return messageService.markAllConsumed();
     }
 
     @RequestMapping(value = "/remove", method = RequestMethod.POST)
+    @BizLogger
     public Result remove(BeanIdForm params) {
         Result errResult = beanIdValidator.validate(params, null);
         if (!errResult.isSuccess()) {

@@ -1,5 +1,6 @@
 package com.hx.blog_v2.controller.admin.front_resource;
 
+import com.hx.blog_v2.biz_log.anno.BizLogger;
 import com.hx.blog_v2.domain.ErrorCode;
 import com.hx.blog_v2.domain.form.common.BeanIdForm;
 import com.hx.blog_v2.domain.form.front_resources.ImageSaveForm;
@@ -42,6 +43,7 @@ public class ImageController {
     private PageValidator pageValidator;
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
+    @BizLogger
     public Result add(ImageSaveForm params) {
         Result errResult = imageSaveValidator.validate(params, null);
         if (!errResult.isSuccess()) {
@@ -55,6 +57,7 @@ public class ImageController {
     }
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
+    @BizLogger(req = false, resp = false)
     public Result list(ImageSearchForm params, SimplePage<AdminImageVO> page) {
         Result errResult = imageSearchValidator.validate(params, null);
         if (!errResult.isSuccess()) {
@@ -69,6 +72,7 @@ public class ImageController {
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST)
+    @BizLogger
     public Result update(ImageSaveForm params) {
         Result errResult = imageSaveValidator.validate(params, null);
         if (!errResult.isSuccess()) {
@@ -82,6 +86,7 @@ public class ImageController {
     }
 
     @RequestMapping(value = "/remove", method = RequestMethod.POST)
+    @BizLogger
     public Result remove(BeanIdForm params) {
         Result errResult = beanIdValidator.validate(params, null);
         if (!errResult.isSuccess()) {
@@ -92,6 +97,7 @@ public class ImageController {
     }
 
     @RequestMapping(value = "/reSort", method = RequestMethod.POST)
+    @BizLogger
     public Result reSort(ImageSearchForm params) {
         Result errResult = imageSearchValidator.validate(params, null);
         if (!errResult.isSuccess()) {

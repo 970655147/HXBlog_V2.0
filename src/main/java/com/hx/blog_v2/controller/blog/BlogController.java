@@ -1,6 +1,7 @@
 package com.hx.blog_v2.controller.blog;
 
 import com.hx.blog_v2.biz_handler.anno.BizHandle;
+import com.hx.blog_v2.biz_log.anno.BizLogger;
 import com.hx.blog_v2.domain.common.system.SessionUser;
 import com.hx.blog_v2.domain.form.common.BeanIdForm;
 import com.hx.blog_v2.domain.form.blog.BlogSearchForm;
@@ -38,6 +39,7 @@ public class BlogController {
     private PageValidator pageValidator;
 
     @RequestMapping("/list")
+    @BizLogger(req = false, resp = false)
     public Result list(BlogSearchForm params, SimplePage<BlogVO> page) {
         Result errResult = blogSearchValidator.validate(params, null);
         if (!errResult.isSuccess()) {
@@ -53,6 +55,7 @@ public class BlogController {
 
     @RequestMapping("/get")
     @BizHandle(handler = "blogVisitLogHandler")
+    @BizLogger(req = false, resp = false)
     public Result get(BeanIdForm params) {
         Result errResult = beanIdValidator.validate(params, null);
         if (!errResult.isSuccess()) {

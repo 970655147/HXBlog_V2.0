@@ -30,7 +30,7 @@ public class ControllerAop {
     @Autowired
     private ExceptionLogService exceptionLogService;
 
-    @Pointcut("within(com.hx.blog_v2.controller.*)")
+    @Pointcut("within(com.hx.blog_v2.controller.*.*)")
     public void controllerPoint() {
 
     }

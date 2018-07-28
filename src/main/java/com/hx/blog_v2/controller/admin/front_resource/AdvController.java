@@ -1,5 +1,6 @@
 package com.hx.blog_v2.controller.admin.front_resource;
 
+import com.hx.blog_v2.biz_log.anno.BizLogger;
 import com.hx.blog_v2.domain.ErrorCode;
 import com.hx.blog_v2.domain.form.front_resources.AdvSaveForm;
 import com.hx.blog_v2.domain.form.common.BeanIdForm;
@@ -33,6 +34,7 @@ public class AdvController {
     private BeanIdValidator beanIdValidator;
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
+    @BizLogger
     public Result add(AdvSaveForm params) {
         Result errResult = advSaveValidator.validate(params, null);
         if (!errResult.isSuccess()) {
@@ -46,11 +48,13 @@ public class AdvController {
     }
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
+    @BizLogger(req = false, resp = false)
     public Result list() {
         return advService.adminList();
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST)
+    @BizLogger
     public Result update(AdvSaveForm params) {
         Result errResult = advSaveValidator.validate(params, null);
         if (!errResult.isSuccess()) {
@@ -64,6 +68,7 @@ public class AdvController {
     }
 
     @RequestMapping(value = "/remove", method = RequestMethod.POST)
+    @BizLogger
     public Result remove(BeanIdForm params) {
         Result errResult = beanIdValidator.validate(params, null);
         if (!errResult.isSuccess()) {

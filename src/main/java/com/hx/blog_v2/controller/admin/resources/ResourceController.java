@@ -2,6 +2,7 @@ package com.hx.blog_v2.controller.admin.resources;
 
 import com.hx.blog_v2.biz_handler.anno.BizHandle;
 import com.hx.blog_v2.biz_handler.handler.AuthUpdatedHandler;
+import com.hx.blog_v2.biz_log.anno.BizLogger;
 import com.hx.blog_v2.domain.ErrorCode;
 import com.hx.blog_v2.domain.form.common.BeanIdForm;
 import com.hx.blog_v2.domain.form.resources.ResourceSaveForm;
@@ -40,6 +41,7 @@ public class ResourceController {
     private RoleResourceUpdateValidator roleResourceUpdateValidator;
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
+    @BizLogger
     public Result add(ResourceSaveForm params) {
         Result errResult = resourceSaveValidator.validate(params, null);
         if (!errResult.isSuccess()) {
@@ -53,27 +55,32 @@ public class ResourceController {
     }
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
+    @BizLogger(req = false, resp = false)
     public Result list() {
         return resourceService.adminList();
     }
 
     @RequestMapping(value = "/treeList", method = RequestMethod.GET)
+    @BizLogger(req = false, resp = false)
     public Result treeList(@RequestParam(defaultValue = "false") boolean spread) {
         return resourceService.treeList(spread);
     }
 
     @RequestMapping(value = "/adminTreeList", method = RequestMethod.GET)
+    @BizLogger(req = false, resp = false)
     public Result adminTreeList(@RequestParam(defaultValue = "false") boolean spread) {
         return resourceService.adminTreeList(spread);
     }
 
 
     @RequestMapping(value = "/roleResource/list", method = RequestMethod.GET)
+    @BizLogger(req = false, resp = false)
     public Result roleResourceList() {
         return resourceService.roleResourceList();
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST)
+    @BizLogger
     public Result update(ResourceSaveForm params) {
         Result errResult = resourceSaveValidator.validate(params, null);
         if (!errResult.isSuccess()) {
@@ -88,6 +95,7 @@ public class ResourceController {
 
     @RequestMapping(value = "/roleResource/update", method = RequestMethod.POST)
     @BizHandle(handler = "authUpdatedHandler", others = AuthUpdatedHandler.ROLE_RESOURCE)
+    @BizLogger
     public Result roleResourceUpdate(RoleResourceUpdateForm params) {
         Result errResult = roleResourceUpdateValidator.validate(params, null);
         if (!errResult.isSuccess()) {
@@ -97,12 +105,8 @@ public class ResourceController {
         return resourceService.roleResourceUpdate(params);
     }
 
-    @RequestMapping(value = "/reSort", method = RequestMethod.POST)
-    public Result reSort() {
-        return resourceService.reSort();
-    }
-
     @RequestMapping(value = "/remove", method = RequestMethod.POST)
+    @BizLogger
     public Result remove(BeanIdForm params) {
         Result errResult = beanIdValidator.validate(params, null);
         if (!errResult.isSuccess()) {
@@ -110,6 +114,12 @@ public class ResourceController {
         }
 
         return resourceService.remove(params);
+    }
+
+    @RequestMapping(value = "/reSort", method = RequestMethod.POST)
+    @BizLogger
+    public Result reSort() {
+        return resourceService.reSort();
     }
 
 }

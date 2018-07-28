@@ -1,5 +1,6 @@
 package com.hx.blog_v2.controller.admin.front_resource;
 
+import com.hx.blog_v2.biz_log.anno.BizLogger;
 import com.hx.blog_v2.domain.ErrorCode;
 import com.hx.blog_v2.domain.form.common.BeanIdForm;
 import com.hx.blog_v2.domain.form.front_resources.LinkSaveForm;
@@ -33,6 +34,7 @@ public class LinkController {
     private BeanIdValidator beanIdValidator;
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
+    @BizLogger
     public Result add(LinkSaveForm params) {
         Result errResult = linkSaveValidator.validate(params, null);
         if (!errResult.isSuccess()) {
@@ -47,11 +49,13 @@ public class LinkController {
 
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
+    @BizLogger(req = false, resp = false)
     public Result list() {
         return linkService.adminList();
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST)
+    @BizLogger
     public Result update(LinkSaveForm params) {
         Result errResult = linkSaveValidator.validate(params, null);
         if (!errResult.isSuccess()) {
@@ -65,6 +69,7 @@ public class LinkController {
     }
 
     @RequestMapping(value = "/remove", method = RequestMethod.POST)
+    @BizLogger
     public Result remove(BeanIdForm params) {
         Result errResult = beanIdValidator.validate(params, null);
         if (!errResult.isSuccess()) {
@@ -75,6 +80,7 @@ public class LinkController {
     }
 
     @RequestMapping(value = "/reSort", method = RequestMethod.POST)
+    @BizLogger
     public Result reSort() {
         return linkService.reSort();
     }

@@ -1,5 +1,6 @@
 package com.hx.blog_v2.controller.admin.blog;
 
+import com.hx.blog_v2.biz_log.anno.BizLogger;
 import com.hx.blog_v2.domain.ErrorCode;
 import com.hx.blog_v2.domain.form.common.BeanIdForm;
 import com.hx.blog_v2.domain.form.blog.BlogTypeSaveForm;
@@ -33,6 +34,7 @@ public class BlogTypeController {
     private BeanIdValidator beanIdValidator;
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
+    @BizLogger
     public Result add(BlogTypeSaveForm params) {
         Result errResult = blogTagSaveValidator.validate(params, null);
         if (!errResult.isSuccess()) {
@@ -52,6 +54,7 @@ public class BlogTypeController {
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST)
+    @BizLogger
     public Result update(BlogTypeSaveForm params) {
         Result errResult = blogTagSaveValidator.validate(params, null);
         if (!errResult.isSuccess()) {
@@ -66,6 +69,7 @@ public class BlogTypeController {
     }
 
     @RequestMapping(value = "/remove", method = RequestMethod.POST)
+    @BizLogger
     public Result remove(BeanIdForm params) {
         Result errResult = beanIdValidator.validate(params, null);
         if (!errResult.isSuccess()) {

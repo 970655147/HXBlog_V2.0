@@ -1,5 +1,6 @@
 package com.hx.blog_v2.controller.others;
 
+import com.hx.blog_v2.biz_log.anno.BizLogger;
 import com.hx.blog_v2.context.CacheContext;
 import com.hx.blog_v2.context.WebContext;
 import com.hx.blog_v2.domain.common.system.SessionUser;
@@ -24,6 +25,7 @@ public class DummyController {
     private CacheContext cacheContext;
 
     @RequestMapping("/*")
+    @BizLogger(req = false, resp = false)
     public void dummy() {
 
         SessionUser user = (SessionUser) WebContext.getAttributeFromSession(BlogConstants.SESSION_USER);

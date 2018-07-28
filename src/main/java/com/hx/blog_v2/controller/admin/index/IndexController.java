@@ -1,5 +1,6 @@
 package com.hx.blog_v2.controller.admin.index;
 
+import com.hx.blog_v2.biz_log.anno.BizLogger;
 import com.hx.blog_v2.context.WebContext;
 import com.hx.blog_v2.service.interf.index.IndexService;
 import com.hx.blog_v2.util.BlogConstants;
@@ -24,11 +25,13 @@ public class IndexController {
     private IndexService indexService;
 
     @RequestMapping("/menus")
+    @BizLogger(req = false, resp = false)
     public Result index() {
         return indexService.adminMenus();
     }
 
     @RequestMapping("/statistics")
+    @BizLogger(req = false, resp = false)
     public Result statistics() {
         Result result = indexService.adminStatistics();
         result.setExtra(WebContext.getAttributeFromSession(BlogConstants.SESSION_USER));

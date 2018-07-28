@@ -1,6 +1,7 @@
 package com.hx.blog_v2.controller.admin.blog;
 
 import com.hx.blog_v2.biz_handler.anno.BizHandle;
+import com.hx.blog_v2.biz_log.anno.BizLogger;
 import com.hx.blog_v2.domain.ErrorCode;
 import com.hx.blog_v2.domain.form.blog.AdminCommentSearchForm;
 import com.hx.blog_v2.domain.form.common.BeanIdForm;
@@ -49,6 +50,7 @@ public class CommentController {
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     @BizHandle(handler = "commentSaveHandler")
+    @BizLogger
     public Result add(CommentSaveForm params) {
         Result errResult = commentSaveValidator.validate(params, null);
         if (!errResult.isSuccess()) {
@@ -92,6 +94,7 @@ public class CommentController {
 
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     @BizHandle(handler = "commentSaveHandler")
+    @BizLogger
     public Result update(CommentSaveForm params) {
         Result errResult = commentSaveValidator.validate(params, null);
         if (!errResult.isSuccess()) {
@@ -106,6 +109,7 @@ public class CommentController {
 
     @RequestMapping(value = "/remove", method = RequestMethod.POST)
     @BizHandle(handler = "commentRemoveHandler")
+    @BizLogger
     public Result remove(BeanIdForm params) {
         Result errResult = beanIdValidator.validate(params, null);
         if (!errResult.isSuccess()) {

@@ -1,5 +1,6 @@
 package com.hx.blog_v2.controller.admin.resources;
 
+import com.hx.blog_v2.biz_log.anno.BizLogger;
 import com.hx.blog_v2.domain.ErrorCode;
 import com.hx.blog_v2.domain.form.common.BeanIdForm;
 import com.hx.blog_v2.domain.form.system.LoginForm;
@@ -46,6 +47,7 @@ public class UserController {
     private PageValidator pageValidator;
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
+    @BizLogger
     public Result add(UserSaveForm params) {
         Result errResult = userSaveValidator.validate(params, null);
         if (!errResult.isSuccess()) {
@@ -60,6 +62,7 @@ public class UserController {
 
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
+    @BizLogger(req = false, resp = false)
     public Result list(SimplePage<AdminUserVO> page) {
         Result errResult = pageValidator.validate(page, null);
         if (!errResult.isSuccess()) {
@@ -70,6 +73,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST)
+    @BizLogger
     public Result update(UserSaveForm params) {
         Result errResult = userSaveValidator.validate(params, null);
         if (!errResult.isSuccess()) {
@@ -83,6 +87,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/updatePwd", method = RequestMethod.POST)
+    @BizLogger
     public Result updatePwd(UpdatePwdForm params) {
         Result errResult = updatePwdValidator.validate(params, null);
         if (!errResult.isSuccess()) {
@@ -93,6 +98,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/remove", method = RequestMethod.POST)
+    @BizLogger
     public Result remove(BeanIdForm params) {
         Result errResult = beanIdValidator.validate(params, null);
         if (!errResult.isSuccess()) {
@@ -103,6 +109,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
+    @BizLogger(req = false, resp = false)
     public Result login(LoginForm params) {
         Result errResult = loginFormValidator.validate(params, null);
         if (!errResult.isSuccess()) {
@@ -114,6 +121,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/logout", method = RequestMethod.POST)
+    @BizLogger(req = false, resp = false)
     public Result logout() {
         return userService.logout();
     }

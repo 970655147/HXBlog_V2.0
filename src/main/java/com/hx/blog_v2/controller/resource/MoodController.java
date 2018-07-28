@@ -1,5 +1,6 @@
 package com.hx.blog_v2.controller.resource;
 
+import com.hx.blog_v2.biz_log.anno.BizLogger;
 import com.hx.blog_v2.service.interf.front_resources.MoodService;
 import com.hx.common.interf.common.Result;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,7 @@ public class MoodController {
     private MoodService moodService;
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
+    @BizLogger(req = false, resp = false)
     public Result list() {
         return moodService.list();
     }

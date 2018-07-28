@@ -1,5 +1,6 @@
 package com.hx.blog_v2.controller.resource;
 
+import com.hx.blog_v2.biz_log.anno.BizLogger;
 import com.hx.blog_v2.domain.form.front_resources.AdvListForm;
 import com.hx.blog_v2.domain.validator.front_resources.AdvListValidator;
 import com.hx.blog_v2.service.interf.front_resources.AdvService;
@@ -25,6 +26,7 @@ public class AdvController {
     private AdvListValidator advListValidator;
 
     @RequestMapping("/list")
+    @BizLogger(req = false, resp = false)
     public Result list(AdvListForm params) {
         Result errResult = advListValidator.validate(params, null);
         if(! errResult.isSuccess()) {

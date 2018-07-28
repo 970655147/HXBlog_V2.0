@@ -1,6 +1,7 @@
 package com.hx.blog_v2.controller.blog;
 
 import com.hx.blog_v2.biz_handler.anno.BizHandle;
+import com.hx.blog_v2.biz_log.anno.BizLogger;
 import com.hx.blog_v2.domain.ErrorCode;
 import com.hx.blog_v2.domain.common.system.SessionUser;
 import com.hx.blog_v2.domain.form.common.BeanIdForm;
@@ -45,6 +46,7 @@ public class CommentController {
 
     @RequestMapping("/add")
     @BizHandle(handler = "commentSaveHandler")
+    @BizLogger
     public Result add(CommentSaveForm params) {
         Result errResult = commentSaveValidator.validate(params, null);
         if(! errResult.isSuccess()) {
@@ -62,6 +64,7 @@ public class CommentController {
     }
 
     @RequestMapping("/list")
+    @BizLogger(req = false, resp = false)
     public Result list(BeanIdForm params, SimplePage<List<CommentVO>> page) {
         Result errResult = beanIdValidator.validate(params, null);
         if(! errResult.isSuccess()) {

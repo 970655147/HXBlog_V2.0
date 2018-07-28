@@ -2,6 +2,7 @@ package com.hx.blog_v2.controller.admin.resources;
 
 import com.baidu.ueditor.define.ActionMap;
 import com.baidu.ueditor.utils.Constants;
+import com.hx.blog_v2.biz_log.anno.BizLogger;
 import com.hx.blog_v2.domain.form.system.UploadedFileSaveForm;
 import com.hx.blog_v2.domain.form.system.UploadedImageSaveForm;
 import com.hx.blog_v2.domain.validator.common.BeanIdValidator;
@@ -42,6 +43,7 @@ public class UploadController {
     private PageValidator pageValidator;
 
     @RequestMapping(value = "/image", method = RequestMethod.POST)
+    @BizLogger(req = false, resp = false)
     public Result upload(UploadedImageSaveForm params) {
         Result errResult = uploadImageSaveValidator.validate(params, null);
         if (!errResult.isSuccess()) {
@@ -52,6 +54,7 @@ public class UploadController {
     }
 
     @RequestMapping(value = "/file", method = RequestMethod.POST)
+    @BizLogger(req = false, resp = false)
     public Result file(UploadedFileSaveForm params) {
         Result errResult = uploadFileSaveValidator.validate(params, null);
         if (!errResult.isSuccess()) {
@@ -62,6 +65,7 @@ public class UploadController {
     }
 
     @RequestMapping(value = "/ueditor/config")
+    @BizLogger(req = false, resp = false)
     public JSONObject config(HttpServletRequest request, HttpServletResponse response) {
         // dispath 获取数据, 上传数据, ..
         request.setAttribute("action", request.getParameter("action"));

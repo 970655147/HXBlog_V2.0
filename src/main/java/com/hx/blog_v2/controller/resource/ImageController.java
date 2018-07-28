@@ -1,5 +1,6 @@
 package com.hx.blog_v2.controller.resource;
 
+import com.hx.blog_v2.biz_log.anno.BizLogger;
 import com.hx.blog_v2.domain.common.resources.CheckCode;
 import com.hx.blog_v2.domain.form.front_resources.ImageSearchForm;
 import com.hx.blog_v2.service.interf.front_resources.ImageService;
@@ -34,18 +35,21 @@ public class ImageController {
     private CheckCodeUtils checkCodeUtils;
 
     @RequestMapping(value = "/imgShowList", method = RequestMethod.GET)
+    @BizLogger(req = false, resp = false)
     public Result imgShowList() {
         ImageSearchForm params = new ImageSearchForm(constantsContext.imgTypeImgShow);
         return imageService.imageList(params);
     }
 
     @RequestMapping(value = "/headImgList", method = RequestMethod.GET)
+    @BizLogger(req = false, resp = false)
     public Result headImgList() {
         ImageSearchForm params = new ImageSearchForm(constantsContext.imgTypeHeadImg);
         return imageService.imageList(params);
     }
 
     @RequestMapping("/checkCode")
+    @BizLogger(req = false, resp = false)
     public void checkCode() {
         CheckCode checkCode = checkCodeUtils.getCheckCode(constantsContext.checkCodeImgWidth, constantsContext.checkCodeImgHeight,
                 constantsContext.checkCodeImgBgColor, constantsContext.checkCodeImgFont, constantsContext.checkCodeLength,

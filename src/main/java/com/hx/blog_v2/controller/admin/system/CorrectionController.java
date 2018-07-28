@@ -1,5 +1,6 @@
 package com.hx.blog_v2.controller.admin.system;
 
+import com.hx.blog_v2.biz_log.anno.BizLogger;
 import com.hx.blog_v2.domain.form.system.CorrectionSearchForm;
 import com.hx.blog_v2.domain.form.system.DoCorrectionForm;
 import com.hx.blog_v2.domain.validator.system.CorrectionSearchValidator;
@@ -30,6 +31,7 @@ public class CorrectionController {
     private DoCorrectionValidator doCorrectionValidator;
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
+    @BizLogger(req = false, resp = false)
     public Result list(CorrectionSearchForm params) {
         Result errResult = correctionSearchValidator.validate(params, null);
         if (!errResult.isSuccess()) {
@@ -40,6 +42,7 @@ public class CorrectionController {
     }
 
     @RequestMapping(value = "/doCorrection", method = RequestMethod.POST)
+    @BizLogger
     public Result doCorrection(DoCorrectionForm params) {
         Result errResult = doCorrectionValidator.validate(params, null);
         if (!errResult.isSuccess()) {

@@ -1,5 +1,6 @@
 package com.hx.blog_v2.controller.admin.system;
 
+import com.hx.blog_v2.biz_log.anno.BizLogger;
 import com.hx.blog_v2.domain.form.system.LogSearchForm;
 import com.hx.blog_v2.domain.validator.system.LogSearchValidator;
 import com.hx.blog_v2.domain.validator.common.PageValidator;
@@ -32,6 +33,7 @@ public class LogController {
     private PageValidator pageValidator;
 
     @RequestMapping(value = "/request/list", method = RequestMethod.GET)
+    @BizLogger(req = false, resp = false)
     public Result requestLogList(LogSearchForm params, SimplePage<RequestLogVO> page) {
         Result errResult = logSearchValidator.validate(params, null);
         if (!errResult.isSuccess()) {
@@ -46,6 +48,7 @@ public class LogController {
     }
 
     @RequestMapping(value = "/exception/list", method = RequestMethod.GET)
+    @BizLogger(req = false, resp = false)
     public Result exceptionLogList(LogSearchForm params, SimplePage<ExceptionLogVO> page) {
         Result errResult = logSearchValidator.validate(params, null);
         if (!errResult.isSuccess()) {

@@ -1,6 +1,7 @@
 package com.hx.blog_v2.controller.blog;
 
 import com.hx.blog_v2.biz_handler.anno.BizHandle;
+import com.hx.blog_v2.biz_log.anno.BizLogger;
 import com.hx.blog_v2.domain.common.system.SessionUser;
 import com.hx.blog_v2.domain.form.blog.BlogSenseForm;
 import com.hx.blog_v2.domain.validator.blog.BlogSenseValidator;
@@ -32,6 +33,7 @@ public class BlogSenseController {
 
     @RequestMapping(value = "/sense", method = RequestMethod.POST)
     @BizHandle(handler = "blogSenseHandler")
+    @BizLogger
     public Result sense(BlogSenseForm params) {
         Result errResult = blogSenseValidator.validate(params, null);
         if (!errResult.isSuccess()) {

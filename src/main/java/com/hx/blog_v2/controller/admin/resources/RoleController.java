@@ -2,6 +2,7 @@ package com.hx.blog_v2.controller.admin.resources;
 
 import com.hx.blog_v2.biz_handler.anno.BizHandle;
 import com.hx.blog_v2.biz_handler.handler.AuthUpdatedHandler;
+import com.hx.blog_v2.biz_log.anno.BizLogger;
 import com.hx.blog_v2.domain.ErrorCode;
 import com.hx.blog_v2.domain.form.common.BeanIdForm;
 import com.hx.blog_v2.domain.form.resources.RoleSaveForm;
@@ -12,9 +13,9 @@ import com.hx.blog_v2.domain.validator.resources.RoleSaveValidator;
 import com.hx.blog_v2.domain.validator.rlt.UserRoleUpdateValidator;
 import com.hx.blog_v2.domain.vo.rlt.UserRoleVO;
 import com.hx.blog_v2.service.interf.resources.RoleService;
+import com.hx.blog_v2.util.ResultUtils;
 import com.hx.common.interf.common.Result;
 import com.hx.common.result.SimplePage;
-import com.hx.blog_v2.util.ResultUtils;
 import com.hx.log.util.Tools;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,6 +45,7 @@ public class RoleController {
     private PageValidator pageValidator;
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
+    @BizLogger
     public Result add(RoleSaveForm params) {
         Result errResult = roleSaveValidator.validate(params, null);
         if (!errResult.isSuccess()) {
@@ -57,11 +59,13 @@ public class RoleController {
     }
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
+    @BizLogger(req = false, resp = false)
     public Result list() {
         return roleService.adminList();
     }
 
     @RequestMapping(value = "/userRole/list", method = RequestMethod.GET)
+    @BizLogger(req = false, resp = false)
     public Result userRoleList(SimplePage<UserRoleVO> page) {
         Result errResult = pageValidator.validate(page, null);
         if (!errResult.isSuccess()) {
@@ -72,6 +76,7 @@ public class RoleController {
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST)
+    @BizLogger
     public Result update(RoleSaveForm params) {
         Result errResult = roleSaveValidator.validate(params, null);
         if (!errResult.isSuccess()) {
@@ -86,6 +91,7 @@ public class RoleController {
 
     @RequestMapping(value = "/userRole/update", method = RequestMethod.POST)
     @BizHandle(handler = "authUpdatedHandler", others = AuthUpdatedHandler.USER_ROLE)
+    @BizLogger
     public Result userRoleUpdate(UserRoleUpdateForm params) {
         Result errResult = userRoleUpdateValidator.validate(params, null);
         if (!errResult.isSuccess()) {
@@ -96,6 +102,7 @@ public class RoleController {
     }
 
     @RequestMapping(value = "/remove", method = RequestMethod.POST)
+    @BizLogger
     public Result remove(BeanIdForm params) {
         Result errResult = beanIdValidator.validate(params, null);
         if (!errResult.isSuccess()) {
@@ -105,8 +112,8 @@ public class RoleController {
         return roleService.remove(params);
     }
 
-
     @RequestMapping(value = "/reSort", method = RequestMethod.POST)
+    @BizLogger
     public Result reSort() {
         return roleService.reSort();
     }

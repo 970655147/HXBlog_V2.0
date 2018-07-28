@@ -1,6 +1,7 @@
 package com.hx.blog_v2.controller.admin.blog;
 
 import com.hx.blog_v2.biz_handler.anno.BizHandle;
+import com.hx.blog_v2.biz_log.anno.BizLogger;
 import com.hx.blog_v2.context.WebContext;
 import com.hx.blog_v2.domain.ErrorCode;
 import com.hx.blog_v2.domain.common.system.SessionUser;
@@ -50,6 +51,7 @@ public class BlogController {
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     @BizHandle(handler = "blogSaveHandler")
+    @BizLogger
     public Result save(BlogSaveForm params) {
         Result errResult = blogSaveValidator.validate(params, null);
         if (!errResult.isSuccess()) {
@@ -105,6 +107,7 @@ public class BlogController {
 
     @RequestMapping(value = "/adminUpdate", method = RequestMethod.POST)
     @BizHandle(handler = "blogSaveHandler")
+    @BizLogger
     public Result adminUpdate(BlogSaveForm params) {
         Result errResult = blogSaveValidator.validate(params, null);
         if (!errResult.isSuccess()) {
@@ -120,6 +123,7 @@ public class BlogController {
 
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     @BizHandle(handler = "blogSaveHandler")
+    @BizLogger
     public Result update(BlogSaveForm params) {
         Result errResult = blogSaveValidator.validate(params, null);
         if (!errResult.isSuccess()) {
@@ -135,6 +139,7 @@ public class BlogController {
 
     @RequestMapping(value = "/adminRemove", method = RequestMethod.POST)
     @BizHandle(handler = "blogRemoveHandler")
+    @BizLogger
     public Result adminRemove(BeanIdForm params) {
         Result errResult = beanIdValidator.validate(params, null);
         if (!errResult.isSuccess()) {
@@ -147,6 +152,7 @@ public class BlogController {
 
     @RequestMapping(value = "/remove", method = RequestMethod.POST)
     @BizHandle(handler = "blogRemoveHandler")
+    @BizLogger
     public Result remove(BeanIdForm params) {
         Result errResult = beanIdValidator.validate(params, null);
         if (!errResult.isSuccess()) {
@@ -158,6 +164,7 @@ public class BlogController {
     }
 
     @RequestMapping(value = "/transfer", method = RequestMethod.POST)
+    @BizLogger
     public Result transfer(BlogSaveForm params) {
         Result errResult = auditValidator.validate(params, null);
         if (!errResult.isSuccess()) {

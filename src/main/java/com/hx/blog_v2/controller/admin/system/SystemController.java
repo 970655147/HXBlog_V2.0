@@ -1,5 +1,6 @@
 package com.hx.blog_v2.controller.admin.system;
 
+import com.hx.blog_v2.biz_log.anno.BizLogger;
 import com.hx.blog_v2.service.interf.system.SystemService;
 import com.hx.common.interf.common.Result;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,11 +23,13 @@ public class SystemController {
     private SystemService systemService;
 
     @RequestMapping(value = "/statsSummary", method = RequestMethod.GET)
+    @BizLogger(req = false, resp = false)
     public Result statsSummary() {
         return systemService.statsSummary();
     }
 
     @RequestMapping(value = "/refreshAuthority", method = RequestMethod.GET)
+    @BizLogger(req = false, resp = false)
     public Result refreshAuthority() {
         return systemService.refreshAuthority();
     }
