@@ -3,7 +3,6 @@ package com.hx.blog_v2.context;
 import com.hx.blog_v2.util.BlogConstants;
 import com.hx.json.JSONParseUtils;
 import com.hx.json.interf.JSON;
-import com.hx.log.util.Log;
 
 import javax.imageio.ImageIO;
 import javax.servlet.ServletContext;
@@ -259,7 +258,12 @@ public final class WebContext {
      * @since 1.0
      */
     public static Object getAttributeFromSession(String key) {
-        return getSession().getAttribute(key);
+        HttpSession session = getSession();
+        if (session == null) {
+            return null;
+        }
+
+        return session.getAttribute(key);
     }
 
     /**
