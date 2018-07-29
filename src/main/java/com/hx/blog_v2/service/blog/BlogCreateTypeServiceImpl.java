@@ -4,8 +4,8 @@ import com.hx.blog_v2.context.CacheContext;
 import com.hx.blog_v2.context.ConstantsContext;
 import com.hx.blog_v2.dao.interf.BlogCreateTypeDao;
 import com.hx.blog_v2.domain.POVOTransferUtils;
-import com.hx.blog_v2.domain.form.common.BeanIdForm;
 import com.hx.blog_v2.domain.form.blog.BlogCreateTypeSaveForm;
+import com.hx.blog_v2.domain.form.common.BeanIdForm;
 import com.hx.blog_v2.domain.mapper.common.OneIntMapper;
 import com.hx.blog_v2.domain.po.blog.BlogCreateTypePO;
 import com.hx.blog_v2.domain.vo.blog.BlogCreateTypeVO;
@@ -83,6 +83,8 @@ public class BlogCreateTypeServiceImpl extends BaseServiceImpl<BlogCreateTypePO>
         }
 
         po.setName(params.getName());
+        po.setDesc(params.getDesc());
+        po.setImgUrl(params.getImgUrl());
         po.setSort(params.getSort());
         po.setUpdatedAt(DateUtils.format(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS));
         Result result = blogCreateTypeDao.update(po);
