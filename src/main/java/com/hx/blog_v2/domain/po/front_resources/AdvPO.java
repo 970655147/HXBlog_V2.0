@@ -46,7 +46,7 @@ public class AdvPO implements JSONTransferable<AdvPO>, Comparable<AdvPO>, Logist
     private int deleted;
 
     public AdvPO(String name, String provider, String pathMatch, String type, String params, int sort) {
-        super();
+        this();
         this.name = name;
         this.provider = provider;
         this.pathMatch = pathMatch;
