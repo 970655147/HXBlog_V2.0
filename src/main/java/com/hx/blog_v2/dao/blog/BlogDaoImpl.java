@@ -69,7 +69,7 @@ public class BlogDaoImpl extends BaseDaoImpl<BlogPO> implements BlogDao {
             cacheContext.putBlog(po.getId(), po);
             return ResultUtils.success(po);
         }
-        return null;
+        return ResultUtils.failed(" have not this blog ");
     }
 
     @Override

@@ -8,9 +8,10 @@ import com.hx.blog_v2.context.ConstantsContext;
 import com.hx.blog_v2.context.WebContext;
 import com.hx.blog_v2.dao.interf.BlogDao;
 import com.hx.blog_v2.dao.interf.BlogExDao;
+import com.hx.blog_v2.dao.interf.BlogSenseDao;
 import com.hx.blog_v2.domain.common.message.MessageType;
-import com.hx.blog_v2.domain.form.common.BeanIdForm;
 import com.hx.blog_v2.domain.form.blog.BlogSenseForm;
+import com.hx.blog_v2.domain.form.common.BeanIdForm;
 import com.hx.blog_v2.domain.form.message.MessageSaveForm;
 import com.hx.blog_v2.domain.po.blog.BlogExPO;
 import com.hx.blog_v2.domain.po.blog.BlogPO;
@@ -42,6 +43,9 @@ public class BlogSenseHandler extends BizHandlerAdapter {
     private BlogDao blogDao;
     @Autowired
     private BlogExDao blogExDao;
+    @Autowired
+    private BlogSenseDao senseDao;
+
     @Autowired
     private MessageService messageService;
     @Autowired
@@ -133,6 +137,13 @@ public class BlogSenseHandler extends BizHandlerAdapter {
             BlogSenseForm params = (BlogSenseForm) context.args()[0];
             BlogSensePO oldPo = (BlogSensePO) WebContext.getAttributeFromRequest(BlogConstants.REQUEST_EXTRA);
             Result updateExResult = updateBlogEx(oldPo, params);
+            if (oldPo != null) {
+                oldPo.setScore(params.getScore());
+                Result updateSenseResult = senseDao.update(oldPo);
+                if (!updateSenseResult.isSuccess()) {
+                    return;
+                }
+            }
             if (!updateExResult.isSuccess()) {
                 return;
             }
