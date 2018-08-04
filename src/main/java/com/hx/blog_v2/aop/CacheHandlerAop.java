@@ -11,6 +11,7 @@ import com.hx.blog_v2.cache_handler.interf.CacheValidator;
 import com.hx.blog_v2.context.ConstantsContext;
 import com.hx.blog_v2.domain.BasePageForm;
 import com.hx.blog_v2.local.service.LocalCacheService;
+import com.hx.blog_v2.util.BizUtils;
 import com.hx.blog_v2.util.CacheConstants;
 import com.hx.common.interf.common.Result;
 import com.hx.json.JSONArray;
@@ -48,6 +49,8 @@ public class CacheHandlerAop {
     private ApplicationContext ac;
     @Autowired
     private LocalCacheService localCacheService;
+    @Autowired
+    private com.hx.blog_v2.context.CacheContext cacheContext;
     @Autowired
     private ConstantsContext constantsContext;
 
@@ -181,7 +184,16 @@ public class CacheHandlerAop {
                 result = null;
             }
         }
+        BizUtils.mergeStatsCount(cacheContext.getCacheAopNs2TotalCount(), cacheNs, 1);
         if (result != null) {
+            int newCount = BizUtils.mergeStatsCount(cacheContext.getCacheAopNs2HitCount(), cacheNs, 1);
+            // newCount % 128 == 0
+            if ((newCount & 0x1111111) == 0) {
+                Log.info(" ns2TotalCount : " + JSONObject.fromObject(cacheContext.getCacheAopNs2TotalCount()).toString());
+                Log.info(" newCount : " + JSONObject.fromObject(cacheContext.getCacheAopNs2HitCount()).toString());
+                Log.info(" evictCount : " + JSONObject.fromObject(cacheContext.getCacheAopNs2EvictCount()).toString());
+                Log.info(" evictAllCount : " + JSONObject.fromObject(cacheContext.getCacheAopNs2EvictAllCount()).toString());
+            }
             Log.info(" cache hitted at, ns : " + cacheNs + ", key : " + cacheKey + ", params : " + JSONArray.fromObject(context.args()).toString());
             return result;
         }
@@ -191,7 +203,7 @@ public class CacheHandlerAop {
         int timeout = cacheHandle.timeout();
         // 如果配置的 timeout 为 CACHE_DEFAULT_TIMEOUT, 取数据库配置的 超时时间
         if (timeout > 0) {
-            if(timeout == CacheConstants.CACHE_DEFAULT_TIMEOUT) {
+            if (timeout == CacheConstants.CACHE_DEFAULT_TIMEOUT) {
                 timeout = constantsContext.cacheHandleDefaultTimeout;
             }
             localCacheService.expire(cacheNs, cacheKey, timeout);
@@ -229,7 +241,7 @@ public class CacheHandlerAop {
                     cacheKey = cacheHandle.others()[0];
                 }
                 return cacheKey;
-            } else if(CacheType.PAGE_DEV_DEFINED == cacheType) {
+            } else if (CacheType.PAGE_DEV_DEFINED == cacheType) {
                 String prefix = CacheConstants.CACHE_LOCAL_SUFFIX_ALL;
                 if (cacheHandle.others().length > 0) {
                     prefix = cacheHandle.others()[0];

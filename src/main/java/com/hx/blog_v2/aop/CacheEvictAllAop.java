@@ -6,6 +6,7 @@ import com.hx.blog_v2.cache_handler.interf.CacheContext;
 import com.hx.blog_v2.cache_handler.interf.CacheHandler;
 import com.hx.blog_v2.cache_handler.interf.CacheValidator;
 import com.hx.blog_v2.redis.interf.IRedisClientTemplate;
+import com.hx.blog_v2.util.BizUtils;
 import com.hx.common.interf.common.Result;
 import com.hx.json.JSONObject;
 import com.hx.log.str.StringUtils;
@@ -41,6 +42,8 @@ public class CacheEvictAllAop {
     private ApplicationContext ac;
     @Autowired
     private IRedisClientTemplate redisClientTemplate;
+    @Autowired
+    private com.hx.blog_v2.context.CacheContext cacheContext;
 
     @Pointcut("@annotation(com.hx.blog_v2.cache_handler.anno.CacheEvictAll)")
     public void cacheEvictAllPoint() {
@@ -137,7 +140,7 @@ public class CacheEvictAllAop {
         // 如果在 beforeHandle 中设置了结果, 直接返回
         Object preparedResult = context.result();
         Object result = preparedResult;
-        if(result == null) {
+        if (result == null) {
             result = point.proceed();
         }
 
@@ -154,6 +157,7 @@ public class CacheEvictAllAop {
                     removed += redisClientTemplate.del(redisClientTemplate.trimPrefix(key));
                 }
                 stat.put(ns, removed);
+                BizUtils.mergeStatsCount(cacheContext.getCacheAopNs2EvictAllCount(), ns, removed.intValue());
             }
             Log.info("[" + point.getSignature().toString() + "] 此次缓存清理, 移除信息如下, stat : " + JSONObject.fromObject(stat).toString());
         }

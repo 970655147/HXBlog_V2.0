@@ -88,7 +88,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @CacheHandle(type = CacheType.PAGE_DEV_DEFINED, ns = CACHE_AOP_ADMIN_PAGE_USER, timeout = CACHE_DEFAULT_TIMEOUT,
-            cacheResultType = CacheResultType.RESULT_PAGE, cacheResultClass = MessageVO.class)
+            cacheResultType = CacheResultType.RESULT_PAGE, cacheResultClass = AdminUserVO.class)
     public Result adminList(Page<AdminUserVO> page) {
         String selectSql = " select * from `user` where deleted = 0 order by created_at desc limit ?, ? ";
         String countSql = " select count(*) as totalRecord from `user` where deleted = 0 ";
@@ -222,7 +222,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @CacheHandle(type = CacheType.DEV_DEFINED, ns = CACHE_AOP_LIST_USER_ID_TO_NAME, timeout = CACHE_DEFAULT_TIMEOUT,
-            cacheResultType = CacheResultType.RESULT_PAGE, cacheResultClass = MessageVO.class)
+            cacheResultType = CacheResultType.RESULT_PAGE, cacheResultClass = Id2NameVO.class)
     public Result allId2Name() {
         String sql = " select id, user_name from user where deleted = 0 order by created_at ";
         List<Id2NameVO> list = jdbcTemplate.query(sql, new Id2NameRoleMapper("id", "user_name"));

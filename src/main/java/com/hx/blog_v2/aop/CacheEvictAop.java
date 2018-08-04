@@ -10,6 +10,7 @@ import com.hx.blog_v2.cache_handler.interf.CacheRequest;
 import com.hx.blog_v2.cache_handler.interf.CacheValidator;
 import com.hx.blog_v2.domain.BasePageForm;
 import com.hx.blog_v2.local.service.LocalCacheService;
+import com.hx.blog_v2.util.BizUtils;
 import com.hx.blog_v2.util.CacheConstants;
 import com.hx.common.interf.common.Result;
 import com.hx.log.str.StringUtils;
@@ -45,6 +46,8 @@ public class CacheEvictAop {
     private ApplicationContext ac;
     @Autowired
     private LocalCacheService localCacheService;
+    @Autowired
+    private com.hx.blog_v2.context.CacheContext cacheContext;
 
     @Pointcut("@annotation(com.hx.blog_v2.cache_handler.anno.CacheEvict)")
     public void cacheEvictPoint() {
@@ -151,7 +154,8 @@ public class CacheEvictAop {
 
         if (!StringUtils.isEmpty(cacheKey)) {
             for (String ns : namespaces) {
-                localCacheService.remove(ns, cacheKey);
+                Long removed = localCacheService.remove(ns, cacheKey);
+                BizUtils.mergeStatsCount(cacheContext.getCacheAopNs2EvictCount(), ns, removed.intValue());
             }
         }
         return result;

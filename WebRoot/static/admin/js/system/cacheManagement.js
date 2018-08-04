@@ -46,7 +46,24 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
         var cacheDetailUrl = formatContextUrl("/static/admin/html/system/cacheDetailManagement.html")
         parent.switchTab(parent.$, parent.element, '缓存详情', cacheDetailUrl, "cacheDetail");
         return false
-    });
+    })
+
+    form.on('submit(viewAopCacheBtn)', function (data) {
+        ajax({
+            url: reqMap.cache.aopCacheSummary,
+            data: {},
+            type: "GET",
+            success: function (resp) {
+                if (resp.success) {
+                    layer.alert(prettyJson(resp))
+                } else {
+                    layer.alert("刷新获取 aop缓存信息 出现了点问题[" + resp.data + "], 请联系管理员 !")
+                }
+            }
+        })
+
+        return false
+    })
 
     /**
      * 增加 tips
@@ -136,7 +153,7 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
             ajax({
                 url: reqMap.cache.refreshAll,
                 data: {},
-                type : "POST",
+                type: "POST",
                 success: function (resp) {
                     if (resp.success) {
                         layer.alert("刷新缓存配置成功 !")
@@ -150,7 +167,7 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
             ajax({
                 url: reqMap.system.refreshAuthority,
                 data: {},
-                type : "POST",
+                type: "POST",
                 success: function (resp) {
                     if (resp.success) {
                         layer.alert("刷新权限成功 !")
@@ -164,7 +181,7 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
             ajax({
                 url: reqMap.cache.refreshAllCached,
                 data: {},
-                type : "POST",
+                type: "POST",
                 success: function (resp) {
                     if (resp.success) {
                         layer.alert("刷新CacheContext的缓存成功 !")
@@ -178,7 +195,7 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
             ajax({
                 url: reqMap.cache.refreshTableCached,
                 data: {},
-                type : "POST",
+                type: "POST",
                 success: function (resp) {
                     if (resp.success) {
                         layer.alert("刷新全表缓存配置成功 !")
@@ -192,7 +209,7 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
             ajax({
                 url: reqMap.cache.refreshLocalCached,
                 data: {},
-                type : "POST",
+                type: "POST",
                 success: function (resp) {
                     if (resp.success) {
                         layer.alert("刷新局部缓存配置成功 !")
@@ -206,7 +223,7 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
             ajax({
                 url: reqMap.cache.refreshStatisticsInfo,
                 data: {},
-                type : "POST",
+                type: "POST",
                 success: function (resp) {
                     if (resp.success) {
                         layer.alert("刷新统计缓存配置成功 !")
@@ -220,7 +237,7 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
             ajax({
                 url: reqMap.cache.refreshOtherCached,
                 data: {},
-                type : "POST",
+                type: "POST",
                 success: function (resp) {
                     if (resp.success) {
                         layer.alert("刷新其他配置缓存成功 !")
@@ -235,7 +252,7 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
             ajax({
                 url: reqMap.cache.refreshAllConfigured,
                 data: {},
-                type : "POST",
+                type: "POST",
                 success: function (resp) {
                     if (resp.success) {
                         layer.alert("刷新ConstantsContext的缓存成功 !")
@@ -249,7 +266,7 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
             ajax({
                 url: reqMap.cache.refreshSystemConfig,
                 data: {},
-                type : "POST",
+                type: "POST",
                 success: function (resp) {
                     if (resp.success) {
                         layer.alert("刷新系统缓存配置成功 !")
@@ -263,7 +280,7 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
             ajax({
                 url: reqMap.cache.refreshRuleConfig,
                 data: {},
-                type : "POST",
+                type: "POST",
                 success: function (resp) {
                     if (resp.success) {
                         layer.alert("刷新规则配置缓存配置成功 !")
@@ -277,7 +294,7 @@ layui.define(['element', 'laypage', 'layer', 'form', 'upload'], function (export
             ajax({
                 url: reqMap.cache.refreshFrontIdxConfig,
                 data: {},
-                type : "POST",
+                type: "POST",
                 success: function (resp) {
                     if (resp.success) {
                         layer.alert("刷新前台配置缓存配置成功 !")

@@ -35,6 +35,16 @@ public interface CacheService {
     Result cacheSummary();
 
     /**
+     * 获取 @CacheHandle 缓存的使用数据的信息
+     *
+     * @return
+     * @author Jerry.X.He
+     * @date 6/11/2017 9:45 AM
+     * @since 1.0
+     */
+    Result aopCacheSummary();
+
+    /**
      * 获取缓存的详细信息
      *
      * @return

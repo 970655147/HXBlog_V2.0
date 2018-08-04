@@ -3,14 +3,14 @@ package com.hx.blog_v2.util;
 import com.hx.attr_handler.util.AttrHandlerConstants;
 import com.hx.attr_handler.util.AttrHandlerUtils;
 import com.hx.blog_v2.context.WebContext;
+import com.hx.blog_v2.domain.common.common.StringIntPair;
 import com.hx.blog_v2.domain.common.system.SessionUser;
 import com.hx.blog_v2.domain.common.system.StatisticsInfo;
-import com.hx.blog_v2.domain.common.common.StringIntPair;
 import com.hx.blog_v2.domain.form.interf.UserInfoExtractor;
 import com.hx.blog_v2.domain.mapper.common.StringIntPairMapper;
 import com.hx.blog_v2.domain.mapper.common.ToMapMapper;
-import com.hx.blog_v2.domain.po.resources.ResourcePO;
 import com.hx.blog_v2.domain.po.interf.LogisticalId;
+import com.hx.blog_v2.domain.po.resources.ResourcePO;
 import com.hx.common.str.AntPathMatcher;
 import com.hx.common.str.interf.PathMatcher;
 import com.hx.json.JSONArray;
@@ -649,6 +649,28 @@ public final class BizUtils {
         }
 
         return u.getPath();
+    }
+
+    /**
+     * 想给定的集合中 累计统计数据
+     *
+     * @param map map
+     * @param key key
+     * @param inc inc
+     * @return int
+     * @author Jerry.X.He
+     * @date 8/4/2018 5:17 PM
+     * @since 1.0
+     */
+    public static int mergeStatsCount(Map<String, Integer> map, String key, int inc) {
+        Integer oldCount = map.get(key);
+        if (oldCount == null) {
+            oldCount = 0;
+        }
+
+        Integer newCount = oldCount + inc;
+        map.put(key, newCount);
+        return newCount;
     }
 
     // ----------------- 辅助方法 -----------------------

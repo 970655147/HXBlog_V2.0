@@ -54,6 +54,16 @@ public class CacheServiceImpl extends BaseServiceImpl<Object> implements CacheSe
     }
 
     @Override
+    public Result aopCacheSummary() {
+        JSONObject data = new JSONObject();
+        data.put("ns2TotalCount", cacheContext.getCacheAopNs2TotalCount());
+        data.put("ns2HitCount", cacheContext.getCacheAopNs2HitCount());
+        data.put("ns2EvictCount", cacheContext.getCacheAopNs2EvictCount());
+        data.put("ns2EvictAllCount", cacheContext.getCacheAopNs2EvictAllCount());
+        return ResultUtils.success(data);
+    }
+
+    @Override
     public Result cacheDetail(CacheSearchForm params) {
         LocalCacheType type = LocalCacheType.of(params.getType());
         Result getCacheResult = getCacheByType(type);

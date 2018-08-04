@@ -42,6 +42,12 @@ public class CacheController {
         return cacheService.cacheSummary();
     }
 
+    @RequestMapping(value = "/aopCacheSummary", method = RequestMethod.GET)
+    @BizLogger(req = false, resp = false)
+    public Result aopCacheSummary() {
+        return cacheService.aopCacheSummary();
+    }
+
     @RequestMapping(value = "/cacheDetail", method = RequestMethod.GET)
     @BizLogger(req = false, resp = false)
     public Result cacheDetail(CacheSearchForm params) {

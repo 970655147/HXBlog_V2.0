@@ -4,8 +4,8 @@ import com.hx.blog_v2.dao.interf.*;
 import com.hx.blog_v2.domain.common.system.StatisticsInfo;
 import com.hx.blog_v2.domain.form.blog.BlogSenseForm;
 import com.hx.blog_v2.domain.form.blog.BlogVisitLogForm;
-import com.hx.blog_v2.domain.po.front_resources.AdvPO;
 import com.hx.blog_v2.domain.po.blog.*;
+import com.hx.blog_v2.domain.po.front_resources.AdvPO;
 import com.hx.blog_v2.domain.po.front_resources.LinkPO;
 import com.hx.blog_v2.domain.po.resources.InterfPO;
 import com.hx.blog_v2.domain.po.resources.ResourcePO;
@@ -239,6 +239,14 @@ public class CacheContext {
      * 缓存的最近的评论的信息
      */
     private Cache<String, BlogCommentPO> latestComments;
+
+    /**
+     * profiling aop cache's visit count & hit count & evict count
+     */
+    private Map<String, Integer> cacheAopNs2TotalCount = new HashMap<>();
+    private Map<String, Integer> cacheAopNs2HitCount = new HashMap<>();
+    private Map<String, Integer> cacheAopNs2EvictCount = new HashMap<>();
+    private Map<String, Integer> cacheAopNs2EvictAllCount = new HashMap<>();
 
     /**
      * 上一次访问 all5SecStatistics 的时间戳
@@ -1264,6 +1272,30 @@ public class CacheContext {
     }
 
     /**
+     * CacheHandle 相关的统计数据
+     *
+     * @return java.util.Map
+     * @author Jerry.X.He
+     * @date 8/4/2018 5:25 PM
+     * @since 1.0
+     */
+    public Map<String, Integer> getCacheAopNs2TotalCount() {
+        return cacheAopNs2TotalCount;
+    }
+
+    public Map<String, Integer> getCacheAopNs2HitCount() {
+        return cacheAopNs2HitCount;
+    }
+
+    public Map<String, Integer> getCacheAopNs2EvictCount() {
+        return cacheAopNs2EvictCount;
+    }
+
+    public Map<String, Integer> getCacheAopNs2EvictAllCount() {
+        return cacheAopNs2EvictAllCount;
+    }
+
+    /**
      * 加载最近的评论的记录
      *
      * @return com.hx.common.interf.cache.Cache<java.lang.String,com.hx.blog_v2.domain.po.blog.BlogPO>
@@ -1275,7 +1307,7 @@ public class CacheContext {
         IQueryCriteria latestCommentCriteria = Criteria.eq("deleted", 0);
         LimitCriteria latestCommentLimit = Criteria.limit(0, Tools.optInt(constantsContext.allSystemConfig(), "latest.blog.cnt", 5));
         Result latestCommentResult = blogCommentDao.list(latestCommentCriteria, Criteria.sortBy("created_at", SortByCriteria.DESC), latestCommentLimit);
-        if (! latestCommentResult.isSuccess()) {
+        if (!latestCommentResult.isSuccess()) {
             Log.err(" error while load latest blog ");
         }
 

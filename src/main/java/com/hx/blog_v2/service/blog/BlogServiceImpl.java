@@ -189,7 +189,7 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
 
     @Override
     @CacheHandle(type = CacheType.BASE_REQ, ns = CACHE_AOP_PAGE_ADMIN_BLOG, timeout = CACHE_DEFAULT_TIMEOUT,
-            cacheResultType = CacheResultType.RESULT_PAGE, cacheResultClass = BlogVO.class)
+            cacheResultType = CacheResultType.RESULT_PAGE, cacheResultClass = AdminBlogVO.class)
     public Result adminList(BlogSearchForm params, Page<AdminBlogVO> page) {
         String selectSql = " select b.*, GROUP_CONCAT(rlt.tag_id) as tagIds from blog as b " +
                 " inner join rlt_blog_tag as rlt on b.id = rlt.blog_id where b.deleted = 0 ";
