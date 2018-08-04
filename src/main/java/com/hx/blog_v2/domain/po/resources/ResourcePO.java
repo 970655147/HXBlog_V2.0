@@ -1,7 +1,9 @@
 package com.hx.blog_v2.domain.po.resources;
 
+import com.hx.blog_v2.domain.BasePO;
 import com.hx.blog_v2.domain.po.interf.LogisticalId;
 import com.hx.blog_v2.util.BlogConstants;
+import com.hx.blog_v2.domain.BaseVO;
 import com.hx.blog_v2.util.DateUtils;
 import com.hx.json.JSONObject;
 import com.hx.json.config.interf.JSONConfig;
@@ -23,7 +25,7 @@ import java.util.Map;
  * @version 1.0
  * @date 5/22/2017 8:03 PM
  */
-public class ResourcePO implements JSONTransferable<ResourcePO>, TreeIdExtractor<ResourcePO, String>,
+public class ResourcePO extends BasePO implements JSONTransferable<ResourcePO>, TreeIdExtractor<ResourcePO, String>,
         Comparable<ResourcePO>, LogisticalId<String> {
 
     @JSONField({"id", "id"})

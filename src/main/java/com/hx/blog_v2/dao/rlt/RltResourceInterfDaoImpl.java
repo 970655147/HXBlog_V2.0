@@ -7,6 +7,7 @@ import com.hx.blog_v2.domain.form.common.BeanIdsForm;
 import com.hx.blog_v2.domain.mapper.common.OneStringMapper;
 import com.hx.blog_v2.domain.po.rlt.RltResourceInterfPO;
 import com.hx.blog_v2.util.BlogConstants;
+import com.hx.blog_v2.domain.BaseVO;
 import com.hx.blog_v2.util.MyMysqlConnectionProvider;
 import com.hx.blog_v2.util.ResultUtils;
 import com.hx.common.interf.common.Result;

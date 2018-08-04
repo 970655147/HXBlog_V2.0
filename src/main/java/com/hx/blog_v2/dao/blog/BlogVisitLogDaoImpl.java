@@ -6,6 +6,7 @@ import com.hx.blog_v2.dao.interf.BlogVisitLogDao;
 import com.hx.blog_v2.domain.form.blog.BlogVisitLogForm;
 import com.hx.blog_v2.domain.po.blog.BlogVisitLogPO;
 import com.hx.blog_v2.util.BlogConstants;
+import com.hx.blog_v2.domain.BaseVO;
 import com.hx.blog_v2.util.MyMysqlConnectionProvider;
 import com.hx.log.util.Tools;
 import com.hx.mongo.config.MysqlDbConfig;

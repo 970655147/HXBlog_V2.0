@@ -1,5 +1,7 @@
 package com.hx.blog_v2.domain.form.system;
 
+import com.hx.blog_v2.domain.BaseForm;
+
 /**
  * CorrectionSearchForm
  *
@@ -7,7 +9,7 @@ package com.hx.blog_v2.domain.form.system;
  * @version 1.0
  * @date 6/18/2017 7:22 PM
  */
-public class DoCorrectionForm {
+public class DoCorrectionForm extends BaseForm {
 
     /**
      * 需要处理的业务关联的 id

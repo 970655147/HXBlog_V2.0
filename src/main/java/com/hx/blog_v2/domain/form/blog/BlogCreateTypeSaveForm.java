@@ -1,5 +1,6 @@
 package com.hx.blog_v2.domain.form.blog;
 
+import com.hx.blog_v2.domain.BaseForm;
 import com.hx.json.interf.JSONField;
 
 /**
@@ -9,7 +10,7 @@ import com.hx.json.interf.JSONField;
  * @version 1.0
  * @date 5/22/2017 8:03 PM
  */
-public class BlogCreateTypeSaveForm {
+public class BlogCreateTypeSaveForm extends BaseForm {
 
     @JSONField({"id", "id"})
     private String id;

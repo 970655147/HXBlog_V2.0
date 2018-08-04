@@ -5,6 +5,7 @@ import com.hx.blog_v2.domain.common.resources.CheckCode;
 import com.hx.blog_v2.domain.form.front_resources.ImageSearchForm;
 import com.hx.blog_v2.service.interf.front_resources.ImageService;
 import com.hx.blog_v2.util.BlogConstants;
+import com.hx.blog_v2.domain.BaseVO;
 import com.hx.blog_v2.util.CheckCodeUtils;
 import com.hx.blog_v2.context.ConstantsContext;
 import com.hx.blog_v2.context.WebContext;

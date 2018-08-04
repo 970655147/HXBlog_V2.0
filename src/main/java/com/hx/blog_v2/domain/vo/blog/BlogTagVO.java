@@ -1,9 +1,6 @@
 package com.hx.blog_v2.domain.vo.blog;
 
-import com.hx.blog_v2.util.BlogConstants;
-import com.hx.blog_v2.util.DateUtils;
-
-import java.util.*;
+import com.hx.blog_v2.domain.BaseVO;
 
 /**
  * 博客的标签
@@ -12,7 +9,7 @@ import java.util.*;
  * @version 1.0
  * @date 5/20/2017 10:03 AM
  */
-public class BlogTagVO {
+public class BlogTagVO extends BaseVO {
 
     private String id;
     private String name;

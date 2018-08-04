@@ -1,7 +1,9 @@
 package com.hx.blog_v2.domain.po.front_resources;
 
+import com.hx.blog_v2.domain.BasePO;
 import com.hx.blog_v2.domain.po.interf.LogisticalId;
 import com.hx.blog_v2.util.BlogConstants;
+import com.hx.blog_v2.domain.BaseVO;
 import com.hx.blog_v2.util.DateUtils;
 import com.hx.json.JSONObject;
 import com.hx.json.config.interf.JSONConfig;
@@ -22,7 +24,7 @@ import java.util.Map;
  * @version 1.0
  * @date 3/3/2018 5:31 PM
  */
-public class AdvPO implements JSONTransferable<AdvPO>, Comparable<AdvPO>, LogisticalId<String> {
+public class AdvPO extends BasePO implements JSONTransferable<AdvPO>, Comparable<AdvPO>, LogisticalId<String> {
 
     @JSONField({"id", "id"})
     private String id;

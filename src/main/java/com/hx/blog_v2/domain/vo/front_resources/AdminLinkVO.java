@@ -1,5 +1,7 @@
 package com.hx.blog_v2.domain.vo.front_resources;
 
+import com.hx.blog_v2.domain.BaseVO;
+
 /**
  * AdminLinkVO
  *
@@ -7,7 +9,7 @@ package com.hx.blog_v2.domain.vo.front_resources;
  * @version 1.0
  * @date 5/24/2017 7:44 PM
  */
-public class AdminLinkVO {
+public class AdminLinkVO extends BaseVO {
 
     private String id;
     private String name;

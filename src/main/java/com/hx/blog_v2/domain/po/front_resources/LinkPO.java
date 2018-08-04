@@ -1,6 +1,8 @@
 package com.hx.blog_v2.domain.po.front_resources;
 
+import com.hx.blog_v2.domain.BasePO;
 import com.hx.blog_v2.util.BlogConstants;
+import com.hx.blog_v2.domain.BaseVO;
 import com.hx.blog_v2.util.DateUtils;
 import com.hx.json.JSONObject;
 import com.hx.json.config.interf.JSONConfig;
@@ -21,7 +23,7 @@ import java.util.Map;
  * @version 1.0
  * @date 5/24/2017 7:40 PM
  */
-public class LinkPO implements JSONTransferable<LinkPO>, Comparable<LinkPO> {
+public class LinkPO extends BasePO implements JSONTransferable<LinkPO>, Comparable<LinkPO> {
 
     @JSONField({"id", "id"})
     private String id;

@@ -13,6 +13,7 @@ import com.hx.blog_v2.domain.vo.front_resources.ImageVO;
 import com.hx.blog_v2.service.interf.BaseServiceImpl;
 import com.hx.blog_v2.service.interf.front_resources.ImageService;
 import com.hx.blog_v2.util.BlogConstants;
+import com.hx.blog_v2.domain.BaseVO;
 import com.hx.blog_v2.context.ConstantsContext;
 import com.hx.blog_v2.util.DateUtils;
 import com.hx.common.interf.common.Page;

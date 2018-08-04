@@ -1,5 +1,7 @@
 package com.hx.blog_v2.domain.vo.others;
 
+import com.hx.blog_v2.domain.BaseVO;
+
 /**
  * FacetByMonthVO
  *
@@ -7,7 +9,7 @@ package com.hx.blog_v2.domain.vo.others;
  * @version 1.0
  * @date 5/27/2017 9:55 PM
  */
-public class FacetByMonthVO {
+public class FacetByMonthVO extends BaseVO {
 
     private String month;
     private Integer cnt;

@@ -12,6 +12,7 @@ import com.hx.blog_v2.domain.validator.interf.ConfigRefreshableValidator;
 import com.hx.blog_v2.domain.validator.common.BeanIdStrValidator;
 import com.hx.blog_v2.util.BizUtils;
 import com.hx.blog_v2.util.BlogConstants;
+import com.hx.blog_v2.domain.BaseVO;
 import com.hx.blog_v2.util.ElementHandler;
 import com.hx.blog_v2.util.ResultUtils;
 import com.hx.common.interf.common.Result;

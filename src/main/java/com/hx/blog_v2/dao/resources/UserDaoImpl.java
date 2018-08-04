@@ -4,6 +4,7 @@ import com.hx.blog_v2.dao.interf.BaseDaoImpl;
 import com.hx.blog_v2.dao.interf.UserDao;
 import com.hx.blog_v2.domain.po.resources.UserPO;
 import com.hx.blog_v2.util.BlogConstants;
+import com.hx.blog_v2.domain.BaseVO;
 import com.hx.blog_v2.util.MyMysqlConnectionProvider;
 import com.hx.blog_v2.util.ResultUtils;
 import com.hx.common.interf.common.Result;

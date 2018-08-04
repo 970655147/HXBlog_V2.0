@@ -1,6 +1,8 @@
 package com.hx.blog_v2.domain.po.resources;
 
+import com.hx.blog_v2.domain.BasePO;
 import com.hx.blog_v2.util.BlogConstants;
+import com.hx.blog_v2.domain.BaseVO;
 import com.hx.blog_v2.util.DateUtils;
 import com.hx.json.JSONObject;
 import com.hx.json.config.interf.JSONConfig;
@@ -21,7 +23,7 @@ import java.util.Map;
  * @version 1.0
  * @date 5/23/2017 8:12 PM
  */
-public class UserPO implements JSONTransferable<UserPO> {
+public class UserPO extends BasePO implements JSONTransferable<UserPO> {
 
     @JSONField({"id", "id"})
     private String id;

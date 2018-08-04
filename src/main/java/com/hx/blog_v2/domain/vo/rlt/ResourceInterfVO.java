@@ -1,5 +1,7 @@
 package com.hx.blog_v2.domain.vo.rlt;
 
+import com.hx.blog_v2.domain.BaseVO;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,7 +12,7 @@ import java.util.List;
  * @version 1.0
  * @date 5/30/2017 4:57 PM
  */
-public class ResourceInterfVO {
+public class ResourceInterfVO extends BaseVO {
 
     /**
      * resourceId

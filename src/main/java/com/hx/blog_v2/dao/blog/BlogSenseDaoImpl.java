@@ -6,6 +6,7 @@ import com.hx.blog_v2.dao.interf.BlogSenseDao;
 import com.hx.blog_v2.domain.form.blog.BlogSenseForm;
 import com.hx.blog_v2.domain.po.blog.BlogSensePO;
 import com.hx.blog_v2.util.BlogConstants;
+import com.hx.blog_v2.domain.BaseVO;
 import com.hx.blog_v2.util.MyMysqlConnectionProvider;
 import com.hx.blog_v2.util.ResultUtils;
 import com.hx.common.interf.common.Result;

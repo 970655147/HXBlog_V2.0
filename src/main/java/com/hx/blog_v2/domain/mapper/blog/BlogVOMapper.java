@@ -4,6 +4,7 @@ import com.hx.blog_v2.domain.POVOTransferUtils;
 import com.hx.blog_v2.domain.po.blog.BlogPO;
 import com.hx.blog_v2.domain.vo.blog.BlogVO;
 import com.hx.blog_v2.util.BlogConstants;
+import com.hx.blog_v2.domain.BaseVO;
 import com.hx.log.util.Tools;
 import com.hx.mongo.util.ResultSet2MapAdapter;
 import org.springframework.jdbc.core.RowMapper;

@@ -2,6 +2,7 @@ package com.hx.blog_v2.domain.mapper.blog;
 
 import com.hx.blog_v2.domain.po.blog.BlogCommentPO;
 import com.hx.blog_v2.util.BlogConstants;
+import com.hx.blog_v2.domain.BaseVO;
 import com.hx.mongo.util.ResultSet2MapAdapter;
 import org.springframework.jdbc.core.RowMapper;
 

@@ -1,6 +1,6 @@
 package com.hx.blog_v2.domain.vo.front_resources;
 
-import java.util.List;
+import com.hx.blog_v2.domain.BaseVO;
 
 /**
  * AdminMoodVO
@@ -9,7 +9,7 @@ import java.util.List;
  * @version 1.0
  * @date 5/20/2017 9:42 AM
  */
-public class AdminMoodVO {
+public class AdminMoodVO extends BaseVO {
 
     private String id;
     private String title;

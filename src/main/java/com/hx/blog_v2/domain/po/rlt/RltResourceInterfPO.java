@@ -1,5 +1,6 @@
 package com.hx.blog_v2.domain.po.rlt;
 
+import com.hx.blog_v2.domain.BasePO;
 import com.hx.json.JSONObject;
 import com.hx.json.config.interf.JSONConfig;
 import com.hx.json.interf.JSONField;
@@ -18,7 +19,7 @@ import java.util.Map;
  * @version 1.0
  * @date 5/20/2017 10:05 AM
  */
-public class RltResourceInterfPO implements JSONTransferable<RltResourceInterfPO> {
+public class RltResourceInterfPO extends BasePO implements JSONTransferable<RltResourceInterfPO> {
 
     @JSONField({"id", "id"})
     private String id;

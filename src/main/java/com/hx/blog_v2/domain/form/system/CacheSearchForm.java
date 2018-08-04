@@ -1,5 +1,7 @@
 package com.hx.blog_v2.domain.form.system;
 
+import com.hx.blog_v2.domain.BaseForm;
+
 /**
  * CacheSearchForm
  *
@@ -7,7 +9,7 @@ package com.hx.blog_v2.domain.form.system;
  * @version 1.0
  * @date 5/31/2017 8:36 PM
  */
-public class CacheSearchForm {
+public class CacheSearchForm extends BaseForm {
 
     private String type;
 

@@ -1,5 +1,7 @@
 package com.hx.blog_v2.domain.form.system;
 
+import com.hx.blog_v2.domain.BaseForm;
+
 /**
  * 系统配置保存表单
  *
@@ -7,7 +9,7 @@ package com.hx.blog_v2.domain.form.system;
  * @version 1.0
  * @date 5/22/2017 8:03 PM
  */
-public class SystemConfigSaveForm {
+public class SystemConfigSaveForm extends BaseForm {
 
     private String id;
     private String name;

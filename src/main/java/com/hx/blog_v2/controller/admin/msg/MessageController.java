@@ -13,6 +13,7 @@ import com.hx.blog_v2.domain.validator.common.PageValidator;
 import com.hx.blog_v2.domain.vo.message.MessageVO;
 import com.hx.blog_v2.service.interf.message.MessageService;
 import com.hx.blog_v2.util.BlogConstants;
+import com.hx.blog_v2.domain.BaseVO;
 import com.hx.common.interf.common.Result;
 import com.hx.common.result.SimplePage;
 import com.hx.blog_v2.util.ResultUtils;

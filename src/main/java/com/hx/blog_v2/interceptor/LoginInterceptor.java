@@ -6,6 +6,7 @@ import com.hx.blog_v2.domain.ErrorCode;
 import com.hx.blog_v2.domain.common.system.SessionUser;
 import com.hx.blog_v2.service.interf.system.ExceptionLogService;
 import com.hx.blog_v2.util.BlogConstants;
+import com.hx.blog_v2.domain.BaseVO;
 import com.hx.common.interf.common.Result;
 import com.hx.blog_v2.util.ResultUtils;
 import com.hx.log.util.Tools;

@@ -4,6 +4,7 @@ import com.hx.blog_v2.biz_log.anno.BizLogger;
 import com.hx.blog_v2.context.WebContext;
 import com.hx.blog_v2.service.interf.index.IndexService;
 import com.hx.blog_v2.util.BlogConstants;
+import com.hx.blog_v2.domain.BaseVO;
 import com.hx.common.interf.common.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;

@@ -1,13 +1,15 @@
 package com.hx.blog_v2.service.index;
 
+import com.hx.blog_v2.cache_handler.CacheType;
+import com.hx.blog_v2.cache_handler.anno.CacheHandle;
 import com.hx.blog_v2.context.CacheContext;
 import com.hx.blog_v2.context.ConstantsContext;
 import com.hx.blog_v2.context.WebContext;
 import com.hx.blog_v2.dao.interf.BlogDao;
 import com.hx.blog_v2.dao.interf.RltRoleResourceDao;
 import com.hx.blog_v2.domain.POVOTransferUtils;
-import com.hx.blog_v2.domain.common.system.SessionUser;
 import com.hx.blog_v2.domain.common.common.StringStringPair;
+import com.hx.blog_v2.domain.common.system.SessionUser;
 import com.hx.blog_v2.domain.extractor.ResourceTreeInfoExtractor;
 import com.hx.blog_v2.domain.form.common.BeanIdForm;
 import com.hx.blog_v2.domain.form.common.BeanIdsForm;
@@ -20,9 +22,10 @@ import com.hx.blog_v2.domain.vo.others.FacetByMonthVO;
 import com.hx.blog_v2.domain.vo.resources.ResourceVO;
 import com.hx.blog_v2.service.blog.BlogServiceImpl;
 import com.hx.blog_v2.service.interf.BaseServiceImpl;
-import com.hx.blog_v2.service.interf.index.IndexService;
 import com.hx.blog_v2.service.interf.front_resources.LinkService;
+import com.hx.blog_v2.service.interf.index.IndexService;
 import com.hx.blog_v2.util.BlogConstants;
+import com.hx.blog_v2.domain.BaseVO;
 import com.hx.blog_v2.util.ResultUtils;
 import com.hx.common.interf.cache.Cache;
 import com.hx.common.interf.cache.CacheEntryFacade;
@@ -36,6 +39,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+
+import static com.hx.blog_v2.util.CacheConstants.*;
 
 /**
  * IndexServiceImpl
@@ -63,6 +68,7 @@ public class IndexServiceImpl extends BaseServiceImpl<Object> implements IndexSe
     private ConstantsContext constantsContext;
 
     @Override
+//    @CacheHandle(type = CacheType.BASE_REQ, ns = CACHE_AOP_INDEX_INDEX, timeout = CACHE_DEFAULT_TIMEOUT, cacheResultClass = JSONObject.class)
     public Result index() {
         List<BlogVO> hotBlogs = collectHotBlogs();
         List<CommentVO> latestComments = collectLatestComments();
@@ -103,6 +109,7 @@ public class IndexServiceImpl extends BaseServiceImpl<Object> implements IndexSe
     }
 
     @Override
+//    @CacheHandle(type = CacheType.BASE_REQ, ns = CACHE_AOP_INDEX_LATEST, timeout = CACHE_DEFAULT_TIMEOUT, cacheResultClass = JSONObject.class)
     public Result latest() {
         BlogVO recommendBlog = collectRecommendBlogs();
         List<BlogVO> latestBlogs = collectLatestBlogs();

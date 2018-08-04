@@ -5,6 +5,7 @@ import com.hx.blog_v2.dao.interf.AdvDao;
 import com.hx.blog_v2.dao.interf.BaseDaoImpl;
 import com.hx.blog_v2.domain.po.front_resources.AdvPO;
 import com.hx.blog_v2.util.BlogConstants;
+import com.hx.blog_v2.domain.BaseVO;
 import com.hx.blog_v2.util.MyMysqlConnectionProvider;
 import com.hx.mongo.config.MysqlDbConfig;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,7 +1,7 @@
 package com.hx.blog_v2.util;
 
-import com.hx.blog_v2.domain.po.front_resources.AdvPO;
 import com.hx.blog_v2.domain.po.blog.*;
+import com.hx.blog_v2.domain.po.front_resources.AdvPO;
 import com.hx.blog_v2.domain.po.front_resources.ImagePO;
 import com.hx.blog_v2.domain.po.front_resources.LinkPO;
 import com.hx.blog_v2.domain.po.front_resources.MoodPO;
@@ -91,6 +91,11 @@ public final class BlogConstants {
      * 一天的毫秒数
      */
     public static final long ONE_DAY = 24 * ONE_HOUR;
+
+    /**
+     * 正则
+     */
+    public static final String REGEX_SPLIT_BY_COMMA = "\\s*,\\s*";
 
     /**
      * JSONTransferable
@@ -465,6 +470,15 @@ public final class BlogConstants {
      * 限制给定周期内请求次数的接口的配置
      */
     public static final String REQ_DELAY_MAP = "req.delay.map";
+
+    /**
+     * @CacheHandle, 限定需要反转义的字段
+     */
+    public static final String CACHE_HANDLE_DETRANSFER_FIELDS = "cache.handle.detransfer.fields";
+    /**
+     * @CacheHandle, 限定需要反转义的 字符列表
+     */
+    public static final String CACHE_HANDLE_DETRANSFER_CAHRS = "cache.handle.detransfer.chars";
 
     // ----------------------------------------- configurable -------------------------------------------------
 

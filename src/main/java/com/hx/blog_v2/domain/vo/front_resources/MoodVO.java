@@ -1,5 +1,7 @@
 package com.hx.blog_v2.domain.vo.front_resources;
 
+import com.hx.blog_v2.domain.BaseVO;
+
 /**
  * MoodVO
  *
@@ -7,7 +9,7 @@ package com.hx.blog_v2.domain.vo.front_resources;
  * @version 1.0
  * @date 5/20/2017 9:42 AM
  */
-public class MoodVO {
+public class MoodVO extends BaseVO {
 
     private String id;
     private String title;

@@ -1,5 +1,7 @@
 package com.hx.blog_v2.domain.form.resources;
 
+import com.hx.blog_v2.domain.BaseForm;
+
 /**
  * 增加 mood 的时候的表单
  *
@@ -7,7 +9,7 @@ package com.hx.blog_v2.domain.form.resources;
  * @version 1.0
  * @date 5/22/2017 8:12 PM
  */
-public class InterfSaveForm {
+public class InterfSaveForm extends BaseForm {
 
     private String id;
     private String name;

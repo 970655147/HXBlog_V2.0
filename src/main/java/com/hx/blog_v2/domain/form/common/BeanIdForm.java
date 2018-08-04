@@ -1,5 +1,12 @@
 package com.hx.blog_v2.domain.form.common;
 
+import com.hx.blog_v2.domain.BaseForm;
+import com.hx.blog_v2.util.CacheConstants;
+import com.hx.log.str.StringUtils;
+
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * 通用的移除一条记录的参数
  *
@@ -7,7 +14,7 @@ package com.hx.blog_v2.domain.form.common;
  * @version 1.0
  * @date 5/20/2017 9:42 AM
  */
-public class BeanIdForm {
+public class BeanIdForm extends BaseForm {
 
     private String id;
     /**
@@ -39,4 +46,11 @@ public class BeanIdForm {
     public void setCheckSelf(boolean checkSelf) {
         this.checkSelf = checkSelf;
     }
+
+    @Override
+    public String generateCacheKey() {
+        List<String> list = Arrays.asList(id, String.valueOf(checkSelf));
+        return StringUtils.join(list, CacheConstants.CACHE_LOCAL_SEP);
+    }
+
 }

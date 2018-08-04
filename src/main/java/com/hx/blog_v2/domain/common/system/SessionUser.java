@@ -3,6 +3,7 @@ package com.hx.blog_v2.domain.common.system;
 import com.hx.blog_v2.domain.form.interf.UserInfoExtractor;
 import com.hx.blog_v2.util.BizUtils;
 import com.hx.blog_v2.util.BlogConstants;
+import com.hx.blog_v2.domain.BaseVO;
 import com.hx.blog_v2.util.DateUtils;
 
 import java.util.Date;

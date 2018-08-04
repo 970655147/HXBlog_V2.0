@@ -1,5 +1,7 @@
 package com.hx.blog_v2.domain.form.blog;
 
+import com.hx.blog_v2.domain.BaseForm;
+
 /**
  * BlogVisitLogForm
  *
@@ -7,7 +9,7 @@ package com.hx.blog_v2.domain.form.blog;
  * @version 1.0
  * @date 6/9/2017 9:00 PM
  */
-public class BlogVisitLogForm {
+public class BlogVisitLogForm extends BaseForm {
 
     private String blogId;
     private String requestIp;

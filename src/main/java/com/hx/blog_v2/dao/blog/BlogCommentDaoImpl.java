@@ -9,6 +9,7 @@ import com.hx.blog_v2.domain.mapper.common.OneIntMapper;
 import com.hx.blog_v2.domain.po.blog.BlogCommentPO;
 import com.hx.blog_v2.domain.vo.blog.CommentVO;
 import com.hx.blog_v2.util.BlogConstants;
+import com.hx.blog_v2.domain.BaseVO;
 import com.hx.blog_v2.util.MyMysqlConnectionProvider;
 import com.hx.blog_v2.util.ResultUtils;
 import com.hx.blog_v2.util.SqlUtils;

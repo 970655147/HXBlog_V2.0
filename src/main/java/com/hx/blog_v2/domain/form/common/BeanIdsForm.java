@@ -1,5 +1,7 @@
 package com.hx.blog_v2.domain.form.common;
 
+import com.hx.blog_v2.domain.BaseForm;
+
 /**
  * 包含逻辑上一系列的id的的参数
  *
@@ -7,7 +9,7 @@ package com.hx.blog_v2.domain.form.common;
  * @version 1.0
  * @date 5/20/2017 9:42 AM
  */
-public class BeanIdsForm {
+public class BeanIdsForm extends BaseForm {
 
     private String ids;
 

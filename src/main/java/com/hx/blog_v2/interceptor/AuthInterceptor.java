@@ -9,6 +9,7 @@ import com.hx.blog_v2.domain.common.system.SessionUser;
 import com.hx.blog_v2.domain.form.common.BeanIdsForm;
 import com.hx.blog_v2.service.interf.system.ExceptionLogService;
 import com.hx.blog_v2.util.BlogConstants;
+import com.hx.blog_v2.domain.BaseVO;
 import com.hx.common.interf.common.Result;
 import com.hx.common.str.AntPathMatcher;
 import com.hx.common.str.interf.PathMatcher;

@@ -1,5 +1,7 @@
 package com.hx.blog_v2.domain.form.message;
 
+import com.hx.blog_v2.domain.BaseForm;
+
 /**
  * BlogSearchForm
  *
@@ -7,7 +9,7 @@ package com.hx.blog_v2.domain.form.message;
  * @version 1.0
  * @date 5/28/2017 11:09 AM
  */
-public class MessageSearchForm {
+public class MessageSearchForm extends BaseForm {
 
     private String id;
     private String senderId;

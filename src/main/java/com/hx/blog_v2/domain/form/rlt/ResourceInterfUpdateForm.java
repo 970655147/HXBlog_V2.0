@@ -1,5 +1,7 @@
 package com.hx.blog_v2.domain.form.rlt;
 
+import com.hx.blog_v2.domain.BaseForm;
+
 /**
  * UserRoleUpdateForm
  *
@@ -7,7 +9,7 @@ package com.hx.blog_v2.domain.form.rlt;
  * @version 1.0
  * @date 5/30/2017 7:14 PM
  */
-public class ResourceInterfUpdateForm {
+public class ResourceInterfUpdateForm extends BaseForm {
 
     private String resourceId;
     private String resourceName;

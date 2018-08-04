@@ -1,5 +1,7 @@
 package com.hx.blog_v2.domain.vo.blog;
 
+import com.hx.blog_v2.domain.BaseVO;
+
 import java.util.List;
 
 /**
@@ -9,7 +11,7 @@ import java.util.List;
  * @version 1.0
  * @date 5/20/2017 9:42 AM
  */
-public class AdminBlogVO {
+public class AdminBlogVO extends BaseVO {
 
     private String id;
     private String title;

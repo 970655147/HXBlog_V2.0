@@ -1,5 +1,6 @@
 package com.hx.blog_v2.domain.po.blog;
 
+import com.hx.blog_v2.domain.BasePO;
 import com.hx.json.JSONObject;
 import com.hx.json.config.interf.JSONConfig;
 import com.hx.json.interf.JSONField;
@@ -18,7 +19,7 @@ import java.util.Map;
  * @version 1.0
  * @date 5/20/2017 9:46 AM
  */
-public class BlogExPO implements JSONTransferable<BlogExPO> {
+public class BlogExPO extends BasePO implements JSONTransferable<BlogExPO> {
 
     @JSONField({"id", "id"})
     private String id;

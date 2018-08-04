@@ -1,6 +1,7 @@
 package com.hx.blog_v2.domain.vo.front_resources;
 
 import com.hx.blog_v2.util.BlogConstants;
+import com.hx.blog_v2.domain.BaseVO;
 import com.hx.blog_v2.util.DateUtils;
 
 import java.util.*;
@@ -12,7 +13,7 @@ import java.util.*;
  * @version 1.0
  * @date 5/22/2017 8:03 PM
  */
-public class AdminImageVO {
+public class AdminImageVO extends BaseVO {
 
     private String id;
     private String title;

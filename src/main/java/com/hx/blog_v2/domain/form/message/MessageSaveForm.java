@@ -1,5 +1,7 @@
 package com.hx.blog_v2.domain.form.message;
 
+import com.hx.blog_v2.domain.BaseForm;
+
 /**
  * 保存消息的接收实体
  *
@@ -7,7 +9,7 @@ package com.hx.blog_v2.domain.form.message;
  * @version 1.0
  * @date 6/11/2017 3:11 PM
  */
-public class MessageSaveForm {
+public class MessageSaveForm extends BaseForm {
 
     /**
      * msgId

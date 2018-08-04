@@ -1,5 +1,7 @@
 package com.hx.blog_v2.domain.form.front_resources;
 
+import com.hx.blog_v2.domain.BaseForm;
+
 /**
  * AdvListForm
  *
@@ -7,7 +9,7 @@ package com.hx.blog_v2.domain.form.front_resources;
  * @version 1.0
  * @date 3/3/2018 5:29 PM
  */
-public class AdvListForm {
+public class AdvListForm extends BaseForm {
 
     /** url */
     private String url;

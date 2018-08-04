@@ -12,6 +12,7 @@ import com.hx.blog_v2.domain.vo.system.SystemConfigVO;
 import com.hx.blog_v2.service.interf.BaseServiceImpl;
 import com.hx.blog_v2.service.interf.system.SystemConfigService;
 import com.hx.blog_v2.util.BlogConstants;
+import com.hx.blog_v2.domain.BaseVO;
 import com.hx.blog_v2.util.DateUtils;
 import com.hx.blog_v2.util.ResultUtils;
 import com.hx.common.interf.common.Page;

@@ -1,6 +1,7 @@
 package com.hx.blog_v2.domain.mapper.others;
 
 import com.hx.blog_v2.util.BlogConstants;
+import com.hx.blog_v2.domain.BaseVO;
 import com.hx.log.json.interf.JSONTransferable;
 import com.hx.mongo.util.ResultSet2MapAdapter;
 import org.springframework.jdbc.core.RowMapper;

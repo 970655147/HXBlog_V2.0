@@ -1,5 +1,10 @@
 package com.hx.blog_v2.service.blog;
 
+import com.hx.blog_v2.cache_handler.CacheResultType;
+import com.hx.blog_v2.cache_handler.CacheType;
+import com.hx.blog_v2.cache_handler.anno.CacheEvict;
+import com.hx.blog_v2.cache_handler.anno.CacheEvictAll;
+import com.hx.blog_v2.cache_handler.anno.CacheHandle;
 import com.hx.blog_v2.context.CacheContext;
 import com.hx.blog_v2.context.ConstantsContext;
 import com.hx.blog_v2.context.WebContext;
@@ -11,10 +16,10 @@ import com.hx.blog_v2.domain.common.blog.BlogState;
 import com.hx.blog_v2.domain.common.blog.BlogStateAction;
 import com.hx.blog_v2.domain.common.blog.SenseType;
 import com.hx.blog_v2.domain.common.system.SessionUser;
-import com.hx.blog_v2.domain.form.common.BeanIdForm;
 import com.hx.blog_v2.domain.form.blog.BlogSaveForm;
 import com.hx.blog_v2.domain.form.blog.BlogSearchForm;
 import com.hx.blog_v2.domain.form.blog.BlogSenseForm;
+import com.hx.blog_v2.domain.form.common.BeanIdForm;
 import com.hx.blog_v2.domain.mapper.blog.AdminBlogVOMapper;
 import com.hx.blog_v2.domain.mapper.blog.BlogVOMapper;
 import com.hx.blog_v2.domain.mapper.common.OneIntMapper;
@@ -25,6 +30,7 @@ import com.hx.blog_v2.domain.vo.blog.BlogVO;
 import com.hx.blog_v2.service.interf.BaseServiceImpl;
 import com.hx.blog_v2.service.interf.blog.BlogService;
 import com.hx.blog_v2.util.BlogConstants;
+import com.hx.blog_v2.domain.BaseVO;
 import com.hx.blog_v2.util.DateUtils;
 import com.hx.blog_v2.util.ResultUtils;
 import com.hx.blog_v2.util.SqlUtils;
@@ -45,6 +51,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+
+import static com.hx.blog_v2.util.CacheConstants.*;
 
 /**
  * BlogServiceImpl
@@ -81,6 +89,7 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
     private StateMachine<BlogState, BlogStateAction> stateMachine = StateMachineUtils.BLOG_STATE_MACHINE;
 
     @Override
+    @CacheEvictAll(ns = {CACHE_AOP_PAGE_BLOG, CACHE_AOP_PAGE_ADMIN_BLOG})
     public Result save(BlogSaveForm params) {
         SessionUser user = (SessionUser) WebContext.getAttributeFromSession(BlogConstants.SESSION_USER);
         String contentUrl = generateBlogPath(params);
@@ -95,6 +104,8 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
     }
 
     @Override
+    @CacheHandle(type = CacheType.BASE_REQ, ns = CACHE_AOP_BLOG, timeout = CACHE_DEFAULT_TIMEOUT,
+            cacheResultClass = BlogVO.class)
     public Result get(BeanIdForm params) {
         Result getBlogResult = blogDao.get(params);
         if (!getBlogResult.isSuccess()) {
@@ -124,6 +135,8 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
     }
 
     @Override
+    @CacheHandle(type = CacheType.BASE_REQ, ns = CACHE_AOP_ADMIN_BLOG, timeout = CACHE_DEFAULT_TIMEOUT,
+            cacheResultClass = AdminBlogVO.class)
     public Result adminGet(BeanIdForm params) {
         Result getBlogResult = blogDao.get(params);
         if (!getBlogResult.isSuccess()) {
@@ -143,6 +156,8 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
     }
 
     @Override
+    @CacheHandle(type = CacheType.BASE_REQ, ns = CACHE_AOP_PAGE_BLOG, timeout = CACHE_DEFAULT_TIMEOUT,
+            cacheResultType = CacheResultType.RESULT_PAGE, cacheResultClass = BlogVO.class)
     public Result list(BlogSearchForm params, Page<BlogVO> page) {
         String selectSql = " select b.*, GROUP_CONCAT(rlt.tag_id) as tagIds from blog as b " +
                 " inner join rlt_blog_tag as rlt on b.id = rlt.blog_id " +
@@ -173,6 +188,8 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
     }
 
     @Override
+    @CacheHandle(type = CacheType.BASE_REQ, ns = CACHE_AOP_PAGE_ADMIN_BLOG, timeout = CACHE_DEFAULT_TIMEOUT,
+            cacheResultType = CacheResultType.RESULT_PAGE, cacheResultClass = BlogVO.class)
     public Result adminList(BlogSearchForm params, Page<AdminBlogVO> page) {
         String selectSql = " select b.*, GROUP_CONCAT(rlt.tag_id) as tagIds from blog as b " +
                 " inner join rlt_blog_tag as rlt on b.id = rlt.blog_id where b.deleted = 0 ";
@@ -201,6 +218,8 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
     }
 
     @Override
+    @CacheEvict(type = CacheType.BASE_REQ, ns = CACHE_AOP_BLOG)
+    @CacheEvictAll(ns = {CACHE_AOP_PAGE_BLOG, CACHE_AOP_PAGE_ADMIN_BLOG})
     public Result remove(BeanIdForm params) {
         Result getBlogResult = blogDao.get(new BeanIdForm(params.getId()));
         if (!getBlogResult.isSuccess()) {
@@ -229,6 +248,8 @@ public class BlogServiceImpl extends BaseServiceImpl<BlogPO> implements BlogServ
     }
 
     @Override
+    @CacheEvict(type = CacheType.BASE_REQ, ns = CACHE_AOP_BLOG)
+    @CacheEvictAll(ns = {CACHE_AOP_PAGE_BLOG, CACHE_AOP_PAGE_ADMIN_BLOG})
     public Result transfer(BlogSaveForm params) {
         Result getBlogResult = blogDao.get(new BeanIdForm(params.getId()));
         if (!getBlogResult.isSuccess()) {

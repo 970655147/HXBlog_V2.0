@@ -1,6 +1,7 @@
 package com.hx.blog_v2.domain.vo.blog;
 
 import com.hx.blog_v2.util.BlogConstants;
+import com.hx.blog_v2.domain.BaseVO;
 import com.hx.blog_v2.util.DateUtils;
 import com.hx.json.JSONObject;
 import com.hx.log.json.interf.JSONTransferable;
@@ -16,7 +17,7 @@ import java.util.*;
  * @version 1.0
  * @date 5/20/2017 10:06 AM
  */
-public class BlogTypeVO {
+public class BlogTypeVO extends BaseVO {
 
     private String id;
     private String name;

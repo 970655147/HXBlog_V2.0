@@ -1,6 +1,6 @@
 package com.hx.blog_v2.domain.vo.front_resources;
 
-import com.hx.json.interf.JSONField;
+import com.hx.blog_v2.domain.BaseVO;
 
 /**
  * AdminAdvVO
@@ -9,7 +9,7 @@ import com.hx.json.interf.JSONField;
  * @version 1.0
  * @date 3/3/2018 7:48 PM
  */
-public class AdminAdvVO {
+public class AdminAdvVO extends BaseVO {
 
     private String id;
     private String name;

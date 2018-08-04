@@ -14,6 +14,7 @@ import com.hx.blog_v2.domain.form.blog.BlogVisitLogForm;
 import com.hx.blog_v2.domain.po.blog.BlogExPO;
 import com.hx.blog_v2.domain.po.blog.BlogVisitLogPO;
 import com.hx.blog_v2.util.BlogConstants;
+import com.hx.blog_v2.domain.BaseVO;
 import com.hx.blog_v2.util.DateUtils;
 import com.hx.common.interf.common.Result;
 import com.hx.log.util.Tools;

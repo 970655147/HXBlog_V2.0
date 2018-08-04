@@ -1,5 +1,7 @@
 package com.hx.blog_v2.domain.form.front_resources;
 
+import com.hx.blog_v2.domain.BaseForm;
+
 /**
  * LinkSaveForm
  *
@@ -7,7 +9,7 @@ package com.hx.blog_v2.domain.form.front_resources;
  * @version 1.0
  * @date 5/24/2017 7:44 PM
  */
-public class LinkSaveForm {
+public class LinkSaveForm extends BaseForm {
 
     private String id;
     private String name;

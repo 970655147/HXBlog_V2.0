@@ -1,5 +1,7 @@
 package com.hx.blog_v2.domain.vo.system;
 
+import com.hx.blog_v2.domain.BaseVO;
+
 /**
  * 异常日志的历史记录
  *
@@ -7,7 +9,7 @@ package com.hx.blog_v2.domain.vo.system;
  * @version 1.0
  * @date 5/20/2017 10:18 AM
  */
-public class ExceptionLogVO {
+public class ExceptionLogVO extends BaseVO {
 
     private String id;
     private String url;

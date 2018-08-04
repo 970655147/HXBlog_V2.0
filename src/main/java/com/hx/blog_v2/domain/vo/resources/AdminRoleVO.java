@@ -1,5 +1,7 @@
 package com.hx.blog_v2.domain.vo.resources;
 
+import com.hx.blog_v2.domain.BaseVO;
+
 /**
  * AdminRoleVO
  *
@@ -7,7 +9,7 @@ package com.hx.blog_v2.domain.vo.resources;
  * @version 1.0
  * @date 5/20/2017 9:42 AM
  */
-public class AdminRoleVO {
+public class AdminRoleVO extends BaseVO {
 
     private String id;
     private String name;

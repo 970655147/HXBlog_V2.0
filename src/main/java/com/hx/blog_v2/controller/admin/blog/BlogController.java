@@ -16,6 +16,7 @@ import com.hx.blog_v2.domain.validator.common.PageValidator;
 import com.hx.blog_v2.domain.vo.blog.AdminBlogVO;
 import com.hx.blog_v2.service.interf.blog.BlogService;
 import com.hx.blog_v2.util.BlogConstants;
+import com.hx.blog_v2.domain.BaseVO;
 import com.hx.blog_v2.util.ResultUtils;
 import com.hx.common.interf.common.Result;
 import com.hx.common.result.SimplePage;

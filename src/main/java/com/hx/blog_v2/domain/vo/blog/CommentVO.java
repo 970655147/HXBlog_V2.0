@@ -1,5 +1,6 @@
 package com.hx.blog_v2.domain.vo.blog;
 
+import com.hx.blog_v2.domain.BaseVO;
 import com.hx.log.alogrithm.tree.interf.TreeIdExtractor;
 
 /**
@@ -9,7 +10,7 @@ import com.hx.log.alogrithm.tree.interf.TreeIdExtractor;
  * @version 1.0
  * @date 5/25/2017 9:45 PM
  */
-public class CommentVO implements TreeIdExtractor<CommentVO, String> {
+public class CommentVO extends BaseVO implements TreeIdExtractor<CommentVO, String> {
 
     private String id;
     private String blogId;

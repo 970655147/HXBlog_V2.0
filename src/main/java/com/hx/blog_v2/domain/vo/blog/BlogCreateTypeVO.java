@@ -1,6 +1,6 @@
 package com.hx.blog_v2.domain.vo.blog;
 
-import com.hx.json.interf.JSONField;
+import com.hx.blog_v2.domain.BaseVO;
 
 /**
  * 博客创建类型
@@ -9,7 +9,7 @@ import com.hx.json.interf.JSONField;
  * @version 1.0
  * @date 5/22/2017 8:03 PM
  */
-public class BlogCreateTypeVO {
+public class BlogCreateTypeVO extends BaseVO {
 
     private String id;
     private String name;

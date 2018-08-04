@@ -1,5 +1,7 @@
 package com.hx.blog_v2.domain.vo.system;
 
+import com.hx.blog_v2.domain.BaseVO;
+
 /**
  * 请求日志的历史记录
  *
@@ -7,7 +9,7 @@ package com.hx.blog_v2.domain.vo.system;
  * @version 1.0
  * @date 5/20/2017 10:16 AM
  */
-public class RequestLogVO {
+public class RequestLogVO extends BaseVO {
 
     private String id;
     private String url;

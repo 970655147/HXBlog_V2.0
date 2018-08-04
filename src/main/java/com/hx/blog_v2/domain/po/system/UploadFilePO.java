@@ -1,7 +1,9 @@
 package com.hx.blog_v2.domain.po.system;
 
+import com.hx.blog_v2.domain.BasePO;
 import com.hx.blog_v2.domain.po.interf.LogisticalId;
 import com.hx.blog_v2.util.BlogConstants;
+import com.hx.blog_v2.domain.BaseVO;
 import com.hx.blog_v2.util.DateUtils;
 import com.hx.json.JSONObject;
 import com.hx.json.config.interf.JSONConfig;
@@ -22,7 +24,7 @@ import java.util.Map;
  * @version 1.0
  * @date 5/29/2017 4:11 PM
  */
-public class UploadFilePO implements JSONTransferable<UploadFilePO>, LogisticalId<String> {
+public class UploadFilePO extends BasePO implements JSONTransferable<UploadFilePO>, LogisticalId<String> {
 
     @JSONField({"id", "id"})
     private String id;

@@ -1,5 +1,7 @@
 package com.hx.blog_v2.domain.form.system;
 
+import com.hx.blog_v2.domain.BaseForm;
+
 /**
  * 登录的表单参数集合
  *
@@ -7,7 +9,7 @@ package com.hx.blog_v2.domain.form.system;
  * @version 1.0
  * @date 5/20/2017 4:45 PM
  */
-public class LoginForm {
+public class LoginForm extends BaseForm {
 
     private String userName;
     private String password;

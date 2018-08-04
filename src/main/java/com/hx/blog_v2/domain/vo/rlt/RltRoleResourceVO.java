@@ -1,5 +1,7 @@
 package com.hx.blog_v2.domain.vo.rlt;
 
+import com.hx.blog_v2.domain.BaseVO;
+
 /**
  * RltRoleResourceVO
  *
@@ -7,7 +9,7 @@ package com.hx.blog_v2.domain.vo.rlt;
  * @version 1.0
  * @date 5/20/2017 10:05 AM
  */
-public class RltRoleResourceVO {
+public class RltRoleResourceVO extends BaseVO {
 
     private String id;
     private String roleId;

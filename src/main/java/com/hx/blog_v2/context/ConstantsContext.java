@@ -1,11 +1,12 @@
 package com.hx.blog_v2.context;
 
 import com.hx.blog_v2.dao.interf.SystemConfigDao;
-import com.hx.blog_v2.domain.common.system.ConfigType;
 import com.hx.blog_v2.domain.common.front_resources.ImageType;
+import com.hx.blog_v2.domain.common.system.ConfigType;
 import com.hx.blog_v2.domain.po.system.SystemConfigPO;
 import com.hx.blog_v2.util.BizUtils;
 import com.hx.blog_v2.util.BlogConstants;
+import com.hx.blog_v2.domain.BaseVO;
 import com.hx.json.JSONArray;
 import com.hx.json.JSONObject;
 import com.hx.log.util.Constants;
@@ -20,6 +21,8 @@ import javax.annotation.PostConstruct;
 import java.awt.*;
 import java.util.*;
 import java.util.List;
+
+import static com.hx.blog_v2.util.BlogConstants.REGEX_SPLIT_BY_COMMA;
 
 /**
  * 维护相关常量
@@ -258,6 +261,12 @@ public class ConstantsContext {
     public String emailAuthUserName;
     public String emailAuthPassword;
     public String emailAuthSmtp;
+
+    /**
+     * cacheHandle 相关
+     */
+    public List<String> cacheHandleDetransferFields;
+    public Set<Character> cacheHandleDetransferChars;
 
     /**
      * 限制给定周期内请求次数的接口的配置
@@ -706,6 +715,15 @@ public class ConstantsContext {
         } catch (Exception e) {
             reqDelayMap = DEFAULT_REQ_DELAY_MAP;
         }
+
+        String cacheHandleDetransferFields = Tools.optString(systemConfig, BlogConstants.CACHE_HANDLE_DETRANSFER_FIELDS, "content,comment");
+        String cacheHandleDetransferChars = Tools.optString(systemConfig, BlogConstants.CACHE_HANDLE_DETRANSFER_CAHRS, "\\");
+        this.cacheHandleDetransferFields = Arrays.asList(cacheHandleDetransferFields.split(REGEX_SPLIT_BY_COMMA));
+        this.cacheHandleDetransferChars = Tools.asSet();
+        for (int i = 0, len = cacheHandleDetransferChars.length(); i < len; i++) {
+            this.cacheHandleDetransferChars.add(cacheHandleDetransferChars.charAt(i));
+        }
+
     }
 
 }

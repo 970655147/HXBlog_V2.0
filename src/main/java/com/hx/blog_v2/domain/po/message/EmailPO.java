@@ -1,6 +1,8 @@
 package com.hx.blog_v2.domain.po.message;
 
+import com.hx.blog_v2.domain.BasePO;
 import com.hx.blog_v2.util.BlogConstants;
+import com.hx.blog_v2.domain.BaseVO;
 import com.hx.blog_v2.util.DateUtils;
 import com.hx.json.JSONObject;
 import com.hx.json.config.interf.JSONConfig;
@@ -18,7 +20,7 @@ import java.util.*;
  * @version 1.0
  * @date 6/26/2017 9:09 PM
  */
-public class EmailPO implements JSONTransferable<EmailPO> {
+public class EmailPO extends BasePO implements JSONTransferable<EmailPO> {
 
     @JSONField({"id", "id"})
     private String id;

@@ -1,5 +1,6 @@
 package com.hx.blog_v2.domain.form.blog;
 
+import com.hx.blog_v2.domain.BaseForm;
 import com.hx.blog_v2.domain.form.interf.UserInfoExtractor;
 import com.hx.blog_v2.util.BizUtils;
 
@@ -10,7 +11,7 @@ import com.hx.blog_v2.util.BizUtils;
  * @version 1.0
  * @date 5/24/2017 7:44 PM
  */
-public class CommentSaveForm implements UserInfoExtractor {
+public class CommentSaveForm extends BaseForm implements UserInfoExtractor {
 
     /**
      * 回复的评论的id

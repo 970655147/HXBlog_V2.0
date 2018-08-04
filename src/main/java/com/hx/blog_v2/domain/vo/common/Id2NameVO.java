@@ -1,5 +1,7 @@
 package com.hx.blog_v2.domain.vo.common;
 
+import com.hx.blog_v2.domain.BaseVO;
+
 /**
  * id -> name
  *
@@ -7,7 +9,7 @@ package com.hx.blog_v2.domain.vo.common;
  * @version 1.0
  * @date 6/11/2017 2:55 PM
  */
-public class Id2NameVO {
+public class Id2NameVO extends BaseVO {
 
     private String id;
     private String name;

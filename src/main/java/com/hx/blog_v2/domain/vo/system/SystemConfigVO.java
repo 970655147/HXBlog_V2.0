@@ -1,5 +1,7 @@
 package com.hx.blog_v2.domain.vo.system;
 
+import com.hx.blog_v2.domain.BaseVO;
+
 /**
  * SystemConfigVO
  *
@@ -7,7 +9,7 @@ package com.hx.blog_v2.domain.vo.system;
  * @version 1.0
  * @date 5/22/2017 8:03 PM
  */
-public class SystemConfigVO {
+public class SystemConfigVO extends BaseVO {
 
     private String id;
     private String name;

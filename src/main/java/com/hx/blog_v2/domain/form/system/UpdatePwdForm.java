@@ -1,5 +1,7 @@
 package com.hx.blog_v2.domain.form.system;
 
+import com.hx.blog_v2.domain.BaseForm;
+
 /**
  * UpdatePwdForm
  *
@@ -7,7 +9,7 @@ package com.hx.blog_v2.domain.form.system;
  * @version 1.0
  * @date 6/4/2017 7:12 PM
  */
-public class UpdatePwdForm {
+public class UpdatePwdForm extends BaseForm {
 
     private String oldPwd;
     private String newPwd;

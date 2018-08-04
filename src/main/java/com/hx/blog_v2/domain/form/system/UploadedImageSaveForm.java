@@ -1,5 +1,6 @@
 package com.hx.blog_v2.domain.form.system;
 
+import com.hx.blog_v2.domain.BaseForm;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -9,7 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
  * @version 1.0
  * @date 5/29/2017 4:20 PM
  */
-public class UploadedImageSaveForm {
+public class UploadedImageSaveForm extends BaseForm {
 
     private MultipartFile file;
 

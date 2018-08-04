@@ -1,5 +1,7 @@
 package com.hx.blog_v2.domain.form.system;
 
+import com.hx.blog_v2.domain.BaseForm;
+
 /**
  * ImageSearchForm
  *
@@ -7,7 +9,7 @@ package com.hx.blog_v2.domain.form.system;
  * @version 1.0
  * @date 5/31/2017 8:36 PM
  */
-public class SystemConfigSearchForm {
+public class SystemConfigSearchForm extends BaseForm {
 
     private String type;
 

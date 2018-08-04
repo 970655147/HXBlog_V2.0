@@ -1,6 +1,7 @@
 package com.hx.blog_v2.test;
 
 import com.hx.blog_v2.util.BlogConstants;
+import com.hx.blog_v2.domain.BaseVO;
 import com.hx.blog_v2.util.DateUtils;
 
 import java.util.Date;

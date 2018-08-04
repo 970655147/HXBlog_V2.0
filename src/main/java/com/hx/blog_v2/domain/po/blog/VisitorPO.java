@@ -1,7 +1,9 @@
 package com.hx.blog_v2.domain.po.blog;
 
+import com.hx.blog_v2.domain.BasePO;
 import com.hx.blog_v2.domain.form.interf.UserInfoExtractor;
 import com.hx.blog_v2.util.BlogConstants;
+import com.hx.blog_v2.domain.BaseVO;
 import com.hx.blog_v2.util.DateUtils;
 import com.hx.json.JSONObject;
 import com.hx.json.config.interf.JSONConfig;
@@ -22,7 +24,7 @@ import java.util.Map;
  * @version 1.0
  * @date 5/20/2017 10:14 AM
  */
-public class VisitorPO implements JSONTransferable<VisitorPO> {
+public class VisitorPO extends BasePO implements JSONTransferable<VisitorPO> {
 
     @JSONField({"id", "id"})
     private String id;

@@ -1,10 +1,11 @@
 package com.hx.blog_v2.domain.vo.resources;
 
+import com.hx.blog_v2.domain.BaseVO;
 import com.hx.blog_v2.util.BlogConstants;
 import com.hx.blog_v2.util.DateUtils;
 import com.hx.log.alogrithm.tree.interf.TreeIdExtractor;
 
-import java.util.*;
+import java.util.Date;
 
 /**
  * ResourceVO
@@ -13,7 +14,7 @@ import java.util.*;
  * @version 1.0
  * @date 5/22/2017 8:03 PM
  */
-public class ResourceVO implements TreeIdExtractor<ResourceVO, String> {
+public class ResourceVO extends BaseVO implements TreeIdExtractor<ResourceVO, String> {
 
     private String id;
     private String name;

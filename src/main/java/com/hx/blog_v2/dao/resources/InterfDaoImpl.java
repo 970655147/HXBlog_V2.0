@@ -4,6 +4,7 @@ import com.hx.blog_v2.dao.interf.BaseDaoImpl;
 import com.hx.blog_v2.dao.interf.InterfDao;
 import com.hx.blog_v2.domain.po.resources.InterfPO;
 import com.hx.blog_v2.util.BlogConstants;
+import com.hx.blog_v2.domain.BaseVO;
 import com.hx.blog_v2.util.MyMysqlConnectionProvider;
 import com.hx.mongo.config.MysqlDbConfig;
 import org.springframework.stereotype.Repository;

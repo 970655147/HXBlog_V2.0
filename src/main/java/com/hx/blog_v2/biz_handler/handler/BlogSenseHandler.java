@@ -19,6 +19,7 @@ import com.hx.blog_v2.domain.po.blog.BlogSensePO;
 import com.hx.blog_v2.domain.po.resources.RolePO;
 import com.hx.blog_v2.service.interf.message.MessageService;
 import com.hx.blog_v2.util.BlogConstants;
+import com.hx.blog_v2.domain.BaseVO;
 import com.hx.blog_v2.util.ResultUtils;
 import com.hx.common.interf.common.Result;
 import com.hx.log.util.Tools;

@@ -1,5 +1,6 @@
 package com.hx.blog_v2.domain.form.front_resources;
 
+import com.hx.blog_v2.domain.BaseForm;
 import com.hx.json.interf.JSONField;
 
 /**
@@ -9,7 +10,7 @@ import com.hx.json.interf.JSONField;
  * @version 1.0
  * @date 3/3/2018 7:26 PM
  */
-public class AdvSaveForm {
+public class AdvSaveForm extends BaseForm {
 
     private String id;
     private String name;

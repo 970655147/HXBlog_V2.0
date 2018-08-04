@@ -4,6 +4,7 @@ import com.hx.blog_v2.domain.po.blog.BlogCommentPO;
 import com.hx.blog_v2.domain.po.blog.BlogExPO;
 import com.hx.blog_v2.domain.po.blog.BlogPO;
 import com.hx.blog_v2.util.BlogConstants;
+import com.hx.blog_v2.domain.BaseVO;
 import com.hx.json.JSONObject;
 import com.hx.json.config.simple.SimpleJSONConfig;
 import com.hx.log.str.MysqlSqlGenerator;

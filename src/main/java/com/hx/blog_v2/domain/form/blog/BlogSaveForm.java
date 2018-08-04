@@ -1,5 +1,12 @@
 package com.hx.blog_v2.domain.form.blog;
 
+import com.hx.blog_v2.domain.BaseForm;
+import com.hx.blog_v2.util.CacheConstants;
+import com.hx.log.str.StringUtils;
+
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * 博客的一条记录
  *
@@ -7,7 +14,7 @@ package com.hx.blog_v2.domain.form.blog;
  * @version 1.0
  * @date 5/20/2017 9:42 AM
  */
-public class BlogSaveForm {
+public class BlogSaveForm extends BaseForm {
 
     private String id;
     private String title;
@@ -104,5 +111,11 @@ public class BlogSaveForm {
 
     public void setCheckSelf(boolean checkSelf) {
         this.checkSelf = checkSelf;
+    }
+
+    @Override
+    public String generateCacheKey() {
+        List<String> list = Arrays.asList(id, String.valueOf(checkSelf));
+        return StringUtils.join(list, CacheConstants.CACHE_LOCAL_SEP);
     }
 }

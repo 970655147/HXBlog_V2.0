@@ -1,5 +1,7 @@
 package com.hx.blog_v2.domain.form.resources;
 
+import com.hx.blog_v2.domain.BaseForm;
+
 /**
  * 增加用户的时候, 需要填的参数
  *
@@ -7,7 +9,7 @@ package com.hx.blog_v2.domain.form.resources;
  * @version 1.0
  * @date 5/23/2017 8:12 PM
  */
-public class UserSaveForm {
+public class UserSaveForm extends BaseForm {
 
     private String id;
     private String userName;
