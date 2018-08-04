@@ -8,6 +8,7 @@ import com.hx.blog_v2.cache_handler.interf.CacheContext;
 import com.hx.blog_v2.cache_handler.interf.CacheHandler;
 import com.hx.blog_v2.cache_handler.interf.CacheRequest;
 import com.hx.blog_v2.cache_handler.interf.CacheValidator;
+import com.hx.blog_v2.context.ConstantsContext;
 import com.hx.blog_v2.domain.BasePageForm;
 import com.hx.blog_v2.local.service.LocalCacheService;
 import com.hx.blog_v2.util.CacheConstants;
@@ -47,6 +48,8 @@ public class CacheHandlerAop {
     private ApplicationContext ac;
     @Autowired
     private LocalCacheService localCacheService;
+    @Autowired
+    private ConstantsContext constantsContext;
 
     @Pointcut("@annotation(com.hx.blog_v2.cache_handler.anno.CacheHandle)")
     public void cacheHandlerPoint() {
@@ -186,7 +189,11 @@ public class CacheHandlerAop {
         result = point.proceed();
         localCacheService.set(cacheNs, cacheKey, JSONObject.fromObject(result).toString());
         int timeout = cacheHandle.timeout();
+        // 如果配置的 timeout 为 CACHE_DEFAULT_TIMEOUT, 取数据库配置的 超时时间
         if (timeout > 0) {
+            if(timeout == CacheConstants.CACHE_DEFAULT_TIMEOUT) {
+                timeout = constantsContext.cacheHandleDefaultTimeout;
+            }
             localCacheService.expire(cacheNs, cacheKey, timeout);
         }
         return result;

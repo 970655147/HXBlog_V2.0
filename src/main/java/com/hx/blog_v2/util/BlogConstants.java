@@ -479,6 +479,10 @@ public final class BlogConstants {
      * @CacheHandle, 限定需要反转义的 字符列表
      */
     public static final String CACHE_HANDLE_DETRANSFER_CAHRS = "cache.handle.detransfer.chars";
+    /**
+     * @CacheHandle, 默认的超时时间
+     */
+    public static final String CACHE_HANDLE_DEFAULT_TIME_OUT = "cache.handle.default.timeout";
 
     // ----------------------------------------- configurable -------------------------------------------------
 

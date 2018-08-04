@@ -267,6 +267,7 @@ public class ConstantsContext {
      */
     public List<String> cacheHandleDetransferFields;
     public Set<Character> cacheHandleDetransferChars;
+    public int cacheHandleDefaultTimeout;
 
     /**
      * 限制给定周期内请求次数的接口的配置
@@ -660,6 +661,8 @@ public class ConstantsContext {
             emailAuthUserName = Tools.optString(systemConfig, BlogConstants.EMAIL_AUTH_USERNAME, "");
             emailAuthPassword = Tools.optString(systemConfig, BlogConstants.EMAIL_AUTH_PASSWORD, "");
             emailAuthSmtp = Tools.optString(systemConfig, BlogConstants.EMAIL_AUTH_SMTP, "smtp.qq.com");
+
+            cacheHandleDefaultTimeout = Tools.optInt(systemConfig, BlogConstants.CACHE_HANDLE_DEFAULT_TIME_OUT, 120);
 
             // 拉取 JSONObject, JSONArray
             retrieveCompositeSystemConfig();
