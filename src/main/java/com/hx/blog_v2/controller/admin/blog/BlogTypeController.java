@@ -49,6 +49,7 @@ public class BlogTypeController {
     }
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
+    @BizLogger(req = false, resp = false)
     public Result list() {
         return blogTypeService.list();
     }
@@ -80,8 +81,8 @@ public class BlogTypeController {
     }
 
     @RequestMapping(value = "/reSort", method = RequestMethod.POST)
+    @BizLogger
     public Result reSort() {
-
         return blogTypeService.reSort();
     }
 

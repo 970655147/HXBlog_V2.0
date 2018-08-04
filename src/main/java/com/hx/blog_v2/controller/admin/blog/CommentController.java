@@ -50,7 +50,7 @@ public class CommentController {
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     @BizHandle(handler = "commentSaveHandler")
-    @BizLogger
+    @BizLogger(req = false)
     public Result add(CommentSaveForm params) {
         Result errResult = commentSaveValidator.validate(params, null);
         if (!errResult.isSuccess()) {
@@ -65,6 +65,7 @@ public class CommentController {
 
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
+    @BizLogger(req = false, resp = false)
     public Result list(AdminCommentSearchForm params, SimplePage<AdminCommentVO> page) {
         Result errResult = searchValidator.validate(params, null);
         if (!errResult.isSuccess()) {
@@ -79,6 +80,7 @@ public class CommentController {
     }
 
     @RequestMapping(value = "/comment/list", method = RequestMethod.GET)
+    @BizLogger(req = false, resp = false)
     public Result floorCommentList(FloorCommentListSearchForm params, SimplePage<CommentVO> page) {
         Result errResult = floorCommentListSearchValidator.validate(params, null);
         if (!errResult.isSuccess()) {
@@ -94,7 +96,7 @@ public class CommentController {
 
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     @BizHandle(handler = "commentSaveHandler")
-    @BizLogger
+    @BizLogger(req = false)
     public Result update(CommentSaveForm params) {
         Result errResult = commentSaveValidator.validate(params, null);
         if (!errResult.isSuccess()) {

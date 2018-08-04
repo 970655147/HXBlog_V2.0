@@ -1,28 +1,31 @@
 package com.hx.blog_v2.service.system;
 
+import com.hx.blog_v2.cache_handler.CacheResultType;
+import com.hx.blog_v2.cache_handler.CacheType;
+import com.hx.blog_v2.cache_handler.anno.CacheHandle;
 import com.hx.blog_v2.context.CacheContext;
 import com.hx.blog_v2.context.ConstantsContext;
 import com.hx.blog_v2.dao.interf.BlogExDao;
 import com.hx.blog_v2.dao.interf.UploadFileDao;
 import com.hx.blog_v2.domain.ErrorCode;
-import com.hx.blog_v2.domain.common.system.CorrectionType;
 import com.hx.blog_v2.domain.common.blog.SenseType;
 import com.hx.blog_v2.domain.common.common.StringIntPair;
 import com.hx.blog_v2.domain.common.common.StringStringPair;
+import com.hx.blog_v2.domain.common.system.CorrectionType;
 import com.hx.blog_v2.domain.form.system.CorrectionSearchForm;
 import com.hx.blog_v2.domain.form.system.DoCorrectionForm;
-import com.hx.blog_v2.domain.mapper.others.CommonPOMapper;
 import com.hx.blog_v2.domain.mapper.common.OneStringMapper;
 import com.hx.blog_v2.domain.mapper.common.StringIntPairMapper;
 import com.hx.blog_v2.domain.mapper.common.StringStringPairMapper;
+import com.hx.blog_v2.domain.mapper.others.CommonPOMapper;
 import com.hx.blog_v2.domain.po.blog.BlogExPO;
 import com.hx.blog_v2.domain.po.system.UploadFilePO;
+import com.hx.blog_v2.domain.vo.message.MessageVO;
 import com.hx.blog_v2.domain.vo.system.CorrectionVO;
 import com.hx.blog_v2.service.interf.BaseServiceImpl;
 import com.hx.blog_v2.service.interf.system.CorrectionService;
 import com.hx.blog_v2.util.BizUtils;
 import com.hx.blog_v2.util.BlogConstants;
-import com.hx.blog_v2.domain.BaseVO;
 import com.hx.blog_v2.util.ResultUtils;
 import com.hx.blog_v2.util.SqlUtils;
 import com.hx.common.interf.common.Result;
@@ -41,6 +44,10 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.io.FileFilter;
 import java.util.*;
+
+import static com.hx.blog_v2.util.CacheConstants.CACHE_AOP_ADMIN_PAGE_USER;
+import static com.hx.blog_v2.util.CacheConstants.CACHE_AOP_LIST_CORRECTION;
+import static com.hx.blog_v2.util.CacheConstants.CACHE_DEFAULT_TIMEOUT;
 
 /**
  * CorrectionServiceImpl
@@ -66,6 +73,8 @@ public class CorrectionServiceImpl extends BaseServiceImpl<Object> implements Co
     private ConstantsContext constantsContext;
 
     @Override
+//    @CacheHandle(type = CacheType.DEV_DEFINED, ns = CACHE_AOP_LIST_CORRECTION, timeout = 5,
+//            cacheResultType = CacheResultType.RESULT_PAGE, cacheResultClass = MessageVO.class)
     public Result list(CorrectionSearchForm params) {
         CorrectionType type = CorrectionType.of(params.getType());
         if (CorrectionType.COMMENT_CNT == type) {

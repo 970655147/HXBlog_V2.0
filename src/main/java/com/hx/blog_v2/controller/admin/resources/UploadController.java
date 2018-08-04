@@ -43,7 +43,7 @@ public class UploadController {
     private PageValidator pageValidator;
 
     @RequestMapping(value = "/image", method = RequestMethod.POST)
-    @BizLogger(req = false, resp = false)
+    @BizLogger(req = false)
     public Result upload(UploadedImageSaveForm params) {
         Result errResult = uploadImageSaveValidator.validate(params, null);
         if (!errResult.isSuccess()) {
@@ -54,7 +54,7 @@ public class UploadController {
     }
 
     @RequestMapping(value = "/file", method = RequestMethod.POST)
-    @BizLogger(req = false, resp = false)
+    @BizLogger(req = false)
     public Result file(UploadedFileSaveForm params) {
         Result errResult = uploadFileSaveValidator.validate(params, null);
         if (!errResult.isSuccess()) {

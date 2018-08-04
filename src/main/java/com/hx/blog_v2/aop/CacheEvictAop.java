@@ -2,11 +2,13 @@ package com.hx.blog_v2.aop;
 
 import com.hx.blog_v2.cache_handler.CacheType;
 import com.hx.blog_v2.cache_handler.anno.CacheEvict;
+import com.hx.blog_v2.cache_handler.anno.CacheHandle;
 import com.hx.blog_v2.cache_handler.context.SimpleCacheContext;
 import com.hx.blog_v2.cache_handler.interf.CacheContext;
 import com.hx.blog_v2.cache_handler.interf.CacheHandler;
 import com.hx.blog_v2.cache_handler.interf.CacheRequest;
 import com.hx.blog_v2.cache_handler.interf.CacheValidator;
+import com.hx.blog_v2.domain.BasePageForm;
 import com.hx.blog_v2.local.service.LocalCacheService;
 import com.hx.blog_v2.util.CacheConstants;
 import com.hx.common.interf.common.Result;
@@ -164,8 +166,8 @@ public class CacheEvictAop {
      * @date 2018/8/2 16:32
      */
     private String generateCacheKey(CacheContext context) {
-        CacheEvict cacheEvict = context.cacheEvict();
-        CacheType cacheType = cacheEvict.type();
+        CacheHandle cacheHandle = context.cacheHandle();
+        CacheType cacheType = cacheHandle.type();
 
         if (context.args().length == 0) {
             return CacheConstants.CACHE_LOCAL_SUFFIX_ALL;
@@ -179,6 +181,19 @@ public class CacheEvictAop {
                     argsList.add(String.valueOf(arg));
                 }
                 return StringUtils.join(argsList, CacheConstants.CACHE_LOCAL_SEP);
+            } else if (CacheType.DEV_DEFINED == cacheType) {
+                String cacheKey = CacheConstants.CACHE_LOCAL_SUFFIX_ALL;
+                if (cacheHandle.others().length > 0) {
+                    cacheKey = cacheHandle.others()[0];
+                }
+                return cacheKey;
+            } else if (CacheType.PAGE_DEV_DEFINED == cacheType) {
+                String prefix = CacheConstants.CACHE_LOCAL_SUFFIX_ALL;
+                if (cacheHandle.others().length > 0) {
+                    prefix = cacheHandle.others()[0];
+                }
+                String pageKey = new BasePageForm().generateCacheKey();
+                return prefix + CacheConstants.CACHE_LOCAL_SEP + pageKey;
             }
         }
         return null;

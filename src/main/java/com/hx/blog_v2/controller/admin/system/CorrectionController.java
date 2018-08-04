@@ -31,7 +31,7 @@ public class CorrectionController {
     private DoCorrectionValidator doCorrectionValidator;
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
-    @BizLogger(req = false, resp = false)
+    @BizLogger(resp = false)
     public Result list(CorrectionSearchForm params) {
         Result errResult = correctionSearchValidator.validate(params, null);
         if (!errResult.isSuccess()) {

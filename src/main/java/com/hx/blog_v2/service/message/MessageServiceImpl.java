@@ -1,5 +1,9 @@
 package com.hx.blog_v2.service.message;
 
+import com.hx.blog_v2.cache_handler.CacheResultType;
+import com.hx.blog_v2.cache_handler.CacheType;
+import com.hx.blog_v2.cache_handler.anno.CacheEvictAll;
+import com.hx.blog_v2.cache_handler.anno.CacheHandle;
 import com.hx.blog_v2.context.ConstantsContext;
 import com.hx.blog_v2.context.WebContext;
 import com.hx.blog_v2.dao.interf.MessageDao;
@@ -17,6 +21,7 @@ import com.hx.blog_v2.domain.mapper.common.ToMapMapper;
 import com.hx.blog_v2.domain.po.message.EmailPO;
 import com.hx.blog_v2.domain.po.message.MessagePO;
 import com.hx.blog_v2.domain.validator.message.EmailValidator;
+import com.hx.blog_v2.domain.vo.front_resources.MoodVO;
 import com.hx.blog_v2.domain.vo.message.MessageVO;
 import com.hx.blog_v2.service.interf.BaseServiceImpl;
 import com.hx.blog_v2.service.interf.message.EmailService;
@@ -37,6 +42,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+
+import static com.hx.blog_v2.util.CacheConstants.*;
 
 /**
  * MessageServiceImpl
@@ -60,6 +67,7 @@ public class MessageServiceImpl extends BaseServiceImpl<MessagePO> implements Me
     private EmailValidator emailValidator;
 
     @Override
+    @CacheEvictAll(ns = {CACHE_AOP_ADMIN_PAGE_MESSAGE, CACHE_AOP_PAGE_MESSAGE})
     public Result add(MessageSaveForm params) {
         Set<String> userIds = new HashSet<>();
         if (!Tools.isEmpty(params.getUserIds())) {
@@ -102,6 +110,8 @@ public class MessageServiceImpl extends BaseServiceImpl<MessagePO> implements Me
     }
 
     @Override
+    @CacheHandle(type = CacheType.BASE_REQ, ns = CACHE_AOP_PAGE_MESSAGE, timeout = CACHE_DEFAULT_TIMEOUT,
+            cacheResultType = CacheResultType.RESULT_PAGE, cacheResultClass = MessageVO.class)
     public Result list(MessageSearchForm params, Page<MessageVO> page) {
         String selectSql = " select * from message where deleted = 0 ";
         String selectSqlSuffix = " order by created_at desc limit ?, ?";
@@ -130,6 +140,8 @@ public class MessageServiceImpl extends BaseServiceImpl<MessagePO> implements Me
     }
 
     @Override
+    @CacheHandle(type = CacheType.BASE_REQ, ns = CACHE_AOP_ADMIN_PAGE_MESSAGE, timeout = CACHE_DEFAULT_TIMEOUT,
+            cacheResultType = CacheResultType.RESULT_PAGE, cacheResultClass = MessageVO.class)
     public Result adminList(MessageSearchForm params, Page<MessageVO> page) {
         String selectSql = " select * from message where deleted = 0 ";
         String selectSqlSuffix = " order by created_at desc limit ?, ?";
@@ -156,6 +168,7 @@ public class MessageServiceImpl extends BaseServiceImpl<MessagePO> implements Me
     }
 
     @Override
+    @CacheEvictAll(ns = {CACHE_AOP_ADMIN_PAGE_MESSAGE, CACHE_AOP_PAGE_MESSAGE})
     public Result update(MessageSaveForm params) {
         String updateAt = DateUtils.format(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
         IQueryCriteria query = Criteria.eq("id", params.getId());
@@ -199,6 +212,7 @@ public class MessageServiceImpl extends BaseServiceImpl<MessagePO> implements Me
     }
 
     @Override
+    @CacheEvictAll(ns = {CACHE_AOP_ADMIN_PAGE_MESSAGE, CACHE_AOP_PAGE_MESSAGE})
     public Result markConsumed(BeanIdForm params) {
         String updateAt = DateUtils.format(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
         IQueryCriteria query = Criteria.eq("id", params.getId());
@@ -212,6 +226,7 @@ public class MessageServiceImpl extends BaseServiceImpl<MessagePO> implements Me
     }
 
     @Override
+    @CacheEvictAll(ns = {CACHE_AOP_ADMIN_PAGE_MESSAGE, CACHE_AOP_PAGE_MESSAGE})
     public Result markAllConsumed() {
         String userId = WebContext.getStrAttrFromSession(BlogConstants.SESSION_USER_ID);
         String updateAt = DateUtils.format(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
@@ -226,6 +241,7 @@ public class MessageServiceImpl extends BaseServiceImpl<MessagePO> implements Me
     }
 
     @Override
+    @CacheEvictAll(ns = {CACHE_AOP_ADMIN_PAGE_MESSAGE, CACHE_AOP_PAGE_MESSAGE})
     public Result remove(BeanIdForm params) {
         String updatedAt = DateUtils.format(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
         IQueryCriteria query = Criteria.eq("id", params.getId());

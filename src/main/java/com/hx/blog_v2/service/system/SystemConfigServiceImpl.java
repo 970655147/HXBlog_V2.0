@@ -1,5 +1,9 @@
 package com.hx.blog_v2.service.system;
 
+import com.hx.blog_v2.cache_handler.CacheResultType;
+import com.hx.blog_v2.cache_handler.CacheType;
+import com.hx.blog_v2.cache_handler.anno.CacheEvictAll;
+import com.hx.blog_v2.cache_handler.anno.CacheHandle;
 import com.hx.blog_v2.context.ConstantsContext;
 import com.hx.blog_v2.dao.interf.SystemConfigDao;
 import com.hx.blog_v2.domain.form.common.BeanIdForm;
@@ -8,6 +12,7 @@ import com.hx.blog_v2.domain.form.system.SystemConfigSearchForm;
 import com.hx.blog_v2.domain.mapper.common.OneIntMapper;
 import com.hx.blog_v2.domain.mapper.system.SystemConfigVOMapper;
 import com.hx.blog_v2.domain.po.system.SystemConfigPO;
+import com.hx.blog_v2.domain.vo.message.MessageVO;
 import com.hx.blog_v2.domain.vo.system.SystemConfigVO;
 import com.hx.blog_v2.service.interf.BaseServiceImpl;
 import com.hx.blog_v2.service.interf.system.SystemConfigService;
@@ -29,6 +34,10 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import static com.hx.blog_v2.util.CacheConstants.CACHE_AOP_ADMIN_PAGE_MESSAGE;
+import static com.hx.blog_v2.util.CacheConstants.CACHE_AOP_ADMIN_PAGE_SYSTEM_CONFIG;
+import static com.hx.blog_v2.util.CacheConstants.CACHE_DEFAULT_TIMEOUT;
+
 /**
  * SystemConfigServiceImpl
  *
@@ -47,6 +56,7 @@ public class SystemConfigServiceImpl extends BaseServiceImpl<SystemConfigPO> imp
     private ConstantsContext constantsContext;
 
     @Override
+    @CacheEvictAll(ns = CACHE_AOP_ADMIN_PAGE_SYSTEM_CONFIG)
     public Result add(SystemConfigSaveForm params) {
         String val = constantsContext.configByTypeAndKey(params.getType(), params.getName());
         if (val != null) {
@@ -65,6 +75,8 @@ public class SystemConfigServiceImpl extends BaseServiceImpl<SystemConfigPO> imp
     }
 
     @Override
+    @CacheHandle(type = CacheType.BASE_REQ, ns = CACHE_AOP_ADMIN_PAGE_SYSTEM_CONFIG, timeout = CACHE_DEFAULT_TIMEOUT,
+            cacheResultType = CacheResultType.RESULT_PAGE, cacheResultClass = SystemConfigVO.class)
     public Result adminList(SystemConfigSearchForm params, Page<SystemConfigVO> page) {
         String selectSql = " select * from system_config where deleted = 0 and type = '" + params.getType() + "' order by sort limit ?, ? ";
         String countSql = " select count(*) as totalRecord from system_config where deleted = 0 and type = '" + params.getType() + "' ";
@@ -82,6 +94,7 @@ public class SystemConfigServiceImpl extends BaseServiceImpl<SystemConfigPO> imp
     }
 
     @Override
+    @CacheEvictAll(ns = CACHE_AOP_ADMIN_PAGE_SYSTEM_CONFIG)
     public Result update(SystemConfigSaveForm params) {
         String val = constantsContext.configByTypeAndKey(params.getType(), params.getName());
         if (val == null) {
@@ -102,6 +115,7 @@ public class SystemConfigServiceImpl extends BaseServiceImpl<SystemConfigPO> imp
     }
 
     @Override
+    @CacheEvictAll(ns = CACHE_AOP_ADMIN_PAGE_SYSTEM_CONFIG)
     public Result remove(BeanIdForm params) {
         Result getResult = systemConfigDao.get(params);
         if (!getResult.isSuccess()) {
@@ -125,6 +139,7 @@ public class SystemConfigServiceImpl extends BaseServiceImpl<SystemConfigPO> imp
     }
 
     @Override
+    @CacheEvictAll(ns = CACHE_AOP_ADMIN_PAGE_SYSTEM_CONFIG)
     public Result reSort(SystemConfigSearchForm params) {
         IQueryCriteria query = Criteria.and(Criteria.eq("type", params.getType()))
                 .add(Criteria.eq("deleted", "0"));

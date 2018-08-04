@@ -1,14 +1,18 @@
 package com.hx.blog_v2.service.system;
 
+import com.hx.blog_v2.cache_handler.CacheResultType;
+import com.hx.blog_v2.cache_handler.CacheType;
+import com.hx.blog_v2.cache_handler.anno.CacheHandle;
 import com.hx.blog_v2.context.ConstantsContext;
 import com.hx.blog_v2.domain.form.system.LogSearchForm;
-import com.hx.blog_v2.domain.mapper.system.ExceptionLogVOMapper;
 import com.hx.blog_v2.domain.mapper.common.OneIntMapper;
+import com.hx.blog_v2.domain.mapper.system.ExceptionLogVOMapper;
 import com.hx.blog_v2.domain.mapper.system.RequestLogVOMapper;
 import com.hx.blog_v2.domain.vo.system.ExceptionLogVO;
 import com.hx.blog_v2.domain.vo.system.RequestLogVO;
 import com.hx.blog_v2.service.interf.BaseServiceImpl;
 import com.hx.blog_v2.service.interf.system.LogService;
+import com.hx.blog_v2.util.CacheConstants;
 import com.hx.blog_v2.util.ResultUtils;
 import com.hx.blog_v2.util.SqlUtils;
 import com.hx.common.interf.common.Page;
@@ -21,6 +25,9 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import static com.hx.blog_v2.util.CacheConstants.CACHE_AOP_LIST_CORRECTION;
+import static com.hx.blog_v2.util.CacheConstants.CACHE_AOP_PAGE_EXCEPTION_LOG;
 
 /**
  * LogServiceImpl
@@ -63,6 +70,8 @@ public class LogServiceImpl extends BaseServiceImpl<Object> implements LogServic
     }
 
     @Override
+    @CacheHandle(type = CacheType.BASE_REQ, ns = CACHE_AOP_PAGE_EXCEPTION_LOG, timeout = CacheConstants.CACHE_DEFAULT_TIMEOUT,
+            cacheResultType = CacheResultType.RESULT_PAGE, cacheResultClass = ExceptionLogVO.class)
     public Result exceptionLogList(LogSearchForm params, Page<ExceptionLogVO> page) {
         String selectSql = " select * from exception_log where 1 = 1 ";
         String selectSqlSuffix = " order by created_at desc limit ?, ? ";

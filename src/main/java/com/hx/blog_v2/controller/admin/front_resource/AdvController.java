@@ -79,6 +79,7 @@ public class AdvController {
     }
 
     @RequestMapping(value = "/reSort", method = RequestMethod.POST)
+    @BizLogger
     public Result reSort() {
         return advService.reSort();
     }

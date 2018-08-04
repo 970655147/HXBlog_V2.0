@@ -1,8 +1,12 @@
 package com.hx.blog_v2.domain.form.blog;
 
-import com.hx.blog_v2.domain.BaseForm;
+import com.hx.blog_v2.domain.BasePageForm;
+import com.hx.blog_v2.util.CacheConstants;
+import com.hx.log.str.StringUtils;
 import com.hx.log.util.Tools;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -12,7 +16,7 @@ import java.util.Map;
  * @version 1.0
  * @date 5/20/2017 9:42 AM
  */
-public class AdminCommentSearchForm extends BaseForm {
+public class AdminCommentSearchForm extends BasePageForm {
 
     /**
      * 根据博客排序
@@ -153,4 +157,13 @@ public class AdminCommentSearchForm extends BaseForm {
     public void setAsc(boolean asc) {
         this.asc = asc;
     }
+
+
+    @Override
+    public String generateCacheKey() {
+        List<String> list = Arrays.asList(keywords, blogName, userName, toUserName, content, blogId, blogTypeId,
+                blogTagId, String.valueOf(sort), String.valueOf(asc), super.generateCacheKey());
+        return StringUtils.join(list, CacheConstants.CACHE_LOCAL_SEP);
+    }
+
 }

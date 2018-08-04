@@ -16,6 +16,16 @@ public enum CacheType {
     /**
      * 使用 toString 来处理相关限定
      */
-    TO_STRING
+    TO_STRING,
+
+    /**
+     * 用户自定义
+     */
+    DEV_DEFINED,
+
+    /**
+     * 分页
+     */
+    PAGE_DEV_DEFINED,
 
 }

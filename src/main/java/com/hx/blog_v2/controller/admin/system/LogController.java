@@ -33,7 +33,7 @@ public class LogController {
     private PageValidator pageValidator;
 
     @RequestMapping(value = "/request/list", method = RequestMethod.GET)
-    @BizLogger(req = false, resp = false)
+    @BizLogger(resp = false)
     public Result requestLogList(LogSearchForm params, SimplePage<RequestLogVO> page) {
         Result errResult = logSearchValidator.validate(params, null);
         if (!errResult.isSuccess()) {
@@ -48,7 +48,7 @@ public class LogController {
     }
 
     @RequestMapping(value = "/exception/list", method = RequestMethod.GET)
-    @BizLogger(req = false, resp = false)
+    @BizLogger(resp = false)
     public Result exceptionLogList(LogSearchForm params, SimplePage<ExceptionLogVO> page) {
         Result errResult = logSearchValidator.validate(params, null);
         if (!errResult.isSuccess()) {

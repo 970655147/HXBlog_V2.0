@@ -48,6 +48,7 @@ public class BlogTagController {
     }
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
+    @BizLogger(req = false, resp = false)
     public Result list() {
         return blogTagService.list();
     }
@@ -78,8 +79,8 @@ public class BlogTagController {
     }
 
     @RequestMapping(value = "/reSort", method = RequestMethod.POST)
+    @BizLogger
     public Result reSort() {
-
         return blogTagService.reSort();
     }
 

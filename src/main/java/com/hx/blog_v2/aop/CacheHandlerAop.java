@@ -8,16 +8,14 @@ import com.hx.blog_v2.cache_handler.interf.CacheContext;
 import com.hx.blog_v2.cache_handler.interf.CacheHandler;
 import com.hx.blog_v2.cache_handler.interf.CacheRequest;
 import com.hx.blog_v2.cache_handler.interf.CacheValidator;
-import com.hx.blog_v2.context.ConstantsContext;
+import com.hx.blog_v2.domain.BasePageForm;
 import com.hx.blog_v2.local.service.LocalCacheService;
 import com.hx.blog_v2.util.CacheConstants;
 import com.hx.common.interf.common.Result;
-import com.hx.common.result.SimpleResult;
 import com.hx.json.JSONArray;
 import com.hx.json.JSONObject;
 import com.hx.log.str.StringUtils;
 import com.hx.log.util.Log;
-import com.hx.log.util.Tools;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
@@ -163,7 +161,7 @@ public class CacheHandlerAop {
                 if (cacheResultType == CacheResultType.BEAN) {
                     Class resultType = context.method().getReturnType();
                     result = localCacheService.getOrNull(cacheNs, cacheKey, resultType);
-                }else if ((cacheResultType == CacheResultType.LIST)) {
+                } else if ((cacheResultType == CacheResultType.LIST)) {
                     result = localCacheService.getListOrNull(cacheNs, cacheKey, cacheHandle.cacheResultClass());
                 } else if ((cacheResultType == CacheResultType.PAGE)) {
                     result = localCacheService.getPageOrNull(cacheNs, cacheKey, cacheHandle.cacheResultClass());
@@ -218,6 +216,19 @@ public class CacheHandlerAop {
                     argsList.add(String.valueOf(arg));
                 }
                 return StringUtils.join(argsList, CacheConstants.CACHE_LOCAL_SEP);
+            } else if (CacheType.DEV_DEFINED == cacheType) {
+                String cacheKey = CacheConstants.CACHE_LOCAL_SUFFIX_ALL;
+                if (cacheHandle.others().length > 0) {
+                    cacheKey = cacheHandle.others()[0];
+                }
+                return cacheKey;
+            } else if(CacheType.PAGE_DEV_DEFINED == cacheType) {
+                String prefix = CacheConstants.CACHE_LOCAL_SUFFIX_ALL;
+                if (cacheHandle.others().length > 0) {
+                    prefix = cacheHandle.others()[0];
+                }
+                String pageKey = new BasePageForm().generateCacheKey();
+                return prefix + CacheConstants.CACHE_LOCAL_SEP + pageKey;
             }
         }
         return null;

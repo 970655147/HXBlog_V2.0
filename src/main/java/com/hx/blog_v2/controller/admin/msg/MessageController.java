@@ -46,7 +46,7 @@ public class MessageController {
     private PageValidator pageValidator;
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    @BizLogger
+    @BizLogger(req = false)
     public Result add(MessageSaveForm params) {
         Result errResult = messageSaveValidator.validate(params, null);
         if (!errResult.isSuccess()) {

@@ -1,9 +1,11 @@
 package com.hx.blog_v2.domain.form.blog;
 
 import com.hx.blog_v2.domain.BaseForm;
-import com.hx.log.util.Tools;
+import com.hx.blog_v2.util.CacheConstants;
+import com.hx.log.str.StringUtils;
 
-import java.util.Map;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * 当前层回复的搜索
@@ -34,6 +36,12 @@ public class FloorCommentListSearchForm extends BaseForm {
 
     public void setFloorId(String floorId) {
         this.floorId = floorId;
+    }
+
+    @Override
+    public String generateCacheKey() {
+        List<String> list = Arrays.asList(blogId, floorId);
+        return StringUtils.join(list, CacheConstants.CACHE_LOCAL_SEP);
     }
 }
 

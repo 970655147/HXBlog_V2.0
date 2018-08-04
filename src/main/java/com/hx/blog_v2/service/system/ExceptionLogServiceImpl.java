@@ -1,7 +1,9 @@
 package com.hx.blog_v2.service.system;
 
+import com.hx.blog_v2.cache_handler.anno.CacheEvictAll;
 import com.hx.blog_v2.context.CacheContext;
 import com.hx.blog_v2.context.ConstantsContext;
+import com.hx.blog_v2.context.WebContext;
 import com.hx.blog_v2.dao.interf.ExceptionLogDao;
 import com.hx.blog_v2.domain.common.system.SessionUser;
 import com.hx.blog_v2.domain.po.system.ExceptionLogPO;
@@ -9,8 +11,6 @@ import com.hx.blog_v2.service.interf.BaseServiceImpl;
 import com.hx.blog_v2.service.interf.system.ExceptionLogService;
 import com.hx.blog_v2.util.BizUtils;
 import com.hx.blog_v2.util.BlogConstants;
-import com.hx.blog_v2.domain.BaseVO;
-import com.hx.blog_v2.context.WebContext;
 import com.hx.common.interf.common.Result;
 import com.hx.json.JSONObject;
 import org.aspectj.lang.JoinPoint;
@@ -19,6 +19,8 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
+
+import static com.hx.blog_v2.util.CacheConstants.CACHE_AOP_PAGE_EXCEPTION_LOG;
 
 /**
  * ExceptionLogServiceImpl
@@ -38,6 +40,7 @@ public class ExceptionLogServiceImpl extends BaseServiceImpl<ExceptionLogPO> imp
     private ConstantsContext constantsContext;
 
     @Override
+    @CacheEvictAll(ns = CACHE_AOP_PAGE_EXCEPTION_LOG)
     public void saveExceptionLog(JoinPoint point, Result result, Throwable e) {
         HttpServletRequest req = WebContext.getRequest();
         SessionUser user = (SessionUser) WebContext.getAttributeFromSession(BlogConstants.SESSION_USER);

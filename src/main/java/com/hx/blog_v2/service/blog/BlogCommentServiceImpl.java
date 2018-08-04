@@ -1,5 +1,9 @@
 package com.hx.blog_v2.service.blog;
 
+import com.hx.blog_v2.cache_handler.CacheResultType;
+import com.hx.blog_v2.cache_handler.CacheType;
+import com.hx.blog_v2.cache_handler.anno.CacheEvictAll;
+import com.hx.blog_v2.cache_handler.anno.CacheHandle;
 import com.hx.blog_v2.context.CacheContext;
 import com.hx.blog_v2.context.ConstantsContext;
 import com.hx.blog_v2.context.WebContext;
@@ -9,9 +13,9 @@ import com.hx.blog_v2.dao.interf.BlogExDao;
 import com.hx.blog_v2.domain.ErrorCode;
 import com.hx.blog_v2.domain.common.system.SessionUser;
 import com.hx.blog_v2.domain.form.blog.AdminCommentSearchForm;
-import com.hx.blog_v2.domain.form.common.BeanIdForm;
 import com.hx.blog_v2.domain.form.blog.CommentSaveForm;
 import com.hx.blog_v2.domain.form.blog.FloorCommentListSearchForm;
+import com.hx.blog_v2.domain.form.common.BeanIdForm;
 import com.hx.blog_v2.domain.mapper.blog.AdminCommentVOMapper;
 import com.hx.blog_v2.domain.mapper.blog.CommentVOMapper;
 import com.hx.blog_v2.domain.mapper.common.OneIntMapper;
@@ -37,6 +41,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import static com.hx.blog_v2.util.CacheConstants.*;
+
 /**
  * BlogCommentServiceImpl
  *
@@ -61,6 +67,7 @@ public class BlogCommentServiceImpl extends BaseServiceImpl<BlogCommentPO> imple
     private ConstantsContext constantsContext;
 
     @Override
+    @CacheEvictAll(ns = {CACHE_AOP_ADMIN_PAGE_COMMENT, CACHE_AOP_LIST_FLOOR_COMMENT})
     public Result add(CommentSaveForm params) {
         Result getBlogResult = blogDao.get(new BeanIdForm(params.getBlogId()));
         if (!getBlogResult.isSuccess()) {
@@ -104,6 +111,8 @@ public class BlogCommentServiceImpl extends BaseServiceImpl<BlogCommentPO> imple
     }
 
     @Override
+    @CacheHandle(type = CacheType.BASE_REQ, ns = CACHE_AOP_ADMIN_PAGE_COMMENT, timeout = CACHE_DEFAULT_TIMEOUT,
+            cacheResultType = CacheResultType.RESULT_PAGE, cacheResultClass = AdminCommentVO.class)
     public Result adminList(AdminCommentSearchForm params, Page<AdminCommentVO> page) {
         String selectSql = " select c.*, b.title as blog_name from blog_comment as c " +
                 " inner join blog as b on c.blog_id = b.id where c.deleted = 0 ";
@@ -135,6 +144,8 @@ public class BlogCommentServiceImpl extends BaseServiceImpl<BlogCommentPO> imple
     }
 
     @Override
+    @CacheHandle(type = CacheType.BASE_REQ, ns = CACHE_AOP_LIST_FLOOR_COMMENT, timeout = CACHE_DEFAULT_TIMEOUT,
+            cacheResultType = CacheResultType.RESULT_PAGE, cacheResultClass = CommentVO.class)
     public Result floorCommentList(FloorCommentListSearchForm params, Page<CommentVO> page) {
         StringBuilder sql = new StringBuilder(" select * from blog_comment as c where c.deleted = 0 ");
         List<Object> sqlParams = new ArrayList<>(4);
@@ -150,6 +161,7 @@ public class BlogCommentServiceImpl extends BaseServiceImpl<BlogCommentPO> imple
     }
 
     @Override
+    @CacheEvictAll(ns = {CACHE_AOP_ADMIN_PAGE_COMMENT, CACHE_AOP_LIST_FLOOR_COMMENT})
     public Result update(CommentSaveForm params) {
         String updatedAt = DateUtils.format(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
         IQueryCriteria query = Criteria.eq("id", params.getId());
@@ -164,6 +176,7 @@ public class BlogCommentServiceImpl extends BaseServiceImpl<BlogCommentPO> imple
     }
 
     @Override
+    @CacheEvictAll(ns = {CACHE_AOP_ADMIN_PAGE_COMMENT, CACHE_AOP_LIST_FLOOR_COMMENT})
     public Result remove(BeanIdForm params) {
         IQueryCriteria query = Criteria.eq("id", params.getId());
         Result getResult = commentDao.get(query);

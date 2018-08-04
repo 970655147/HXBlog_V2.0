@@ -280,7 +280,7 @@ public class LocalCacheService implements CacheService {
         Result result = typeCast(cachedValue, SimpleResult.class);
         if (result != null) {
             String cachedPageValue = String.valueOf(result.getData());
-            Page<T> data = cachedValueToPage(cachedPageValue, clazz);
+            Page data = cachedValueToPage(cachedPageValue, clazz);
             result.setData(data);
         }
         return result;
@@ -370,7 +370,10 @@ public class LocalCacheService implements CacheService {
             return null;
         }
 
-        SimplePage<T> result = typeCast(pageObj, SimplePage.class);
+        SimplePage<T> result = new SimplePage<>();
+        result.setPageNow(pageObj.getInt("pageNow"));
+        result.setPageSize(pageObj.getInt("pageSize"));
+        result.setTotalRecord(pageObj.getInt("totalRecord"));
         JSONArray pageList = pageObj.getJSONArray("list");
         List<T> list = new ArrayList<>(pageList.size());
         for (int i = 0, len = pageList.size(); i < len; i++) {

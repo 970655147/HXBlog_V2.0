@@ -1,6 +1,12 @@
 package com.hx.blog_v2.domain.form.system;
 
 import com.hx.blog_v2.domain.BaseForm;
+import com.hx.blog_v2.domain.BasePageForm;
+import com.hx.blog_v2.util.CacheConstants;
+import com.hx.log.str.StringUtils;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * CorrectionSearchForm
@@ -9,7 +15,7 @@ import com.hx.blog_v2.domain.BaseForm;
  * @version 1.0
  * @date 6/18/2017 7:22 PM
  */
-public class LogSearchForm extends BaseForm {
+public class LogSearchForm extends BasePageForm {
 
     public String url;
     private String handler;
@@ -85,5 +91,12 @@ public class LogSearchForm extends BaseForm {
 
     public void setMsg(String msg) {
         this.msg = msg;
+    }
+
+    @Override
+    public String generateCacheKey() {
+        List<String> list = Arrays.asList(url, handler, params, name, email, String.valueOf(isSystemUser), requestIp, msg,
+                super.generateCacheKey());
+        return StringUtils.join(list, CacheConstants.CACHE_LOCAL_SEP);
     }
 }

@@ -1,5 +1,9 @@
 package com.hx.blog_v2.service.resources;
 
+import com.hx.blog_v2.cache_handler.CacheResultType;
+import com.hx.blog_v2.cache_handler.CacheType;
+import com.hx.blog_v2.cache_handler.anno.CacheEvictAll;
+import com.hx.blog_v2.cache_handler.anno.CacheHandle;
 import com.hx.blog_v2.context.CacheContext;
 import com.hx.blog_v2.context.ConstantsContext;
 import com.hx.blog_v2.context.WebContext;
@@ -14,6 +18,7 @@ import com.hx.blog_v2.domain.mapper.resources.AdminUserVOMapper;
 import com.hx.blog_v2.domain.mapper.resources.Id2NameRoleMapper;
 import com.hx.blog_v2.domain.mapper.common.OneIntMapper;
 import com.hx.blog_v2.domain.po.resources.UserPO;
+import com.hx.blog_v2.domain.vo.message.MessageVO;
 import com.hx.blog_v2.domain.vo.resources.AdminUserVO;
 import com.hx.blog_v2.domain.vo.common.Id2NameVO;
 import com.hx.blog_v2.service.interf.resources.UserService;
@@ -37,6 +42,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import static com.hx.blog_v2.util.CacheConstants.*;
+
 /**
  * UserServiceImpl
  *
@@ -57,6 +64,7 @@ public class UserServiceImpl implements UserService {
     private CacheContext cacheContext;
 
     @Override
+    @CacheEvictAll(ns = {CACHE_AOP_LIST_USER_ID_TO_NAME, CACHE_AOP_ADMIN_PAGE_USER})
     public Result add(UserSaveForm params) {
         String countSql = "select count(*) as totalRecord from `user` where user_name = ? ";
         Integer totalRecord = jdbcTemplate.queryForObject(countSql, new String[]{params.getUserName()}, new OneIntMapper("totalRecord"));
@@ -79,6 +87,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @CacheHandle(type = CacheType.PAGE_DEV_DEFINED, ns = CACHE_AOP_ADMIN_PAGE_USER, timeout = CACHE_DEFAULT_TIMEOUT,
+            cacheResultType = CacheResultType.RESULT_PAGE, cacheResultClass = MessageVO.class)
     public Result adminList(Page<AdminUserVO> page) {
         String selectSql = " select * from `user` where deleted = 0 order by created_at desc limit ?, ? ";
         String countSql = " select count(*) as totalRecord from `user` where deleted = 0 ";
@@ -96,6 +106,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @CacheEvictAll(ns = {CACHE_AOP_LIST_USER_ID_TO_NAME, CACHE_AOP_ADMIN_PAGE_USER})
     public Result update(UserSaveForm params) {
         Result getUserResult = userDao.get(Criteria.eq("user_name", params.getUserName()));
         if (!getUserResult.isSuccess()) {
@@ -144,6 +155,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @CacheEvictAll(ns = {CACHE_AOP_LIST_USER_ID_TO_NAME, CACHE_AOP_ADMIN_PAGE_USER})
     public Result remove(BeanIdForm params) {
         String updatedAt = DateUtils.format(new Date(), BlogConstants.FORMAT_YYYY_MM_DD_HH_MM_SS);
         IQueryCriteria query = Criteria.eq("id", params.getId());
@@ -209,6 +221,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @CacheHandle(type = CacheType.DEV_DEFINED, ns = CACHE_AOP_LIST_USER_ID_TO_NAME, timeout = CACHE_DEFAULT_TIMEOUT,
+            cacheResultType = CacheResultType.RESULT_PAGE, cacheResultClass = MessageVO.class)
     public Result allId2Name() {
         String sql = " select id, user_name from user where deleted = 0 order by created_at ";
         List<Id2NameVO> list = jdbcTemplate.query(sql, new Id2NameRoleMapper("id", "user_name"));
